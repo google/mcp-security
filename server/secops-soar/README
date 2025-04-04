@@ -1,0 +1,128 @@
+This is a personal project.
+
+# Chronicle SecOps MCP Server
+
+[![smithery badge](https://smithery.ai/badge/@emeryray2002/mcp-secops-soar)](https://smithery.ai/server/@emeryray2002/mcp-secops-soar)
+
+This is an MCP (Model Context Protocol) server for interacting with Google's
+Chronicle Security Operations suite.
+[MCP Info](https://modelcontextprotocol.io/introduction)
+
+## Installing in Claude Desktop
+
+To use this MCP server with Claude Desktop:
+
+1.  Install Claude Desktop
+
+2.  Open Claude Desktop and select "Settings" from the Claude menu
+
+3.  Click on "Developer" in the lefthand bar, then click "Edit Config"
+
+4.  Update your `claude_desktop_config.json` with the following configuration
+    (replace paths with your actual paths):
+
+```json
+{
+  "mcpServers": {
+    "secops-mcp": {
+      "command": "/path/to/your/uv",
+      "args": [
+        "--directory",
+        "/path/to/your/mcp-secops-soar",
+        "run",
+        "secops_soar_mcp.py"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "your-google-cloud-project-id",
+        "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
+        "CHRONICLE_REGION": "us"
+      }
+    }
+  }
+}
+```
+
+1.  Make sure to update:
+
+    -   The path to `uv` (use `which uv` to find it)
+    -   The directory path to where this repository is cloned
+    -   Your Chronicle credentials (project ID, customer ID, and region)
+
+2.  Save the file and restart Claude Desktop
+
+3.  You should now see the hammer icon in the Claude Desktop interface,
+    indicating the MCP server is active
+
+## Features
+
+### Security Tools
+
+-   TBD
+
+## Installation
+
+### Installing via Smithery
+
+To install mcp-secops-soar for Claude Desktop automatically via
+[Smithery](https://smithery.ai/server/@emeryray2002/mcp-secops-soar):
+
+```bash
+npx -y @smithery/cli install @emeryray2002/mcp-secops-soar --client claude
+```
+
+### Manual Installation
+
+1.  Install the package:
+
+```bash
+pip install -e .
+```
+
+1.  Set up your environment variables:
+
+```bash
+export TBD
+```
+
+## Requirements
+
+-   Python 3.11+
+-   A Google Cloud account with Chronicle Security Operations enabled
+-   Proper authentication configured
+
+## Usage
+
+### Running the MCP Server
+
+```bash
+python main.py
+```
+
+### API Capabilities
+
+The MCP server provides the following capabilities:
+
+1.  **TBD**
+
+### Example
+
+See `example.py` for a complete example of using the MCP server.
+
+## Authentication
+
+The server uses Google's authentication. Make sure you have either:
+
+1.  Set up Application Default Credentials (ADC)
+2.  Set a GOOGLE_APPLICATION_CREDENTIALS environment variable
+3.  Used `gcloud auth application-default login`
+
+## License
+
+Apache 2.0
+
+## Development
+
+The project is structured as follows:
+
+-   `secops_soar_mcp.py`: Main MCP server implementation
+-   `example.py`: Example usage of the MCP server
