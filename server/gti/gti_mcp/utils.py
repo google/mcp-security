@@ -17,14 +17,15 @@ async def fetch_object(
     resource_collection_type: str,
     resource_type: str, 
     resource_id: str, 
-    relationships: typing.List[str]):
+    relationships: typing.List[str],
+    params: dict[str, typing.Any] = None):
   """Fetches objects from Google Threat Intelligence API."""
   logging.info(
       f"Fetching comprehensive {resource_collection_type} "
       f"report for id: {resource_id}")
 
   obj = await vt_client.get_object_async(
-      f"/{resource_collection_type}/{resource_id}")
+      f"/{resource_collection_type}/{resource_id}", params=params)
 
   if obj.error:
     logging.error(
@@ -35,18 +36,23 @@ async def fetch_object(
         # "details": report.get("details"),
     }
 
-  # # Create a concise summary of key threat details
-  threat_summary = obj.to_dict()
-  threat_summary["relationships"] = await fetch_object_relationships(
-      vt_client, resource_collection_type, resource_id, relationships)  
+  # Build response.
+  obj_dict = obj.to_dict()
+  obj_dict['id'] = obj.id
+  obj_dict["relationships"] = await fetch_object_relationships(
+      vt_client, resource_collection_type, resource_id, relationships, params=params)  
 
   logging.info(
       f"Successfully generated concise threat summary for id: {resource_id}")
-  return threat_summary
+  return obj_dict
 
 
 async def fetch_object_relationships(
-    vt_client: vt.Client, resource_collection_type: str, resource_id: str, relationships: typing.List[str]):
+    vt_client: vt.Client, 
+    resource_collection_type: str, 
+    resource_id: str, 
+    relationships: typing.List[str], 
+    params: dict[str, typing.Any] = None):
   """Fetches the given relationships from the given object."""
   rel_futures = {}
   async with asyncio.TaskGroup() as tg:
@@ -54,7 +60,7 @@ async def fetch_object_relationships(
       rel_futures[rel_name] = tg.create_task(
           consume_vt_iterator(
               vt_client, 
-              f"/{resource_collection_type}/{resource_id}/{rel_name}"))
+              f"/{resource_collection_type}/{resource_id}/{rel_name}", params=params))
       
   data = {}
   for name, items in rel_futures.items():
