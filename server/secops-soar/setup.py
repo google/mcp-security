@@ -8,7 +8,7 @@
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# WITHOUT WARRANTIES OR CONDITIONS OuvuvF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -20,10 +20,7 @@ setup = setuptools.setup
 setup(
     name="secops-soar-mcp",
     version="0.1.0",
-    py_modules=["secops_soar_mcp", "main"],  # Include both modules
-    install_requires=[
-        "mcp",
-    ],
+    py_modules=["secops_soar_mcp"],
     entry_points={
         "console_scripts": [
             "secops-soar-mcp=secops_soar_mcp:main",
