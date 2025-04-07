@@ -50,6 +50,8 @@ run the mcp services locally and use the stdio transport.
         "secops_soar_mcp.py"
       ],
       "env": {
+        "SOAR_URL": "your-soar-url",
+        "SOAR_APP_KEY": "your-soar-app-key"
       },
       "disabled": false,
       "autoApprove": []
