@@ -87,55 +87,55 @@ async def get_entities_related_to_a_file(hash: str, relationship_name: str, ctx:
 
     The following table shows a summary of available relationships for file objects.
 
-    | Relationship           | Description                                                                       | Accessibility                                                         | Return object type                                      |
-    | :--------------------- | :-------------------------------------------------------------------------------- | :-------------------------------------------------------------------- | :------------------------------------------------------ |
-    | analyses               | Analyses for the file                                                             | Google TI users only.                                      | A list of [Analyses](ref:analyses-object)               |
-    | associations           | File's associated objects (reports, campaigns, IoC collections, malware families, software toolkits, vulnerabilities, threat-actors), without filtering by the associated object type.                                                                                      | Everyone.                                      | A list of [reports](ref:report-object), [campaigns](ref:campaign-object), [IoC collections](ref:ioc-collection-object), [malware families](ref:malware-family-object), [software toolkits](ref:software-toolkit-object), [vulnerabilities](ref:vulnerability-object), [threat-actors](ref:threat-actor-object) objecs. |
-    | behaviours             | Behaviour reports for the file. See [File behaviour](ref:file-behaviour-summary-object). | Everyone.                                                             | A list of [File behaviour](ref:file-behaviour-summary-object). |
-    | attack_techniques              | Returns the Attack Techniques of the File.             | Google TI Enterprise and Enterprise Plus users only.                    | List of [Attack Techniques](ref:object-attack-techniques).             |
-    | bundled_files          | Files bundled within the file.                                                    | Everyone.                                                             | A list of [Files](ref:file-object).                    |
-    | campaigns              | Campaigns associated to the file.                                                 | Google TI Enterprise and Enterprise Plus users only.                                      | A list of collections of type [Campaign](ref:campaign-object).             |
-    | carbonblack_children   | Files derived from the file according to Carbon Black.                            | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | carbonblack_parents    | Files from where the file was derived according to Carbon Black.                  | Google TI users only.                                      | A list of [Files](ref:file-object).                           |
-    | collections            | IoC Collections associated to the file.                                           | Everyone.                                                             | A list of collections of type [IoC Collection](ref:ioc-collection-object). |
-    | comments               | Comments for the file.                                                            | Everyone.                                                             | A list of [Comments](ref:comment-object).               |
-    | compressed_parents     | Compressed files that contain the file.                                           | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | contacted_domains      | Domains contacted by the file.                                                    | Everyone.                                                             | A list of [Domains](ref:domains-object).                |
-    | contacted_ips          | IP addresses contacted by the file.                                               | Everyone.                                                             | A list of [IP addresses](ref:ip-object).                |
-    | contacted_urls         | URLs contacted by the file.                                                       | Everyone.                                                             | A list of [URLs](ref:url-object).                       |
-    | dropped_files          | Files dropped by the file during its execution.                                   | Everyone.                                                             | A list of [Files](ref:file-object).                    |
-    | email_attachments      | Files attached to the email.                                                      | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | email_parents          | Email files that contained the file.                                              | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | embedded_domains       | Domain names embedded in the file.                                                | Google TI users only.                                      | A list of [Domains](ref:domains-object).                |
-    | embedded_ips           | IP addresses embedded in the file.                                                | Google TI users only.                                      | A list of [IP addresses](ref:ip-object).                |
-    | embedded_urls          | URLs embedded in the file.                                                        | Google TI users only.                                      | A list of [URLs](ref:url-object).                       |
-    | execution_parents      | Files that executed the file.                                                     | Everyone.                                                             | A list of [Files](ref:file-object).                    |
-    | graphs                 | Graphs that include the file.                                                     | Everyone.                                                             | A list of [Graphs](ref:graph-object).                   |
-    | itw_domains            | In the wild domain names from where the file has been downloaded.                 | Google TI users only.                                      | A list of [Domains](ref:domains-object).                |
-    | itw_ips                | In the wild IP addresses from where the file has been downloaded.                 | Google TI users only.                                      | A list of [IP addresses](ref:ip-object).                |
-    | itw_urls               | In the wild URLs from where the file has been downloaded.                         | Google TI users only.                                      | A list of [URLs](ref:url-object).                       |
-    | malware_families       | Malware families associated to the file.                                          | Google TI Enterprise and Enterprise Plus users only.                                     | A list of collections of type [malware family](ref:malware-family-object).|
-    | memory_pattern_domains       | Domain string patterns found in memory during sandbox execution.                   | Google TI users only.                                     | List of [Domains](ref:domains-object).|
-    | memory_pattern_ips       | IP address string patterns found in memory during sandbox execution.                         | Google TI users only.                                     | List of [IP Addresses](ref:ip-object).|
-    | memory_pattern_urls       | URL string patterns found in memory during sandbox execution.                                          | Google TI users only.                         | List of [URLs](ref:url-object).|
-    | overlay_children       | Files contained by the file as an overlay.                                        | Google TI users only.                                      | List of [Files](ref:file-object).                    |
-    | overlay_parents        | File that contain the file as an overlay.                                         | Google TI users only.                                     | A list of [Files](ref:file-object).                    |
-    | pcap_children          | Files contained within the PCAP file.                                             | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | pcap_parents           | PCAP files that contain the file.                                                 | Google TI users only.                                      | A list of [Files](ref:file-object).                    |
-    | pe_resource_children   | Files contained by a PE file as a resource.                                       | Everyone.                                                             | A list of [Files](ref:file-object).                    |
-    | pe_resource_parents    | PE files containing the file as a resource.                                       | Everyone.                                                             | A list of [Files](ref:file-object).                    |
-    | related_attack_techniques    | Returns the Attack Techniques of the Collections containing this File.                  | Google TI Enterprise and Enterprise Plus users only.                   | List of [Attack Techniques](ref:object-attack-techniques).                    |
-    | related_reports    | Reports that are directly and indirectly related to the file.                      | Google TI Enterprise and Enterprise Plus users only.                                                             | List of [Reports](ref:report-object).                   |
-    | related_threat_actors    | File's related threat actors.                     | Google TI Enterprise and Enterprise Plus users only.                                                             | List of collections of type [Threat Actor](ref:threat-actor-object).                    |
-    | reports                | Reports directly associated to the file.                                                  | Google TI Enterprise and Enterprise Plus users only.                                      | A list of collections of type [Report](ref:report-object).                 |
-    | screenshots            | Screenshots related to the sandbox execution of the file.                         | Google TI users only.                                      | A list of [Screenshots](ref:screenshots-object).        |
-    | similar_files          | Files that are similar to the file.                                               | Google TI users only.                                     | A list of [Files](ref:file-object).                    |
-    | software_toolkits      | Software and Toolkits associated to the file.                                     | Google TI Enterprise and Enterprise Plus users only.                                    | A list of collections of type [Software and Toolkits](ref:software-toolkit-object).            |
-    | submissions            | Submissions for the file.                                                         | Google TI users only.                                      | A list of [Submissions](ref:submission-object).         |
-    | urls_for_embedded_js          | URLs where this (JS) file is embedded.                                              | Google TI users only.                                      | List of [URLs](ref:url-object).     |
-    | user_votes          | File's votes made by current signed-in user.                                | Everyone.                                      | A list of [Votes](ref:vote-object).     |
-    | votes                  | Votes for the file.                                                               | Everyone.                                                              | A list of [Votes](ref:vote-object).                     |
-    | vulnerabilities        | Vulnerabilities associated to the file.                                           | Google TI Enterprise and Enterprise Plus users only.                                      | A list of collections of type [Vulnerability](ref:vulnerability-object).  |
+    | Relationship           | Description                                                                       |
+    | :--------------------- | :-------------------------------------------------------------------------------- |
+    | analyses               | Analyses for the file                                                             |
+    | associations           | File's associated objects (reports, campaigns, IoC collections, malware families, software toolkits, vulnerabilities, threat-actors), without filtering by the associated object type.                                                                                      |
+    | behaviours             | Behaviour reports for the file.                                                   |
+    | attack_techniques      | Returns the Attack Techniques of the File.                                        |
+    | bundled_files          | Files bundled within the file.                                                    |
+    | campaigns              | Campaigns associated to the file.                                                 |
+    | carbonblack_children   | Files derived from the file according to Carbon Black.                            |
+    | carbonblack_parents    | Files from where the file was derived according to Carbon Black.                  |
+    | collections            | IoC Collections associated to the file.                                           |
+    | comments               | Comments for the file.                                                            |
+    | compressed_parents     | Compressed files that contain the file.                                           |
+    | contacted_domains      | Domains contacted by the file.                                                    |
+    | contacted_ips          | IP addresses contacted by the file.                                               |
+    | contacted_urls         | URLs contacted by the file.                                                       |
+    | dropped_files          | Files dropped by the file during its execution.                                   |
+    | email_attachments      | Files attached to the email.                                                      |
+    | email_parents          | Email files that contained the file.                                              |
+    | embedded_domains       | Domain names embedded in the file.                                                |
+    | embedded_ips           | IP addresses embedded in the file.                                                |
+    | embedded_urls          | URLs embedded in the file.                                                        |
+    | execution_parents      | Files that executed the file.                                                     |
+    | graphs                 | Graphs that include the file.                                                     |
+    | itw_domains            | In the wild domain names from where the file has been downloaded.                 |
+    | itw_ips                | In the wild IP addresses from where the file has been downloaded.                 |
+    | itw_urls               | In the wild URLs from where the file has been downloaded.                         |
+    | malware_families       | Malware families associated to the file.                                          |
+    | memory_pattern_domains | Domain string patterns found in memory during sandbox execution.                  |
+    | memory_pattern_ips     | IP address string patterns found in memory during sandbox execution.              |
+    | memory_pattern_urls    | URL string patterns found in memory during sandbox execution.                     |
+    | overlay_children       | Files contained by the file as an overlay.                                        |
+    | overlay_parents        | File that contain the file as an overlay.                                         |
+    | pcap_children          | Files contained within the PCAP file.                                             |
+    | pcap_parents           | PCAP files that contain the file.                                                 |
+    | pe_resource_children   | Files contained by a PE file as a resource.                                       |
+    | pe_resource_parents    | PE files containing the file as a resource.                                       |
+    | related_attack_techniques    | Returns the Attack Techniques of the Collections containing this File.      |
+    | related_reports        | Reports that are directly and indirectly related to the file.                     |
+    | related_threat_actors  | File's related threat actors.                                                     |
+    | reports                | Reports directly associated to the file.                                          | 
+    | screenshots            | Screenshots related to the sandbox execution of the file.                         |
+    | similar_files          | Files that are similar to the file.                                               |
+    | software_toolkits      | Software and Toolkits associated to the file.                                     |
+    | submissions            | Submissions for the file.                                                         |
+    | urls_for_embedded_js   | URLs where this (JS) file is embedded.                                            |
+    | user_votes             | File's votes made by current signed-in user.                                      |
+    | votes                  | Votes for the file.                                                               |
+    | vulnerabilities        | Vulnerabilities associated to the file.                                           |
   
     Args:
       hash (required): MD5/SHA1/SHA256) hash that identifies the file.
