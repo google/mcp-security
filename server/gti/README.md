@@ -24,8 +24,8 @@ Threat Intelligence suite.
 {
   "mcpServers": {
     "Google Threat Intelligence MCP server": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/mcp-security/server/gti", "run", "python3", "-m", "gti_mcp.server"],
+      "command": "python3",
+      "args": ["-m", "gti_mcp.server"],
       "env": {
         "VT_APIKEY": "$VT_APIKEY"
       },
@@ -34,7 +34,7 @@ Threat Intelligence suite.
     }
   }
 }
-````
+```
 
 ## License
 
@@ -47,4 +47,3 @@ The project is structured as follows:
 - `gti_mcp/server.py`: Main MCP server implementation
 - `gti_mcp/utils.py`: Utils to consume VirusTotal API using vt-py library.
 - `gti_mcp/tools/`: Folder containing tools.
-
