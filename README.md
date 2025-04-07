@@ -67,16 +67,6 @@ run the mcp services locally and use the stdio transport.
       },
       "disabled": false,
       "autoApprove": []
-    },
-    "scc-mcp": {
-      "command": "python3",
-      "args": [
-        "/path/to/the/repo/server/scc/scc_mcp.py"
-      ],
-      "env": {
-      },
-      "disabled": false,
-      "autoApprove": []
     }
   }
 }
