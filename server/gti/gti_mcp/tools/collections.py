@@ -295,3 +295,23 @@ async def search_vulnerabilities(query: str, ctx: Context, limit: int = 10, orde
   """
   res = await _search_threats_by_collection_type(query, "vulnerability", ctx, limit, order_by)
   return res
+
+
+@server.tool()
+async def get_collection_timeline_events(id: str, ctx: Context):
+  """Retrieves timeline events from the given collection, when available.
+  
+  This is super valuable curated information produced by security analysits at Google Threat Intelligence.
+
+  We should fetch this information for campaigns and threat actors always.
+  Args:
+    id (required): Collection identifier
+  Return:
+    List of events related to the given collection.
+  """
+  events = []
+
+  data = await vt_client(ctx).get_async(f'/collections/{id}/timeline/events')
+  data = await data.json_async()
+
+  return data
