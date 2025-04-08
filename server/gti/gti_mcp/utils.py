@@ -39,6 +39,8 @@ async def fetch_object(
   # Build response.
   obj_dict = obj.to_dict()
   obj_dict['id'] = obj.id
+  if 'aggregations' in obj_dict['attributes']:
+    del obj_dict['attributes']['aggregations']
   obj_dict["relationships"] = await fetch_object_relationships(
       vt_client, resource_collection_type, resource_id, relationships, params=params)  
 
@@ -64,6 +66,11 @@ async def fetch_object_relationships(
       
   data = {}
   for name, items in rel_futures.items():
-    data[name] = items.result()
+    data[name] = []
+    for obj in items.result():
+      obj_dict = obj.to_dict()
+      if 'aggregations' in obj_dict['attributes']:
+        del obj_dict['attributes']['aggregations']
+      data[name].append(obj_dict)
 
   return data
