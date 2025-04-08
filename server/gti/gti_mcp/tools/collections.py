@@ -101,7 +101,7 @@ async def get_entities_related_to_a_collection(id: str, relationship_name: str, 
 
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "collections", id, [relationship_name])
-  return [obj.to_dict() for obj in res.get(relationship_name, [])]
+  return res.get(relationship_name, [])
 
 
 async def _search_threats_by_collection_type(
