@@ -34,7 +34,7 @@ async def get_collection_report(collection_id: str, ctx: Context) -> typing.Dict
   
   They have different sub types like: "malware-family", "threat-actor", "campaign", "report" or a generic "collection". You can find it in the "collection_type" field.
   
-  You must always include the subtype and identifier as parameter for the tool the pattern will always be subtype--<id> such as "report--6e908e6adec4d5121a4b4e5ff5fdeb304f5148cf2377bfc070781353287dcb4c".
+  You must always include the subtype and identifier as a parameter for the tool the pattern will always be subtype--<id> such as "report--6e908e6adec4d5121a4b4e5ff5fdeb304f5148cf2377bfc070781353287dcb4c".
 
   Args:
     collection_id (required): Google Threat Intelligence identifier.
@@ -86,8 +86,18 @@ async def search_threats(query: str, ctx: Context, limit: int = 10, order_by: st
   
   Threats are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
 
-  If you need to filter by any kind of threat in particular, you can use the "collection_type" modifier. Avalable types are: "threat-actor", "malware-family", "campaign", "report", "vulnerability" and a generic "collection" type.
+  **IMPORTANT CONTEXT CLUE:** Pay close attention to the user's request. If their request mentions specific *kinds* of threats such as "threat actor", "malware family", "campaign", "report", or "vulnerability", treat this as a strong signal that you **must** use the `collection_type` filter in your `query` to ensure relevant results. Using this filter significantly improves search precision.
 
+  **Filtering by Type:**
+  To filter your search results to a specific *type* of threat, include the `collection_type` modifier *within your query string*.
+  Syntax: `collection_type:"<type>"`
+  Available `<type>` values:
+    - "threat-actor": Use when the user asks about specific actors, groups, or APTs.
+    - "malware-family": Use when the user asks about malware, trojans, viruses, ransomware families.
+    - "campaign": Use when the user asks about specific attack campaigns.
+    - "report": Use when the user is looking for analysis reports.
+    - "vulnerability": Use when the user asks about specific CVEs or vulnerabilities.
+    - "collection": A generic type, use only if no other type fits or if the user explicitly asks for generic "collections".
   You can use order_by to sort the results by: "relevance", "creation_date". You can use the sign "+" to make it order ascending, or "-" to make it descending. By default is "relevance-"
   
   Args:
