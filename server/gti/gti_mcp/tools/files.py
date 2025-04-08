@@ -139,8 +139,9 @@ async def get_entities_related_to_a_file(hash: str, relationship_name: str, ctx:
   
     Args:
       hash (required): MD5/SHA1/SHA256) hash that identifies the file.
+      relationship_name (required): Relationship name.
     Returns:
-      List of user comments to the given file.
+      List of objects related to the given file.
   """
   if not relationship_name in FILE_RELATIONSHIPS:
     return {

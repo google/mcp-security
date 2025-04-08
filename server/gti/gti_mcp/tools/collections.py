@@ -7,12 +7,24 @@ from .. import utils
 from ..server import server, vt_client
 
 
-COLLECTION_KEY_RELATIONSHIPS = [
+COLLECTION_RELATIONSHIPS = [
     "associations",
-    "files",
+    "attack_techniques",
     "domains",
+    "files",
     "ip_addresses",
     "urls",
+    "threat_actors",
+    "malware_families",
+    "software_toolkits",
+    "campaigns",
+    "vulnerabilities",
+    "reports",
+    "suspected_threat_actors",
+]
+
+COLLECTION_KEY_RELATIONSHIPS = [
+    "associations",
 ]
 COLLECTION_EXCLUDED_ATTRS = ','.join([
     "aggregations"
@@ -23,13 +35,15 @@ COLLECTION_TYPES = {
     "malware-family",
     "campaign",
     "report",
+    "software-toolkit",
     "vulnerability",
-    "collection"
+    "collection",
+    
 }
 
 # Load resources and tools.
 @server.tool()
-async def get_collection_report(collection_id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """At Google Threat Intelligence, threats are modeled as "collections". This tool retrieves them from the platform.
   
   They have different sub types like: "malware-family", "threat-actor", "campaign", "report" or a generic "collection". You can find it in the "collection_type" field.
@@ -37,7 +51,7 @@ async def get_collection_report(collection_id: str, ctx: Context) -> typing.Dict
   You must always include the subtype and identifier as a parameter for the tool the pattern will always be subtype--<id> such as "report--6e908e6adec4d5121a4b4e5ff5fdeb304f5148cf2377bfc070781353287dcb4c".
 
   Args:
-    collection_id (required): Google Threat Intelligence identifier.
+    id (required): Google Threat Intelligence identifier.
   Returns:
     A collection object. Put attention to the collection type to correctly understand what it represents.
   """
@@ -45,10 +59,49 @@ async def get_collection_report(collection_id: str, ctx: Context) -> typing.Dict
       vt_client(ctx), 
       "collections", 
       "collection", 
-      collection_id,
+      id,
       COLLECTION_KEY_RELATIONSHIPS,
       params={"exclude_attributes": COLLECTION_EXCLUDED_ATTRS})
   return res
+
+
+@server.tool()
+async def get_entities_related_to_a_collection(id: str, relationship_name: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+  """Retrieve entities related to the the given collection ID.
+
+    The following table shows a summary of available relationships for collection objects.
+
+    | Relationship         | Return object type                                |
+    | :------------------- | :------------------------------------------------ |
+    | associations         | List of associated threats                        |
+    | attack_techniques    | List of attack techniques                         |
+    | domains              | List of Domains                                   |
+    | files                | List of Files                                     |
+    | ip_addresses         | List of IP addresses                              |
+    | urls                 | List of URLs                                      |
+    | threat_actors        | List of related threat actors                     |
+    | malware_families     | List of related malware families                  |
+    | software_toolkits    | List of related tools                             |
+    | campaigns            | List of related campaigns                         |
+    | vulnerabilities      | List of related vulnerabilities                   |
+    | reports              | List of reports                                   |
+    | suspected_threat_actors | List of related suspected threat actors        |
+  
+    Args:
+      id (required): Collection identifier.
+      relationship_name (required): Relationship name.
+    Returns:
+      List of objects related to the collection.
+  """
+  if not relationship_name in COLLECTION_RELATIONSHIPS:
+    return {
+       "error": f"Relationship {relationship_name} does not exist. "
+                f"Available relationships are: {','.join(COLLECTION_RELATIONSHIPS)}"
+    }
+
+  res = await utils.fetch_object_relationships(
+      vt_client(ctx), "collections", id, [relationship_name])
+  return [obj.to_dict() for obj in res.get(relationship_name, [])]
 
 
 async def _search_threats_by_collection_type(
@@ -56,7 +109,7 @@ async def _search_threats_by_collection_type(
   """Search a given threat type in the Google Threat Intelligence platform, 
   
   Args:
-    query (required): Search query to find threats.
+    query (required): Search query to find threats. If you want any threat, just pass an empty string.
     collection_type (required): Collection type. One of: "threat-actor", "malware-family", "campaign", "report", "vulnerability", "collection".
     limit: Limit the number of threats to retrieve. 10 by default.
     order_by: Order results by the given order key. "relevance-" by default.
@@ -94,10 +147,12 @@ async def search_threats(query: str, ctx: Context, limit: int = 10, order_by: st
   Available `<type>` values:
     - "threat-actor": Use when the user asks about specific actors, groups, or APTs.
     - "malware-family": Use when the user asks about malware, trojans, viruses, ransomware families.
+    - "software-toolkit": Use when the user asks about legit tools usually related to malware.
     - "campaign": Use when the user asks about specific attack campaigns.
     - "report": Use when the user is looking for analysis reports.
     - "vulnerability": Use when the user asks about specific CVEs or vulnerabilities.
     - "collection": A generic type, use only if no other type fits or if the user explicitly asks for generic "collections".
+
   You can use order_by to sort the results by: "relevance", "creation_date". You can use the sign "+" to make it order ascending, or "-" to make it descending. By default is "relevance-"
   
   Args:
@@ -177,6 +232,26 @@ async def search_malware_families(query: str, ctx: Context, limit: int = 10, ord
     List of collections, aka threats.
   """
   res = await _search_threats_by_collection_type(query, "malware-family", ctx, limit, order_by)
+  return res
+
+
+@server.tool()
+async def search_software_toolkits(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+  """Search software toolkits (or just tools) in the Google Threat Intelligence platform.
+  
+  Software toolkits are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
+
+  You can use order_by to sort the results by: "relevance", "creation_date". You can use the sign "+" to make it order ascending, or "-" to make it descending. By default is "relevance-"
+  
+  Args:
+    query (required): Search query to find threats.
+    limit: Limit the number of threats to retrieve. 10 by default.
+    order_by: Order results by the given order key. "relevance-" by default.
+    
+  Returns:
+    List of collections, aka threats.
+  """
+  res = await _search_threats_by_collection_type(query, "software-toolkit", ctx, limit, order_by)
   return res
 
 

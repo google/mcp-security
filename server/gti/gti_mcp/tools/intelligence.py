@@ -11,13 +11,6 @@ from ..server import server, vt_client
 async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-") -> typing.List[typing.Dict[str, typing.Any]]:
   """Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform.
   
-  You can find all available modifers at: https://gtidocs.virustotal.com/docs/file-search-modifiers
-
-  With integer modifers, use the `-` and `+` characters to indicate:
-    - Greater than: `p:60+`
-    - Less than: `p:60-`
-    - Equal to: `p:60`
-
   You can search by for different IOC types using the `entity` modifier. Below, the different IOC types and the supported orders:
 
     | Entity type   | Supported orders | Default order |
@@ -26,6 +19,17 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
     | url           | first_submission_date, last_submission_date, positives, times_submitted, status   | last_submission_date- |
     | domain        | creation_date, last_modification_date, last_update_date, positives                | last_modification_date- |
     | ip            | ip, last_modification_date, positives                                             | last_modification_date- |
+
+  You can find all available modifers at: 
+    - Files: https://gtidocs.virustotal.com/docs/file-search-modifiers
+    - URLs: https://gtidocs.virustotal.com/docs/url-search-modifiers
+    - Domains: https://gtidocs.virustotal.com/docs/domain-search-modifiers
+    - IP Addresses: https://gtidocs.virustotal.com/docs/ip-address-search-modifiers
+
+  With integer modifers, use the `-` and `+` characters to indicate:
+    - Greater than: `p:60+`
+    - Less than: `p:60-`
+    - Equal to: `p:60`
 
   Args
     query (required): Search query to find IOCs.
