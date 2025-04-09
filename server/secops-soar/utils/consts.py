@@ -20,3 +20,7 @@ class Endpoints:
     LIST_INVOLVED_EVENTS_BY_ALERT = BASE_SPECIFIC_ALERT_URL + "/involvedEvents"
     FETCH_FULL_UNIQUE_ENTITY = "/api/external/v1/entities/GetEntityData"
     SEARCH_ENTITY = "/api/external/v1.0/entity-search/entities"
+    GET_SCOPES = "/api/external/v1/settings/GetScopes"
+    GET_ALERT_GROUP_IDENTIFIERS_ENTITIES = (
+        "/api/external/v1/case-overview/GetAlertsEntities"
+    )
