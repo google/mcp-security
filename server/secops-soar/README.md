@@ -22,13 +22,36 @@ To use this MCP server with Claude Desktop:
 ```json
 {
   "mcpServers": {
-    "secops-mcp": {
+    "secops-soar": {
       "command": "/path/to/your/uv",
       "args": [
         "--directory",
         "/path/to/your/mcp-secops-soar",
         "run",
         "secops_soar_mcp.py"
+      ],
+      "env": {
+        "SOAR_URL": "your-soar-url",
+        "SOAR_APP_KEY": "your-soar-app-key"
+      }
+    }
+  }
+}
+```
+
+To have the MCP server provide tools for specific marketplace integrations, use the `integrations` flag followed by a comma-separated string of the desired integration names. For example, for the `ServiceNow`, `CSV`, and `Siemplify` integrations:
+```json
+{
+  "mcpServers": {
+    "secops-soar": {
+      "command": "/path/to/your/uv",
+      "args": [
+        "--directory",
+        "/path/to/your/mcp-secops-soar",
+        "run",
+        "secops_soar_mcp.py",
+        "--integrations",
+        "ServiceNow,CSV,Siemplify"
       ],
       "env": {
         "SOAR_URL": "your-soar-url",
