@@ -1,6 +1,6 @@
 import asyncio
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from utils.consts import Endpoints
 from utils.models import CasePriority
 from logger_utils import get_logger

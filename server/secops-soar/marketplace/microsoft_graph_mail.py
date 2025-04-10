@@ -1,7 +1,7 @@
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from utils.consts import Endpoints
-from utils.models import ApiManualActionDataModel, TargetEntity
+from utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
 from typing import Optional, Any, List, Dict, Union, Annotated
 from pydantic import Field
@@ -11,7 +11,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the MicrosoftGraphMail integration.
 
     @mcp.tool()
-    async def microsoft_graph_mail_send_vote_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], send_from: Annotated[str, Field(..., description="Optional email address to send an email from (if permissions allow it). By default, the email is sent from the default mailbox specified in the integration configuration.")], subject: Annotated[str, Field(..., description="Email subject.")], send_to: Annotated[str, Field(..., description="Arbitrary comma-separated list of email addresses for the email recipients, for example, user1@company.co, user2@company.co.")], email_html_template: Annotated[str, Field(..., description="The question you would like to ask, or describe the decision you would like the recipient to be able to respond to")], structure_of_voting_options: Annotated[List[Any], Field(..., description="Structure of the vote to send to the recipients.")], attachment_location: Annotated[List[Any], Field(..., description="Location where the attachments to be added are stored. By default, the action attempts to get the attachment from the Google Cloud storage bucket, another option is to fetch it from the local file system.")], cc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the CC email field. Use the same format as for the \"Send to\" field.")], bcc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the BCC email field. Use the same format for the \"Send to\" field.")], attachments_paths: Annotated[Optional[str], Field(default=None, description="Specify the attachments to be added, parameter expects full paths to be provided, for example: /<work directory>/file1.pdf. Parameter accepts multiple values as a comma separated string.")], reply_to_recipients: Annotated[Optional[str], Field(default=None, description="Comma-separated list of recipients used in the Reply-To header. Note: The Reply-To header is added to force email replies to specific email addresses instead of the email sender address stated in the From field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_graph_mail_send_vote_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], send_from: Annotated[str, Field(..., description="Optional email address to send an email from (if permissions allow it). By default, the email is sent from the default mailbox specified in the integration configuration.")], subject: Annotated[str, Field(..., description="Email subject.")], send_to: Annotated[str, Field(..., description="Arbitrary comma-separated list of email addresses for the email recipients, for example, user1@company.co, user2@company.co.")], email_html_template: Annotated[EmailContent, Field(..., description="The question you would like to ask, or describe the decision you would like the recipient to be able to respond to")], structure_of_voting_options: Annotated[List[Any], Field(..., description="Structure of the vote to send to the recipients.")], attachment_location: Annotated[List[Any], Field(..., description="Location where the attachments to be added are stored. By default, the action attempts to get the attachment from the Google Cloud storage bucket, another option is to fetch it from the local file system.")], cc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the CC email field. Use the same format as for the \"Send to\" field.")], bcc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the BCC email field. Use the same format for the \"Send to\" field.")], attachments_paths: Annotated[Optional[str], Field(default=None, description="Specify the attachments to be added, parameter expects full paths to be provided, for example: /<work directory>/file1.pdf. Parameter accepts multiple values as a comma separated string.")], reply_to_recipients: Annotated[Optional[str], Field(default=None, description="Comma-separated list of recipients used in the Reply-To header. Note: The Reply-To header is added to force email replies to specific email addresses instead of the email sender address stated in the From field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Send email with easy answering options, to allow stakeholders to be included in workflow processes. This action uses Google SecOps HTML templates to format the email. If permissions allow, the action sends an email from a mailbox different than the one specified in the integration configuration. Note: This action is not running on Google SecOps entities.
 
         Returns:
@@ -61,9 +61,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Send From"] = send_from
             script_params["Subject"] = subject
             script_params["Send to"] = send_to
@@ -73,6 +70,7 @@ def register_tools(mcp: FastMCP):
                 script_params["BCC"] = bcc
             if attachments_paths is not None:
                 script_params["Attachments Paths"] = attachments_paths
+            email_html_template = email_html_template.model_dump()
             script_params["Email HTML Template"] = email_html_template
             script_params["Structure of voting options"] = structure_of_voting_options
             if reply_to_recipients is not None:
@@ -99,7 +97,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -161,9 +159,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search In Mailbox"] = search_in_mailbox
             script_params["Folder Name"] = folder_name
             script_params["Mail IDs"] = mail_i_ds
@@ -188,7 +183,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -250,9 +245,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Send From"] = send_from
             script_params["Mail ID"] = mail_id
             script_params["Folder Name"] = folder_name
@@ -285,7 +277,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -347,9 +339,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Mail ID"] = mail_id
             if wait_for_all_recipients_to_reply is not None:
                 script_params["Wait for All Recipients to Reply?"] = wait_for_all_recipients_to_reply
@@ -384,7 +373,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -446,9 +435,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Send From"] = send_from
             script_params["Mail ID"] = mail_id
             if folder_name is not None:
@@ -484,7 +470,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -546,9 +532,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Move In Mailbox"] = move_in_mailbox
             script_params["Source Folder Name"] = source_folder_name
             script_params["Destination Folder Name"] = destination_folder_name
@@ -589,7 +572,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -651,9 +634,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Vote Mail Sent From"] = vote_mail_sent_from
             script_params["Mail ID"] = mail_id
             if wait_for_all_recipients_to_reply is not None:
@@ -687,7 +667,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -699,7 +679,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_graph_mail_send_email_html(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], send_from: Annotated[str, Field(..., description="Optional email address to send an email from (if permissions allow it). By default, the email is sent from the default mailbox specified in the integration configuration.")], subject: Annotated[str, Field(..., description="Email subject.")], send_to: Annotated[str, Field(..., description="Specify the arbitrary comma-separated list of email addresses for the email recipients,for example, user1@company.co, user2@company.co.")], email_html_template: Annotated[str, Field(..., description="The question you would like to ask, or describe the decision you would like the recipient to be able to respond to")], attachment_location: Annotated[List[Any], Field(..., description="Location where the attachments to be added are stored. By default, the action attempts to get the attachment from the Google Cloud storage bucket, another option is to fetch it from the local file system.")], cc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the CC email field. Use the same format as for the \"Send to\" field.")], bcc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the BCC email field. Use the same format for the \"Send to\" field.")], attachments_paths: Annotated[Optional[str], Field(default=None, description="Specify the attachments to be added, parameter expects full paths to be provided, for example: /<work directory>/file1.pdf. Parameter accepts multiple values as a comma separated string.")], reply_to_recipients: Annotated[Optional[str], Field(default=None, description="Comma-separated list of recipients used in the Reply-To header. Note: The Reply-To header is added to force email replies to specific email addresses instead of the email sender address stated in the From field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_graph_mail_send_email_html(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], send_from: Annotated[str, Field(..., description="Optional email address to send an email from (if permissions allow it). By default, the email is sent from the default mailbox specified in the integration configuration.")], subject: Annotated[str, Field(..., description="Email subject.")], send_to: Annotated[str, Field(..., description="Specify the arbitrary comma-separated list of email addresses for the email recipients,for example, user1@company.co, user2@company.co.")], email_html_template: Annotated[EmailContent, Field(..., description="The question you would like to ask, or describe the decision you would like the recipient to be able to respond to")], attachment_location: Annotated[List[Any], Field(..., description="Location where the attachments to be added are stored. By default, the action attempts to get the attachment from the Google Cloud storage bucket, another option is to fetch it from the local file system.")], cc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the CC email field. Use the same format as for the \"Send to\" field.")], bcc: Annotated[Optional[str], Field(default=None, description="Arbitrary comma-separated list of email addresses to use in the BCC email field. Use the same format for the \"Send to\" field.")], attachments_paths: Annotated[Optional[str], Field(default=None, description="Specify the attachments to be added, parameter expects full paths to be provided, for example: /<work directory>/file1.pdf. Parameter accepts multiple values as a comma separated string.")], reply_to_recipients: Annotated[Optional[str], Field(default=None, description="Comma-separated list of recipients used in the Reply-To header. Note: The Reply-To header is added to force email replies to specific email addresses instead of the email sender address stated in the From field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Send email with the Google SecOps HTML template from a specific mailbox to an arbitrary list of recipients. If permissions allow, the action sends an email from a mailbox different than the one specified in the integration configuration. Note: Action is not running on Google SecOps entities.
 
         Returns:
@@ -749,9 +729,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Send From"] = send_from
             script_params["Subject"] = subject
             script_params["Send to"] = send_to
@@ -761,6 +738,7 @@ def register_tools(mcp: FastMCP):
                 script_params["BCC"] = bcc
             if attachments_paths is not None:
                 script_params["Attachments Paths"] = attachments_paths
+            email_html_template = email_html_template.model_dump()
             script_params["Email HTML Template"] = email_html_template
             if reply_to_recipients is not None:
                 script_params["Reply-To Recipients"] = reply_to_recipients
@@ -786,7 +764,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -848,9 +826,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
     
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -872,7 +847,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -934,9 +909,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search in Mailbox"] = search_in_mailbox
             script_params["Folder Name"] = folder_name
             if subject_filter is not None:
@@ -978,7 +950,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1040,9 +1012,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search In Mailbox"] = search_in_mailbox
             if folder_name is not None:
                 script_params["Folder Name"] = folder_name
@@ -1076,7 +1045,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1138,9 +1107,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Send From"] = send_from
             script_params["Subject"] = subject
             script_params["Send to"] = send_to
@@ -1177,7 +1143,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1239,9 +1205,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
     
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -1263,7 +1226,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1325,9 +1288,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search In Mailbox"] = search_in_mailbox
             if folder_name is not None:
                 script_params["Folder Name"] = folder_name
@@ -1366,7 +1326,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1428,9 +1388,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Delete In Mailbox"] = delete_in_mailbox
             script_params["Folder Name"] = folder_name
             if mail_i_ds is not None:
@@ -1470,7 +1427,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1532,9 +1489,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search In Mailbox"] = search_in_mailbox
             script_params["Folder Name"] = folder_name
             script_params["Mail IDs"] = mail_i_ds
@@ -1559,7 +1513,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1621,9 +1575,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Search In Mailbox"] = search_in_mailbox
             if folder_name is not None:
                 script_params["Folder Name"] = folder_name
@@ -1651,7 +1602,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
