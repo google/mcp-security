@@ -1,7 +1,7 @@
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from utils.consts import Endpoints
-from utils.models import ApiManualActionDataModel, TargetEntity
+from utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
 from typing import Optional, Any, List, Dict, Union, Annotated
 from pydantic import Field
@@ -61,9 +61,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
     
             # Prepare data model for the API request
@@ -86,7 +83,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -148,9 +145,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Trusted IP List IDs"] = trusted_ip_list_i_ds
     
@@ -174,7 +168,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -236,9 +230,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             if finding_types is not None:
                 script_params["Finding Types"] = finding_types
@@ -263,7 +254,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -325,9 +316,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
     
             # Prepare data model for the API request
@@ -350,7 +338,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -412,9 +400,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             if max_trusted_ip_lists_to_return is not None:
                 script_params["Max Trusted IP Lists To Return"] = max_trusted_ip_lists_to_return
@@ -441,7 +426,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -503,9 +488,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Trusted IP List IDs"] = trusted_ip_list_i_ds
     
@@ -529,7 +511,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -591,9 +573,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["ID"] = id
             if name is not None:
@@ -622,7 +601,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -684,9 +663,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Threat Intelligence Set IDs"] = threat_intelligence_set_i_ds
             if aws_region is not None:
@@ -712,7 +688,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -774,9 +750,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Finding IDs"] = finding_i_ds
             if aws_region is not None:
@@ -802,7 +775,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -864,9 +837,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Finding IDs"] = finding_i_ds
     
@@ -890,7 +860,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -952,9 +922,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Trusted IP List ID"] = trusted_ip_list_id
             if name is not None:
@@ -985,7 +952,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1047,9 +1014,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if max_detectors_to_return is not None:
                 script_params["Max Detectors To Return"] = max_detectors_to_return
     
@@ -1073,7 +1037,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1135,9 +1099,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
     
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -1159,7 +1120,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1221,9 +1182,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Useful?"] = useful
             script_params["Findings IDs"] = findings_i_ds
@@ -1252,7 +1210,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1314,9 +1272,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Name"] = name
             script_params["File Format"] = file_format
@@ -1345,7 +1300,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1407,9 +1362,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             if max_threat_intelligence_sets_to_return is not None:
                 script_params["Max Threat Intelligence Sets To Return"] = max_threat_intelligence_sets_to_return
@@ -1436,7 +1388,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1498,9 +1450,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             if enable is not None:
                 script_params["Enable"] = enable
@@ -1525,7 +1474,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1587,9 +1536,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Name"] = name
             script_params["File Format"] = file_format
@@ -1618,7 +1564,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1680,9 +1626,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Enable"] = enable
     
             # Prepare data model for the API request
@@ -1705,7 +1648,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1767,9 +1710,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Finding IDs"] = finding_i_ds
             script_params["Detector ID"] = detector_id
             if aws_region is not None:
@@ -1795,7 +1735,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1857,9 +1797,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             if max_findings_to_return is not None:
                 script_params["Max Findings To Return"] = max_findings_to_return
@@ -1890,7 +1827,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1952,9 +1889,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Detector ID"] = detector_id
             script_params["Threat Intelligence Set IDs"] = threat_intelligence_set_i_ds
     
@@ -1978,7 +1912,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:

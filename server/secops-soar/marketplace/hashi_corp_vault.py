@@ -1,7 +1,7 @@
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from utils.consts import Endpoints
-from utils.models import ApiManualActionDataModel, TargetEntity
+from utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
 from typing import Optional, Any, List, Dict, Union, Annotated
 from pydantic import Field
@@ -61,9 +61,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if aws_secret_engine_path is not None:
                 script_params["AWS Secret Engine Path"] = aws_secret_engine_path
             script_params["AWS Role Name"] = aws_role_name
@@ -96,7 +93,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -158,9 +155,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
     
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -182,7 +176,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -244,9 +238,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if key_value_secret_engine_path is not None:
                 script_params["Key-Value Secret Engine Path"] = key_value_secret_engine_path
             if secret_path is not None:
@@ -274,7 +265,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -336,9 +327,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if aws_secret_engine_path is not None:
                 script_params["AWS Secret Engine Path"] = aws_secret_engine_path
             if max_records_to_return is not None:
@@ -364,7 +352,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -426,9 +414,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if key_value_secret_engine_path is not None:
                 script_params["Key-Value Secret Engine Path"] = key_value_secret_engine_path
             script_params["Secret Path"] = secret_path
@@ -457,7 +442,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:

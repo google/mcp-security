@@ -4,7 +4,7 @@ import asyncio
 import importlib
 from pathlib import Path
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from logger_utils import get_logger
 from case_management import register_tools
 from utils.utils import to_snake_case

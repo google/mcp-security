@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "aiohttp>=3.11.15",
-    "fastmcp>=0.4.1"
+    "mcp[cli]>=1.4.1"
 ]
 
 [build-system]

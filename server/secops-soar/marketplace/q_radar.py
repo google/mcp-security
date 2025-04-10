@@ -1,7 +1,7 @@
 import bindings
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from utils.consts import Endpoints
-from utils.models import ApiManualActionDataModel, TargetEntity
+from utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
 from typing import Optional, Any, List, Dict, Union, Annotated
 from pydantic import Field
@@ -61,9 +61,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if fields_to_return is not None:
                 script_params["Fields To Return"] = fields_to_return
             if filter_condition is not None:
@@ -90,7 +87,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -152,9 +149,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if fields_to_return is not None:
                 script_params["Fields To Return"] = fields_to_return
             if filter_condition is not None:
@@ -181,7 +175,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -243,9 +237,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Query Format"] = query_format
     
             # Prepare data model for the API request
@@ -268,7 +259,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -330,9 +321,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if time_delta_in_minutes is not None:
                 script_params["Time Delta In Minutes"] = time_delta_in_minutes
             script_params["Events Limit To Fetch"] = events_limit_to_fetch
@@ -367,7 +355,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -429,9 +417,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Value"] = value
     
@@ -455,7 +440,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -517,9 +502,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Offense ID"] = offense_id
             script_params["Note Text"] = note_text
     
@@ -543,7 +525,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -605,9 +587,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Value"] = value
     
@@ -631,7 +610,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -693,9 +672,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Key"] = key
     
@@ -719,7 +695,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -781,9 +757,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
     
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -805,7 +778,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -867,9 +840,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Table Name"] = table_name
             if fields_to_return is not None:
                 script_params["Fields To Return"] = fields_to_return
@@ -908,7 +878,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -970,9 +940,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if time_delta_in_minutes is not None:
                 script_params["Time Delta In Minutes"] = time_delta_in_minutes
             script_params["Flows Limit To Fetch"] = flows_limit_to_fetch
@@ -1003,7 +970,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1065,9 +1032,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Rule Names"] = rule_names
             if create_insight is not None:
                 script_params["Create Insight"] = create_insight
@@ -1092,7 +1056,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1154,9 +1118,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if fields_to_return is not None:
                 script_params["Fields To Return"] = fields_to_return
             if filter_condition is not None:
@@ -1183,7 +1144,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1245,9 +1206,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             if fields_to_return is not None:
                 script_params["Fields To Return"] = fields_to_return
             if filter_condition is not None:
@@ -1274,7 +1232,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1336,9 +1294,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Value"] = value
     
@@ -1362,7 +1317,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1424,9 +1379,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Offense ID"] = offense_id
             if assigned_to is not None:
                 script_params["Assigned To"] = assigned_to
@@ -1458,7 +1410,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1520,9 +1472,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Key"] = key
     
@@ -1546,7 +1495,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
@@ -1608,9 +1557,6 @@ def register_tools(mcp: FastMCP):
     
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["caseId"] = case_id
-            script_params["alertGroupIdentifiers"] = alert_group_identifiers
-            script_params["scope"] = scope
             script_params["Name"] = name
             script_params["Value"] = value
     
@@ -1634,7 +1580,7 @@ def register_tools(mcp: FastMCP):
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump() # Assumes Pydantic v2
+                    req=action_data.model_dump()
                 )
                 return execution_response
             except Exception as e:
