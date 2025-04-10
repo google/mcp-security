@@ -172,3 +172,11 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# mcp SDK reference code
+python-sdk/
+secops-wrapper/
+
+# integration test auth config
+config.py
+llm.py
