@@ -14,7 +14,8 @@ Each server can be enabled and run separately, allowing flexibility for environm
 Comprehensive documentation is available in the `docs` folder. You can:
 
 1. Read the markdown files directly in the repository
-2. Generate HTML documentation using Sphinx (see instructions in the docs folder)
+2. View the documentation website at [https://google.github.io/mcp-security/](https://google.github.io/mcp-security/)
+3. Generate HTML documentation locally using Sphinx (see instructions in the docs folder)
 
 The documentation covers:
 - Detailed information about each MCP server

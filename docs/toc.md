@@ -5,6 +5,7 @@
 :caption: Getting Started
 
 index
+usage_guide
 ```
 
 ```{toctree}
@@ -17,16 +18,16 @@ servers/secops_mcp
 servers/secops_soar_mcp
 ```
 
-<!-- Placeholder for future sections
 ```{toctree}
 :maxdepth: 2
 :caption: Tools & Usage
 
-tools/tool_reference
-examples/usage_examples
+usage_guide
 ```
--->
 
 ```{toctree}
 :maxdepth: 1
 :caption: Development
+
+development_guide
+```
