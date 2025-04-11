@@ -51,10 +51,10 @@ run the mcp services locally and use the stdio transport.
         "secops_mcp.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "your-google-cloud-project-id",
-        "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
-        "CHRONICLE_REGION": "us"
-      }
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
       "disabled": false,
       "autoApprove": []
     },
@@ -66,11 +66,11 @@ run the mcp services locally and use the stdio transport.
         "run",
         "secops_soar_mcp.py",
         "--integrations",
-        "<your-integration-names-comma-separated>" // For example "ServiceNow,CSV,Siemplify""
+        "${SOAR_INTEGRATIONS}" // For example "ServiceNow,CSV,Siemplify"
       ],
       "env": {
-        "SOAR_URL": "<your-soar-url>",
-        "SOAR_APP_KEY": "<your-soar-app-key>"
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -84,7 +84,7 @@ run the mcp services locally and use the stdio transport.
         "gti.py"
       ],
       "env": {
-        "VT_API_KEY": "your-vt-api-key"
+        "VT_API_KEY": "${VT_API_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -105,6 +105,8 @@ run the mcp services locally and use the stdio transport.
   }
 }
 ```
+
+Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
 ### Installing in Claude Desktop
 

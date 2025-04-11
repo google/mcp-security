@@ -59,7 +59,7 @@ Once configured, you can interact with the MCP servers by asking Claude to perfo
 
 ## MCP Server Configuration Reference
 
-Here's a complete reference configuration for all available MCP servers:
+Here's a complete reference configuration for all available MCP servers. We strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
 
 ```json
 {
@@ -73,9 +73,9 @@ Here's a complete reference configuration for all available MCP servers:
         "secops_mcp.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "your-google-cloud-project-id",
-        "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
-        "CHRONICLE_REGION": "us"
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
       },
       "disabled": false,
       "autoApprove": []
@@ -88,11 +88,11 @@ Here's a complete reference configuration for all available MCP servers:
         "run",
         "secops_soar_mcp.py",
         "--integrations",
-        "ServiceNow,CSV,Siemplify"
+        "${SOAR_INTEGRATIONS}"
       ],
       "env": {
-        "SOAR_URL": "your-soar-url",
-        "SOAR_APP_KEY": "your-soar-app-key"
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -106,7 +106,7 @@ Here's a complete reference configuration for all available MCP servers:
         "gti.py"
       ],
       "env": {
-        "VT_API_KEY": "your-vt-api-key"
+        "VT_API_KEY": "${VT_API_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -125,6 +125,50 @@ Here's a complete reference configuration for all available MCP servers:
     }
   }
 }
+```
+
+### Setting Up Environment Variables
+
+#### For macOS/Linux:
+
+Add these lines to your `~/.bashrc`, `~/.zshrc`, or equivalent shell configuration file:
+
+```bash
+# Google Security Operations (Chronicle)
+export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
+export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
+export CHRONICLE_REGION="us"
+
+# SOAR
+export SOAR_URL="your-soar-url"
+export SOAR_APP_KEY="your-soar-app-key"
+export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
+
+# Google Threat Intelligence
+export VT_API_KEY="your-vt-api-key"
+```
+
+Then restart your terminal or run `source ~/.bashrc` (or equivalent).
+
+#### For Windows:
+
+Set environment variables using the System Properties dialog:
+
+1. Search for "environment variables" in the Start menu
+2. Click "Edit the system environment variables"
+3. Click the "Environment Variables" button
+4. Add new variables with the appropriate names and values
+
+Or set them via PowerShell:
+
+```powershell
+$Env:CHRONICLE_PROJECT_ID = "your-google-cloud-project-id"
+$Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
+$Env:CHRONICLE_REGION = "us"
+$Env:SOAR_URL = "your-soar-url"
+$Env:SOAR_APP_KEY = "your-soar-app-key"
+$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
+$Env:VT_API_KEY = "your-vt-api-key"
 ```
 
 You can enable or disable individual servers by setting `"disabled": true` for specific servers.
