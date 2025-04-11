@@ -67,7 +67,7 @@ run the mcp services locally and use the stdio transport.
         "gti.py"
       ],
       "env": {
-        "VT_API_KEY": "your-vt-api-key"
+        "VT_APIKEY": "your-vt-api-key"
       },
       "disabled": false,
       "autoApprove": []
