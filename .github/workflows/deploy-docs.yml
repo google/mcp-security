@@ -1,0 +1,54 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Or your default branch
+    paths:
+      - 'docs/**' # Trigger only on changes within the docs directory
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: write # Needed to push to gh-pages branch
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # Use a specific version if needed, e.g., 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Assuming requirements are in docs/requirements.txt
+          if [ -f docs/requirements.txt ]; then
+            pip install -r docs/requirements.txt
+          else
+            echo "docs/requirements.txt not found, skipping dependency installation."
+            # Install Sphinx directly if no requirements file
+            pip install sphinx sphinx-rtd-theme
+          fi
+
+      - name: Build documentation
+        run: |
+          # Run make html inside the docs directory
+          make -C docs html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html # Directory containing the built HTML
+          publish_branch: gh-pages # Target branch
+          force_orphan: true # Creates a clean history for the gh-pages branch
+          # Optional: Configure user for commits
+          # user_name: 'github-actions[bot]'
+          # user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Optional: Commit message
+          # commit_message: ${{ github.event.head_commit.message }}
