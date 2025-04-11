@@ -1,3 +1,16 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import logging
 import typing
 
@@ -60,8 +73,8 @@ FILE_RELATIONSHIPS = [
 # Load resources and tools.
 @server.tool()
 async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
-  """Get a comprehensive file analysis report using its hash (MD5/SHA-1/SHA-256). 
-  
+  """Get a comprehensive file analysis report using its hash (MD5/SHA-1/SHA-256).
+
   Returns a concise summary of key threat details including
   detection stats, threat classification, and important indicators.
   Parameters:
@@ -127,7 +140,7 @@ async def get_entities_related_to_a_file(hash: str, relationship_name: str, ctx:
     | related_attack_techniques    | Returns the Attack Techniques of the Collections containing this File.      |
     | related_reports        | Reports that are directly and indirectly related to the file.                     |
     | related_threat_actors  | File's related threat actors.                                                     |
-    | reports                | Reports directly associated to the file.                                          | 
+    | reports                | Reports directly associated to the file.                                          |
     | screenshots            | Screenshots related to the sandbox execution of the file.                         |
     | similar_files          | Files that are similar to the file.                                               |
     | software_toolkits      | Software and Toolkits associated to the file.                                     |
@@ -136,7 +149,7 @@ async def get_entities_related_to_a_file(hash: str, relationship_name: str, ctx:
     | user_votes             | File's votes made by current signed-in user.                                      |
     | votes                  | Votes for the file.                                                               |
     | vulnerabilities        | Vulnerabilities associated to the file.                                           |
-  
+
     Args:
       hash (required): MD5/SHA1/SHA256) hash that identifies the file.
       relationship_name (required): Relationship name.
@@ -161,7 +174,7 @@ async def get_file_behavior_report(file_behaviour_id: str, ctx: Context) -> typi
   You can get all the file behaviour of a given a file by calling `get_entities_related_to_a_file` as the file hash and the `behaviours` as relationship name.
 
   The file behaviour ID is composed using the following pattern: "{file hash}_{sandbox name}".
-  
+
   Args:
     file_behaviour_id (required): File behaviour ID.
   Returns:
@@ -183,7 +196,7 @@ async def get_file_behavior_report(file_behaviour_id: str, ctx: Context) -> typi
 @server.tool()
 async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Retrieve a summary of all the file behaviour reports from all the sandboxes runned by VirusTotal.
-  
+
   Args:
     hash (required): MD5/SHA1/SHA256) hash that identifies the file.
   Returns:

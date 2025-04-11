@@ -1,3 +1,16 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import base64
 import typing
 
@@ -45,7 +58,7 @@ URL_RELATIONSHIPS = [
 
 def url_to_base64(url: str) -> str:
   """Converts the URL into base64.
-  
+
   Without padding, as required by the Google Threat Intelligence API.
   """
   b = base64.b64encode(url.encode('utf-8'))
@@ -90,7 +103,7 @@ async def get_entities_related_to_an_url(url: str, relationship_name: str, ctx: 
     | http_response_contents                  | TTP response contents from the URL.            |
     | last_serving_ip_address | Last IP address that served the URL.                           |
     | malware_families        | Malware families associated to the URL.                        |
-    | memory_pattern_parents        | Files having a domain as string on memory during sandbox execution.                                | 
+    | memory_pattern_parents        | Files having a domain as string on memory during sandbox execution.                                |
     | network_location        | Domain or IP for the URL.                                      |
     | parent_resource_urls           | Returns the URLs where this URL has been loaded as resource.                                        |
     | redirecting_urls           | URLs that redirected to the given URL.                      |
@@ -119,7 +132,7 @@ async def get_entities_related_to_an_url(url: str, relationship_name: str, ctx: 
        "error": f"Relationship {relationship_name} does not exist. "
                 f"Available relationships are: {','.join(URL_RELATIONSHIPS)}"
     }
-  
+
   url_id = url_to_base64(url)
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "urls", url_id, [relationship_name])
