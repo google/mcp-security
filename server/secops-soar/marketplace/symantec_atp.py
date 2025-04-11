@@ -528,8 +528,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def symantec_atp_delete_white_list_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Delete WhiteList policy for entity.
+    async def symantec_atp_delete_allowlist_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Delete Allowlist policy for entity.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -587,10 +587,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SymantecATP_Delete WhiteList Policy",
+                actionName="SymantecATP_Delete Allowlist Policy",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SymantecATP_Delete WhiteList Policy", # Assuming same as actionName
+                    "ScriptName": "SymantecATP_Delete Allowlist Policy", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -604,7 +604,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action SymantecATP_Delete WhiteList Policy for SymantecATP: {e}")
+                print(f"Error executing action SymantecATP_Delete Allowlist Policy for SymantecATP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for SymantecATP")
@@ -865,8 +865,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def symantec_atp_add_to_white_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Create new whitelist policy. Note: MD5 hashes couldn’t be added to the whitelist, it's the Symantec ATP limitation.
+    async def symantec_atp_add_to_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Create new allowlist policy. Note: MD5 hashes couldn’t be added to the allowlist, it's the Symantec ATP limitation.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -924,10 +924,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SymantecATP_Add To WhiteList",
+                actionName="SymantecATP_Add To Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SymantecATP_Add To WhiteList", # Assuming same as actionName
+                    "ScriptName": "SymantecATP_Add To Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -941,7 +941,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action SymantecATP_Add To WhiteList for SymantecATP: {e}")
+                print(f"Error executing action SymantecATP_Add To Allowlist for SymantecATP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for SymantecATP")

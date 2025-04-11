@@ -258,7 +258,7 @@ def register_tools(mcp: FastMCP):
             if query is not None:
                 script_params["Query"] = query
             if use_global_blacklist is not None:
-                script_params["Use Global Blacklist"] = use_global_blacklist
+                script_params["Use Global Blocklist"] = use_global_blacklist
 
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -268,10 +268,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SentinelOneV2_Get Blacklist",
+                actionName="SentinelOneV2_Get Blocklist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SentinelOneV2_Get Blacklist", # Assuming same as actionName
+                    "ScriptName": "SentinelOneV2_Get Blocklist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -285,7 +285,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action SentinelOneV2_Get Blacklist for SentinelOneV2: {e}")
+                print(f"Error executing action SentinelOneV2_Get Blocklist for SentinelOneV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for SentinelOneV2")
@@ -1443,7 +1443,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action SentinelOneV2_Delete Hash Blacklist Record for SentinelOneV2: {e}")
+                print(f"Error executing action SentinelOneV2_Delete Hash Blocklist Record for SentinelOneV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for SentinelOneV2")
@@ -1965,7 +1965,7 @@ def register_tools(mcp: FastMCP):
 
     @mcp.tool()
     async def sentinel_one_v2_create_hash_blacklist_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], operating_system: Annotated[str, Field(..., description="Specify the OS for the hash. Possible values: windows, windows_legacy, macos, linux.")], add_to_global_black_list: Annotated[bool, Field(..., description="If enabled, action will add the hash to the global blacklist. Note: when this parameter is enabled, parameters \u201cSite IDs\u201c, \u201cGroup IDs\u201c and \u201cAccount IDs\u201c are ignored.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, where hash needs to be sent to the blacklist.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, where hash needs to be sent to the blacklist.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, where hash needs to be sent to the blacklist.")], description: Annotated[Optional[str], Field(default=None, description="Specify additional information related to the hash.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Add hashes to a blacklist in SentinelOne. Note: Only SHA1 hashes are supported.
+        """Add hashes to a blocklist in SentinelOne. Note: Only SHA1 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -2033,10 +2033,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SentinelOneV2_Create Hash Blacklist Record",
+                actionName="SentinelOneV2_Create Hash Blocklist Record",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SentinelOneV2_Create Hash Blacklist Record", # Assuming same as actionName
+                    "ScriptName": "SentinelOneV2_Create Hash Blocklist Record", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -2050,7 +2050,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action SentinelOneV2_Create Hash Blacklist Record for SentinelOneV2: {e}")
+                print(f"Error executing action SentinelOneV2_Create Hash Blocklist Record for SentinelOneV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for SentinelOneV2")

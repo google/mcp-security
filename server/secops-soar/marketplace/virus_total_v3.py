@@ -34,7 +34,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,17 +65,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Comment"] = comment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -91,7 +91,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -118,7 +118,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -149,13 +149,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Query"] = query
@@ -166,7 +166,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Sort Order"] = sort_order
             if max_io_cs_to_return is not None:
                 script_params["Max IOCs To Return"] = max_io_cs_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -182,7 +182,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -199,7 +199,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def virus_total_v3_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_whitelist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], resubmit_hash: Annotated[Optional[bool], Field(default=None, description="If enabled, action will resubmit hashes for analysis instead of using the latest information.")], resubmit_after_days: Annotated[Optional[str], Field(default=None, description="Specify how many days since the last submission should pass for the entity to be submitted again. Note: parameter \"Resubmit Hash\" needs to be enabled.")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], retrieve_sigma_analysis: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve sigma analysis for the hash.")], sandbox: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of sandbox names that should be used for behavior analysis. If nothing is provided, action will only use the \"VirusTotal Jujubox\" sandbox. Make sure that the spelling is correct. Examples of sandboxes: VirusTotal Jujubox, VirusTotal ZenBox, Microsoft Sysinternals, Tencent HABO.")], retrieve_sandbox_analysis: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch sandbox analysis for the entity. For each sandbox, action will create a separate section in the JSON result. Action will only return data for the sandboxes that are provided in the parameter \"Sandbox\".")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], fetch_mitre_details: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about related MITRE techniques and tactics.")], lowest_mitre_technique_severity: Annotated[Optional[List[Any]], Field(default=None, description="Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def virus_total_v3_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_allowlist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], resubmit_hash: Annotated[Optional[bool], Field(default=None, description="If enabled, action will resubmit hashes for analysis instead of using the latest information.")], resubmit_after_days: Annotated[Optional[str], Field(default=None, description="Specify how many days since the last submission should pass for the entity to be submitted again. Note: parameter \"Resubmit Hash\" needs to be enabled.")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], retrieve_sigma_analysis: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve sigma analysis for the hash.")], sandbox: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of sandbox names that should be used for behavior analysis. If nothing is provided, action will only use the \"VirusTotal Jujubox\" sandbox. Make sure that the spelling is correct. Examples of sandboxes: VirusTotal Jujubox, VirusTotal ZenBox, Microsoft Sysinternals, Tencent HABO.")], retrieve_sandbox_analysis: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch sandbox analysis for the entity. For each sandbox, action will create a separate section in the JSON result. Action will only return data for the sandboxes that are provided in the parameter \"Sandbox\".")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], fetch_mitre_details: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about related MITRE techniques and tactics.")], lowest_mitre_technique_severity: Annotated[Optional[List[Any]], Field(default=None, description="Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich Hash using information from VirusTotal. Supported entities: Filehash. Note: only MD5, SHA-1 and SHA-256 are supported.
 
         Returns:
@@ -209,7 +209,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -229,7 +229,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -240,21 +240,21 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if engine_threshold is not None:
                 script_params["Engine Threshold"] = engine_threshold
             if engine_percentage_threshold is not None:
                 script_params["Engine Percentage Threshold"] = engine_percentage_threshold
-            if engine_whitelist is not None:
-                script_params["Engine Whitelist"] = engine_whitelist
+            if engine_allowlist is not None:
+                script_params["Engine Allowlist"] = engine_allowlist
             if resubmit_hash is not None:
                 script_params["Resubmit Hash"] = resubmit_hash
             if resubmit_after_days is not None:
@@ -281,7 +281,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Fetch MITRE Details"] = fetch_mitre_details
             if lowest_mitre_technique_severity is not None:
                 script_params["Lowest MITRE Technique Severity"] = lowest_mitre_technique_severity
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -297,7 +297,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -324,7 +324,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -344,7 +344,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -355,20 +355,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if results is not None:
                 script_params["Results"] = results
             if max_i_ps_to_return is not None:
                 script_params["Max IPs To Return"] = max_i_ps_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -384,7 +384,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -411,7 +411,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -431,7 +431,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -442,20 +442,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if results is not None:
                 script_params["Results"] = results
             if max_domains_to_return is not None:
                 script_params["Max Domains To Return"] = max_domains_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -471,7 +471,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -488,7 +488,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def virus_total_v3_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_whitelist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def virus_total_v3_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_allowlist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich IP using information from VirusTotal. Supported entities: IP address.
 
         Returns:
@@ -498,7 +498,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -518,7 +518,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -529,21 +529,21 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if engine_threshold is not None:
                 script_params["Engine Threshold"] = engine_threshold
             if engine_percentage_threshold is not None:
                 script_params["Engine Percentage Threshold"] = engine_percentage_threshold
-            if engine_whitelist is not None:
-                script_params["Engine Whitelist"] = engine_whitelist
+            if engine_allowlist is not None:
+                script_params["Engine Allowlist"] = engine_allowlist
             if retrieve_comments is not None:
                 script_params["Retrieve Comments"] = retrieve_comments
             if create_insight is not None:
@@ -556,7 +556,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Widget Theme"] = widget_theme
             if fetch_widget is not None:
                 script_params["Fetch Widget"] = fetch_widget
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -572,7 +572,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -599,7 +599,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -619,7 +619,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -630,16 +630,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -655,7 +655,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -672,7 +672,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def virus_total_v3_get_domain_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the domain as malicious or suspicious, for Siemplify to label it as risky. Note: if \"Engine Whitelist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_whitelist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def virus_total_v3_get_domain_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the domain as malicious or suspicious, for Siemplify to label it as risky. Note: if \"Engine Allowlist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_allowlist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get detailed information about the domain using information from VirusTotal. Supported entities: URL (entity extracts domain part), Hostname, Domain.
 
         Returns:
@@ -682,7 +682,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -702,7 +702,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -713,21 +713,21 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if engine_threshold is not None:
                 script_params["Engine Threshold"] = engine_threshold
             if engine_percentage_threshold is not None:
                 script_params["Engine Percentage Threshold"] = engine_percentage_threshold
-            if engine_whitelist is not None:
-                script_params["Engine Whitelist"] = engine_whitelist
+            if engine_allowlist is not None:
+                script_params["Engine Allowlist"] = engine_allowlist
             if retrieve_comments is not None:
                 script_params["Retrieve Comments"] = retrieve_comments
             if create_insight is not None:
@@ -740,7 +740,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Widget Theme"] = widget_theme
             if fetch_widget is not None:
                 script_params["Fetch Widget"] = fetch_widget
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -756,7 +756,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -783,7 +783,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -803,7 +803,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -814,13 +814,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Query"] = query
@@ -828,7 +828,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Sort Field"] = sort_field
             if max_graphs_to_return is not None:
                 script_params["Max Graphs To Return"] = max_graphs_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -844,7 +844,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -871,7 +871,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -891,7 +891,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -902,20 +902,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if sort_field is not None:
                 script_params["Sort Field"] = sort_field
             if max_graphs_to_return is not None:
                 script_params["Max Graphs To Return"] = max_graphs_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -931,7 +931,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -958,7 +958,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -978,7 +978,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -989,13 +989,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if ioc_type is not None:
@@ -1005,7 +1005,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Widget Theme"] = widget_theme
             if fetch_widget is not None:
                 script_params["Fetch Widget"] = fetch_widget
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1021,7 +1021,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1048,7 +1048,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1068,7 +1068,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1079,19 +1079,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Download Folder Path"] = download_folder_path
             if overwrite is not None:
                 script_params["Overwrite"] = overwrite
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1107,7 +1107,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1134,7 +1134,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1154,7 +1154,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1165,20 +1165,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if results is not None:
                 script_params["Results"] = results
             if max_hashes_to_return is not None:
                 script_params["Max Hashes To Return"] = max_hashes_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1194,7 +1194,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1221,7 +1221,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1241,7 +1241,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1252,17 +1252,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Vote"] = vote
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1278,7 +1278,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1305,7 +1305,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1325,7 +1325,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1336,19 +1336,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Graph ID"] = graph_id
             if max_links_to_return is not None:
                 script_params["Max Links To Return"] = max_links_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1364,7 +1364,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1381,7 +1381,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def virus_total_v3_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_whitelist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], resubmit_url: Annotated[Optional[bool], Field(default=None, description="If enabled, action will resubmit urls for analysis instead of using the latest information.")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], resubmit_after_days: Annotated[Optional[str], Field(default=None, description="Specify how many days since the last submission should pass for the entity to be submitted again. Note: parameter \"Resubmit URL\" needs to be enabled. Default: 30.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def virus_total_v3_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_allowlist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], resubmit_url: Annotated[Optional[bool], Field(default=None, description="If enabled, action will resubmit urls for analysis instead of using the latest information.")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], only_suspicious_entity_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the entities.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return. Default: 10.")], resubmit_after_days: Annotated[Optional[str], Field(default=None, description="Specify how many days since the last submission should pass for the entity to be submitted again. Note: parameter \"Resubmit URL\" needs to be enabled. Default: 30.")], widget_theme: Annotated[Optional[List[Any]], Field(default=None, description="Specify the theme for the widget.")], fetch_widget: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch augmented widget related to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich URL using information from VirusTotal. Supported entities: URL.
 
         Returns:
@@ -1391,7 +1391,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1411,7 +1411,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1422,21 +1422,21 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if engine_threshold is not None:
                 script_params["Engine Threshold"] = engine_threshold
             if engine_percentage_threshold is not None:
                 script_params["Engine Percentage Threshold"] = engine_percentage_threshold
-            if engine_whitelist is not None:
-                script_params["Engine Whitelist"] = engine_whitelist
+            if engine_allowlist is not None:
+                script_params["Engine Allowlist"] = engine_allowlist
             if resubmit_url is not None:
                 script_params["Resubmit URL"] = resubmit_url
             if retrieve_comments is not None:
@@ -1453,7 +1453,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Widget Theme"] = widget_theme
             if fetch_widget is not None:
                 script_params["Fetch Widget"] = fetch_widget
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1469,7 +1469,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1486,7 +1486,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def virus_total_v3_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of absolute file paths. Note: if \"Linux Server Address\" is specified, action will try to fetch file from remote server.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the file as malicious or suspicious, for Siemplify to label it as risky. Note: if \"Engine Whitelist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Whitelist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_whitelist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return.")], linux_server_address: Annotated[Optional[str], Field(default=None, description="Specify the IP address of the remote linux server, where the file is located.")], linux_username: Annotated[Optional[str], Field(default=None, description="Specify the username of the remote linux server, where the file is located.")], linux_password: Annotated[Optional[str], Field(default=None, description="Specify the password of the remote linux server, where the file is located.")], private_submission: Annotated[Optional[bool], Field(default=None, description="If enabled, action will submit the file privately. Note: this functionality requires premium VT access.")], fetch_mitre_details: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about related MITRE techniques and tactics.")], lowest_mitre_technique_severity: Annotated[Optional[List[Any]], Field(default=None, description="Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".")], retrieve_ai_summary: Annotated[Optional[bool], Field(default=None, description="Experimental. If enabled, action will retrieve an AI Summary for the submitted file. AI Summary is only available for private submissions.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def virus_total_v3_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of absolute file paths. Note: if \"Linux Server Address\" is specified, action will try to fetch file from remote server.")], engine_threshold: Annotated[Optional[str], Field(default=None, description="Specify how many engines should mark the file as malicious or suspicious, for Siemplify to label it as risky. Note: if \"Engine Allowlist\" contains values, action will only count results from those engines.")], engine_percentage_threshold: Annotated[Optional[str], Field(default=None, description="Specify the percentage of engines should mark the entity as malicious or suspicious, for Siemplify to label it as suspicious. Note: if \"Engine Allowlist\" contains values, action will only count the percentage from those engines. If both \"Engine Threshold\" and \"Engine Percentage Threshold\" are provided, \"Engine Threshold\" will be used. Maximum value: 100. Minimum: 0.")], engine_allowlist: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of engines that should be used to retrieve information, whether an entity is malicious or not. Example: AlienVault,Kaspersky. Note: if nothing is specified in this parameter, action will take results from every available engine. If the engine didn't return any information about the entity it\u2019s not going to be counted for the parameters \"Engine Threshold\" and \"Engine Percentage Threshold\".")], retrieve_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve comments about the entity.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return.")], linux_server_address: Annotated[Optional[str], Field(default=None, description="Specify the IP address of the remote linux server, where the file is located.")], linux_username: Annotated[Optional[str], Field(default=None, description="Specify the username of the remote linux server, where the file is located.")], linux_password: Annotated[Optional[str], Field(default=None, description="Specify the password of the remote linux server, where the file is located.")], private_submission: Annotated[Optional[bool], Field(default=None, description="If enabled, action will submit the file privately. Note: this functionality requires premium VT access.")], fetch_mitre_details: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about related MITRE techniques and tactics.")], lowest_mitre_technique_severity: Annotated[Optional[List[Any]], Field(default=None, description="Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".")], retrieve_ai_summary: Annotated[Optional[bool], Field(default=None, description="Experimental. If enabled, action will retrieve an AI Summary for the submitted file. AI Summary is only available for private submissions.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a file and return results from VirusTotal.
 
         Returns:
@@ -1496,7 +1496,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1516,7 +1516,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1527,13 +1527,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["File Paths"] = file_paths
@@ -1541,8 +1541,8 @@ def register_tools(mcp: FastMCP):
                 script_params["Engine Threshold"] = engine_threshold
             if engine_percentage_threshold is not None:
                 script_params["Engine Percentage Threshold"] = engine_percentage_threshold
-            if engine_whitelist is not None:
-                script_params["Engine Whitelist"] = engine_whitelist
+            if engine_allowlist is not None:
+                script_params["Engine Allowlist"] = engine_allowlist
             if retrieve_comments is not None:
                 script_params["Retrieve Comments"] = retrieve_comments
             if max_comments_to_return is not None:
@@ -1561,7 +1561,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Lowest MITRE Technique Severity"] = lowest_mitre_technique_severity
             if retrieve_ai_summary is not None:
                 script_params["Retrieve AI Summary"] = retrieve_ai_summary
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1577,7 +1577,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1604,7 +1604,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1624,7 +1624,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1635,20 +1635,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for VirusTotalV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if results is not None:
                 script_params["Results"] = results
             if max_ur_ls_to_return is not None:
                 script_params["Max URLs To Return"] = max_ur_ls_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1664,7 +1664,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
