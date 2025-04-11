@@ -1,11 +1,28 @@
 # Google Security Operations and Threat Intelligence MCP Server
 
-This repository contains three separate MCP servers that enable MCP clients to
-access Google Security Operations, Google Security Operations SOAR, and Google
-Threat Intelligence API services.
+This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop or the cline.bot VS Code extension) to access Google's security products and services:
 
-To easily support environments that do not have all three, individual servers
-can be enabled and run separately.
+1. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
+2. **Google Security Operations SOAR** - For security orchestration, automation, and response
+3. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
+4. **Security Command Center (SCC)** - For cloud security and risk management
+
+Each server can be enabled and run separately, allowing flexibility for environments that don't require all capabilities.
+
+## Documentation
+
+Comprehensive documentation is available in the `docs` folder. You can:
+
+1. Read the markdown files directly in the repository
+2. View the documentation website at [https://google.github.io/mcp-security/](https://google.github.io/mcp-security/)
+3. Generate HTML documentation locally using Sphinx (see instructions in the docs folder)
+
+The documentation covers:
+- Detailed information about each MCP server
+- Configuration options and requirements
+- Usage examples and best practices
+
+To get started with the documentation, see [docs/index.md](docs/index.md).
 
 ## Installation
 
@@ -34,10 +51,10 @@ run the mcp services locally and use the stdio transport.
         "secops_mcp.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "your-google-cloud-project-id",
-        "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
-        "CHRONICLE_REGION": "us"
-      }
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
       "disabled": false,
       "autoApprove": []
     },
@@ -49,11 +66,11 @@ run the mcp services locally and use the stdio transport.
         "run",
         "secops_soar_mcp.py",
         "--integrations",
-        "<your-integration-names-comma-separated>" // For example "ServiceNow,CSV,Siemplify""
+        "${SOAR_INTEGRATIONS}" // For example "ServiceNow,CSV,Siemplify"
       ],
       "env": {
-        "SOAR_URL": "<your-soar-url>",
-        "SOAR_APP_KEY": "<your-soar-app-key>"
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -67,7 +84,7 @@ run the mcp services locally and use the stdio transport.
         "gti.py"
       ],
       "env": {
-        "VT_APIKEY": "your-vt-api-key"
+        "VT_APIKEY": "${VT_API_KEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -88,6 +105,8 @@ run the mcp services locally and use the stdio transport.
   }
 }
 ```
+
+Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
 ### Installing in Claude Desktop
 

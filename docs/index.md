@@ -1,30 +1,47 @@
 # Google MCP Security Documentation
 
-Welcome to the documentation for the Google MCP Security project. This project provides tools and resources related to security operations using the Model Context Protocol (MCP).
+Welcome to the documentation for the Google MCP Security project. This project provides Model Context Protocol (MCP) servers that enable MCP-compatible AI assistants like Claude to access Google's security products and services.
 
 ## Project Overview
 
-This repository contains tools, servers, and potentially sample code for interacting with various security platforms and services via MCP.
+This repository contains four MCP servers that provide access to different Google security products:
 
-*(More specific project details can be added here later.)*
+1. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
+2. **Google Security Operations SOAR** - For security orchestration, automation, and response
+3. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
+4. **Security Command Center (SCC)** - For cloud security and risk management
 
-## Documentation Structure
+These servers allow security professionals to leverage AI assistants for security tasks, enhancing productivity and enabling natural language interactions with security tools.
 
-This documentation aims to provide guidance on using the components within this project.
+## Navigation
 
-*(The table of contents (`toc.md`) will define the navigation structure. Specific documentation pages can be added and linked here as the project evolves.)*
+👉 Use the navigation menu on the left to explore the documentation.
 
-### MCP Servers
+If you're new to this project, we recommend starting with the [Usage Guide](usage_guide.md) to learn how to set up and configure the MCP servers.
 
-Explore the tools provided by the different MCP servers included in this project:
+## Quick Links
 
-- [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md)
-- [Security Command Center (SCC) Server](servers/scc_mcp.md)
-- [Chronicle Security Operations (SecOps) Server](servers/secops_mcp.md)
-- [SecOps SOAR Server](servers/secops_soar_mcp.md)
+- **[Installation & Setup](usage_guide.md#getting-started)** - Get started quickly with installation instructions
+- **[Configuration Reference](usage_guide.md#mcp-server-configuration-reference)** - Configure the MCP servers for your environment
+- **[Usage Examples](usage_guide.md#usage-examples)** - See examples of how to interact with the MCP servers
+- **[Development Guide](development_guide.md)** - Learn how to contribute to or extend the project
 
-<!-- Placeholder for future content links
-- [Getting Started](getting_started.md)
-- [MCP Server Details](servers/server_overview.md)
-- [Tool Usage Examples](examples/tool_examples.md)
--->
+## MCP Servers
+
+Each server provides different capabilities:
+
+- [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
+- [Security Command Center (SCC) Server](servers/scc_mcp.md) - Manage cloud security posture and vulnerabilities
+- [Chronicle Security Operations (SecOps) Server](servers/secops_mcp.md) - Search and analyze security events and alerts
+- [SecOps SOAR Server](servers/secops_soar_mcp.md) - Manage security cases and automate response actions
+
+## Example Use Cases
+
+- Investigate suspicious IPs, files, or domains using Google Threat Intelligence
+- Identify and remediate critical vulnerabilities in your Google Cloud environment
+- Search for security events across your enterprise using natural language
+- Automate security response workflows and case management
+
+## Contributing
+
+We welcome contributions to improve these MCP servers and their documentation. Please review our [CONTRIBUTING](../CONTRIBUTING) file for guidelines on how to contribute to this project. For technical details on extending or modifying the servers, see the [Development Guide](development_guide.md).
