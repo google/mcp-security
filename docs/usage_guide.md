@@ -106,7 +106,7 @@ Here's a complete reference configuration for all available MCP servers. We stro
         "gti.py"
       ],
       "env": {
-        "VT_API_KEY": "${VT_API_KEY}"
+        "VT_APIKEY": "${VT_APIKEY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -145,7 +145,7 @@ export SOAR_APP_KEY="your-soar-app-key"
 export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 
 # Google Threat Intelligence
-export VT_API_KEY="your-vt-api-key"
+export VT_APIKEY="your-vt-api-key"
 ```
 
 Then restart your terminal or run `source ~/.bashrc` (or equivalent).
@@ -168,7 +168,7 @@ $Env:CHRONICLE_REGION = "us"
 $Env:SOAR_URL = "your-soar-url"
 $Env:SOAR_APP_KEY = "your-soar-app-key"
 $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
-$Env:VT_API_KEY = "your-vt-api-key"
+$Env:VT_APIKEY = "your-vt-api-key"
 ```
 
 You can enable or disable individual servers by setting `"disabled": true` for specific servers.

@@ -16,10 +16,26 @@ Configure your MCP server with the following environment variables:
 
 ```json
 "env": {
-  "SOAR_URL": "https://your-soar-instance.example.com",
-  "SOAR_APP_KEY": "your-soar-api-key"
+  "SOAR_URL": "${SOAR_URL}",
+  "SOAR_APP_KEY": "${SOAR_APP_KEY}"
 }
 ```
+
+Set up these environment variables in your system:
+
+**For macOS/Linux:**
+```bash
+export SOAR_URL="https://your-soar-instance.example.com"
+export SOAR_APP_KEY="your-soar-api-key"
+```
+
+**For Windows PowerShell:**
+```powershell
+$Env:SOAR_URL = "https://your-soar-instance.example.com"
+$Env:SOAR_APP_KEY = "your-soar-api-key"
+```
+
+For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
 ### Enabling Integrations
 
@@ -32,8 +48,18 @@ To enable specific integrations, add the `--integrations` flag when starting the
   "run",
   "secops_soar_mcp.py",
   "--integrations",
-  "ServiceNow,CSV,Siemplify"
+  "${SOAR_INTEGRATIONS}"
 ]
+```
+
+Set the integrations environment variable:
+
+```bash
+# For macOS/Linux
+export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
+
+# For Windows PowerShell
+$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
 Available integrations include:

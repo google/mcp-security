@@ -20,16 +20,34 @@ Configure the following environment variables in your MCP server config:
 
 ```json
 "env": {
-  "CHRONICLE_PROJECT_ID": "your-google-cloud-project-id",
-  "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
-  "CHRONICLE_REGION": "us"
+  "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+  "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+  "CHRONICLE_REGION": "${CHRONICLE_REGION}"
 }
+```
+
+Set up these environment variables in your system:
+
+**For macOS/Linux:**
+```bash
+export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
+export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
+export CHRONICLE_REGION="us"
+```
+
+**For Windows PowerShell:**
+```powershell
+$Env:CHRONICLE_PROJECT_ID = "your-google-cloud-project-id"
+$Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
+$Env:CHRONICLE_REGION = "us"
 ```
 
 The `CHRONICLE_REGION` can be one of:
 - `us` - United States (default)
 - `eu` - Europe
 - `asia` - Asia-Pacific
+
+For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
 #### Option 2: Parameter-Based Authentication
 
