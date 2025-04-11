@@ -195,8 +195,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def sentinel_one_v2_get_blacklist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], hash: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of hashes that need to be checked in blacklist. Only hashes that were found will be returned. If nothing is specified here action will return all hashes. Note: if \"Hash\" parameter is provided then \"Limit\" parameter is ignored.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, which should be used to return blacklist items.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, which should be used to return blacklist items.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, which should be used to return blacklist items.")], limit: Annotated[Optional[str], Field(default=None, description="Specify how many blacklist items should be returned. Note: if \"Hash\" parameter has values, then this parameter is ignored. Maximum is 1000.")], query: Annotated[Optional[str], Field(default=None, description="Specify the query that needs to be used in order to filter the results.")], use_global_blacklist: Annotated[Optional[bool], Field(default=None, description="If enabled, action will also return hashes from the global blacklist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Get a list of all the items available in the blacklist in SentinelOne.
+    async def sentinel_one_v2_get_blocklist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], hash: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of hashes that need to be checked in blocklist. Only hashes that were found will be returned. If nothing is specified here action will return all hashes. Note: if \"Hash\" parameter is provided then \"Limit\" parameter is ignored.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, which should be used to return blocklist items.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, which should be used to return blocklist items.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, which should be used to return blocklist items.")], limit: Annotated[Optional[str], Field(default=None, description="Specify how many blocklist items should be returned. Note: if \"Hash\" parameter has values, then this parameter is ignored. Maximum is 1000.")], query: Annotated[Optional[str], Field(default=None, description="Specify the query that needs to be used in order to filter the results.")], use_global_blocklist: Annotated[Optional[bool], Field(default=None, description="If enabled, action will also return hashes from the global blocklist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Get a list of all the items available in the blocklist in SentinelOne.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -257,8 +257,8 @@ def register_tools(mcp: FastMCP):
                 script_params["Limit"] = limit
             if query is not None:
                 script_params["Query"] = query
-            if use_global_blacklist is not None:
-                script_params["Use Global Blocklist"] = use_global_blacklist
+            if use_global_blocklist is not None:
+                script_params["Use Global Blocklist"] = use_global_blocklist
 
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -1359,8 +1359,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def sentinel_one_v2_delete_hash_black_list_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, from where the hash needs to be removed.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, from where the hash needs to be removed.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, from where the hash needs to be removed.")], remove_from_global_black_list: Annotated[Optional[bool], Field(default=None, description="If enabled, action will remove the hash from the global black list. Note: when this parameter is enabled, parameters \"Site IDs\", \"Group IDs\" and \"Account IDs\" are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Delete hashes from a black list in SentinelOne. Note: Only SHA1 hashes are supported.
+    async def sentinel_one_v2_delete_hash_block_list_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, from where the hash needs to be removed.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, from where the hash needs to be removed.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, from where the hash needs to be removed.")], remove_from_global_block_list: Annotated[Optional[bool], Field(default=None, description="If enabled, action will remove the hash from the global block list. Note: when this parameter is enabled, parameters \"Site IDs\", \"Group IDs\" and \"Account IDs\" are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Delete hashes from a block list in SentinelOne. Note: Only SHA1 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -1415,8 +1415,8 @@ def register_tools(mcp: FastMCP):
                 script_params["Group IDs"] = group_i_ds
             if account_i_ds is not None:
                 script_params["Account IDs"] = account_i_ds
-            if remove_from_global_black_list is not None:
-                script_params["Remove from global black list"] = remove_from_global_black_list
+            if remove_from_global_block_list is not None:
+                script_params["Remove from global block list"] = remove_from_global_block_list
 
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
@@ -1426,10 +1426,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SentinelOneV2_Delete Hash Black list Record",
+                actionName="SentinelOneV2_Delete Hash Blocklist Record",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SentinelOneV2_Delete Hash Black list Record", # Assuming same as actionName
+                    "ScriptName": "SentinelOneV2_Delete Hash Blocklist Record", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -1964,7 +1964,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def sentinel_one_v2_create_hash_blacklist_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], operating_system: Annotated[str, Field(..., description="Specify the OS for the hash. Possible values: windows, windows_legacy, macos, linux.")], add_to_global_black_list: Annotated[bool, Field(..., description="If enabled, action will add the hash to the global blacklist. Note: when this parameter is enabled, parameters \u201cSite IDs\u201c, \u201cGroup IDs\u201c and \u201cAccount IDs\u201c are ignored.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, where hash needs to be sent to the blacklist.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, where hash needs to be sent to the blacklist.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, where hash needs to be sent to the blacklist.")], description: Annotated[Optional[str], Field(default=None, description="Specify additional information related to the hash.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def sentinel_one_v2_create_hash_blocklist_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], operating_system: Annotated[str, Field(..., description="Specify the OS for the hash. Possible values: windows, windows_legacy, macos, linux.")], add_to_global_block_list: Annotated[bool, Field(..., description="If enabled, action will add the hash to the global blocklist. Note: when this parameter is enabled, parameters \u201cSite IDs\u201c, \u201cGroup IDs\u201c and \u201cAccount IDs\u201c are ignored.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, where hash needs to be sent to the blocklist.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, where hash needs to be sent to the blocklist.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, where hash needs to be sent to the blocklist.")], description: Annotated[Optional[str], Field(default=None, description="Specify additional information related to the hash.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add hashes to a blocklist in SentinelOne. Note: Only SHA1 hashes are supported.
 
         Returns:
@@ -2023,7 +2023,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Account IDs"] = account_i_ds
             if description is not None:
                 script_params["Description"] = description
-            script_params["Add to global black list"] = add_to_global_black_list
+            script_params["Add to global block list"] = add_to_global_block_list
 
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
