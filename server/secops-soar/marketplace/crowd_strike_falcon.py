@@ -34,7 +34,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,18 +65,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Detection ID"] = detection_id
             script_params["Comment"] = comment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -92,7 +92,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -119,7 +119,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -150,13 +150,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["URLs"] = ur_ls
@@ -166,7 +166,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Network Environment"] = network_environment
             if check_duplicate is not None:
                 script_params["Check Duplicate"] = check_duplicate
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -182,7 +182,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -209,7 +209,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -229,7 +229,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -240,13 +240,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -256,7 +256,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Status"] = status
             if assign_to is not None:
                 script_params["Assign to"] = assign_to
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -272,7 +272,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -299,7 +299,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -319,7 +319,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -330,13 +330,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -347,7 +347,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Raw Script"] = raw_script
             if hostname is not None:
                 script_params["Hostname"] = hostname
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -363,7 +363,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -390,7 +390,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -410,7 +410,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -421,13 +421,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -437,7 +437,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Admin Command"] = admin_command
             if hostname is not None:
                 script_params["Hostname"] = hostname
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -453,7 +453,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -480,7 +480,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -500,7 +500,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -511,19 +511,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Detection ID"] = detection_id
             if hide_detection is not None:
                 script_params["Hide Detection"] = hide_detection
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -539,7 +539,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -566,7 +566,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -586,7 +586,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -597,18 +597,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Incident ID"] = incident_id
             script_params["Comment"] = comment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -624,7 +624,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -651,7 +651,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -671,7 +671,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -682,13 +682,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Alert ID"] = alert_id
@@ -698,7 +698,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Verdict"] = verdict
             if assign_to is not None:
                 script_params["Assign To"] = assign_to
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -714,7 +714,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -741,7 +741,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -761,7 +761,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -772,13 +772,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -789,7 +789,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Filter Value"] = filter_value
             if max_hosts_to_return is not None:
                 script_params["Max Hosts To Return"] = max_hosts_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -805,7 +805,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -832,7 +832,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -852,7 +852,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -863,18 +863,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Detection ID"] = detection_id
             script_params["Comment"] = comment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -890,7 +890,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -917,7 +917,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -937,7 +937,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -948,16 +948,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -973,7 +973,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1000,7 +1000,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1020,7 +1020,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1031,16 +1031,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1056,7 +1056,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1083,7 +1083,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1103,7 +1103,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1114,20 +1114,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
                 script_params["Customer ID"] = customer_id
             if fail_if_timeout is not None:
                 script_params["Fail If Timeout"] = fail_if_timeout
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1143,7 +1143,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1161,7 +1161,7 @@ def register_tools(mcp: FastMCP):
 
     @mcp.tool()
     async def crowd_strike_falcon_add_alert_comment(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert that needs to be updated.")], comment: Annotated[str, Field(..., description="Specify the comment for the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Add a comment to alert in Crowdstrike. 
+        """Add a comment to alert in Crowdstrike.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -1170,7 +1170,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1190,7 +1190,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1201,18 +1201,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Alert ID"] = alert_id
             script_params["Comment"] = comment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1228,7 +1228,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1255,7 +1255,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1275,7 +1275,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1286,13 +1286,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if description is not None:
@@ -1303,7 +1303,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Expiration days"] = expiration_days
             if detect_policy is not None:
                 script_params["Detect policy"] = detect_policy
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1319,7 +1319,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1346,7 +1346,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1366,7 +1366,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1377,20 +1377,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
                 script_params["Customer ID"] = customer_id
             script_params["Download Folder Path"] = download_folder_path
             script_params["Overwrite"] = overwrite
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1406,7 +1406,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1433,7 +1433,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1453,7 +1453,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1464,17 +1464,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Max Events To Process"] = max_events_to_process
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1490,7 +1490,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1517,7 +1517,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1537,7 +1537,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1548,13 +1548,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Platform"] = platform
@@ -1565,7 +1565,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Host Group Name"] = host_group_name
             if action is not None:
                 script_params["Action"] = action
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1581,7 +1581,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1608,7 +1608,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1628,7 +1628,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1639,20 +1639,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
                 script_params["Customer ID"] = customer_id
             if create_insight is not None:
                 script_params["Create Insight"] = create_insight
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1668,7 +1668,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1695,7 +1695,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1715,7 +1715,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1726,13 +1726,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -1762,7 +1762,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Max Scan Duration"] = max_scan_duration
             if hostname is not None:
                 script_params["Hostname"] = hostname
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1778,7 +1778,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1805,7 +1805,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1825,7 +1825,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1836,13 +1836,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Detection ID"] = detection_id
@@ -1850,7 +1850,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Status"] = status
             if assign_to is not None:
                 script_params["Assign To"] = assign_to
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1866,7 +1866,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1893,7 +1893,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1913,7 +1913,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1924,17 +1924,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Devices Names"] = devices_names
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1950,7 +1950,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1977,7 +1977,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1997,7 +1997,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2008,16 +2008,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2033,7 +2033,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2060,7 +2060,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2080,7 +2080,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2091,13 +2091,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if ioc_type_filter is not None:
@@ -2108,7 +2108,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Value Filter String"] = value_filter_string
             if max_io_cs_to_return is not None:
                 script_params["Max IOCs To Return"] = max_io_cs_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2124,7 +2124,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2141,7 +2141,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify the file paths to the files that need to be submitted. Refer to the documentation portal for a list of the supported file formats.")], sandbox_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the network environment for the analysis.")], archive_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with archive files.")], document_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with Adobe or Office files. Maximum: 32 characters.")], check_duplicate: Annotated[Optional[bool], Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns the available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], comment: Annotated[Optional[str], Field(default=None, description="Specify the comment for the submission.")], confidential_submission: Annotated[Optional[bool], Field(default=None, description="If enabled, the file is only shown to users within your customer account.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify the file paths to the files that need to be submitted. Refer to the documentation portal for a list of the supported file formats.")], sandbox_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the network environment for the analysis.")], archive_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with archive files.")], document_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with Adobe or Office files. Maximum: 32 characters.")], check_duplicate: Annotated[Optional[bool], Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns the available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], comment: Annotated[Optional[str], Field(default=None, description="Specify the comment for the submission.")], private_submission: Annotated[Optional[bool], Field(default=None, description="If enabled, the file is only shown to users within your customer account.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit files to a sandbox in Crowdstrike. Note: This action requires a Falcon Sandbox license. For the list of supported file formats, refer to the documentation portal.
 
         Returns:
@@ -2151,7 +2151,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2171,7 +2171,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2182,13 +2182,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["File Paths"] = file_paths
@@ -2204,9 +2204,9 @@ def register_tools(mcp: FastMCP):
                 script_params["Check Duplicate"] = check_duplicate
             if comment is not None:
                 script_params["Comment"] = comment
-            if confidential_submission is not None:
-                script_params["Confidential Submission"] = confidential_submission
-    
+            if private_submission is not None:
+                script_params["Private Submission"] = private_submission
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2222,7 +2222,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2249,7 +2249,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2269,7 +2269,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2280,20 +2280,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Detection ID"] = detection_id
             script_params["Status"] = status
             if assign_detection_to is not None:
                 script_params["Assign Detection to"] = assign_detection_to
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2309,7 +2309,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2327,7 +2327,7 @@ def register_tools(mcp: FastMCP):
 
     @mcp.tool()
     async def crowd_strike_falcon_list_host_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], severity_filter: Annotated[Optional[str], Field(default=None, description="Specify the comma-separated list of severities for vulnerabilities.If nothing is provided, action will ingest all related vulnerabilities. Possible values: Critical, High, Medium, Low, Unknown.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight per entity containing statistical information about related vulnerabilities.")], max_vulnerabilities_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many vulnerabilities to return per host. If nothing is provided action will process all of the related vulnerabilities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """List vulnerabilities found on the host in Crowdstrike Falcon. Supported entities: IP Address and Hostname. Note: requires Falcon Spotlight license and permissions. 
+        """List vulnerabilities found on the host in Crowdstrike Falcon. Supported entities: IP Address and Hostname. Note: requires Falcon Spotlight license and permissions.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -2336,7 +2336,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2356,7 +2356,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2367,13 +2367,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
@@ -2384,7 +2384,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Create Insight"] = create_insight
             if max_vulnerabilities_to_return is not None:
                 script_params["Max Vulnerabilities To Return"] = max_vulnerabilities_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2400,7 +2400,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2427,7 +2427,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2447,7 +2447,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2458,20 +2458,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CrowdStrikeFalcon: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if customer_id is not None:
                 script_params["Customer ID"] = customer_id
             if fail_if_timeout is not None:
                 script_params["Fail If Timeout"] = fail_if_timeout
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2487,7 +2487,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

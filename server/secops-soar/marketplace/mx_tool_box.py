@@ -34,7 +34,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,16 +65,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -90,7 +90,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -117,7 +117,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -148,16 +148,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -173,7 +173,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -200,7 +200,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -220,7 +220,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -231,17 +231,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Port Number"] = port_number
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -257,7 +257,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -304,7 +304,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -315,16 +315,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -340,7 +340,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -367,7 +367,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -387,7 +387,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -398,16 +398,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -423,7 +423,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -450,7 +450,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -470,7 +470,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -481,17 +481,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["IP Address"] = ip_address
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -507,7 +507,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -534,7 +534,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -554,7 +554,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -565,16 +565,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -590,7 +590,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -607,8 +607,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mx_tool_box_blacklist_check(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], blacklist_threshold: Annotated[str, Field(..., description="The threshold of the blacklist to determine whether a domain or IP are blacklisted")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Blacklist check returns if Domain or IP were backlisted
+    async def mx_tool_box_denylist_check(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], denylist_threshold: Annotated[str, Field(..., description="The threshold of the denylist to determine whether a domain or IP are denylisted")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Denylist check returns if Domain or IP were backlisted
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -617,7 +617,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -637,7 +637,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -648,17 +648,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["Blacklist Threshold"] = blacklist_threshold
-    
+            script_params["Denylist Threshold"] = denylist_threshold
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -667,14 +667,14 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="MXToolBox_Blacklist Check",
+                actionName="MXToolBox_Denylist Check",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "MXToolBox_Blacklist Check", # Assuming same as actionName
+                    "ScriptName": "MXToolBox_Denylist Check", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -684,7 +684,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action MXToolBox_Blacklist Check for MXToolBox: {e}")
+                print(f"Error executing action MXToolBox_Denylist Check for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for MXToolBox")
@@ -701,7 +701,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -721,7 +721,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -732,16 +732,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -757,7 +757,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

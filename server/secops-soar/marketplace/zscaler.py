@@ -24,8 +24,8 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Zscaler integration.
 
     @mcp.tool()
-    async def zscaler_get_url_categories(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], display_url: Annotated[bool, Field(..., description="True to display URLs of each category, otherwise false.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Gets information about all URL categories.
+    async def zscaler_get_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Gets a list of allowlisted URLs.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -84,10 +84,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Get Url Categories",
+                actionName="Zscaler_Get Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Get Url Categories", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Get Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -101,15 +101,15 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Get Url Categories for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Get Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zscaler_add_to_blacklist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Adds a URL/Domain/IP to black list.
+    async def zscaler_add_to_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Adds a URL/Domain/IP to the allowlisted URLs.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -167,10 +167,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Add To Blocklist",
+                actionName="Zscaler_Add To Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Add To Blocklist", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Add To Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -184,15 +184,15 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Add To Blocklist for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Add To Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zscaler_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Check connectivity
+    async def zscaler_remove_from_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Removes a URL/Domain/IP from the allowlisted URLs
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -250,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Ping",
+                actionName="Zscaler_Remove From Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Ping", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Remove From Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -267,15 +267,15 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Ping for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Remove From Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zscaler_get_whitelist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Gets a list of white-listed URLs.
+    async def zscaler_get_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Gets a list of allowlisted URLs.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -333,10 +333,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Get Whitelist",
+                actionName="Zscaler_Get Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Get Whitelist", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Get Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -350,15 +350,15 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Get Whitelist for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Get Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zscaler_add_to_whitelist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Adds a URL/Domain/IP to the white-listed URLs.
+    async def zscaler_add_to_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Adds a URL/Domain/IP to the allowlisted URLs.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -416,10 +416,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Add To Whitelist",
+                actionName="Zscaler_Add To Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Add To Whitelist", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Add To Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -433,7 +433,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Add To Whitelist for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Add To Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")
@@ -689,8 +689,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zscaler_remove_from_whitelist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Removes a URL/Domain/IP from the white-listed URLs
+    async def zscaler_remove_from_allowlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Removes a URL/Domain/IP from the allowlisted URLs
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -748,10 +748,10 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="Zscaler_Remove From Whitelist",
+                actionName="Zscaler_Remove From Allowlist",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Zscaler_Remove From Whitelist", # Assuming same as actionName
+                    "ScriptName": "Zscaler_Remove From Allowlist", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
@@ -765,7 +765,7 @@ def register_tools(mcp: FastMCP):
                 return execution_response
             except Exception as e:
                 # Log error appropriately
-                print(f"Error executing action Zscaler_Remove From Whitelist for Zscaler: {e}")
+                print(f"Error executing action Zscaler_Remove From Allowlist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
             print(f"Warning: No active integration instance found for Zscaler")

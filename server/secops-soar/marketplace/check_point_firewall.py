@@ -34,7 +34,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,18 +65,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Script text"] = script_text
             script_params["Target"] = target
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -92,7 +92,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -119,7 +119,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -150,17 +150,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["URLs Group Name"] = ur_ls_group_name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -176,7 +176,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -203,7 +203,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -223,7 +223,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -234,20 +234,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Log IDs"] = log_i_ds
             script_params["Download Folder Path"] = download_folder_path
             if create_case_wall_attachment is not None:
                 script_params["Create Case Wall Attachment"] = create_case_wall_attachment
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -263,7 +263,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -310,7 +310,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -321,13 +321,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Security Gateway to Create SAM Rule on"] = security_gateway_to_create_sam_rule_on
@@ -349,7 +349,7 @@ def register_tools(mcp: FastMCP):
             script_params["How to Track Matching Connections"] = how_to_track_matching_connections
             if close_connections is not None:
                 script_params["Close Connections"] = close_connections
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -365,7 +365,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -382,7 +382,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def check_point_firewall_add_ip_to_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], blacklist_group_name: Annotated[str, Field(..., description="Specify the name of the group to which you want to add IP address.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def check_point_firewall_add_ip_to_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], denylist_group_name: Annotated[str, Field(..., description="Specify the name of the group to which you want to add IP address.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IP to the Checkpoint FireWall Group
 
         Returns:
@@ -392,7 +392,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -412,7 +412,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -423,17 +423,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["Blacklist Group Name"] = blacklist_group_name
-    
+            script_params["Denylist Group Name"] = denylist_group_name
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -449,7 +449,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -476,7 +476,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -496,7 +496,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -507,16 +507,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -532,7 +532,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -559,7 +559,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -579,7 +579,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -590,18 +590,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if max_policies_to_return is not None:
                 script_params["Max Policies To Return"] = max_policies_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -617,7 +617,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -644,7 +644,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -664,7 +664,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -675,13 +675,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Security Gateway"] = security_gateway
@@ -701,7 +701,7 @@ def register_tools(mcp: FastMCP):
             script_params["How to Track Matching Connections"] = how_to_track_matching_connections
             if close_connections is not None:
                 script_params["Close Connections"] = close_connections
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -717,7 +717,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -744,7 +744,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -764,7 +764,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -775,13 +775,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if query_filter is not None:
@@ -790,7 +790,7 @@ def register_tools(mcp: FastMCP):
             script_params["Log Type"] = log_type
             if max_logs_to_return is not None:
                 script_params["Max Logs To Return"] = max_logs_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -806,7 +806,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -833,7 +833,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -853,7 +853,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -864,17 +864,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["URLs Group Name"] = ur_ls_group_name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -890,7 +890,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -907,7 +907,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def check_point_firewall_remove_ip_from_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], blacklist_group_name: Annotated[str, Field(..., description="Specify the name of the group from which you want to remove IP address.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def check_point_firewall_remove_ip_from_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], denylist_group_name: Annotated[str, Field(..., description="Specify the name of the group from which you want to remove IP address.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove IP from the Checkpoint FireWall Group
 
         Returns:
@@ -917,7 +917,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -937,7 +937,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -948,17 +948,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-            script_params["Blacklist Group Name"] = blacklist_group_name
-    
+            script_params["Denylist Group Name"] = denylist_group_name
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -974,7 +974,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1001,7 +1001,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-    
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1021,7 +1021,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1032,18 +1032,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CheckPointFirewall: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if max_layers_to_return is not None:
                 script_params["Max Layers To Return"] = max_layers_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1059,7 +1059,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
