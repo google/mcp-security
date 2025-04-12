@@ -16,6 +16,10 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 
 
+class EmailContent(BaseModel):
+    pass
+
+
 class CasePriority(StrEnum):
     PRIORITY_UNSPECIFIED = "PriorityUnspecified"
     PRIORITY_INFO = "PriorityInfo"
