@@ -16,54 +16,43 @@
 import asyncio
 import asyncio
 import importlib
-import json # Added json import
 from pathlib import Path
 import bindings
 from mcp.server.fastmcp import FastMCP
 from logger_utils import get_logger
 from case_management import register_tools
 from utils.utils import to_snake_case
-from utils.consts import Endpoints # Added Endpoints import
-# import argparse # Removed argparse
+from utils.consts import Endpoints
 
 logger = get_logger(__name__)
 mcp = FastMCP("SoarAS")
 
 register_tools(mcp) # Register base case management tools
 
-# Argument parsing removed - integrations will be fetched dynamically
-
 async def main():
     """Main function."""
     logger.info("Starting SecOps SOAR MCP server")
     await bindings.bind() # Initialize HTTP client and bindings
 
-    # --- Fetch Enabled Integrations Dynamically ---
+    # Fetch enabled integrations dynamically
     enabled_integrations_set = set()
     try:
         logger.info("Fetching enabled integrations from SOAR tenant...")
-        # Assuming the response is JSON and contains a list under a key like 'integrations' or similar
-        # And each item in the list is a dict with a 'name' field.
-        # Adjust parsing based on actual API response structure if needed.
         response = await bindings.http_client.get(Endpoints.LIST_INSTALLED_INTEGRATIONS)
 
-        # --- TODO: Adjust the parsing logic below based on the actual API response structure ---
         installed_integrations = response # Assuming the response *is* the list
         if isinstance(installed_integrations, list):
-             # Assuming each item has a 'name' or 'identifier' field - check actual response
             integration_names = [integ.get('name') or integ.get('identifier') for integ in installed_integrations]
             valid_names = [name for name in integration_names if name and isinstance(name, str)]
             enabled_integrations_set = {to_snake_case(name) for name in valid_names}
             logger.info("Successfully fetched and processed enabled integrations: %s", enabled_integrations_set)
         else:
             logger.warning("API response for installed integrations was not a list as expected: %s", response)
-        # --- END TODO ---
-
     except Exception as e:
         logger.error("Failed to fetch or parse enabled integrations from SOAR API: %s. No integrations will be loaded dynamically.", e, exc_info=True)
         enabled_integrations_set = set() # Fallback to empty set on error
 
-    # --- Dynamic Tool Registration (Moved inside main) ---
+    # Dynamic tool registration
     logger.info("Starting dynamic tool registration based on fetched integrations...")
     try:
         script_dir = Path(__file__).parent.resolve()
@@ -109,7 +98,7 @@ async def main():
 
     except Exception as e:
         logger.error("An unexpected error occurred during dynamic tool registration: %s", e, exc_info=True)
-    # --- End Dynamic Tool Registration ---
+    # End Dynamic Tool Registration
 
     await mcp.run_stdio_async()
 
