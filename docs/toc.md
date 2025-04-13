@@ -1,33 +1,37 @@
-# Google MCP Security Documentation
+# Table of Contents
 
-```{toctree}
-:maxdepth: 2
-:caption: Getting Started
-
-index
-usage_guide
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: MCP Servers
-
-servers/gti_mcp
-servers/scc_mcp
-servers/secops_mcp
-servers/secops_soar_mcp
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: Tools & Usage
-
-usage_guide
-```
-
-```{toctree}
-:maxdepth: 1
-:caption: Development
-
-development_guide
-```
+*   [Development Guide](development_guide.md)
+*   [Usage Guide](usage_guide.md)
+*   [Servers](servers/index.md)
+    *   [Google Threat Intelligence](servers/gti_mcp.md)
+    *   [Security Command Center](servers/scc_mcp.md)
+    *   [SecOps](servers/secops_mcp.md)
+    *   [SecOps SOAR](servers/secops_soar_mcp.md)
+    *   [SOAR Integrations](soar_integrations/index.md)
+        *   [Active Directory](soar_integrations/active_directory.md)
+        *   [Alexa](soar_integrations/alexa.md)
+        *   [AlgoSec](soar_integrations/algo_sec.md)
+        *   [AlienVault Anywhere](soar_integrations/alien_vault_anywhere.md)
+        *   [AlienVault Appliance](soar_integrations/alien_vault_appliance.md)
+        *   [AlienVault TI](soar_integrations/alien_vault_ti.md)
+        *   [Amazon Macie](soar_integrations/amazon_macie.md)
+        *   [Anomali Staxx](soar_integrations/anomali_staxx.md)
+        *   [Anomali ThreatStream](soar_integrations/anomali_threat_stream.md)
+        *   [Anomali](soar_integrations/anomali.md)
+        *   [Any.Run](soar_integrations/any_run.md)
+        *   [APIVoid](soar_integrations/api_void.md)
+        *   [AppSheet](soar_integrations/app_sheet.md)
+        *   [ArcSight Logger](soar_integrations/arc_sight_logger.md)
+        *   [Arcsight](soar_integrations/arcsight.md)
+        *   [Area1](soar_integrations/area1.md)
+        *   [Armis](soar_integrations/armis.md)
+        *   [Atlassian Confluence Server](soar_integrations/atlassian_confluence_server.md)
+        *   [Attivo](soar_integrations/attivo.md)
+        *   [AutoFocus](soar_integrations/auto_focus.md)
+        *   [Automox](soar_integrations/automox.md)
+        *   [AWS CloudTrail](soar_integrations/aws_cloud_trail.md)
+        *   [AWS CloudWatch](soar_integrations/aws_cloud_watch.md)
+        *   [AWS GuardDuty](soar_integrations/aws_guard_duty.md)
+        *   [AWSEC2](soar_integrations/awsec2.md)
+        *   [AWSIAMAccessAnalyzer](soar_integrations/awsiam_access_analyzer.md)
+        *   [AWSIAM](soar_integrations/awsiam.md)
