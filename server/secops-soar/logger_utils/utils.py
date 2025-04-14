@@ -14,13 +14,15 @@
 import logging
 
 logging.basicConfig(
-    level=logging.WARNING,
+    level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(message)s",  # Include logger name
+    filename="/Users/dandye/Projects/google-mcp-security/server/secops-soar/logs/mcp_server.log",
+    filemode="a",
 )
 
 
 def get_logger(logger_name: str):
-    logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.INFO)
+  logger = logging.getLogger(logger_name)
+  logger.setLevel(logging.DEBUG)
 
-    return logger
+  return logger
