@@ -136,4 +136,4 @@ async def get_entities_related_to_an_url(url: str, relationship_name: str, ctx: 
   url_id = url_to_base64(url)
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "urls", url_id, [relationship_name])
-  return [obj.to_dict() for obj in res.get(relationship_name, [])]
+  return res.get(relationship_name, [])

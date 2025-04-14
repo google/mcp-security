@@ -148,7 +148,7 @@ async def get_entities_related_to_a_domain(domain: str, relationship_name: str, 
 
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "domains", domain, [relationship_name])
-  return [obj.to_dict() for obj in res.get(relationship_name, [])]
+  return res.get(relationship_name, [])
 
 
 @server.tool()
@@ -210,4 +210,4 @@ async def get_entities_related_to_an_ip_address(ip_address: str, relationship_na
 
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "ip_addresses", ip_address, [relationship_name])
-  return [obj.to_dict() for obj in res.get(relationship_name, [])]
+  return res.get(relationship_name, [])
