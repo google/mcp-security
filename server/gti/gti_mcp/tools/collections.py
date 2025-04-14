@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import typing
 
 from mcp.server.fastmcp import Context
@@ -38,9 +39,7 @@ COLLECTION_RELATIONSHIPS = [
 COLLECTION_KEY_RELATIONSHIPS = [
     "associations",
 ]
-COLLECTION_EXCLUDED_ATTRS = ','.join([
-    "aggregations"
-])
+COLLECTION_EXCLUDED_ATTRS = ",".join(["aggregations"])
 
 COLLECTION_TYPES = {
     "threat-actor",
@@ -50,10 +49,9 @@ COLLECTION_TYPES = {
     "software-toolkit",
     "vulnerability",
     "collection",
-
 }
 
-# Load resources and tools.
+
 @server.tool()
 async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """At Google Threat Intelligence, threats are modeled as "collections". This tool retrieves them from the platform.
@@ -78,7 +76,9 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 
 
 @server.tool()
-async def get_entities_related_to_a_collection(id: str, relationship_name: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_entities_related_to_a_collection(
+    id: str, relationship_name: str, ctx: Context
+) -> typing.Dict[str, typing.Any]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
@@ -106,10 +106,10 @@ async def get_entities_related_to_a_collection(id: str, relationship_name: str, 
       List of objects related to the collection.
   """
   if not relationship_name in COLLECTION_RELATIONSHIPS:
-    return {
-       "error": f"Relationship {relationship_name} does not exist. "
-                f"Available relationships are: {','.join(COLLECTION_RELATIONSHIPS)}"
-    }
+      return {
+          "error": f"Relationship {relationship_name} does not exist. "
+          f"Available relationships are: {','.join(COLLECTION_RELATIONSHIPS)}"
+      }
 
   res = await utils.fetch_object_relationships(
       vt_client(ctx), "collections", id, [relationship_name])
@@ -117,7 +117,12 @@ async def get_entities_related_to_a_collection(id: str, relationship_name: str, 
 
 
 async def _search_threats_by_collection_type(
-    query: str, collection_type:str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+    query: str,
+    collection_type: str,
+    ctx: Context,
+    limit: int = 10,
+    order_by: str = "relevance-",
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search a given threat type in the Google Threat Intelligence platform,
 
   Args:
@@ -130,23 +135,31 @@ async def _search_threats_by_collection_type(
     List of collections, aka threats.
   """
   if collection_type not in COLLECTION_TYPES:
-    raise ValueError(
-      f"wrong collection_type. Available collection_type are: {','.join(COLLECTION_TYPES)} ")
+      raise ValueError(
+          f"wrong collection_type. Available collection_type are: {','.join(COLLECTION_TYPES)} ")
 
   res = await utils.consume_vt_iterator(
       vt_client(ctx),
       "/collections",
       params={
-          "filter": f'collection_type:{collection_type} {query}',
+          "filter": f"collection_type:{collection_type} {query}",
           "order": order_by,
           "relationships": COLLECTION_KEY_RELATIONSHIPS,
-          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS},
-      limit=limit)
+          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+      },
+      limit=limit,
+  )
   return res
 
 
 @server.tool()
-async def search_threats(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_threats(
+    ctx: Context,
+    query: str,
+    collection_type: str = None,
+    limit: int = 5,
+    order_by: str = "relevance-",
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search threats in the Google Threat Intelligence platform.
 
   Threats are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -167,28 +180,43 @@ async def search_threats(query: str, ctx: Context, limit: int = 10, order_by: st
 
   You can use order_by to sort the results by: "relevance", "creation_date". You can use the sign "+" to make it order ascending, or "-" to make it descending. By default is "relevance-"
 
+  When asked for latest threats, prioritize campaigns or vulnerabilities over reports.
+
   Args:
     query (required): Search query to find threats.
+    collection_type: Filter your search results to a specific *type* of threat
     limit: Limit the number of threats to retrieve. 10 by default.
     order_by: Order results by the given order key. "relevance-" by default.
 
   Returns:
-    List of collections, aka threats.
+    List of collections, aka threats. They are full collection objects, you do not need to retrieve them`using the `get_collection_report` tool. You may need to extend with relationships using `get_entities_related_to_a_collection` tool.
   """
+  filter = ""
+  if collection_type:
+    if collection_type not in COLLECTION_TYPES:
+      raise ValueError(
+          f"unknown collection_type. Available are {','.join(COLLECTION_TYPES)}")
+    filter += f"collection_type:{collection_type}"
+  if query:
+    filter += query
   res = await utils.consume_vt_iterator(
       vt_client(ctx),
       "/collections",
       params={
-          "filter": query,
+          "filter": filter,
           "order": order_by,
           "relationships": COLLECTION_KEY_RELATIONSHIPS,
-          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS},
-      limit=limit)
+          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+      },
+      limit=limit,
+  )
   return res
 
 
 @server.tool()
-async def search_campaigns(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_campaigns(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search threat campaigns in the Google Threat Intelligence platform.
 
   Campaigns are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -203,12 +231,15 @@ async def search_campaigns(query: str, ctx: Context, limit: int = 10, order_by: 
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "campaign", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "campaign", ctx, limit, order_by)
   return res
 
 
 @server.tool()
-async def search_threat_actors(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_threat_actors(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search threat actors in the Google Threat Intelligence platform.
 
   Threat actors are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -223,12 +254,15 @@ async def search_threat_actors(query: str, ctx: Context, limit: int = 10, order_
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "threat-actor", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "threat-actor", ctx, limit, order_by)
   return res
 
 
 @server.tool()
-async def search_malware_families(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_malware_families(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search malware families in the Google Threat Intelligence platform.
 
   Malware families are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -243,12 +277,15 @@ async def search_malware_families(query: str, ctx: Context, limit: int = 10, ord
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "malware-family", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "malware-family", ctx, limit, order_by)
   return res
 
 
 @server.tool()
-async def search_software_toolkits(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_software_toolkits(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search software toolkits (or just tools) in the Google Threat Intelligence platform.
 
   Software toolkits are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -263,12 +300,15 @@ async def search_software_toolkits(query: str, ctx: Context, limit: int = 10, or
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "software-toolkit", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "software-toolkit", ctx, limit, order_by)
   return res
 
 
 @server.tool()
-async def search_threat_reports(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_threat_reports(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search threat reports in the Google Threat Intelligence platform.
 
   Google Threat Intelligence provides continuously updated reports and analysis of threat actors, campaigns, vulnerabilities, malware, and tools
@@ -285,12 +325,15 @@ async def search_threat_reports(query: str, ctx: Context, limit: int = 10, order
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "report", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "report", ctx, limit, order_by)
   return res
 
 
 @server.tool()
-async def search_vulnerabilities(query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_vulnerabilities(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search vulnerabilities (CVEs) in the Google Threat Intelligence platform.
 
   Vulnerabilities are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -305,7 +348,8 @@ async def search_vulnerabilities(query: str, ctx: Context, limit: int = 10, orde
   Returns:
     List of collections, aka threats.
   """
-  res = await _search_threats_by_collection_type(query, "vulnerability", ctx, limit, order_by)
+  res = await _search_threats_by_collection_type(
+      query, "vulnerability", ctx, limit, order_by)
   return res
 
 
@@ -316,14 +360,27 @@ async def get_collection_timeline_events(id: str, ctx: Context):
   This is super valuable curated information produced by security analysits at Google Threat Intelligence.
 
   We should fetch this information for campaigns and threat actors always.
+
+  It's common to display the events grouped by the "event_category" field.
+
   Args:
     id (required): Collection identifier
   Return:
     List of events related to the given collection.
   """
-  events = []
+  data = await vt_client(ctx).get_async(f"/collections/{id}/timeline/events")
+  return await data.json_async()
 
-  data = await vt_client(ctx).get_async(f'/collections/{id}/timeline/events')
-  data = await data.json_async()
 
-  return data
+@server.tool()
+async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
+  """Retrieves the Mitre tactics and techniques associated with a threat.
+
+  Args:
+    id (required): Collection identifiers.
+  Return:
+    A dictionary including the tactics and techniques associated to the given threat.
+  """
+  data = await vt_client(ctx).get_async(f"/collections/{id}/mitre_tree")
+  return await data.json_async()
+
