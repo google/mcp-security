@@ -37,41 +37,6 @@ $Env:SOAR_APP_KEY = "your-soar-api-key"
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
-### Enabling Integrations
-
-To enable specific integrations, add the `--integrations` flag when starting the server:
-
-```json
-"args": [
-  "--directory",
-  "/path/to/the/repo/server/secops-soar",
-  "run",
-  "secops_soar_mcp.py",
-  "--integrations",
-  "${SOAR_INTEGRATIONS}"
-]
-```
-
-Set the integrations environment variable:
-
-```bash
-# For macOS/Linux
-export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
-
-# For Windows PowerShell
-$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
-```
-
-Available integrations include:
-- **ServiceNow** - Create/update tickets in ServiceNow
-- **CSV** - Export data to CSV files
-- **Siemplify** - Advanced Siemplify-specific features
-- **Jira** - Create/update Jira issues
-- **Slack** - Send notifications to Slack
-- **Email** - Send email notifications
-- **VirusTotal** - Enrich indicators with VirusTotal data
-- **Active Directory** - Query and manage Active Directory
-
 ### Authentication Methods
 
 The server supports two authentication methods:
@@ -398,9 +363,9 @@ These tools are always available.
       }
       ```
 
-## Dynamic Integration Tools (Marketplace)
+## Integration Tools (Marketplace)
 
-This server can dynamically load additional tools based on integrations enabled via the `--integrations` command-line flag when the server is started. These tools correspond to modules found in the `marketplace/` directory.
+This server dynamically loads additional tools based on the available integration modules found in the `marketplace/` directory and what is configured on your tenant.
 
 ### Available Integrations
 
@@ -410,7 +375,7 @@ Tools for creating and managing ServiceNow tickets:
 
 - **`servicenow_create_ticket(case_id, summary=None, description=None, priority=None, ticket_type="Incident")`**
   - Creates a ServiceNow ticket linked to a SOAR case
-  
+
 - **`servicenow_update_ticket(case_id, ticket_number, status=None, resolution_notes=None)`**
   - Updates an existing ServiceNow ticket
 
@@ -418,9 +383,9 @@ Tools for creating and managing ServiceNow tickets:
 
 Tools for exporting data to CSV files:
 
-- **`csv_export_case(case_id, file_path=None)`** 
+- **`csv_export_case(case_id, file_path=None)`**
   - Exports case details to a CSV file
-  
+
 - **`csv_export_entities(case_id, entity_types=None, file_path=None)`**
   - Exports entities from a case to a CSV file
 
@@ -430,7 +395,7 @@ Tools for creating and managing Jira issues:
 
 - **`jira_create_issue(case_id, project_key, issue_type="Bug", summary=None, description=None, priority=None)`**
   - Creates a Jira issue linked to a SOAR case
-  
+
 - **`jira_update_issue(case_id, issue_key, status=None, resolution=None, comment=None)`**
   - Updates an existing Jira issue
 
@@ -461,10 +426,10 @@ AI: I found 3 open cases:
 
 1. SEC-12345: Suspicious Login Attempts (High Priority)
    Status: In Progress, Assigned to: john.analyst
-   
+
 2. SEC-12346: Malware Detection - Emotet (Critical Priority)
    Status: New, Unassigned
-   
+
 3. SEC-12347: Data Exfiltration Alert (Medium Priority)
    Status: New, Unassigned
 
@@ -554,10 +519,10 @@ AI: I found 3 entities that have had communications with this IP:
 
 1. workstation-1234 (Hostname)
    Status: Suspicious, Last communication: 2023-09-15 11:22:10
-   
+
 2. workstation-5678 (Hostname)
    Status: Suspicious, Last communication: 2023-09-15 09:15:30
-   
+
 3. user456 (User)
    Status: Under investigation
 ```
