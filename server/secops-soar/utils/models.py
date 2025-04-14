@@ -39,3 +39,9 @@ class ApiManualActionDataModel(BaseModel):
     scope: Optional[str]
     alertGroupIdentifiers: List[str] = Field(default_factory=list)
     isPredefinedScope: bool
+
+
+class EmailContent(BaseModel):
+    Content: str
+    ContentTemplateName: Optional[str]
+    HtmlTemplateName: Optional[str]
