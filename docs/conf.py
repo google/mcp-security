@@ -16,8 +16,9 @@
 
 import datetime
 import os
+from subprocess import PIPE
+from subprocess import Popen
 import sys
-from subprocess import PIPE, Popen
 
 # Add parent directory to path for module imports
 sys.path.insert(0, os.path.abspath('..'))

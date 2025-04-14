@@ -16,11 +16,14 @@ import typing
 from mcp.server.fastmcp import Context
 
 from .. import utils
-from ..server import server, vt_client
+from ..server import server
+from ..server import vt_client
 
 
 @server.tool()
-async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_iocs(
+    query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-"
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform.
 
   You can search by for different IOC types using the `entity` modifier. Below, the different IOC types and the supported orders:
@@ -53,8 +56,7 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
   res = await utils.consume_vt_iterator(
       vt_client(ctx),
       "/intelligence/search",
-      params={
-          "query": query,
-          "order": order_by},
-      limit=limit)
+      params={"query": query, "order": order_by},
+      limit=limit,
+  )
   return res

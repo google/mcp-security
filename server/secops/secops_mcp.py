@@ -19,11 +19,17 @@ This example demonstrates how to use the secops-mcp server to perform
 security operations tasks using Chronicle, including natural language search.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 import logging
 import os
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+
 from mcp.server.fastmcp import FastMCP
 from secops import SecOpsClient
 
@@ -115,9 +121,7 @@ async def search_security_events(
       and metadata.
   """
   try:
-    logger.info(
-        f'Searching security events with natural language query: {text}'
-    )
+    logger.info(f'Searching security events with natural language query: {text}')
 
     chronicle = get_chronicle_client(project_id, customer_id, region)
 
@@ -148,8 +152,7 @@ async def search_security_events(
       events = {'events': event_list, 'total_events': total_events}
 
     logger.info(
-        f'Search results: {total_events} total events,'
-        f' {len(event_list)} returned'
+        f'Search results: {total_events} total events, {len(event_list)} returned'
     )
 
     # Return a new dictionary with UDM query first, then events data
@@ -229,18 +232,14 @@ async def get_security_alerts(
 
       # Try different possible status field paths
       status = 'Unknown'
-      if 'feedbackSummary' in alert and isinstance(
-          alert['feedbackSummary'], dict
-      ):
+      if 'feedbackSummary' in alert and isinstance(alert['feedbackSummary'], dict):
         status = alert['feedbackSummary'].get('status', 'Unknown')
       elif 'status' in alert:
         status = alert.get('status', 'Unknown')
 
       # Try different possible severity field paths
       severity = 'Unknown'
-      if 'feedbackSummary' in alert and isinstance(
-          alert['feedbackSummary'], dict
-      ):
+      if 'feedbackSummary' in alert and isinstance(alert['feedbackSummary'], dict):
         severity = alert['feedbackSummary'].get('severityDisplay', 'Unknown')
       elif 'severity' in alert:
         severity = alert.get('severity', 'Unknown')
@@ -319,9 +318,7 @@ async def lookup_entity(
       asset = None
 
       # Try to get entity_type
-      if hasattr(entity, 'metadata') and hasattr(
-          entity.metadata, 'entity_type'
-      ):
+      if hasattr(entity, 'metadata') and hasattr(entity.metadata, 'entity_type'):
         entity_type = entity.metadata.entity_type
       elif isinstance(entity, dict) and 'metadata' in entity:
         if isinstance(entity['metadata'], dict):

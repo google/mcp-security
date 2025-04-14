@@ -22,24 +22,20 @@ language search.
 
 import argparse
 import asyncio
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 import json
 import os
 
 # Example configuration - defaults to environment variables if available
-PROJECT_ID = os.environ.get(
-    'CHRONICLE_PROJECT_ID', 'your-google-cloud-project-id'
-)
-CUSTOMER_ID = os.environ.get(
-    'CHRONICLE_CUSTOMER_ID', 'your-chronicle-customer-id'
-)
+PROJECT_ID = os.environ.get('CHRONICLE_PROJECT_ID', 'your-google-cloud-project-id')
+CUSTOMER_ID = os.environ.get('CHRONICLE_CUSTOMER_ID', 'your-chronicle-customer-id')
 REGION = os.environ.get('CHRONICLE_REGION', 'us')
 
 
 # Chronicle security examples
-async def security_examples(
-    project_id: str, customer_id: str, region: str
-) -> None:
+async def security_examples(project_id: str, customer_id: str, region: str) -> None:
   """Run examples of Chronicle security API calls.
 
   Args:
@@ -64,10 +60,7 @@ async def security_examples(
   total_events = events_result.get('total_events', 0)
   event_list = events_result.get('events', [])
 
-  print(
-      f'Found {total_events} events, showing details for'
-      f' {len(event_list)} events:'
-  )
+  print(f'Found {total_events} events, showing details for {len(event_list)} events:')
 
   # Process the events
   for i, event_wrapper in enumerate(event_list, 1):
@@ -188,9 +181,7 @@ async def security_examples(
       principal = event.get('principal', {})
       target = event.get('target', {})
 
-      principal_ip = (
-          principal.get('ip', ['Unknown']) if 'ip' in principal else ['None']
-      )
+      principal_ip = principal.get('ip', ['Unknown']) if 'ip' in principal else ['None']
       target_ip = target.get('ip', ['Unknown']) if 'ip' in target else ['None']
 
       print(f"  Source IP: {', '.join(principal_ip)}")
@@ -218,8 +209,7 @@ async def security_examples(
       custom_event_list = custom_events.get('events', [])
 
       print(
-          f'Found {total_custom_events} events, showing'
-          f' {len(custom_event_list)} events'
+          f'Found {total_custom_events} events, showing {len(custom_event_list)} events'
       )
 
       # Display the events
@@ -238,9 +228,7 @@ async def security_examples(
 
 async def main() -> None:
   """Parse command line arguments and run security examples."""
-  parser = argparse.ArgumentParser(
-      description='Security Operations MCP examples'
-  )
+  parser = argparse.ArgumentParser(description='Security Operations MCP examples')
   parser.add_argument(
       '--project-id',
       help='Google Cloud project ID',
@@ -279,13 +267,11 @@ async def main() -> None:
 
 
 # Import the functions after defining the example functions to avoid circular imports
-from secops_mcp import (
-    search_security_events,
-    get_security_alerts,
-    lookup_entity,
-    list_security_rules,
-    get_ioc_matches,
-)
+from secops_mcp import get_ioc_matches
+from secops_mcp import get_security_alerts
+from secops_mcp import list_security_rules
+from secops_mcp import lookup_entity
+from secops_mcp import search_security_events
 
 if __name__ == '__main__':
   asyncio.run(main())
