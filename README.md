@@ -64,7 +64,9 @@ run the mcp services locally and use the stdio transport.
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
-        "secops_soar_mcp.py"
+        "secops_soar_mcp.py",
+        "--integrations",
+        "${SOAR_INTEGRATIONS}" // For example "ServiceNow,CSV,Siemplify"
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
