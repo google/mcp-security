@@ -156,7 +156,7 @@ async def _search_threats_by_collection_type(
 async def search_threats(
     ctx: Context,
     query: str,
-    collection_type: str = None,
+    collection_type: str | None,
     limit: int = 5,
     order_by: str = "relevance-",
 ) -> typing.List[typing.Dict[str, typing.Any]]:

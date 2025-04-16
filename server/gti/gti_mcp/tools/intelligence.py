@@ -45,10 +45,11 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
 
   Args
     query (required): Search query to find IOCs.
-    limit: Limit the number of threats to retrieve. 10 by default.
+    limit: Limit the number of IoCs to retrieve. 10 by default.
+    order_by: Order the results. "last_submission_date-" by default.
 
   Returns:
-    List of collections, aka threats.
+    List of Indicators of Compromise (IoCs).
   """
   res = await utils.consume_vt_iterator(
       vt_client(ctx),
