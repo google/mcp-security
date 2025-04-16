@@ -30,7 +30,7 @@ async def fetch_object(
     resource_collection_type: str,
     resource_type: str,
     resource_id: str,
-    relationships: typing.List[str] | None = None,
+    relationships: list[str] | None = None,
     params: dict[str, typing.Any] | None = None):
   """Fetches objects from Google Threat Intelligence API."""
   logging.info(
