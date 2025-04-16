@@ -1,0 +1,43 @@
+{
+  // --- General Editor Settings ---
+  "editor.detectIndentation": false, // Enforce tabSize setting
+  "editor.rulers": [
+    80
+  ], // Google style line length guide
+  "editor.formatOnPaste": true, // Format code on paste
+  "files.insertFinalNewline": true, // Ensure final newline in files
+  "files.trimTrailingWhitespace": true, // Remove trailing whitespace on save
+  // --- Python Specific Settings ---
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter", // Use the Black Formatter extension
+    "editor.formatOnSave": true, // Format entire file on save
+    "editor.formatOnSaveMode": "modifications", // but only format modified lines
+    "editor.insertSpaces": true, // Use spaces instead of tabs
+    "editor.tabSize": 2, // Google style indentation
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit" // Run isort on save
+    }
+  },
+  // --- Formatter Configuration ---
+  // Explicitly use pyink from the venv with 2-space indent for the Black Formatter extension
+  "black-formatter.path": [
+    "${workspaceFolder}/venv-dev/bin/pyink",
+    "--pyink-indentation",
+    "2"
+  ],
+  // --- Optional Settings (Commented Out) ---
+  // Set Python interpreter path explicitly if needed (VS Code usually prompts)
+  // "python.defaultInterpreterPath": "${workspaceFolder}/venv-dev/bin/python",
+  // Linting (Install pylint/flake8 in venv-dev if you enable these)
+  // "python.linting.pylintEnabled": true,
+  // "python.linting.flake8Enabled": true,
+  // "python.linting.enabled": true,
+  // "python.linting.pylintPath": "${workspaceFolder}/venv-dev/bin/pylint",
+  // "python.linting.flake8Path": "${workspaceFolder}/venv-dev/bin/flake8",
+  // Format only modified lines on save (alternative to full file format)
+  // "[python]": {
+  //   "editor.formatOnSaveMode": "modifications"
+  // }
+  "workbench.enableExperiments": false, // Fetches experiments to run from a Microsoft online service.
+  "workbench.settings.enableNaturalLanguageSearch": false // natural language search provided by a Microsoft online service.
+}
