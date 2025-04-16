@@ -119,7 +119,6 @@ from mcp.shared.memory import (
 )
 async def test_get_ioc_report(
     make_httpserver_ipv4,
-    mock_vt_client,
     tool_name,
     tool_arguments,
     base_endpoint,
@@ -159,7 +158,6 @@ async def test_get_ioc_report(
 @pytest.mark.asyncio(scope="session")
 async def test_server_connection():
     """Test that the server is running and accessible."""
-    from gti_mcp.server import server
 
     async with client_session(server._mcp_server) as client:
         tools_result = await client.list_tools()
