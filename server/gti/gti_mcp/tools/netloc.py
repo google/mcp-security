@@ -53,6 +53,10 @@ DOMAIN_RELATIONSHIPS = [
     "vulnerabilities",
 ]
 
+DOMAIN_KEY_RELATIONSHIPS = [
+    "associations",
+]
+
 
 IP_RELATIONSHIPS = [
     "associations",
@@ -79,6 +83,10 @@ IP_RELATIONSHIPS = [
     "vulnerabilities",
 ]
 
+IP_KEY_RELATIONSHIPS = [
+    "associations",
+]
+
 
 @server.tool()
 async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typing.Any]:
@@ -89,9 +97,8 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
   Returns:
     Report with insights about the domain.
   """
-  res = await utils.fetch_object(vt_client(ctx), "domains", "domain", domain, [
-      "associations",
-  ])
+  res = await utils.fetch_object(
+      vt_client(ctx), "domains", "domain", domain, DOMAIN_KEY_RELATIONSHIPS)
   return res
 
 
@@ -160,9 +167,8 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
   Returns:
     Report with insights about the IP address.
   """
-  res = await utils.fetch_object(vt_client(ctx), "ip_addresses", "ip", ip_address, [
-      "associations",
-  ])
+  res = await utils.fetch_object(
+      vt_client(ctx), "ip_addresses", "ip", ip_address, IP_KEY_RELATIONSHIPS)
   return res
 
 

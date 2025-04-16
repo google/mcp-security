@@ -30,7 +30,7 @@ async def fetch_object(
     resource_collection_type: str,
     resource_type: str,
     resource_id: str,
-    relationships: typing.List[str],
+    relationships: typing.List[str] = None,
     params: dict[str, typing.Any] = None):
   """Fetches objects from Google Threat Intelligence API."""
   logging.info(
@@ -54,8 +54,10 @@ async def fetch_object(
   obj_dict['id'] = obj.id
   if 'aggregations' in obj_dict['attributes']:
     del obj_dict['attributes']['aggregations']
-  obj_dict["relationships"] = await fetch_object_relationships(
-      vt_client, resource_collection_type, resource_id, relationships, params=params)
+
+  if relationships:
+    obj_dict["relationships"] = await fetch_object_relationships(
+        vt_client, resource_collection_type, resource_id, relationships, params=params)
 
   logging.info(
       f"Successfully generated concise threat summary for id: {resource_id}")
