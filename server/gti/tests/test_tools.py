@@ -25,94 +25,126 @@ from mcp.shared.memory import (
 
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
-    "entity_id,entity_collection,entity_type,relationships,tool_name,tool_id_name,gti_id",
+    "tool_name,tool_arguments,base_endpoint,obj_resp,relationships,expected",
     [
         (
-            "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
-            "files",
-            "file",
-            tools.FILE_KEY_RELATIONSHIPS,
             "get_file_report",
-            "hash",
-            "",
+            {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"},
+            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+            {
+                "data": {
+                    "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+                    "type": "file",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            tools.FILE_KEY_RELATIONSHIPS,
+            {
+                "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+                "type": "file",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.FILE_KEY_RELATIONSHIPS
+                }
+            },
         ),
         (
-            "theevil.com",
-            "domains",
-            "domain",
-            tools.DOMAIN_KEY_RELATIONSHIPS,
             "get_domain_report",
-            "domain",
-            "",
+            {"domain": "theevil.com"},
+            "/api/v3/domains/theevil.com",
+            {
+                "data": {
+                    "id": "theevil.com",
+                    "type": "domain",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            tools.DOMAIN_KEY_RELATIONSHIPS,
+            {
+                "id": "theevil.com",
+                "type": "domain",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.DOMAIN_KEY_RELATIONSHIPS
+                }
+            },
         ),
         (
-            "8.8.8.8",
-            "ip_addresses",
-            "ip_address",
-            tools.IP_KEY_RELATIONSHIPS,
             "get_ip_address_report",
-            "ip_address",
-            "",
+            {"ip_address": "8.8.8.8"},
+            "/api/v3/ip_addresses/8.8.8.8",
+            {
+                "data": {
+                    "id": "8.8.8.8",
+                    "type": "ip_address",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            tools.IP_KEY_RELATIONSHIPS,
+            {
+                "id": "8.8.8.8",
+                "type": "ip_address",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.IP_KEY_RELATIONSHIPS
+                }
+            },
         ),
         (
-            "http://theevil.com/",
-            "urls",
-            "url",
-            tools.URL_KEY_RELATIONSHIPS,
             "get_url_report",
-            "url",
-            "aHR0cDovL3RoZWV2aWwuY29tLw",
+            {"url": "http://theevil.com/"},
+            "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw",
+            {
+                "data": {
+                    "id": "970281e76715a46d571ac5bbcef540145f54e1a112751ccf616df2b3c6fe9de4",
+                    "type": "url",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            tools.URL_KEY_RELATIONSHIPS,
+            {
+                "id": "970281e76715a46d571ac5bbcef540145f54e1a112751ccf616df2b3c6fe9de4",
+                "type": "url",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.URL_KEY_RELATIONSHIPS
+                }
+            },
         ),
     ],
 )
-async def test_get_file_report(
+async def test_get_ioc_report(
     make_httpserver_ipv4,
     mock_vt_client,
-    entity_id,
-    entity_collection,
-    entity_type,
-    relationships,
     tool_name,
-    tool_id_name,
-    gti_id,
+    tool_arguments,
+    base_endpoint,
+    obj_resp,
+    relationships,
+    expected
 ):
     """Test `get_{file,domain,ip_address,url}_report` tools."""
 
-    tool_arguments = {tool_id_name: entity_id}
-
-    # Build API path.
-    base_endpoint = f"/api/v3/{entity_collection}/{entity_id}"
-    if gti_id:
-        # GTI expects url's sha256 or base64 encoded.
-        base_endpoint = f"/api/v3/{entity_collection}/{gti_id}"
-
     # Mock get object request.
-    expected = {
-        "data": {
-            "id": entity_id,
-            "type": entity_type,
-            "attributes": {"foo": "foo", "bar": "bar"},
-        }
-    }
     make_httpserver_ipv4.expect_request(
         base_endpoint,
         method="GET",
         headers={"X-Apikey": "dummy_api_key"},
-    ).respond_with_json(expected)
+    ).respond_with_json(obj_resp)
 
     # Mock get relationships requests.
-    expected_rels = {}
     for rel_name in relationships:
-        resp = {
-            "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
-        }
         make_httpserver_ipv4.expect_request(
             f"{base_endpoint}/{rel_name}",
             method="GET",
             headers={"X-Apikey": "dummy_api_key"},
-        ).respond_with_json(resp)
-        expected_rels[rel_name] = resp["data"]
-    expected["data"]["relationships"] = expected_rels
+        ).respond_with_json({
+            "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+        })
 
     # Execute tool call.
     async with client_session(server._mcp_server) as client:
@@ -121,7 +153,7 @@ async def test_get_file_report(
         assert result.isError == False
         assert len(result.content) == 1
         assert isinstance(result.content[0], mcp.types.TextContent)
-        assert json.loads(result.content[0].text) == expected["data"]
+        assert json.loads(result.content[0].text) == expected
 
 
 @pytest.mark.asyncio(scope="session")
