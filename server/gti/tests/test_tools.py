@@ -25,8 +25,10 @@ from mcp.shared.memory import (
 
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
-    "tool_name,tool_arguments,base_endpoint,obj_resp,relationships,expected",
-    [
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "abridged_relationships", "expected",
+    ],
+    argvalues=[
         (
             "get_file_report",
             {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"},
@@ -116,34 +118,16 @@ from mcp.shared.memory import (
             },
         ),
     ],
+    indirect=["vt_endpoint", "vt_object_response", "abridged_relationships"],
 )
+@pytest.mark.usefixtures("vt_get_object_mock")
 async def test_get_ioc_report(
-    make_httpserver_ipv4,
+    vt_get_object_mock,
     tool_name,
     tool_arguments,
-    base_endpoint,
-    obj_resp,
-    relationships,
-    expected
+    expected    
 ):
     """Test `get_{file,domain,ip_address,url}_report` tools."""
-
-    # Mock get object request.
-    make_httpserver_ipv4.expect_request(
-        base_endpoint,
-        method="GET",
-        headers={"X-Apikey": "dummy_api_key"},
-    ).respond_with_json(obj_resp)
-
-    # Mock get relationships requests.
-    for rel_name in relationships:
-        make_httpserver_ipv4.expect_request(
-            f"{base_endpoint}/{rel_name}",
-            method="GET",
-            headers={"X-Apikey": "dummy_api_key"},
-        ).respond_with_json({
-            "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
-        })
 
     # Execute tool call.
     async with client_session(server._mcp_server) as client:
