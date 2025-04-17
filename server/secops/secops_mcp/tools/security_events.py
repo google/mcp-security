@@ -41,6 +41,8 @@ async def search_security_events(
     - "Show me network connections from yesterday for the domain google.com"
     - "Display connections to IP address 192.168.1.100"
 
+    When searching for email addresses, use only lowercase letters.
+
     Args:
         text: Natural language description of the events you want to find
         project_id: Google Cloud project ID (defaults to config)
