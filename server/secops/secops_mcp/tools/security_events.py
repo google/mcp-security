@@ -31,29 +31,51 @@ async def search_security_events(
     max_events: int = 100,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Search for security events in Chronicle using natural language.
+    """Search for security events in Chronicle SIEM using natural language.
 
-    This function allows you to search for events using everyday language instead
-    of requiring UDM query syntax. The natural language query will be automatically translated
-    into a Chronicle UDM query for execution.
+    Allows searching Chronicle event logs using natural language queries, which are
+    automatically translated into UDM queries for execution.
 
-    Examples of natural language queries:
-    - "Show me network connections from yesterday for the domain google.com"
-    - "Display connections to IP address 192.168.1.100"
+    **Workflow Integration:**
+    Ideal for deep investigation *once a specific SOAR case has been prioritized*.
+    Use it to retrieve detailed UDM event logs from Chronicle related to the indicators
+    or timeline of the prioritized incident, going beyond the summary information
+    available in SOAR (via `secops-soar` tools) or entity summaries (via `lookup_entity`).
 
-    When searching for email addresses, use only lowercase letters.
+    **Use Cases:**
+    - Investigate specific activities or test hypotheses during alert/case analysis.
+    - Retrieve raw event logs related to specific indicators (IPs, domains, users, hosts)
+      or activities (e.g., logins, file modifications, network connections) within a
+      defined time window when more detail than an entity summary (`lookup_entity`) is required.
+
+    Examples of natural language queries for investigation:
+    - "Show network connections involving IP 10.0.0.5 in the last 6 hours"
+    - "Find login events for user 'admin' yesterday"
+    - "List file modifications on host 'server1' today"
+    - "Search for DNS lookups to 'malicious.example.com' in the past 3 days"
+
+    Note: When searching for email addresses, use only lowercase letters.
 
     Args:
-        text: Natural language description of the events you want to find
-        project_id: Google Cloud project ID (defaults to config)
-        customer_id: Chronicle customer ID (defaults to config)
-        hours_back: How many hours to look back (default: 24)
-        max_events: Maximum number of events to return (default: 100)
-        region: Chronicle region (defaults to config)
+        text (str): Natural language description of the events you want to find.
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        hours_back (int): How many hours back from the current time to search. Defaults to 24.
+        max_events (int): Maximum number of event records to return. Defaults to 100.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        Dictionary containing the UDM query and search results, including events
-        and metadata.
+        Dict[str, Any]: A dictionary containing:
+            - 'udm_query' (str | None): The translated UDM query used for the search, or None if translation failed.
+            - 'events' (Dict): A dictionary containing the search results:
+                - 'events' (List[Dict]): The list of UDM event records found.
+                - 'total_events' (int): The total number of events matching the query (may exceed `max_events`).
+                - 'error' (str | None): An error message if the search failed.
+
+    Next Steps:
+        - Analyze the returned UDM event records for relevant details (e.g., specific commands executed, full connection details, file paths).
+        - Correlate findings with information from SOAR cases or entity lookups (`lookup_entity`).
+        - Use findings to add detailed comments to the relevant SOAR case (e.g., using `secops-soar:post_case_comment`) or inform further response actions.
     """
     try:
         logger.info(
@@ -102,4 +124,4 @@ async def search_security_events(
         return {
             'udm_query': None,
             'events': {'error': str(e), 'events': [], 'total_events': 0},
-        } 
+        }

@@ -31,19 +31,44 @@ async def get_security_alerts(
     status_filter: str = 'feedback_summary.status != "CLOSED"',
     region: Optional[str] = None,
 ) -> str:
-    """Get security alerts from Chronicle.
+    """Get security alerts directly from Chronicle SIEM.
+
+    Retrieves a list of recent security alerts generated within Chronicle, based on
+    detection rules or other alert sources configured in the SIEM.
+
+    **Workflow Integration:**
+    - Use this for direct monitoring of Chronicle alert activity, potentially identifying
+      issues before they are ingested or processed by a SOAR platform.
+    - Can be used as an initial step to get a sense of recent high-priority events
+      directly from the source SIEM.
+    - Contrast this with `secops-soar:list_alerts_by_case`, which retrieves alerts
+      already associated with a specific case within the SOAR platform.
+
+    **Use Cases:**
+    - Get a quick overview of recent, non-closed alerts in Chronicle.
+    - Monitor for specific high-severity alerts or rule triggers.
+    - Check for alerts that might not have corresponding SOAR cases yet.
 
     Args:
-        project_id: Google Cloud project ID (defaults to config)
-        customer_id: Chronicle customer ID (defaults to config)
-        hours_back: How many hours to look back (default: 24)
-        max_alerts: Maximum number of alerts to return (default: 10)
-        status_filter: Query string to filter alerts by status (default: exclude
-          closed)
-        region: Chronicle region (defaults to config)
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        hours_back (int): How many hours to look back for alerts. Defaults to 24.
+        max_alerts (int): Maximum number of alerts to return. Defaults to 10.
+        status_filter (str): Query string to filter alerts by status (e.g., 'feedback_summary.status != "CLOSED"').
+                             Defaults to excluding closed alerts.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        Formatted string with security alerts
+        str: A formatted string summarizing the retrieved security alerts, including rule name,
+             creation time, status, severity, and associated SOAR case (if available).
+             Returns 'No security alerts found...' if none match the criteria.
+
+    Next Steps:
+        - Analyze the returned alerts for priority and relevance.
+        - For high-priority alerts, check if a SOAR case already exists (using `secops-soar:list_cases` or checking the alert details).
+        - If no SOAR case exists, consider creating one or initiating investigation.
+        - Use `lookup_entity` on indicators found within the alert details.
+        - Use `search_security_events` to find related raw logs in Chronicle.
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -118,4 +143,4 @@ async def get_security_alerts(
 
         return result
     except Exception as e:
-        return f'Error retrieving security alerts: {str(e)}' 
+        return f'Error retrieving security alerts: {str(e)}'

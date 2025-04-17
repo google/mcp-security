@@ -24,18 +24,39 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def list_security_rules(
     project_id: Optional[str] = None, 
-    customer_id: Optional[str] = None, 
-    region: Optional[str] = None
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List security detection rules from Chronicle.
+    """List security detection rules configured in Chronicle SIEM.
+
+    Retrieves the definitions of detection rules currently active or configured
+    within the Chronicle SIEM instance.
+
+    **Workflow Integration:**
+    - Useful for understanding the detection capabilities currently deployed.
+    - Can help identify the specific rule that generated a Chronicle alert
+      (obtained via `get_security_alerts` or from SOAR case details).
+    - Provides context for rule tuning or development efforts.
+
+    **Use Cases:**
+    - Review the logic or scope of a specific detection rule.
+    - Audit the set of active detection rules.
+    - Understand which rules might be relevant to a particular threat scenario.
 
     Args:
-        project_id: Google Cloud project ID (defaults to config)
-        customer_id: Chronicle customer ID (defaults to config)
-        region: Chronicle region (defaults to config)
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        Raw response from the Chronicle API containing security detection rules
+        Dict[str, Any]: Raw response from the Chronicle API, typically containing a list
+                        of rule objects with their definitions and metadata. Returns an
+                        error structure if the API call fails.
+
+    Next Steps:
+        - Analyze the rule definition (e.g., the YARA-L code) to understand its trigger conditions.
+        - Correlate rule details with specific alerts (`get_security_alerts`) or SOAR cases.
+        - Use insights for rule optimization or false positive analysis.
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -43,4 +64,4 @@ async def list_security_rules(
         return rules_response
     except Exception as e:
         logger.error(f'Error listing security rules: {str(e)}', exc_info=True)
-        return {'error': str(e), 'rules': []} 
+        return {'error': str(e), 'rules': []}

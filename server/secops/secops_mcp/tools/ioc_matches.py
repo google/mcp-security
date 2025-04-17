@@ -30,17 +30,42 @@ async def get_ioc_matches(
     max_matches: int = 20,
     region: Optional[str] = None,
 ) -> str:
-    """Get Indicators of Compromise (IoCs) matches from Chronicle.
+    """Get Indicators of Compromise (IoCs) matches from Chronicle SIEM.
+
+    Retrieves IoCs (e.g., malicious IPs, domains, hashes) from configured threat
+    intelligence feeds that have been observed matching events in Chronicle logs
+    within the specified time window.
+
+    **Workflow Integration:**
+    - Use this to proactively identify potential threats based on IoC matches,
+      even before specific detection rules trigger or SOAR cases are created.
+    - Can provide early warning signs or context during investigations initiated
+      from other alerts or intelligence sources.
+    - Complements rule-based alerts (`get_security_alerts`) by showing matches
+      against known bad indicators.
+
+    **Use Cases:**
+    - Monitor for recent sightings of known malicious indicators in your environment.
+    - Identify assets that may have interacted with known bad infrastructure or files.
+    - Supplement investigations by checking if involved entities match known IoCs.
 
     Args:
-        project_id: Google Cloud project ID (defaults to config)
-        customer_id: Chronicle customer ID (defaults to config)
-        hours_back: How many hours to look back (default: 24)
-        max_matches: Maximum number of matches to return (default: 20)
-        region: Chronicle region (defaults to config)
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        hours_back (int): How many hours back to look for IoC matches. Defaults to 24.
+        max_matches (int): Maximum number of IoC matches to return. Defaults to 20.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        Formatted string with IoC matches
+        str: A formatted string summarizing the IoC matches found, including the IoC type,
+             value, and the threat intelligence sources that identified it. Returns
+             'No IoC matches found...' if none are found in the time range.
+
+    Next Steps:
+        - Investigate the assets or events associated with the matched IoCs.
+        - Use `lookup_entity` on the matched IoC value (IP, domain, hash) for broader context.
+        - Use `search_security_events` to find the specific events in Chronicle logs that triggered the IoC match.
+        - Check if related SOAR cases exist or create one if the match indicates a significant threat.
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -92,4 +117,4 @@ async def get_ioc_matches(
 
         return result
     except Exception as e:
-        return f'Error retrieving IoC matches: {str(e)}' 
+        return f'Error retrieving IoC matches: {str(e)}'

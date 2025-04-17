@@ -37,6 +37,17 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary representing the raw API response from the SOAR platform,
                   usually containing a list of case objects with their summary details (e.g., ID, name, status, priority).
+                  While priority is a key factor for triage, it should be considered alongside other case details for a complete assessment.
+
+        **Workflow Integration:**
+        - Often the first step in a triage workflow to understand the current incident queue.
+        - Use the output to identify high-priority or newly opened cases needing attention.
+
+        **Next Steps:**
+        - Identify specific `case_id` values from the response for further investigation.
+        - Use `get_case_full_details` for a comprehensive view of a specific case.
+        - Use `list_alerts_by_case` to see the alerts associated with a specific case.
+        - Use `change_case_priority` if initial assessment suggests a different priority is warranted.
         """
         return await bindings.http_client.get(Endpoints.BASE_CASE_URL)
 
@@ -62,6 +73,16 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary representing the raw API response, usually confirming
                   the successful posting of the comment or indicating any errors.
+
+        **Workflow Integration:**
+        - Use this throughout an investigation to document findings, analyst actions,
+          or conclusions derived from other tools (e.g., `secops:lookup_entity`,
+          `secops:search_security_events`, `gti` tools).
+        - Essential for collaboration and maintaining an audit trail within the case.
+
+        **Next Steps:**
+        - Continue investigation based on the information documented.
+        - Use comments to justify changes in case priority (`change_case_priority`) or status.
         """
         return await bindings.http_client.post(
             Endpoints.BASE_CASE_COMMENTS_URL.format(CASE_ID=case_id),
@@ -86,7 +107,20 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary representing the raw API response, typically containing
                   a list of alert objects linked to the specified case, including details
-                  like alert name, source, severity, and timestamp.
+                  like alert name, source, severity, and timestamp. Alert severity provides
+                  initial guidance, but the actual risk depends on the context and evidence
+                  within the associated events.
+
+        **Workflow Integration:**
+        - Use after identifying a case of interest (via `list_cases` or `get_case_full_details`).
+        - Helps understand the specific triggers and scope of the incident represented by the case.
+
+        **Next Steps:**
+        - Identify specific `alert_id` values for deeper investigation.
+        - Use `list_events_by_alert` to get the raw events underlying a specific alert.
+        - Use `list_alert_group_identifiers_by_case` to understand how alerts are grouped.
+        - Use `get_entities_by_alert_group_identifiers` to find entities associated with specific alert groups.
+        - Use `secops:lookup_entity` or `secops:search_security_events` based on indicators found in the alerts.
         """
         return await bindings.http_client.get(
             Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id)
@@ -112,6 +146,17 @@ def register_tools(mcp: FastMCP):
                   The exact structure depends on the API, but it typically contains
                   a list of strings, where each string is an alert group identifier
                   associated with the specified case.
+
+        **Workflow Integration:**
+        - Use after identifying a case (`list_cases`) and its alerts (`list_alerts_by_case`).
+        - Helps understand how alerts are grouped within the case, which might be relevant
+          for understanding playbook logic or identifying related sets of alerts.
+
+        **Next Steps:**
+        - Use the retrieved identifiers with `get_entities_by_alert_group_identifiers`
+          to find entities specifically related to these groups.
+        - Use the identifiers as parameters for certain playbook actions or integrations
+          if they operate on alert groups (e.g., some `google_chronicle_*` actions).
         """
         return await bindings.http_client.get(
             Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id)
@@ -138,6 +183,16 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary representing the raw API response from the SOAR platform,
                   typically containing a list of event objects (potentially in UDM format)
                   related to the specified alert.
+
+        **Workflow Integration:**
+        - Use after identifying a specific alert of interest within a case (via `list_alerts_by_case`).
+        - Provides the ground truth data needed to validate the alert and understand the exact actions that occurred.
+
+        **Next Steps:**
+        - Analyze the UDM event data for specific details (e.g., process command lines, network connection details, file hashes).
+        - Use indicators found in the events for further enrichment using `secops:lookup_entity`, `secops:get_threat_intel`, or `gti` tools.
+        - Correlate event details with other related events using `secops:search_security_events`.
+        - Document findings in the case using `post_case_comment`.
         """
         return await bindings.http_client.get(
             Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
@@ -156,9 +211,9 @@ def register_tools(mcp: FastMCP):
 
         Case priority (e.g., PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium,
         PriorityHigh, PriorityCritical) helps security teams triage incidents and focus
-        on the most urgent threats. This is crucial for managing analyst workload and
-        ensuring timely response to critical events. The priority might be adjusted
-        during the investigation lifecycle based on new findings.
+        on the most urgent threats. Remember that priority can change as more context is 
+        gathered during the investigation. The priority might be adjusted during the 
+        investigation lifecycle based on new findings. 
 
         Args:
             case_id (str): The unique identifier (ID) of the case whose priority needs
@@ -171,6 +226,16 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary representing the raw API response from the SOAR platform,
                   usually confirming the successful update of the case priority or
                   indicating any errors encountered.
+
+        **Workflow Integration:**
+        - Use during triage or investigation when new information suggests the initial
+          priority is incorrect (e.g., after using `get_case_full_details`, `secops:lookup_entity`,
+          or `gti` tools).
+        - Helps ensure analyst focus aligns with the actual risk posed by the incident.
+
+        **Next Steps:**
+        - Document the reason for the priority change using `post_case_comment`.
+        - Adjust investigation efforts based on the new priority level.
         """
         return await bindings.http_client.patch(
             Endpoints.BASE_SPECIFIC_CASE_URL.format(CASE_ID=case_id),
@@ -203,6 +268,17 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary representing the raw API response from the SOAR platform.
                   This typically contains a list or structure detailing the entities
                   (with identifiers, types, etc.) associated with the specified alert groups.
+
+        **Workflow Integration:**
+        - Use after identifying relevant `alert_group_identifiers` within a case (via `list_alert_group_identifiers_by_case`).
+        - Crucial for pinpointing the specific assets, users, or indicators involved in a particular stage or aspect of an incident.
+
+        **Next Steps:**
+        - Analyze the list of entities to understand the scope of impact.
+        - Use `get_entity_details` to get more SOAR-specific context on individual entities.
+        - Use `secops:lookup_entity` to get broader historical context from Chronicle SIEM for these entities.
+        - Use `secops:search_security_events` to find detailed logs related to these entities' activities.
+        - Use the entity list as input for targeted response actions or playbooks.
         """
         return await bindings.http_client.post(
             Endpoints.GET_ALERT_GROUP_IDENTIFIERS_ENTITIES,
@@ -237,6 +313,18 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary representing the raw API response from the SOAR platform,
                   containing detailed attributes and related information for the specified entity.
+
+        **Workflow Integration:**
+        - Use after identifying a specific entity of interest, perhaps via
+          `get_entities_by_alert_group_identifiers` or `search_entity`.
+        - Provides the SOAR platform's view of the entity, including enrichments
+          performed by SOAR playbooks or integrations.
+
+        **Next Steps:**
+        - Analyze the enrichment data (e.g., threat intel scores, asset details).
+        - Compare SOAR entity details with broader context from `secops:lookup_entity`.
+        - Use findings to inform risk assessment and response decisions.
+        - Document key details using `post_case_comment`.
         """
         return await bindings.http_client.post(
             Endpoints.FETCH_FULL_UNIQUE_ENTITY,
@@ -322,6 +410,17 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary representing the raw API response from the SOAR platform,
                   typically containing a list of entity objects matching the search criteria.
+
+        **Workflow Integration:**
+        - Useful for exploratory analysis or finding entities when you don't have a specific
+          identifier from an alert or case.
+        - Can help identify potentially related entities based on partial information or
+          shared characteristics (e.g., finding all suspicious hosts in a specific environment).
+
+        **Next Steps:**
+        - Analyze the list of returned entities.
+        - Use `get_entity_details` for more information on specific entities found.
+        - Use `secops:lookup_entity` for broader context on interesting entities.
         """
         return await bindings.http_client.post(
             Endpoints.SEARCH_ENTITY,
@@ -357,6 +456,21 @@ def register_tools(mcp: FastMCP):
                   - 'case_details': The raw API response for the basic case information.
                   - 'case_alerts': The raw API response containing the list of alerts associated with the case.
                   - 'case_comments': The raw API response containing the list of comments for the case.
+                  Use the priority field as an initial guide, but analyze the combined details (alerts, comments, entities) to determine the true urgency and impact.
+
+        **Workflow Integration:**
+        - A primary tool for investigating a specific case identified via `list_cases`.
+        - Provides a comprehensive starting point by gathering core case data, alerts, and comments in one call.
+
+        **Next Steps:**
+        - Analyze the `case_details` for status, priority, and description.
+        - Examine `case_alerts` to understand the triggers (use `list_events_by_alert` for underlying events).
+        - Review `case_comments` for analyst notes or previous actions.
+        - Identify key entities from alerts or comments.
+        - Use `list_alert_group_identifiers_by_case` and `get_entities_by_alert_group_identifiers` to find associated entities.
+        - Enrich findings using `secops` and `gti` tools.
+        - Document investigation progress using `post_case_comment`.
+        - Consider adjusting priority with `change_case_priority` based on findings.
         """
         case_coro = bindings.http_client.get(
             Endpoints.BASE_SPECIFIC_CASE_URL.format(CASE_ID=case_id)
