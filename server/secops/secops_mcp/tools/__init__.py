@@ -11,23 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#!/usr/bin/env python3
-import setuptools
+"""Security Operations MCP tools package."""
 
-setup = setuptools.setup
-
-setup(
-    name="secops-mcp",
-    version="0.1.0",
-    py_modules=["secops_mcp", "main"],  # Include both modules
-    install_requires=[
-        "fastmcp",
-        "secops",
-    ],
-    entry_points={
-        "console_scripts": [
-            "secops-mcp=secops_mcp:main",
-        ],
-    },
-)
+from .security_events import *
+from .security_alerts import *
+from .entity_lookup import *
+from .security_rules import *
+from .ioc_matches import *
+from .threat_intel import * 
