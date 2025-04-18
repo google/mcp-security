@@ -13,6 +13,9 @@ dependencies = [
     "vt-py"
 ]
 
+[project.optional-dependencies]
+test = ["pytest", "pytest_httpserver", "pytest_asyncio"]
+
 [tool.setuptools.packages]
 find = {} 
 

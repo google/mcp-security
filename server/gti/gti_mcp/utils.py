@@ -17,7 +17,7 @@ import vt
 import typing
 
 
-async def consume_vt_iterator(vt_client: vt.Client, endpoint: str, params: dict = None, limit: int = 10):
+async def consume_vt_iterator(vt_client: vt.Client, endpoint: str, params: dict | None, limit: int = 10):
   """Consumes a vt.Iterator iterator and return the list of objects."""
   res = []
   async for obj in vt_client.iterator(endpoint, params=params, limit=limit):
@@ -30,8 +30,8 @@ async def fetch_object(
     resource_collection_type: str,
     resource_type: str,
     resource_id: str,
-    relationships: typing.List[str],
-    params: dict[str, typing.Any] = None):
+    relationships: list[str] | None = None,
+    params: dict[str, typing.Any] | None = None):
   """Fetches objects from Google Threat Intelligence API."""
   logging.info(
       f"Fetching comprehensive {resource_collection_type} "
@@ -54,8 +54,10 @@ async def fetch_object(
   obj_dict['id'] = obj.id
   if 'aggregations' in obj_dict['attributes']:
     del obj_dict['attributes']['aggregations']
-  obj_dict["relationships"] = await fetch_object_relationships(
-      vt_client, resource_collection_type, resource_id, relationships, params=params)
+
+  if relationships:
+    obj_dict["relationships"] = await fetch_object_relationships(
+        vt_client, resource_collection_type, resource_id, relationships, params=params)
 
   logging.info(
       f"Successfully generated concise threat summary for id: {resource_id}")
@@ -67,7 +69,7 @@ async def fetch_object_relationships(
     resource_collection_type: str,
     resource_id: str,
     relationships: typing.List[str],
-    params: dict[str, typing.Any] = None):
+    params: dict[str, typing.Any] | None = None):
   """Fetches the given relationships from the given object."""
   rel_futures = {}
   async with asyncio.TaskGroup() as tg:

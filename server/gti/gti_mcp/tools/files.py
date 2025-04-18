@@ -70,6 +70,17 @@ FILE_RELATIONSHIPS = [
     "vulnerabilities",
 ]
 
+FILE_KEY_RELATIONSHIPS = [
+    "contacted_domains",
+    "contacted_ips",
+    "contacted_urls",
+    "dropped_files",
+    "embedded_domains",
+    "embedded_ips",
+    "embedded_urls",
+    "associations",
+]
+
 
 @server.tool()
 async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
@@ -86,16 +97,7 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
       "files",
       "file",
       hash,
-      [
-          "contacted_domains",
-          "contacted_ips",
-          "contacted_urls",
-          "dropped_files",
-          "embedded_domains",
-          "embedded_ips",
-          "embedded_urls",
-          "associations",
-      ],
+      FILE_KEY_RELATIONSHIPS,
   )
   return res
 

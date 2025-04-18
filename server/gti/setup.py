@@ -25,6 +25,9 @@ setup(
         "mcp",
         "vt-py",
     ],
+    extras_require={
+        "test": ["pytest", "pytest_httpserver", "pytest_asyncio"]
+    },
     entry_points={
         "console_scripts": [
             "gti_mcp=gti_mcp.server:main",

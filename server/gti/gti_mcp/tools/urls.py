@@ -55,6 +55,10 @@ URL_RELATIONSHIPS = [
     "vulnerabilities",
 ]
 
+URL_KEY_RELATIONSHIPS = [
+    "associations",
+]
+
 
 def url_to_base64(url: str) -> str:
   """Converts the URL into base64.

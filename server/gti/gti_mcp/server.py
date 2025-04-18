@@ -29,11 +29,15 @@ class AppContext:
   client: vt.Client
 
 
+async def new_vt_client():
+  return vt.Client(os.environ.get('VT_APIKEY'))
+
+
 @asynccontextmanager
 async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
   """Manage application lifecycle with type-safe context"""
   # Initialize on startup
-  client = vt.Client(os.environ.get('VT_APIKEY'))
+  client = await new_vt_client()
   try:
     yield AppContext(client=client)
   finally:
