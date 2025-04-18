@@ -31,29 +31,84 @@ async def search_security_events(
     max_events: int = 100,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Search for security events in Chronicle using natural language.
+    """Search for security events in Chronicle SIEM using natural language.
 
-    This function allows you to search for events using everyday language instead
-    of requiring UDM query syntax. The natural language query will be automatically translated
-    into a Chronicle UDM query for execution.
+    Allows searching Chronicle event logs using natural language queries, which are
+    automatically translated into UDM queries for execution.
 
-    Examples of natural language queries:
-    - "Show me network connections from yesterday for the domain google.com"
-    - "Display connections to IP address 192.168.1.100"
+    **Workflow Integration:**
+    - Ideal for deep investigation after an initial alert, case, or entity has been prioritized.
+    - Use it to retrieve detailed UDM event logs from Chronicle SIEM related to specific indicators
+      or activities, going beyond high-level summaries from other tools.
+    - Helps validate findings from other security platforms (SOAR, EDR, TI) by examining the
+      underlying log evidence.
 
-    When searching for email addresses, use only lowercase letters.
+    **Use Cases:**
+    - Investigate specific activities or test hypotheses during incident analysis.
+    - Retrieve raw event logs related to specific indicators (IPs, domains, users, hosts)
+      or activities (e.g., logins, file modifications, network connections) within a
+      defined time window when granular detail is needed.
+
+    Examples of natural language queries for investigation:
+    - "Show network connections involving IP 10.0.0.5 in the last 6 hours"
+    - "Find login events for user 'admin' yesterday"
+    - "List file modifications on host 'server1' today"
+    - "Search for DNS lookups to 'malicious.example.com' in the past 3 days"
+
+    Note: When searching for email addresses, use only lowercase letters.
 
     Args:
-        text: Natural language description of the events you want to find
-        project_id: Google Cloud project ID (defaults to config)
-        customer_id: Chronicle customer ID (defaults to config)
-        hours_back: How many hours to look back (default: 24)
-        max_events: Maximum number of events to return (default: 100)
-        region: Chronicle region (defaults to config)
+        text (str): Natural language description of the events you want to find.
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        hours_back (int): How many hours back from the current time to search. Defaults to 24.
+        max_events (int): Maximum number of event records to return. Defaults to 100.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        Dictionary containing the UDM query and search results, including events
-        and metadata.
+        Dict[str, Any]: A dictionary containing:
+            - 'udm_query' (str | None): The translated UDM query used for the search, or None if translation failed.
+            - 'events' (Dict): A dictionary containing the search results:
+                - 'events' (List[Dict]): The list of UDM event records found.
+                - 'total_events' (int): The total number of events matching the query (may exceed `max_events`).
+                - 'error' (str | None): An error message if the search failed.
+
+    Next Steps (using MCP-enabled tools):
+        - Analyze the returned UDM event records for relevant details (e.g., specific commands executed, full connection details, file paths).
+        - Extract new indicators (IPs, domains, hashes, users) from the events.
+        - Use entity lookup tools (like `lookup_entity`) or threat intelligence tools
+          to enrich newly found indicators.
+        - Correlate findings with data from other security tools (e.g., EDR process details,
+          network flow data, cloud audit logs) via their respective MCP tools.
+        - Document findings in a relevant case management or ticketing system using an appropriate MCP tool.
+        - Use findings to inform response actions (e.g., blocking an IP, isolating a host) via SOAR or endpoint MCP tools.
+
+    **Troubleshooting & Iterative Searching:**
+
+    If your initial natural language search doesn't return the expected events, consider the following iterative steps:
+
+    1.  **Check the Translated Query:** Examine the `udm_query` field in the response. This shows how your natural language was translated into UDM. Does it accurately reflect your intent? Are the correct UDM fields being targeted?
+    2.  **Broaden the Search:**
+        *   **Remove Specific Event Types:** If you initially filtered by `metadata.event_type` (e.g., "USER_LOGIN"), try removing that constraint to search across all event types. Example: "Find any events involving IP 1.2.3.4" instead of "Find login events involving IP 1.2.3.4".
+        *   **Simplify the Query:** Reduce the complexity of your natural language query to focus on the core entity or activity.
+    3.  **Target Alternative UDM Fields:** Chronicle's UDM has many fields. If searching for an entity like a user or IP doesn't work with a simple query, the identifier might be in a less common field. Try specifying fields often used for:
+        *   **Users:** `principal.user.userid`, `target.user.userid`, `src.user.userid`, `network.email.from`, `network.email.to`, `about.user.userid`
+        *   **IPs:** `principal.ip`, `target.ip`, `src.ip`, `observer.ip`, `network.ip`, `about.ip`
+        *   **Hostnames:** `principal.hostname`, `target.hostname`, `src.hostname`, `about.hostname`
+        *   **URLs:** `target.url`, `about.url`
+        *   **Hashes:** `target.file.md5`, `target.file.sha1`, `target.file.sha256`, `principal.process.file.md5`, etc.
+        *   **Natural Language Example:** Instead of "Events for user john.doe@example.com", try "Events where the target email address is john.doe@example.com" or "Events where the principal user ID is john.doe@example.com".
+    4.  **Refine Time Window:** Ensure the `hours_back` parameter covers the expected timeframe of the events.
+    5.  **Consult UDM Schema:** If specific fields are known, referencing the Chronicle UDM schema can help formulate more precise natural language queries targeting those fields.
+
+    **Example Iteration:**
+
+    *   **Initial Query (Fails):** "Find login events for user charlie.brown@cymbalgroup.com"
+        *   *Returned `udm_query`: `metadata.event_type = "USER_LOGIN" user = "charlie.brown@cymbalgroup.com"`*
+        *   *Result: 0 events*
+    *   **Iteration 1 (Broaden):** "Find any events where the user is 'charlie.brown@cymbalgroup.com'"
+        *   *Returned `udm_query`: `email = "charlie.brown@cymbalgroup.com"`*
+        *   *Result: 6 events (Success!)* - This indicates the user identifier was primarily in an `email` field, not the generic `user` field, and removing the `USER_LOGIN` constraint helped.
     """
     try:
         logger.info(
@@ -102,4 +157,4 @@ async def search_security_events(
         return {
             'udm_query': None,
             'events': {'error': str(e), 'events': [], 'total_events': 0},
-        } 
+        }
