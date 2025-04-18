@@ -33,15 +33,15 @@ async def list_security_rules(
     within the Chronicle SIEM instance.
 
     **Workflow Integration:**
-    - Useful for understanding the detection capabilities currently deployed.
-    - Can help identify the specific rule that generated a Chronicle alert
-      (obtained via `get_security_alerts` or from SOAR case details).
-    - Provides context for rule tuning or development efforts.
+    - Useful for understanding the detection capabilities currently deployed in the SIEM.
+    - Can help identify the specific rule that generated a SIEM alert (obtained via SIEM alert tools
+      or from case management/SOAR system details).
+    - Provides context for rule tuning, development, or understanding alert logic.
 
     **Use Cases:**
-    - Review the logic or scope of a specific detection rule.
-    - Audit the set of active detection rules.
-    - Understand which rules might be relevant to a particular threat scenario.
+    - Review the logic or scope of a specific detection rule identified from an alert.
+    - Audit the set of active detection rules within the SIEM.
+    - Understand which rules might be relevant to a particular threat scenario or TTP.
 
     Args:
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
@@ -53,10 +53,11 @@ async def list_security_rules(
                         of rule objects with their definitions and metadata. Returns an
                         error structure if the API call fails.
 
-    Next Steps:
+    Next Steps (using MCP-enabled tools):
         - Analyze the rule definition (e.g., the YARA-L code) to understand its trigger conditions.
-        - Correlate rule details with specific alerts (`get_security_alerts`) or SOAR cases.
-        - Use insights for rule optimization or false positive analysis.
+        - Correlate rule details with specific alerts retrieved from the SIEM or case management system.
+        - Use insights for rule optimization, false positive analysis, or developing related detections.
+        - Document relevant rule information in associated cases using a case management tool.
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)

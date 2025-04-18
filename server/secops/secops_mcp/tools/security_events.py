@@ -37,16 +37,17 @@ async def search_security_events(
     automatically translated into UDM queries for execution.
 
     **Workflow Integration:**
-    Ideal for deep investigation *once a specific SOAR case has been prioritized*.
-    Use it to retrieve detailed UDM event logs from Chronicle related to the indicators
-    or timeline of the prioritized incident, going beyond the summary information
-    available in SOAR (via `secops-soar` tools) or entity summaries (via `lookup_entity`).
+    - Ideal for deep investigation after an initial alert, case, or entity has been prioritized.
+    - Use it to retrieve detailed UDM event logs from Chronicle SIEM related to specific indicators
+      or activities, going beyond high-level summaries from other tools.
+    - Helps validate findings from other security platforms (SOAR, EDR, TI) by examining the
+      underlying log evidence.
 
     **Use Cases:**
-    - Investigate specific activities or test hypotheses during alert/case analysis.
+    - Investigate specific activities or test hypotheses during incident analysis.
     - Retrieve raw event logs related to specific indicators (IPs, domains, users, hosts)
       or activities (e.g., logins, file modifications, network connections) within a
-      defined time window when more detail than an entity summary (`lookup_entity`) is required.
+      defined time window when granular detail is needed.
 
     Examples of natural language queries for investigation:
     - "Show network connections involving IP 10.0.0.5 in the last 6 hours"
@@ -72,10 +73,15 @@ async def search_security_events(
                 - 'total_events' (int): The total number of events matching the query (may exceed `max_events`).
                 - 'error' (str | None): An error message if the search failed.
 
-    Next Steps:
+    Next Steps (using MCP-enabled tools):
         - Analyze the returned UDM event records for relevant details (e.g., specific commands executed, full connection details, file paths).
-        - Correlate findings with information from SOAR cases or entity lookups (`lookup_entity`).
-        - Use findings to add detailed comments to the relevant SOAR case (e.g., using `secops-soar:post_case_comment`) or inform further response actions.
+        - Extract new indicators (IPs, domains, hashes, users) from the events.
+        - Use entity lookup tools (like `lookup_entity`) or threat intelligence tools
+          to enrich newly found indicators.
+        - Correlate findings with data from other security tools (e.g., EDR process details,
+          network flow data, cloud audit logs) via their respective MCP tools.
+        - Document findings in a relevant case management or ticketing system using an appropriate MCP tool.
+        - Use findings to inform response actions (e.g., blocking an IP, isolating a host) via SOAR or endpoint MCP tools.
     """
     try:
         logger.info(

@@ -37,17 +37,17 @@ async def get_ioc_matches(
     within the specified time window.
 
     **Workflow Integration:**
-    - Use this to proactively identify potential threats based on IoC matches,
-      even before specific detection rules trigger or SOAR cases are created.
-    - Can provide early warning signs or context during investigations initiated
-      from other alerts or intelligence sources.
-    - Complements rule-based alerts (`get_security_alerts`) by showing matches
-      against known bad indicators.
+    - Use this to proactively identify potential threats based on IoC matches within SIEM data,
+      potentially before specific detection rules trigger or cases are created in other systems.
+    - Can provide early warning signs or context during investigations initiated from alerts
+      or intelligence originating from any connected security tool (SIEM, EDR, TI platforms, etc.).
+    - Complements rule-based alerts by showing matches against known bad indicators from
+      threat intelligence feeds integrated with the SIEM.
 
     **Use Cases:**
-    - Monitor for recent sightings of known malicious indicators in your environment.
-    - Identify assets that may have interacted with known bad infrastructure or files.
-    - Supplement investigations by checking if involved entities match known IoCs.
+    - Monitor for recent sightings of known malicious indicators within SIEM logs.
+    - Identify assets that may have interacted with known bad infrastructure or files, based on log evidence.
+    - Supplement investigations by checking if involved entities match known IoCs curated by threat intelligence sources.
 
     Args:
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
@@ -61,11 +61,12 @@ async def get_ioc_matches(
              value, and the threat intelligence sources that identified it. Returns
              'No IoC matches found...' if none are found in the time range.
 
-    Next Steps:
+    Next Steps (using MCP-enabled tools):
         - Investigate the assets or events associated with the matched IoCs.
-        - Use `lookup_entity` on the matched IoC value (IP, domain, hash) for broader context.
-        - Use `search_security_events` to find the specific events in Chronicle logs that triggered the IoC match.
-        - Check if related SOAR cases exist or create one if the match indicates a significant threat.
+        - Use entity lookup tools to get broader context on the matched IoC value (IP, domain, hash).
+        - Use SIEM event search tools to find the specific events in logs that triggered the IoC match.
+        - Check if related cases exist in your case management/SOAR system or create one if the match indicates a significant threat.
+        - Correlate IoC match details with findings from other security tools (EDR, Network, Cloud) via their MCP tools.
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
