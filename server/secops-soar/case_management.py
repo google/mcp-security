@@ -31,17 +31,17 @@ def register_tools(mcp: FastMCP):
         In a SOAR context, a 'case' typically represents a security incident, investigation,
         or a container for related alerts and response actions. Listing cases provides an
         overview of ongoing or past security events being managed by the platform.
-        This is useful for getting a high-level view of the security posture or finding
+        This is useful for getting a high-level list of recent security issues or finding
         a specific incident to investigate further.
 
         Returns:
             dict: A dictionary representing the raw API response from the SOAR platform,
                   usually containing a list of case objects with their summary details (e.g., ID, name, status, priority).
-                  While priority is a key factor for triage, it should be considered alongside other case details for a complete assessment.
+                  **Important Triage Note:** Case priority is only an initial indicator. True importance must be assessed by examining the full context (alerts, entities, potential impact, threat intelligence) using tools like `get_case_full_details`.
 
         **Workflow Integration:**
-        - Often the first step in a triage workflow to understand the current incident queue within the SOAR platform.
-        - Use the output to identify high-priority or newly opened cases needing attention.
+        - Often the FIRST step in a triage workflow to understand the current incident queue within the SOAR platform.
+        - Use the output as a STARTING point, not an end, for cases needing attention.
 
         **Next Steps (using MCP-enabled tools):**
         - Identify specific `case_id` values from the response for further investigation.
@@ -217,9 +217,9 @@ def register_tools(mcp: FastMCP):
 
         Case priority (e.g., PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium,
         PriorityHigh, PriorityCritical) helps security teams triage incidents and focus
-        on the most urgent threats. Remember that priority can change as more context is 
-        gathered during the investigation. The priority might be adjusted during the 
-        investigation lifecycle based on new findings. 
+        on the most urgent threats based on the *currently available information*. Remember that priority can change as more context is
+        gathered during the investigation. The priority might be adjusted during the
+        investigation lifecycle based on new findings.
 
         Args:
             case_id (str): The unique identifier (ID) of the case whose priority needs
@@ -465,19 +465,19 @@ def register_tools(mcp: FastMCP):
                   - 'case_details': The raw API response for the basic case information.
                   - 'case_alerts': The raw API response containing the list of alerts associated with the case.
                   - 'case_comments': The raw API response containing the list of comments for the case.
-                  Use the priority field as an initial guide, but analyze the combined details (alerts, comments, entities) to determine the true urgency and impact.
+                  **Triage Note:** Use the `priority` field as an initial guide only. Analyze the combined details (alerts, comments, entities involved, potential impact, related threat intelligence) gathered by this tool and others to determine the true importance and urgency of the case.
 
         **Workflow Integration:**
-        - A primary tool for investigating a specific case identified within the SOAR platform (e.g., via `list_cases`).
-        - Provides a comprehensive starting point by gathering core SOAR case data, associated alerts, and comments in one call.
+        - A primary tool for *starting* the investigation of a specific case identified within the SOAR platform (e.g., via `list_cases`).
+        - Provides a comprehensive *initial overview* by gathering core SOAR case data, associated alerts, and comments in one call. **Crucially, this is a starting point; a full investigation requires deeper analysis using subsequent tools.**
 
-        **Next Steps (using MCP-enabled tools):**
+        **Next Steps (using MCP-enabled tools - Essential for Full Investigation):**
         - Analyze the `case_details` for status, priority, and description.
-        - Examine `case_alerts` to understand the triggers (use alert event tools for underlying event data).
+        - Examine `case_alerts` to understand the triggers. **Use alert event tools (like `list_events_by_alert`) for underlying event data.**
         - Review `case_comments` for analyst notes or previous actions.
         - Identify key entities from alerts or comments.
-        - Use tools to find entities associated with the case or specific alert groups within it.
-        - Enrich findings using SIEM, TI, EDR, Cloud, or other relevant security tool MCP integrations.
+        - **Use tools to find entities associated with the case or specific alert groups within it (like `get_entities_by_alert_group_identifiers`).**
+        - **Enrich findings using SIEM (`lookup_entity`, `search_security_events`), TI (`get_threat_intel`), EDR, Cloud, or other relevant security tool MCP integrations.**
         - Document investigation progress using a case commenting tool.
         - Consider adjusting case priority using a priority management tool based on findings.
         """
