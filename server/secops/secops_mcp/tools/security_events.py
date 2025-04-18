@@ -82,6 +82,33 @@ async def search_security_events(
           network flow data, cloud audit logs) via their respective MCP tools.
         - Document findings in a relevant case management or ticketing system using an appropriate MCP tool.
         - Use findings to inform response actions (e.g., blocking an IP, isolating a host) via SOAR or endpoint MCP tools.
+
+    **Troubleshooting & Iterative Searching:**
+
+    If your initial natural language search doesn't return the expected events, consider the following iterative steps:
+
+    1.  **Check the Translated Query:** Examine the `udm_query` field in the response. This shows how your natural language was translated into UDM. Does it accurately reflect your intent? Are the correct UDM fields being targeted?
+    2.  **Broaden the Search:**
+        *   **Remove Specific Event Types:** If you initially filtered by `metadata.event_type` (e.g., "USER_LOGIN"), try removing that constraint to search across all event types. Example: "Find any events involving IP 1.2.3.4" instead of "Find login events involving IP 1.2.3.4".
+        *   **Simplify the Query:** Reduce the complexity of your natural language query to focus on the core entity or activity.
+    3.  **Target Alternative UDM Fields:** Chronicle's UDM has many fields. If searching for an entity like a user or IP doesn't work with a simple query, the identifier might be in a less common field. Try specifying fields often used for:
+        *   **Users:** `principal.user.userid`, `target.user.userid`, `src.user.userid`, `network.email.from`, `network.email.to`, `about.user.userid`
+        *   **IPs:** `principal.ip`, `target.ip`, `src.ip`, `observer.ip`, `network.ip`, `about.ip`
+        *   **Hostnames:** `principal.hostname`, `target.hostname`, `src.hostname`, `about.hostname`
+        *   **URLs:** `target.url`, `about.url`
+        *   **Hashes:** `target.file.md5`, `target.file.sha1`, `target.file.sha256`, `principal.process.file.md5`, etc.
+        *   **Natural Language Example:** Instead of "Events for user john.doe@example.com", try "Events where the target email address is john.doe@example.com" or "Events where the principal user ID is john.doe@example.com".
+    4.  **Refine Time Window:** Ensure the `hours_back` parameter covers the expected timeframe of the events.
+    5.  **Consult UDM Schema:** If specific fields are known, referencing the Chronicle UDM schema can help formulate more precise natural language queries targeting those fields.
+
+    **Example Iteration:**
+
+    *   **Initial Query (Fails):** "Find login events for user charlie.brown@cymbalgroup.com"
+        *   *Returned `udm_query`: `metadata.event_type = "USER_LOGIN" user = "charlie.brown@cymbalgroup.com"`*
+        *   *Result: 0 events*
+    *   **Iteration 1 (Broaden):** "Find any events where the user is 'charlie.brown@cymbalgroup.com'"
+        *   *Returned `udm_query`: `email = "charlie.brown@cymbalgroup.com"`*
+        *   *Result: 6 events (Success!)* - This indicates the user identifier was primarily in an `email` field, not the generic `user` field, and removing the `USER_LOGIN` constraint helped.
     """
     try:
         logger.info(
