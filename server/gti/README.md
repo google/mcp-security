@@ -6,34 +6,82 @@ Threat Intelligence suite.
 
 ## Features
 
-### IOC Reports
+### Collections (Threats)
 
-- `get_file_report`: Get the file's report.
-- `get_entitites_related_to_a_file`: Retrieve [entities related](https://gtidocs.virustotal.com/reference/file-object) to the given file.
-- `get_file_behavior_report`: Retrieves a particular file's behavioural report
-- `get_file_behavior_summary`: Retrieve a summary of all the file behaviour reports from all the sandboxes runned by VirusTotal.
+- **`get_collection_report(id)`**: Retrieves a specific collection report by its ID (e.g., `report--<hash>`, `threat-actor--<hash>`).
+- **`get_entities_related_to_a_collection(id, relationship_name)`**: Gets related entities (domains, files, IPs, URLs, other collections) for a given collection ID.
+- **`search_threats(query, limit=10, order_by="relevance-")`**: Performs a general search for threats (collections) using GTI query syntax.
+- **`search_campaigns(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `campaign`.
+- **`search_threat_actors(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `threat-actor`.
+- **`search_malware_families(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `malware-family`.
+- **`search_software_toolkits(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `software-toolkit`.
+- **`search_threat_reports(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `report`.
+- **`search_vulnerabilities(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `vulnerability`.
+- **`get_collection_timeline_events(id)`**: Retrieves curated timeline events for a collection.
 
-### Threat Actors, Malware & Tools, Campaigns, IoC Collections
+### Files
 
-- `get_collection_report`: At Google Threat Intelligence, threats are modeled as "collections". This tool retrieves them from the platform.
-- `search_threats`: Search threats.
+- **`get_file_report(hash)`**: Retrieves a comprehensive analysis report for a file based on its MD5, SHA1, or SHA256 hash.
+- **`get_entities_related_to_a_file(hash, relationship_name)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash.
+- **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a specific sandbox behavior report for a file.
+- **`get_file_behavior_summary(hash)`**: Retrieves a summary of all sandbox behavior reports for a file hash.
 
-## Integration with Cline
+### Intelligence Search
+
+- **`search_iocs(query, limit=10, order_by="last_submission_date-")`**: Searches for Indicators of Compromise (files, URLs, domains, IPs) using advanced GTI query syntax.
+
+### Network Locations (Domains & IPs)
+
+- **`get_domain_report(domain)`**: Retrieves a comprehensive analysis report for a domain.
+- **`get_entities_related_to_a_domain(domain, relationship_name)`**: Gets related entities for a given domain.
+- **`get_ip_address_report(ip_address)`**: Retrieves a comprehensive analysis report for an IPv4 or IPv6 address.
+- **`get_entities_related_to_an_ip_address(ip_address, relationship_name)`**: Gets related entities for a given IP address.
+
+### URLs
+
+- **`get_url_report(url)`**: Retrieves a comprehensive analysis report for a URL.
+- **`get_entities_related_to_an_url(url, relationship_name)`**: Gets related entities for a given URL.
+
+## Configuration
+
+### MCP Server Configuration
+
+Add the following configuration to your MCP client's settings file:
 
 ```json
 {
   "mcpServers": {
-    "Google Threat Intelligence MCP server": {
-      "command": "python3",
-      "args": ["-m", "gti_mcp.server"],
+    "gti": {
+      "command": "uv",
+      "args": [
+        "--env-file=/path/to/your/env",
+        "--directory",
+        "/path/to/the/repo/server/gti/gti_mcp",
+        "run",
+        "server.py"
+      ],
       "env": {
-        "VT_APIKEY": "$VT_APIKEY"
+        "VT_APIKEY": "${VT_APIKEY}"
       },
       "disabled": false,
       "autoApprove": []
     }
   }
 }
+```
+
+### Environment Variable Setup
+
+Set up the `VT_APIKEY` environment variable in your system:
+
+**For macOS/Linux:**
+```bash
+export VT_APIKEY="your-vt-api-key"
+```
+   
+**For Windows PowerShell:**
+```powershell
+$Env:VT_APIKEY = "your-vt-api-key"
 ```
 
 ## License

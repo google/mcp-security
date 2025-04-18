@@ -12,19 +12,34 @@ This server provides tools for interacting with Chronicle Security Operations us
 2. **Google Cloud Project** - A project with Chronicle API enabled
 3. **API Credentials** - Authentication credentials with appropriate permissions
 
-### Setup Options
+### MCP Server Configuration
 
-#### Option 1: Environment Variables (Recommended)
-
-Configure the following environment variables in your MCP server config:
+Add the following configuration to your MCP client's settings file:
 
 ```json
-"env": {
-  "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-  "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-  "CHRONICLE_REGION": "${CHRONICLE_REGION}"
-}
+"secops": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/secops/secops_mcp",
+        "--env-file",
+        "/path/to/your/env",
+        "run",
+        "server.py"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
 ```
+
+The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+
+### Environment Variable Setup
 
 Set up these environment variables in your system:
 
@@ -49,7 +64,7 @@ The `CHRONICLE_REGION` can be one of:
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
-#### Option 2: Parameter-Based Authentication
+### Parameter-Based Authentication
 
 Each tool accepts optional parameters for authentication, allowing dynamic configuration:
 
@@ -232,6 +247,33 @@ The service account or user credentials need the following Chronicle roles:
       MATCHED EVENT: Process execution on server-5678 at 2023-09-15T09:18:27Z
       ```
 
+- **`get_threat_intel(query, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get answers to general security domain questions and specific threat intelligence information using Chronicle's AI capabilities.
+    - **Parameters:**
+        - `query` (required): The security or threat intelligence question to ask.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Formatted text response with information about the requested threat intelligence topic.
+    - **Return Example:**
+      ```
+      The threat actor APT28 (also known as Fancy Bear, Sofacy, or Strontium) is a 
+      Russian state-sponsored advanced persistent threat group associated with 
+      Russia's military intelligence agency, the GRU. 
+      
+      Key characteristics:
+      - Active since approximately 2004
+      - Primarily targets government, military, and security organizations
+      - Known for spear-phishing campaigns and exploitation of zero-day vulnerabilities
+      - Has been linked to major operations including the 2016 DNC hack and Olympics-related attacks
+      
+      Common TTPs include:
+      - Spear-phishing with malicious attachments
+      - Credential harvesting through fake login pages
+      - Use of custom malware including X-Tunnel, X-Agent, and Lojax
+      - Zero-day exploitation
+      ```
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
@@ -301,6 +343,34 @@ AI: I found 3 open alerts from the last 24 hours:
 3. Unusual Authentication Pattern (Low)
    Created: 2023-09-15T08:07:06Z
    Affected assets: user-john, 10.0.0.35
+```
+
+### Example 4: Threat Intelligence Research
+
+```
+User: Can you tell me about the Lazarus Group threat actor?
+
+AI uses: get_threat_intel(query="Provide information about the Lazarus Group threat actor")
+
+AI: The Lazarus Group is a North Korean state-sponsored threat actor, also known as:
+- Hidden Cobra
+- Guardians of Peace
+- APT38
+- Zinc
+
+Key characteristics:
+- Active since at least 2009
+- Primarily motivated by financial gain and intelligence gathering
+- Known for high-profile attacks including the 2014 Sony Pictures hack, 2016 Bangladesh Bank heist, and various cryptocurrency exchange attacks
+- Responsible for developing and deploying WannaCry ransomware
+
+Their TTPs include:
+- Sophisticated social engineering and spear-phishing
+- Custom malware frameworks including BLINDINGCAN and CROWDEDFLOUNDER
+- Watering hole attacks against specific industry sectors
+- Advanced persistent access into compromised networks
+
+The group continues to evolve tactics and primarily targets financial institutions, cryptocurrency exchanges, and organizations in sectors of strategic interest to North Korea.
 ```
 
 ## Additional Resources

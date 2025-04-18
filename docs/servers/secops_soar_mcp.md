@@ -10,16 +10,36 @@ This server provides tools for interacting with a Security Orchestration, Automa
 2. **API Access** - SOAR API key with appropriate permissions
 3. **Integration Modules** - (Optional) Specific integration modules for additional functionality
 
-### Basic Setup
+### MCP Server Configuration
 
-Configure your MCP server with the following environment variables:
+Add the following configuration to your MCP client's settings file:
 
 ```json
-"env": {
-  "SOAR_URL": "${SOAR_URL}",
-  "SOAR_APP_KEY": "${SOAR_APP_KEY}"
-}
+"secops-soar": {
+      "command": "uv",
+      "args": [
+
+        "--directory",
+        "/path/to/the/repo/server/secops-soar",
+        "run",
+        "--env-file",
+        "/path/to/your/env",
+        "secops_soar_mcp.py",
+        "--integrations",
+        "CSV, OKTA"
+      ],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
 ```
+
+The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+
+### Environment Variable Setup
 
 Set up these environment variables in your system:
 
@@ -37,32 +57,10 @@ $Env:SOAR_APP_KEY = "your-soar-api-key"
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
-### Enabling Integrations
+### Available Integrations
 
-To enable specific integrations, add the `--integrations` flag when starting the server:
+The `--integrations` flag in the server configuration allows you to enable specific integrations. The integration modules are located in the `marketplace/` directory. Here's a subset of the available integrations:
 
-```json
-"args": [
-  "--directory",
-  "/path/to/the/repo/server/secops-soar",
-  "run",
-  "secops_soar_mcp.py",
-  "--integrations",
-  "${SOAR_INTEGRATIONS}"
-]
-```
-
-Set the integrations environment variable:
-
-```bash
-# For macOS/Linux
-export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
-
-# For Windows PowerShell
-$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
-```
-
-Available integrations include:
 - **ServiceNow** - Create/update tickets in ServiceNow
 - **CSV** - Export data to CSV files
 - **Siemplify** - Advanced Siemplify-specific features
@@ -71,6 +69,18 @@ Available integrations include:
 - **Email** - Send email notifications
 - **VirusTotal** - Enrich indicators with VirusTotal data
 - **Active Directory** - Query and manage Active Directory
+- **Microsoft Defender ATP** - Integration with Microsoft Defender for Endpoint
+- **Splunk** - Query and retrieve data from Splunk
+- **Sentinel One** - Endpoint protection and response
+- **QRadar** - Integration with IBM QRadar SIEM
+- **Recorded Future** - Threat intelligence enrichment
+- **Tenable.io** - Vulnerability management
+- **Rapid7 InsightVM** - Vulnerability management
+- **Tanium** - Endpoint management and security
+- **Zscaler** - Cloud security
+- **And many more** - Over 100 integrations are available in the marketplace
+
+Refer to the files in the `server/secops-soar/marketplace/` directory for a complete list of available integrations. Each integration module provides specific tools for interacting with the corresponding service.
 
 ### Authentication Methods
 

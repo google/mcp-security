@@ -20,17 +20,21 @@ Before you begin, make sure you have:
    - Claude Desktop
    - cline.bot VS Code extension
 
+4. **Python environment tools**:
+   - `uv` - The Python package installer used to run the MCP servers with isolated environments
+
 ## Getting Started
 
-### Step 1: Install the MCP Servers
+### Step 1: Clone the Repository
 
-Clone this repository and ensure you have the required Python dependencies installed:
+Clone this repository to your local machine:
 
 ```bash
 git clone https://github.com/your-org/mcp-security.git
 cd mcp-security
-python -m pip install -e .
 ```
+
+No additional installation is needed as `uv` will handle dependencies when running the servers.
 
 ### Step 2: Configure Your MCP Client
 
@@ -38,7 +42,7 @@ python -m pip install -e .
 
 1. Open Claude Desktop and select "Settings" from the Claude menu
 2. Click on "Developer" in the lefthand bar, then click "Edit Config"
-3. Add the MCP server configurations to your `claude_desktop_config.json` (see below)
+3. Add the MCP server configurations to your `claude_desktop_config.json` (see configuration reference below)
 4. Save the file and restart Claude Desktop
 5. Look for the hammer icon indicating the MCP servers are active
 
@@ -67,10 +71,11 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "secops": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/secops",
+        "/path/to/the/repo/server/secops/secops_mcp",
         "run",
-        "secops_mcp.py"
+        "server.py"
       ],
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
@@ -83,6 +88,7 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "secops-soar": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
@@ -100,10 +106,11 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "gti": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/gti",
+        "/path/to/the/repo/server/gti/gti_mcp",
         "run",
-        "gti.py"
+        "server.py"
       ],
       "env": {
         "VT_APIKEY": "${VT_APIKEY}"
@@ -114,6 +121,7 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "scc-mcp": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
@@ -126,6 +134,8 @@ Here's a complete reference configuration for all available MCP servers. We stro
   }
 }
 ```
+
+The `--env-file` option in the configuration allows `uv` to use a .env file for environment variables. Make sure to create this file with your sensitive information, or use system environment variables as described below.
 
 ### Setting Up Environment Variables
 
@@ -181,7 +191,7 @@ You can enable or disable individual servers by setting `"disabled": true` for s
 Can you search for information about the Emotet malware family?
 ```
 
-Claude will use the GTI server to search for and retrieve information about the Emotet malware family, including related IoCs, campaigns, and threat actor information.
+The LLM will use the GTI server to search for and retrieve information about the Emotet malware family, including related IoCs, campaigns, and threat actor information.
 
 ### Chronicle Security Operations (SecOps)
 
@@ -189,7 +199,7 @@ Claude will use the GTI server to search for and retrieve information about the 
 Can you look for security events related to suspicious PowerShell usage in the last 24 hours?
 ```
 
-Claude will use the Chronicle SecOps server to search for security events matching this description and present the findings.
+The LLM will use the Chronicle SecOps server to search for security events matching this description and present the findings.
 
 ### SecOps SOAR
 
@@ -197,7 +207,7 @@ Claude will use the Chronicle SecOps server to search for security events matchi
 Can you list open security cases and show me details about the highest priority one?
 ```
 
-Claude will use the SecOps SOAR server to list open cases and provide details about the highest priority case.
+The LLM will use the SecOps SOAR server to list open cases and provide details about the highest priority case.
 
 ### Security Command Center (SCC)
 
@@ -205,7 +215,7 @@ Claude will use the SecOps SOAR server to list open cases and provide details ab
 What are the top critical vulnerabilities in my GCP project 'my-project-id'?
 ```
 
-Claude will use the SCC server to list high-priority vulnerabilities and provide remediation guidance.
+The LLM will use the SCC server to list high-priority vulnerabilities and provide remediation guidance.
 
 ## Troubleshooting
 
@@ -214,5 +224,5 @@ If you encounter issues with the MCP servers:
 1. **Check authentication**: Ensure your Google Cloud credentials are properly set up
 2. **Verify API keys**: Make sure all required API keys are correctly configured
 3. **Check server logs**: Look for error messages in the server output
-4. **Restart the client**: Sometimes restarting Claude Desktop or VS Code can resolve connection issues
-5. **Update dependencies**: Make sure you have the latest version of the MCP server code and dependencies 
+4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
+5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH 
