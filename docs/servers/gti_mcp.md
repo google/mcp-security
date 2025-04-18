@@ -8,27 +8,47 @@ To use this server, you need a VirusTotal API key:
 
 1. Register for a VirusTotal account at [virustotal.com](https://www.virustotal.com)
 2. Navigate to your profile and obtain your API key
-3. Add the API key to your MCP server configuration using environment variables:
+3. Add the API key to your MCP server configuration using environment variables
 
-   ```json
-   "env": {
-     "VT_APIKEY": "${VT_APIKEY}"
-   }
-   ```
+### MCP Server Configuration
 
-4. Set up the `VT_APIKEY` environment variable in your system:
+Add the following configuration to your MCP client's settings file:
 
-   **For macOS/Linux:**
-   ```bash
-   export VT_APIKEY="your-vt-api-key"
-   ```
+```json
+"gti": {
+  "command": "uv",
+  "args": [
+    "--env-file=/path/to/your/env",
+    "--directory",
+    "/path/to/the/repo/server/gti/gti_mcp",
+    "run",
+    "server.py"
+  ],
+  "env": {
+    "VT_APIKEY": "${VT_APIKEY}"
+  },
+  "disabled": false,
+  "autoApprove": []
+}
+```
+
+The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+
+### Environment Variable Setup
+
+Set up the `VT_APIKEY` environment variable in your system:
+
+**For macOS/Linux:**
+```bash
+export VT_APIKEY="your-vt-api-key"
+```
    
-   **For Windows PowerShell:**
-   ```powershell
-   $Env:VT_APIKEY = "your-vt-api-key"
-   ```
+**For Windows PowerShell:**
+```powershell
+$Env:VT_APIKEY = "your-vt-api-key"
+```
 
-   For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
+For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
 ## Tools
 

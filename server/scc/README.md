@@ -1,29 +1,38 @@
 # Google Cloud Security Command Center (SCC) MCP Server
 
-This directory contains an MCP server (`scc_mcp.py`) that enables interaction with Google Cloud Security Command Center (SCC) via MCP clients.
+This is an MCP (Model Context Protocol) server for interacting with Google Cloud Security Command Center (SCC) and Cloud Asset Inventory (CAI).
 
-## Authentication
+## Features
 
-The server uses Google Cloud's authentication mechanisms. Ensure you have one of the following configured in the environment where the server runs:
+### Available Tools
 
-1.  Application Default Credentials (ADC) set up (e.g., via `gcloud auth application-default login`).
-2.  The `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to a valid service account key file.
+- **`top_vulnerability_findings(project_id, max_findings=20)`**
+    - **Description**: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project, sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the output if available. Aids prioritization for remediation.
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+        - `max_findings` (optional): The maximum number of findings to return. Defaults to 20.
 
-## Authorization
+- **`get_finding_remediation(project_id, resource_name=None, category=None, finding_id=None)`**
+    - **Description**: Gets the remediation steps (`nextSteps`) for a specific finding within a project, along with details of the affected resource fetched from Cloud Asset Inventory (CAI). The finding can be identified either by its `resource_name` and `category` (for ACTIVE findings) or directly by its `finding_id` (regardless of state).
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+        - `resource_name` (optional): The full resource name associated with the finding (e.g., `//container.googleapis.com/projects/my-project/locations/us-central1/clusters/my-cluster`). Required if `finding_id` is not provided.
+        - `category` (optional): The category of the finding (e.g., `GKE_SECURITY_BULLETIN`). Required if `finding_id` is not provided.
+        - `finding_id` (optional): The ID of the finding to search for directly (e.g., `finding123`). Required if `resource_name` and `category` are not provided.
 
-Appropriate IAM permissions are required on the target Google Cloud project(s) to list findings (e.g., `securitycenter.findings.list`) and search resources in Cloud Asset Inventory (`cloudasset.assets.searchAllResources`).
+## Configuration
 
-## Client Configuration Example
+### MCP Server Configuration
 
-Add the following configuration to your MCP client (e.g., `claude_desktop_config.json` or `cline_mcp_settings.json`), ensuring the path in `args` points to the correct location of `scc_mcp.py`:
+Add the following configuration to your MCP client's settings file:
 
 ```json
 {
   "mcpServers": {
-    // ... other servers ...
     "scc-mcp": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
@@ -33,28 +42,28 @@ Add the following configuration to your MCP client (e.g., `claude_desktop_config
       "disabled": false,
       "autoApprove": []
     }
-    // ... other servers ...
   }
 }
 ```
 
-## Available Tools
+### Authentication
 
-### `top_vulnerability_findings`
+The server uses Google Cloud's authentication mechanisms. Ensure you have one of the following configured in the environment where the server runs:
 
-*   **Description**: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project, sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the output if available. Aids prioritization for remediation.
-*   **Parameters**:
-    *   `project_id` (string, required): The Google Cloud project ID (e.g., 'my-gcp-project').
-    *   `max_findings` (integer, optional): The maximum number of findings to return. Defaults to 20.
-*   **Returns**: A dictionary containing `top_findings` (a list of finding summaries including `attackExposureScore`), `count`, and `more_findings_exist_beyond_fetch_limit`.
+1. Application Default Credentials (ADC) set up (e.g., via `gcloud auth application-default login`).
+2. The `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to a valid service account key file.
 
-### `get_finding_remediation`
+### Required IAM Permissions
 
-*   **Description**: Gets the remediation steps (nextSteps) for a specific finding within a project, along with details of the affected resource fetched from Cloud Asset Inventory (CAI). The finding can be identified either by its `resource_name` and `category` (for ACTIVE findings) or directly by its `finding_id` (using the V1 client's list_findings with a name filter).
-*   **Parameters**:
-    *   `project_id` (string, required): The Google Cloud project ID (e.g., 'my-gcp-project').
-    *   `resource_name` (string, optional): The full resource name associated with the finding (e.g., '//compute.googleapis.com/...'). Required if `finding_id` is not provided.
-    *   `category` (string, optional): The category of the finding (e.g., 'PUBLIC_IP_ADDRESS'). Required if `finding_id` is not provided.
-    *   `finding_id` (string, optional): The specific ID of the finding. Required if `resource_name` and `category` are not provided.
-*   **Returns**: A dictionary containing `remediation_steps`, `finding_name`, `description`, `resource_name`, `resource_details_cai` (from Cloud Asset Inventory), and the full `finding_details` from SCC.
-#
+Appropriate IAM permissions are required on the target Google Cloud project(s):
+- Security Command Center: `roles/securitycenter.adminViewer` or `roles/securitycenter.adminEditor`
+- Cloud Asset Inventory: `roles/cloudasset.viewer`
+
+## License
+
+Apache 2.0
+
+## Development
+
+The project is structured as follows:
+- `scc_mcp.py`: Main MCP server implementation

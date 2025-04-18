@@ -24,15 +24,13 @@ The documentation covers:
 
 To get started with the documentation, see [docs/index.md](docs/index.md).
 
-## Installation
-
 ## Authentication
 
 The server uses Google's authentication. Make sure you have either:
 
-1.  Set up Application Default Credentials (ADC)
-2.  Set a GOOGLE_APPLICATION_CREDENTIALS environment variable
-3.  Used `gcloud auth application-default login`
+1. Set up Application Default Credentials (ADC)
+2. Set a GOOGLE_APPLICATION_CREDENTIALS environment variable
+3. Used `gcloud auth application-default login`
 
 ## Client Configuration
 
@@ -45,10 +43,11 @@ run the mcp services locally and use the stdio transport.
     "secops": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/secops",
+        "/path/to/the/repo/server/secops/secops_mcp",
         "run",
-        "secops_mcp.py"
+        "server.py"
       ],
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
@@ -61,12 +60,13 @@ run the mcp services locally and use the stdio transport.
     "secops-soar": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
         "secops_soar_mcp.py",
         "--integrations",
-        "${SOAR_INTEGRATIONS}" // For example "ServiceNow,CSV,Siemplify"
+        "${SOAR_INTEGRATIONS}"
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
@@ -78,10 +78,11 @@ run the mcp services locally and use the stdio transport.
     "gti": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/gti",
+        "/path/to/the/repo/server/gti/gti_mcp",
         "run",
-        "gti.py"
+        "server.py"
       ],
       "env": {
         "VT_APIKEY": "${VT_APIKEY}"
@@ -92,6 +93,7 @@ run the mcp services locally and use the stdio transport.
     "scc-mcp": {
       "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
@@ -106,34 +108,26 @@ run the mcp services locally and use the stdio transport.
 }
 ```
 
+The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described in the usage guide.
+
 Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
 ### Installing in Claude Desktop
 
 To use the MCP servers with Claude Desktop:
 
-1.  Install Claude Desktop
-
-1.  Open Claude Desktop and select "Settings" from the Claude menu
-
-1.  Click on "Developer" in the lefthand bar, then click "Edit Config"
-
-1.  Update your `claude_desktop_config.json` with the configuration (replace
-    paths with your actual paths):
-
-1.  Save the file and restart Claude Desktop
-
-1.  You should now see the hammer icon in the Claude Desktop interface,
-    indicating the MCP server is active
+1. Install Claude Desktop
+2. Open Claude Desktop and select "Settings" from the Claude menu
+3. Click on "Developer" in the lefthand bar, then click "Edit Config"
+4. Update your `claude_desktop_config.json` with the configuration (replace paths with your actual paths)
+5. Save the file and restart Claude Desktop
+6. You should now see the hammer icon in the Claude Desktop interface, indicating the MCP server is active
 
 ### Installing in cline (vscode extension)
 
-1.  Install cline.bot extension in VSCode.
-
-1.  Update your `cline_mcp_settings.json` with the configuration (replace paths
-    with your actual paths):
-
-1.  Save the file and restart Claude Desktop
+1. Install cline.bot extension in VSCode
+2. Update your `cline_mcp_settings.json` with the configuration (replace paths with your actual paths)
+3. Save the file and restart VS Code
 
 ## License
 

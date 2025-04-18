@@ -1,10 +1,38 @@
-This is a personal project.
-
 # Chronicle SecOps SOAR MCP Server
 
 This is an MCP (Model Context Protocol) server for interacting with Google's
 Chronicle Security Operations SOAR suite.
 [MCP Info](https://modelcontextprotocol.io/introduction)
+
+## Features
+
+### Core Tools (Case Management & Entities)
+
+- **`list_cases()`** - Lists available cases in the SOAR platform.
+- **`post_case_comment(case_id, comment)`** - Adds a textual comment to a specific case.
+- **`list_alerts_by_case(case_id)`** - Lists all alerts associated with a specific case ID.
+- **`list_alert_group_identifiers_by_case(case_id)`** - Lists the unique group identifiers for alerts within a specific case.
+- **`list_events_by_alert(case_id, alert_id)`** - Lists the events associated with a particular alert within a given case.
+- **`change_case_priority(case_id, case_priority)`** - Modifies the priority level of a specific case.
+- **`get_entities_by_alert_group_identifiers(case_id, alert_group_identifiers)`** - Retrieves entities involved in one or more alert groups.
+- **`get_entity_details(entity_identifier, entity_type, entity_environment)`** - Fetches detailed information about a specific entity.
+- **`search_entity(term=None, type=None, is_suspicious=None, is_internal_asset=None, is_enriched=None, network_name=None, environment_name=None)`** - Searches for entities within the SOAR platform.
+- **`get_case_full_details(case_id)`** - Retrieves comprehensive details for a single case.
+
+### Dynamic Integration Tools (Marketplace)
+
+This server can dynamically load additional tools based on integrations enabled via the `--integrations` command-line flag when the server is started. These tools correspond to modules found in the `marketplace/` directory.
+
+Available integrations include:
+- ServiceNow
+- CSV
+- Jira
+- Slack
+- Email
+- VirusTotal
+- Active Directory
+- Microsoft Defender ATP
+- And many more
 
 ## Installing in Claude Desktop
 
@@ -23,17 +51,20 @@ To use this MCP server with Claude Desktop:
 {
   "mcpServers": {
     "secops-soar": {
-      "command": "/path/to/your/uv",
+      "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/your/mcp-secops-soar",
+        "/path/to/the/repo/server/secops-soar",
         "run",
         "secops_soar_mcp.py"
       ],
       "env": {
-        "SOAR_URL": "your-soar-url",
-        "SOAR_APP_KEY": "your-soar-app-key"
-      }
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
@@ -44,75 +75,49 @@ To have the MCP server provide tools for specific marketplace integrations, use 
 {
   "mcpServers": {
     "secops-soar": {
-      "command": "/path/to/your/uv",
+      "command": "uv",
       "args": [
+        "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/your/mcp-secops-soar",
+        "/path/to/the/repo/server/secops-soar",
         "run",
         "secops_soar_mcp.py",
         "--integrations",
         "ServiceNow,CSV,Siemplify"
       ],
       "env": {
-        "SOAR_URL": "your-soar-url",
-        "SOAR_APP_KEY": "your-soar-app-key"
-      }
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
 ```
 
-1.  Make sure to update:
+### Environment Variable Setup
 
-    -   The path to `uv` (use `which uv` to find it)
-    -   The directory path to where this repository is cloned
-    -   Your SOAR URL and AppKey
+Set up these environment variables in your system:
 
-2.  Save the file and restart Claude Desktop
-
-3.  You should now see the hammer icon in the Claude Desktop interface,
-    indicating the MCP server is active
-
-## Features
-
-### Security Tools
-
--   TBD
-
-## Installation
-
-
-### Manual Installation
-
-1.  Install the package:
-
+**For macOS/Linux:**
 ```bash
-pip install -e .
+export SOAR_URL="your-soar-url"
+export SOAR_APP_KEY="your-soar-app-key"
+export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```
 
-1.  Set up your environment variables:
-
-```bash
-export TBD
+**For Windows PowerShell:**
+```powershell
+$Env:SOAR_URL = "your-soar-url"
+$Env:SOAR_APP_KEY = "your-soar-app-key"
+$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
 ## Requirements
 
 -   Python 3.11+
 -   SOAR URL and AppKey
-
-## Usage
-
-### Running the MCP Server
-
-```bash
-python secops_soar_mcp.py
-```
-
-### API Capabilities
-
-The MCP server provides the following capabilities:
-
 
 ## License
 
@@ -123,3 +128,4 @@ Apache 2.0
 The project is structured as follows:
 
 -   `secops_soar_mcp.py`: Main MCP server implementation
+-   `marketplace/`: Directory containing integration modules

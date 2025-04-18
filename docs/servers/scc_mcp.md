@@ -19,6 +19,28 @@ This server requires Google Cloud authentication to access SCC and CAI APIs:
    - Security Command Center API: `securitycenter.googleapis.com`
    - Cloud Asset Inventory API: `cloudasset.googleapis.com`
 
+### MCP Server Configuration
+
+Add the following configuration to your MCP client's settings file:
+
+```json
+"scc-mcp": {
+  "command": "uv",
+  "args": [
+    "--env-file=/path/to/your/env",
+    "--directory",
+    "/path/to/the/repo/server/scc",
+    "run",
+    "scc_mcp.py"
+  ],
+  "env": {},
+  "disabled": false,
+  "autoApprove": []
+}
+```
+
+The `--env-file` option allows `uv` to use a .env file for environment variables. This server relies primarily on Google Cloud Authentication, which is typically set up system-wide rather than through environment variables in the configuration.
+
 ## Tools
 
 - **`top_vulnerability_findings(project_id, max_findings=20)`**
