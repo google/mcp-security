@@ -18,22 +18,23 @@ Add the following configuration to your MCP client's settings file:
 
 ```json
 "secops": {
-  "command": "uv",
-  "args": [
-    "--env-file=/path/to/your/env",
-    "--directory",
-    "/path/to/the/repo/server/secops/secops_mcp",
-    "run",
-    "server.py"
-  ],
-  "env": {
-    "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-    "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-    "CHRONICLE_REGION": "${CHRONICLE_REGION}"
-  },
-  "disabled": false,
-  "autoApprove": []
-}
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/secops/secops_mcp",
+        "--env-file",
+        "/path/to/your/env",
+        "run",
+        "server.py"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
 ```
 
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.

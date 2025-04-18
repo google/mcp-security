@@ -16,23 +16,25 @@ Add the following configuration to your MCP client's settings file:
 
 ```json
 "secops-soar": {
-  "command": "uv",
-  "args": [
-    "--env-file=/path/to/your/env",
-    "--directory",
-    "/path/to/the/repo/server/secops-soar",
-    "run",
-    "secops_soar_mcp.py",
-    "--integrations",
-    "${SOAR_INTEGRATIONS}"
-  ],
-  "env": {
-    "SOAR_URL": "${SOAR_URL}",
-    "SOAR_APP_KEY": "${SOAR_APP_KEY}"
-  },
-  "disabled": false,
-  "autoApprove": []
-}
+      "command": "uv",
+      "args": [
+
+        "--directory",
+        "/path/to/the/repo/server/secops-soar",
+        "run",
+        "--env-file",
+        "/path/to/your/env",
+        "secops_soar_mcp.py",
+        "--integrations",
+        "CSV, OKTA"
+      ],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
 ```
 
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
@@ -45,14 +47,12 @@ Set up these environment variables in your system:
 ```bash
 export SOAR_URL="https://your-soar-instance.example.com"
 export SOAR_APP_KEY="your-soar-api-key"
-export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```
 
 **For Windows PowerShell:**
 ```powershell
 $Env:SOAR_URL = "https://your-soar-instance.example.com"
 $Env:SOAR_APP_KEY = "your-soar-api-key"
-$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).

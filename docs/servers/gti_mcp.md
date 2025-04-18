@@ -16,20 +16,21 @@ Add the following configuration to your MCP client's settings file:
 
 ```json
 "gti": {
-  "command": "uv",
-  "args": [
-    "--env-file=/path/to/your/env",
-    "--directory",
-    "/path/to/the/repo/server/gti/gti_mcp",
-    "run",
-    "server.py"
-  ],
-  "env": {
-    "VT_APIKEY": "${VT_APIKEY}"
-  },
-  "disabled": false,
-  "autoApprove": []
-}
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/gti/gti_mcp",
+        "run",
+        "--env-file",
+        "/path/to/your/env",
+        "server.py"
+      ],
+      "env": {
+        "VT_APIKEY": "${VT_APIKEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
 ```
 
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.

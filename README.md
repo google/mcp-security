@@ -37,15 +37,17 @@ The server uses Google's authentication. Make sure you have either:
 The configuration for Claude Desktop and cline is the same. We make use of uv to
 run the mcp services locally and use the stdio transport.
 
+
 ```json
 {
   "mcpServers": {
     "secops": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/secops/secops_mcp",
+        "--env-file",
+        "/path/to/your/env",
         "run",
         "server.py"
       ],
@@ -60,13 +62,15 @@ run the mcp services locally and use the stdio transport.
     "secops-soar": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
+
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
+        "--env-file",
+        "/path/to/your/env",
         "secops_soar_mcp.py",
         "--integrations",
-        "${SOAR_INTEGRATIONS}"
+        "CSV,OKTA"
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
@@ -78,10 +82,11 @@ run the mcp services locally and use the stdio transport.
     "gti": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/gti/gti_mcp",
         "run",
+        "--env-file",
+        "/path/to/your/env",
         "server.py"
       ],
       "env": {
@@ -93,10 +98,11 @@ run the mcp services locally and use the stdio transport.
     "scc-mcp": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
+        "--env-file",
+        "/path/to/your/env",
         "scc_mcp.py"
       ],
       "env": {
@@ -109,6 +115,9 @@ run the mcp services locally and use the stdio transport.
 ```
 
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described in the usage guide.
+
+Alternatively, you can set `UV_ENV_FILE` to your `.env` file and omit the `--env-file` portion of the configuration.
+
 
 Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
