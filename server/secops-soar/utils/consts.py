@@ -20,6 +20,7 @@ ENV_SOAR_APP_KEY = "SOAR_APP_KEY"
 class Endpoints:
     """Endpoints for SOAR."""
 
+    LIST_INSTALLED_INTEGRATIONS = "/api/external/v1/integrations/GetInstalledIntegrations"  # Added endpoint
     EXECUTE_MANUAL_ACTION = "/api/external/v1/cases/ExecuteManualAction"
     LIST_INTEGRATION_INSTANCES = "/api/1p/external/v1/integrations/{INTEGRATION_NAME}/integrationInstances?$select=identifier"
     BASE_CASE_URL = "/api/1p/external/v1/cases"
