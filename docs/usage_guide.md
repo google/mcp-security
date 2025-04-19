@@ -177,7 +177,6 @@ $Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
 $Env:CHRONICLE_REGION = "us"
 $Env:SOAR_URL = "your-soar-url"
 $Env:SOAR_APP_KEY = "your-soar-app-key"
-$Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 $Env:VT_APIKEY = "your-vt-api-key"
 ```
 
@@ -208,6 +207,8 @@ Can you list open security cases and show me details about the highest priority 
 ```
 
 The LLM will use the SecOps SOAR server to list open cases and provide details about the highest priority case.
+
+For details on configuring and using specific SOAR integrations, refer to the [SOAR Integrations documentation](./soar_integrations/index.md).
 
 ### Security Command Center (SCC)
 

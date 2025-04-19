@@ -80,6 +80,8 @@ The `--integrations` flag in the server configuration allows you to enable speci
 - **Zscaler** - Cloud security
 - **And many more** - Over 100 integrations are available in the marketplace
 
+For detailed documentation on each integration, see the [SOAR Integrations](../soar_integrations/index.md) section.
+
 Refer to the files in the `server/secops-soar/marketplace/` directory for a complete list of available integrations. Each integration module provides specific tools for interacting with the corresponding service.
 
 ### Authentication Methods
@@ -413,6 +415,8 @@ These tools are always available.
 This server can dynamically load additional tools based on integrations enabled via the `--integrations` command-line flag when the server is started. These tools correspond to modules found in the `marketplace/` directory.
 
 ### Available Integrations
+
+For detailed documentation on each integration, see the [SOAR Integrations](../soar_integrations/index.md) section.
 
 #### ServiceNow Integration
 
