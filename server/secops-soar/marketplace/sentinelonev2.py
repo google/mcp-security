@@ -34,7 +34,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,18 +65,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat ID"] = threat_id
             script_params["Note"] = note
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -92,7 +92,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -119,7 +119,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -150,19 +150,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat IDs"] = threat_i_ds
             if annotation is not None:
                 script_params["Annotation"] = annotation
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -178,7 +178,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -205,7 +205,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -225,7 +225,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -236,13 +236,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if hash is not None:
@@ -259,7 +259,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Query"] = query
             if use_global_blacklist is not None:
                 script_params["Use Global Blacklist"] = use_global_blacklist
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -275,7 +275,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -302,7 +302,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -322,7 +322,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -333,13 +333,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Operation System"] = operation_system
@@ -353,7 +353,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Description"] = description
             if add_to_global_exclusion_list is not None:
                 script_params["Add to global exclusion list"] = add_to_global_exclusion_list
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -369,7 +369,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -396,7 +396,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -416,7 +416,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -427,16 +427,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -452,7 +452,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -479,7 +479,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -499,7 +499,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -510,16 +510,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -535,7 +535,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -562,7 +562,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -582,7 +582,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -593,13 +593,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Hours Back"] = hours_back
@@ -619,7 +619,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Include Registry Events Information"] = include_registry_events_information
             if include_scheduled_task_events_information is not None:
                 script_params["Include Scheduled Task Events Information"] = include_scheduled_task_events_information
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -635,7 +635,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -662,7 +662,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -682,7 +682,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -693,13 +693,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Path"] = path
@@ -718,7 +718,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Include Subfolders"] = include_subfolders
             if mode is not None:
                 script_params["Mode"] = mode
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -734,7 +734,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -761,7 +761,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -781,7 +781,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -792,19 +792,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Query ID"] = query_id
             if limit is not None:
                 script_params["Limit"] = limit
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -820,7 +820,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -847,7 +847,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -867,7 +867,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -878,13 +878,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Query"] = query
@@ -892,7 +892,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Start Date"] = start_date
             if end_date is not None:
                 script_params["End Date"] = end_date
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -908,7 +908,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -935,7 +935,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -955,7 +955,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -966,13 +966,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if mitigation_status is not None:
@@ -989,7 +989,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Limit"] = limit
             if api_version is not None:
                 script_params["API Version"] = api_version
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1005,7 +1005,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1032,7 +1032,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1052,7 +1052,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1063,20 +1063,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if create_insight is not None:
                 script_params["Create Insight"] = create_insight
             if only_infected_endpoints_insights is not None:
                 script_params["Only Infected Endpoints Insights"] = only_infected_endpoints_insights
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1092,7 +1092,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1119,7 +1119,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1139,7 +1139,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1150,16 +1150,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1175,7 +1175,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1202,7 +1202,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1222,7 +1222,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1233,17 +1233,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat IDs"] = threat_i_ds
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1259,7 +1259,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1286,7 +1286,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1306,7 +1306,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1317,16 +1317,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1342,7 +1342,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1359,8 +1359,8 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def sentinel_one_v2_delete_hash_black_list_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, from where the hash needs to be removed.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, from where the hash needs to be removed.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, from where the hash needs to be removed.")], remove_from_global_black_list: Annotated[Optional[bool], Field(default=None, description="If enabled, action will remove the hash from the global black list. Note: when this parameter is enabled, parameters \"Site IDs\", \"Group IDs\" and \"Account IDs\" are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Delete hashes from a black list in SentinelOne. Note: Only SHA1 hashes are supported.
+    async def sentinel_one_v2_delete_hash_blacklist_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], site_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of site ids, from where the hash needs to be removed.")], group_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of group ids, from where the hash needs to be removed.")], account_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of account ids, from where the hash needs to be removed.")], remove_from_global_black_list: Annotated[Optional[bool], Field(default=None, description="If enabled, action will remove the hash from the global black list. Note: when this parameter is enabled, parameters \"Site IDs\", \"Group IDs\" and \"Account IDs\" are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Delete hashes from a blacklist in SentinelOne. Note: Only SHA1 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
@@ -1369,7 +1369,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1389,7 +1389,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1400,13 +1400,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if site_i_ds is not None:
@@ -1417,7 +1417,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Account IDs"] = account_i_ds
             if remove_from_global_black_list is not None:
                 script_params["Remove from global black list"] = remove_from_global_black_list
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1426,14 +1426,14 @@ def register_tools(mcp: FastMCP):
                 scope=final_scope,
                 isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
                 actionProvider="Scripts", # Assuming constant based on example
-                actionName="SentinelOneV2_Delete Hash Black list Record",
+                actionName="SentinelOneV2_Delete Hash Blacklist Record",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "SentinelOneV2_Delete Hash Black list Record", # Assuming same as actionName
+                    "ScriptName": "SentinelOneV2_Delete Hash Blacklist Record", # Assuming same as actionName
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1460,7 +1460,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1480,7 +1480,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1491,16 +1491,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1516,7 +1516,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1543,7 +1543,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1563,7 +1563,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1574,18 +1574,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat ID"] = threat_id
             script_params["Status"] = status
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1601,7 +1601,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1628,7 +1628,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1648,7 +1648,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1659,18 +1659,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Mitigation action"] = mitigation_action
             script_params["Threat IDs"] = threat_i_ds
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1686,7 +1686,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1713,7 +1713,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1733,7 +1733,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1744,20 +1744,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat ID"] = threat_id
             script_params["Password"] = password
             script_params["Download Folder Path"] = download_folder_path
             script_params["Overwrite"] = overwrite
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1773,7 +1773,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1800,7 +1800,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1820,7 +1820,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1831,16 +1831,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1856,7 +1856,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1883,7 +1883,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1903,7 +1903,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1914,13 +1914,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if filter_key is not None:
@@ -1931,7 +1931,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Filter Value"] = filter_value
             if max_records_to_return is not None:
                 script_params["Max Records To Return"] = max_records_to_return
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1947,7 +1947,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1974,7 +1974,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1994,7 +1994,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2005,13 +2005,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Operating System"] = operating_system
@@ -2024,7 +2024,7 @@ def register_tools(mcp: FastMCP):
             if description is not None:
                 script_params["Description"] = description
             script_params["Add to global black list"] = add_to_global_black_list
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2040,7 +2040,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2067,7 +2067,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2087,7 +2087,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2098,16 +2098,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2123,7 +2123,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2150,7 +2150,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2170,7 +2170,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2181,18 +2181,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if max_applications_to_return is not None:
                 script_params["Max Applications To Return"] = max_applications_to_return
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2208,7 +2208,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2235,7 +2235,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2255,7 +2255,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2266,13 +2266,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if reputation_threshold is not None:
@@ -2281,7 +2281,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Create Insight"] = create_insight
             if only_suspicious_hashes_insight is not None:
                 script_params["Only Suspicious Hashes Insight"] = only_suspicious_hashes_insight
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2297,7 +2297,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2324,7 +2324,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2344,7 +2344,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2355,17 +2355,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Group Names"] = group_names
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2381,7 +2381,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2408,7 +2408,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2428,7 +2428,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2439,18 +2439,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threat ID"] = threat_id
             script_params["Analyst Verdict"] = analyst_verdict
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2466,7 +2466,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -2493,7 +2493,7 @@ def register_tools(mcp: FastMCP):
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
-
+    
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -2513,7 +2513,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-
+    
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -2524,20 +2524,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for SentinelOneV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-
+    
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-
+    
             # Construct parameters dictionary for the API call
             script_params = {}
             if group_id is not None:
                 script_params["Group ID"] = group_id
             if group_name is not None:
                 script_params["Group Name"] = group_name
-
+    
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -2553,7 +2553,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-
+    
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
