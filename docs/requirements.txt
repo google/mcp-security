@@ -18,3 +18,4 @@ cogapp>=3.3.0
 sphinx-autodoc-typehints>=1.18.3
 autoapi>=2.0.1
 sphinx-click>=4.3.0
+sphinxcontrib-mermaid>=0.7.1

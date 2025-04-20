@@ -54,6 +54,7 @@ extensions = [
     "sphinx.ext.napoleon",   # Support for Google-style docstrings
     "sphinx.ext.intersphinx", # Link to other projects' documentation
     "sphinx_click",         # Document click-based CLI applications
+    'sphinxcontrib.mermaid',
 ]
 
 # MyST Parser configuration for extended Markdown support
@@ -162,6 +163,12 @@ copybutton_prompt_text = "$ "
 copybutton_prompt_is_regexp = True
 copybutton_only_copy_prompt_lines = False
 copybutton_remove_prompts = True
+
+# Mermaid configuration
+mermaid_init_js = """mermaid.initialize({
+    startOnLoad: true,
+    theme: 'neutral'
+});"""
 
 # -- Options for HTMLHelp output ------------------------------------------
 
