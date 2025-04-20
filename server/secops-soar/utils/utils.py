@@ -96,3 +96,7 @@ def to_snake_case(name: str) -> str:
     if name in PYTHON_KEYWORDS:
         name += "_"
     return name
+
+
+def normalize_integration_name(integration_name: str) -> str:
+    return integration_name.replace(" ", "").replace("/", "").lower()
