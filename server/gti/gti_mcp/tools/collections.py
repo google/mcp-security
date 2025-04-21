@@ -149,14 +149,14 @@ async def _search_threats_by_collection_type(
       },
       limit=limit,
   )
-  return res
+  return [o.to_dict() for o in res]
 
 
 @server.tool()
 async def search_threats(
     ctx: Context,
     query: str,
-    collection_type: str | None,
+    collection_type: str | None = None,
     limit: int = 5,
     order_by: str = "relevance-",
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -210,6 +210,7 @@ async def search_threats(
       },
       limit=limit,
   )
+  res = [o.to_dict() for o in res]
   return res
 
 
@@ -369,7 +370,8 @@ async def get_collection_timeline_events(id: str, ctx: Context):
     List of events related to the given collection.
   """
   data = await vt_client(ctx).get_async(f"/collections/{id}/timeline/events")
-  return await data.json_async()
+  data = await data.json_async()
+  return data["data"]
 
 
 @server.tool()
@@ -382,5 +384,6 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
     A dictionary including the tactics and techniques associated to the given threat.
   """
   data = await vt_client(ctx).get_async(f"/collections/{id}/mitre_tree")
-  return await data.json_async()
+  data = await data.json_async()
+  return data["data"]
 
