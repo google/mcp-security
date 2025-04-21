@@ -69,3 +69,15 @@ def fixture_vt_get_object_mock(
         "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
     })
   return make_httpserver_ipv4
+
+
+@pytest.fixture(name="vt_get_request_mock")
+def fixture_vt_get_request_mock(
+    make_httpserver_ipv4, vt_endpoint, vt_object_response):
+  # Mock get object request.
+  make_httpserver_ipv4.expect_request(
+      vt_endpoint,
+      method="GET",
+      headers={"X-Apikey": "dummy_api_key"},
+  ).respond_with_json(vt_object_response)
+  return make_httpserver_ipv4

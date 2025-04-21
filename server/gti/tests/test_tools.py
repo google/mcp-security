@@ -52,6 +52,46 @@ from mcp.shared.memory import (
             },
         ),
         (
+            "get_file_behavior_report",
+            {"file_behaviour_id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox"},
+            "/api/v3/file_behaviours/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
+            {
+                "data": {
+                    "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
+                    "type": "file_behaviour",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            [
+                "contacted_domains",
+                "contacted_ips",
+                "contacted_urls",
+                "dropped_files",
+                "embedded_domains",
+                "embedded_ips",
+                "embedded_urls",
+                "associations",
+            ],
+            {
+                "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
+                "type": "file_behaviour",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in [
+                        "contacted_domains",
+                        "contacted_ips",
+                        "contacted_urls",
+                        "dropped_files",
+                        "embedded_domains",
+                        "embedded_ips",
+                        "embedded_urls",
+                        "associations",
+                    ]
+                },
+            },
+        ),
+        (
             "get_domain_report",
             {"domain": "theevil.com"},
             "/api/v3/domains/theevil.com",
@@ -117,6 +157,28 @@ from mcp.shared.memory import (
                 }
             },
         ),
+        (
+            "get_collection_report",
+            {"id": "collection_id"},
+            "/api/v3/collections/collection_id",
+            {
+                "data": {
+                    "id": "collection_id",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "collection_id",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
     ],
     indirect=["vt_endpoint", "vt_object_response", "abridged_relationships"],
 )
@@ -127,7 +189,80 @@ async def test_get_ioc_report(
     tool_arguments,
     expected    
 ):
-    """Test `get_{file,domain,ip_address,url}_report` tools."""
+    """Test `get_{file,file_behaviour,domain,ip_address,url}_report` tools."""
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            "get_entities_related_to_a_file",
+            {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f", "relationship_name": "associations"},
+            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ), 
+        (
+            "get_entities_related_to_a_domain",
+            {"domain": "theevil.com", "relationship_name": "associations"},
+            "/api/v3/domains/theevil.com/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),   
+        (
+            "get_entities_related_to_an_ip_address",
+            {"ip_address": "8.8.8.8", "relationship_name": "associations"},
+            "/api/v3/ip_addresses/8.8.8.8/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ), 
+        (
+            "get_entities_related_to_an_url",
+            {"url": "http://theevil.com/", "relationship_name": "associations"},
+            "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),
+        (
+            "get_entities_related_to_a_collection",
+            {"id": "collection_id", "relationship_name": "associations"},
+            "/api/v3/collections/collection_id/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),     
+    ],
+    indirect=["vt_endpoint", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_request_mock")
+async def test_get_entities_related(
+    vt_get_request_mock,
+    tool_name,
+    tool_arguments,
+    expected    
+):
+    """Test `get_{file,file_behaviour,domain,ip_address,url,collection}_report` tools."""
 
     # Execute tool call.
     async with client_session(server._mcp_server) as client:
