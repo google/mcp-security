@@ -46,6 +46,8 @@ See `example.py` for a complete example of using the MCP server.
 
 Add the following configuration to your MCP client's settings file:
 
+#### Using uv (Recommended)
+
 ```json
 {
   "mcpServers": {
@@ -69,6 +71,43 @@ Add the following configuration to your MCP client's settings file:
   }
 }
 ```
+
+#### Using pip
+
+You can also use pip instead of uv to install and run the MCP server:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "cd /path/to/the/repo/server/secops && pip install -e . && secops_mcp"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "get_ioc_matches",
+        "search_security_events",
+        "get_security_alerts"
+      ],
+      "alwaysAllow": [
+        "get_ioc_matches"
+      ]
+    }
+  }
+}
+```
+
+#### When to use uv vs pip
+
+- **uv**: Recommended for most users as it provides faster package installation, better dependency resolution, and supports loading environment variables from a file with the `--env-file` option.
+- **pip**: Use when you prefer the standard Python package manager or when you need specific environment setup requirements.
 
 ### Environment Variable Setup
 
