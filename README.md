@@ -37,6 +37,7 @@ The server uses Google's authentication. Make sure you have either:
 The configuration for Claude Desktop and cline is the same. We make use of uv to
 run the mcp services locally and use the stdio transport.
 
+### Using uv (Recommended)
 
 ```json
 {
@@ -62,7 +63,6 @@ run the mcp services locally and use the stdio transport.
     "secops-soar": {
       "command": "uv",
       "args": [
-
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
@@ -114,10 +114,70 @@ run the mcp services locally and use the stdio transport.
 }
 ```
 
+### Using pip
+
+You can also use pip instead of uv to install and run the MCP servers. This approach uses a bash command to:
+1. Change to the server directory
+2. Install the package in development mode
+3. Run the server binary
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "cd /path/to/the/repo/server/secops && pip install -e . && secops_mcp"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "get_ioc_matches",
+        "search_security_events",
+        "get_security_alerts"
+      ],
+      "alwaysAllow": [
+        "get_ioc_matches"
+      ]
+    },
+    "gti": {
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "cd /path/to/the/repo/server/gti && pip install -e . && gti_mcp"
+      ],
+      "env": {
+        "VT_APIKEY": "${VT_APIKEY}"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "get_domain_report",
+        "get_url_report",
+        "get_file_report",
+        "get_ip_address_report",
+        "search_threats"
+      ],
+      "alwaysAllow": [
+        "get_file_report"
+      ]
+    }
+  }
+}
+```
+
+### When to use uv vs pip
+
+- **uv**: Recommended for most users because it offers faster package installation, better dependency resolution, and isolated environments. It also supports loading environment variables from a file.
+- **pip**: Use when you prefer the standard Python package manager or when you have specific environment setup requirements.
+
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described in the usage guide.
 
 Alternatively, you can set `UV_ENV_FILE` to your `.env` file and omit the `--env-file` portion of the configuration.
-
 
 Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
