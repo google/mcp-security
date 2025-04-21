@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+    participant SOAR as secops-soar
+
+    User->>Cline: Request workflow execution (GTI Collection ID: 3e3add...b89, SOAR Case ID: 14900)
+    Cline->>GTI: get_collection_report(id='3e3add...b89')
+    GTI-->>Cline: Collection details (Domains: 3, IPs: 1)
+    Cline->>GTI: get_entities_related_to_a_collection(id='3e3add...b89', relationship_name='domains')
+    GTI-->>Cline: Domains: scarfponcho.com, superstarts.top, superlist.top
+    Cline->>GTI: get_entities_related_to_a_collection(id='3e3add...b89', relationship_name='ip_addresses')
+    GTI-->>Cline: IP: 79.116.213.193
+    Note over Cline: Extracted IoCs: scarfponcho.com, superstarts.top, superlist.top, 79.116.213.193
+    Cline->>SIEM: get_ioc_matches(hours_back=72, max_matches=50)
+    SIEM-->>Cline: IoC Matches (including scarfponcho.com, superstarts.top, superlist.top)
+    Cline->>SIEM: search_security_events(text='Find any events involving the domain scarfponcho.com', hours_back=72)
+    SIEM-->>Cline: 2 NETWORK_HTTP events found
+    Cline->>SIEM: search_security_events(text='Find any events involving the domain superstarts.top', hours_back=72)
+    SIEM-->>Cline: 27 NETWORK_DNS events found (SuspiciousDnsRequest)
+    Cline->>SIEM: search_security_events(text='Find any events involving the domain superlist.top', hours_back=72)
+    SIEM-->>Cline: 27 NETWORK_DNS events found (SuspiciousDnsRequest)
+    Cline->>SIEM: search_security_events(text='Find any events involving the IP address 79.116.213.193', hours_back=72)
+    SIEM-->>Cline: 100+ events found (Azure AD Logins, AWS CloudTrail Admin Actions)
+    Cline->>SIEM: get_security_alerts(hours_back=72, max_alerts=50)
+    SIEM-->>Cline: 50 alerts retrieved (None definitively linked to IoCs from summary)
+    Note over Cline: Synthesize report with all findings (IoC matches, events, alerts)
+    Cline->>SOAR: post_case_comment(case_id='14900', comment='Workflow Run Summary...')
+    SOAR-->>Cline: Comment confirmation (ID: 23)
+    Cline->>User: attempt_completion(result='Workflow complete. Summary posted to SOAR Case 14900.')

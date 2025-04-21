@@ -215,11 +215,14 @@ sequenceDiagram
 ```
 
 
-### New Report to Environment Sweep
+### Compare GTI Collection to IoCs, Events in SecOps
 
-From a GTI Collection (could be a Private Collection as well), search for any UDM events containing:
+From a GTI Collection (could be a Private Collection as well), search the past 3 days for any UDM events containing:
  1) Indicators of Compromise
  2) IOC++ (Modeled behvaioral data) (Would need to interpret relevant UDM fields)
+ 3) Get Chronicle SIEM IoC Matches (`get_ioc_matches`)
+ 4) Produce report on findings
+ 5) Add report to SOAR Case
 
 Analyze results and compare against GTI Collection context (report or campaign). (Optional) Notable indicators are added to SQLite Table. Provide analyst report with prescribed follow on response actions.
 
