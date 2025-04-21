@@ -221,7 +221,7 @@ From a GTI Collection (could be a Private Collection as well), search for any UD
  1) Indicators of Compromise
  2) IOC++ (Modeled behvaioral data) (Would need to interpret relevant UDM fields)
 
-Analyze results and compare against GTI Collection context (report or campaign). Notable indicators are added to Data Table. Provide analyst report with prescribed follow on response actions.
+Analyze results and compare against GTI Collection context (report or campaign). (Optional) Notable indicators are added to SQLite Table. Provide analyst report with prescribed follow on response actions.
 
 Uses tools:
 
@@ -230,7 +230,7 @@ Uses tools:
  * `secops-mcp.search_security_events`
  * `secops-mcp.get_security_alerts`
  * `gti-mcp.*` (various lookups like `get_file_report`, etc.)
- * (Conceptual) Add to Data Table
+ * (Optional) Add to SQLite Table
  * `secops-soar.post_case_comment`
 
 ```{mermaid}
