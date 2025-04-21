@@ -23,6 +23,16 @@ from mcp.shared.memory import (
 )
 
 
+@pytest.mark.asyncio(scope="session")
+async def test_server_connection():
+    """Test that the server is running and accessible."""
+
+    async with client_session(server._mcp_server) as client:
+        tools_result = await client.list_tools()
+        assert isinstance(tools_result, mcp.ListToolsResult)
+        assert len(tools_result.tools) > 0
+
+
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
@@ -183,7 +193,7 @@ from mcp.shared.memory import (
     indirect=["vt_endpoint", "vt_object_response", "abridged_relationships"],
 )
 @pytest.mark.usefixtures("vt_get_object_mock")
-async def test_get_ioc_report(
+async def test_get_reports(
     vt_get_object_mock,
     tool_name,
     tool_arguments,
@@ -274,11 +284,35 @@ async def test_get_entities_related(
         assert json.loads(result.content[0].text) == expected
 
 
-@pytest.mark.asyncio(scope="session")
-async def test_server_connection():
-    """Test that the server is running and accessible."""
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "vt_endpoint", "vt_object_response",
+    ],
+    argvalues=[
+        (
+            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/behaviour_summary",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+        ), 
+    ],
+    indirect=["vt_endpoint", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_request_mock")
+async def test_get_file_behavior_summary(vt_get_request_mock):
+    """Test `get_file_behavior_summary` tools."""
 
+    # Execute tool call.
     async with client_session(server._mcp_server) as client:
-        tools_result = await client.list_tools()
-        assert isinstance(tools_result, mcp.ListToolsResult)
-        assert len(tools_result.tools) > 0
+        result = await client.call_tool(
+            "get_file_behavior_summary",
+            arguments={"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"})
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == {
+            "type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
+
+
