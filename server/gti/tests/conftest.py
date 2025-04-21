@@ -29,6 +29,11 @@ def fixture_vt_object_response(request) -> dict[str, typing.Any]:
   return request.param
 
 
+@pytest.fixture(name="vt_request_params")
+def fixture_vt_request_params(request) -> dict[str, typing.Any]:
+  return request.param
+
+
 @pytest.fixture(name='abridged_relationships')
 def fixture_abridged_relationships(request) -> list[str]:
   return request.param
@@ -58,6 +63,28 @@ def fixture_vt_get_object_mock(
       vt_endpoint,
       method="GET",
       headers={"X-Apikey": "dummy_api_key"},
+  ).respond_with_json(vt_object_response)
+  # Mock get relationships requests.
+  for rel_name in abridged_relationships:
+    make_httpserver_ipv4.expect_request(
+        f"{vt_endpoint}/{rel_name}",
+        method="GET",
+        headers={"X-Apikey": "dummy_api_key"},
+    ).respond_with_json({
+        "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+    })
+  return make_httpserver_ipv4
+
+
+@pytest.fixture(name="vt_get_object_with_params_mock")
+def fixture_vt_get_object_with_params_mock(
+    make_httpserver_ipv4, vt_endpoint, vt_object_response, abridged_relationships, vt_request_params):
+  # Mock get object request.
+  make_httpserver_ipv4.expect_request(
+      vt_endpoint,
+      method="GET",
+      headers={"X-Apikey": "dummy_api_key"},
+      query_string=vt_request_params,
   ).respond_with_json(vt_object_response)
   # Mock get relationships requests.
   for rel_name in abridged_relationships:

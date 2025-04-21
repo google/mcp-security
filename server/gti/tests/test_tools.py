@@ -338,3 +338,264 @@ async def test_get_simple_tools(
         assert json.loads(result.content[0].text) == expected
 
 
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "abridged_relationships", "expected",
+    ],
+    argvalues=[
+        (
+            "search_threats",
+            {"query": "What is APT44?"},
+            "/api/v3/collections",
+            {
+                "filter": "What is APT44?", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_campaigns",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:campaign APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_threat_actors",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:threat-actor APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_malware_families",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:malware-family APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_software_toolkits",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:software-toolkit APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_threat_reports",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:report APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+        (
+            "search_vulnerabilities",
+            {"query": "APT44"},
+            "/api/v3/collections",
+            {
+                "filter": "collection_type:vulnerability APT44", 
+                "order": "relevance-",
+                "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
+                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+            },
+            {
+                "data": [{
+                    "id": "apt44",
+                    "type": "collection",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
+                }]
+            },
+            tools.COLLECTION_KEY_RELATIONSHIPS,
+            {
+                "id": "apt44",
+                "type": "collection",
+                "attributes": {"foo": "foo", "bar": "bar"},
+                "relationships": {
+                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                }
+            },
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response", "abridged_relationships"],
+)
+@pytest.mark.usefixtures("vt_get_object_with_params_mock")
+async def test_search_threats(
+    vt_get_object_with_params_mock,
+    tool_name,
+    tool_arguments,
+    expected    
+):
+    """Test `search_*` tools.
+    
+    Tested tools:
+        - search_threats
+        - search_campaigns
+        - search_threat_actors
+        - search_malware_families
+        - search_software_toolkits
+        - search_threat_reports
+        - search_vulnerabilities
+    """
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
