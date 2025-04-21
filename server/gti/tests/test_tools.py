@@ -287,32 +287,54 @@ async def test_get_entities_related(
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
-        "vt_endpoint", "vt_object_response",
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
     ],
     argvalues=[
         (
+            "get_file_behavior_summary",
+            {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"},
             "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/behaviour_summary",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
+        ), 
+        (
+            "get_collection_timeline_events",
+            {"id": "collection_id"},
+            "/api/v3/collections/collection_id/timeline/events",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
+        ),
+        (
+            "get_collection_mitre_tree",
+            {"id": "collection_id"},
+            "/api/v3/collections/collection_id/mitre_tree",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
         ), 
     ],
     indirect=["vt_endpoint", "vt_object_response"],
 )
 @pytest.mark.usefixtures("vt_get_request_mock")
-async def test_get_file_behavior_summary(vt_get_request_mock):
-    """Test `get_file_behavior_summary` tools."""
+async def test_get_simple_tools(
+    vt_get_request_mock,
+    tool_name,
+    tool_arguments,
+    expected):
+    """Test simple tools that just retrieve information from GTI."""
 
     # Execute tool call.
     async with client_session(server._mcp_server) as client:
-        result = await client.call_tool(
-            "get_file_behavior_summary",
-            arguments={"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"})
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
         assert isinstance(result, mcp.types.CallToolResult)
         assert result.isError == False
         assert len(result.content) == 1
         assert isinstance(result.content[0], mcp.types.TextContent)
-        assert json.loads(result.content[0].text) == {
-            "type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
+        assert json.loads(result.content[0].text) == expected
 
 

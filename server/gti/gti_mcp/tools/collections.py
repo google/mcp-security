@@ -369,7 +369,8 @@ async def get_collection_timeline_events(id: str, ctx: Context):
     List of events related to the given collection.
   """
   data = await vt_client(ctx).get_async(f"/collections/{id}/timeline/events")
-  return await data.json_async()
+  data = await data.json_async()
+  return data["data"]
 
 
 @server.tool()
@@ -382,5 +383,6 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
     A dictionary including the tactics and techniques associated to the given threat.
   """
   data = await vt_client(ctx).get_async(f"/collections/{id}/mitre_tree")
-  return await data.json_async()
+  data = await data.json_async()
+  return data["data"]
 
