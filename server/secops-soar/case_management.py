@@ -25,7 +25,15 @@ logger = get_logger(__name__)
 
 def register_tools(mcp: FastMCP):
     @mcp.tool()
-    async def list_cases() -> dict:
+    async def list_cases(
+        next_page_token: Annotated[
+            Optional[str],
+            Field(
+                default=None,
+                description="The nextPageToken to fetch the next page of results.",
+            ),
+        ],
+    ) -> dict:
         """List cases available in the Security Orchestration, Automation, and Response (SOAR) platform.
 
         In a SOAR context, a 'case' typically represents a security incident, investigation,
@@ -50,6 +58,10 @@ def register_tools(mcp: FastMCP):
         - Use a tool to change the case priority if initial assessment suggests it's warranted (like `change_case_priority`).
         - Begin enrichment by extracting key indicators from the case summary and using appropriate SIEM, TI, or other security tool MCP integrations.
         """
+        if next_page_token:
+            return await bindings.http_client.get(
+                Endpoints.BASE_CASE_URL, params={"pageToken": next_page_token}
+            )
         return await bindings.http_client.get(Endpoints.BASE_CASE_URL)
 
     @mcp.tool()
@@ -94,6 +106,13 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def list_alerts_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
+        next_page_token: Annotated[
+            Optional[str],
+            Field(
+                default=None,
+                description="The nextPageToken to fetch the next page of results.",
+            ),
+        ],
     ) -> dict:
         """List the security alerts associated with a specific case ID in the SOAR platform.
 
@@ -125,6 +144,11 @@ def register_tools(mcp: FastMCP):
         - Extract indicators from alert details and use SIEM entity lookup or event search tools for enrichment.
         - Correlate alert details with findings from other security tools (EDR, Network, Cloud, TI) via their MCP tools.
         """
+        if next_page_token:
+            return await bindings.http_client.get(
+                Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id),
+                params={"pageToken": next_page_token},
+            )
         return await bindings.http_client.get(
             Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id)
         )
@@ -132,6 +156,13 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def list_alert_group_identifiers_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
+        next_page_token: Annotated[
+            Optional[str],
+            Field(
+                default=None,
+                description="The nextPageToken to fetch the next page of results.",
+            ),
+        ],
     ):
         """List alert group identifiers associated with a specific case ID in the SOAR platform.
 
@@ -161,6 +192,11 @@ def register_tools(mcp: FastMCP):
         - Use the identifiers as parameters for certain playbook actions or integrations
           (potentially from various security tools connected via MCP) if they operate on alert groups.
         """
+        if next_page_token:
+            return await bindings.http_client.get(
+                Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id),
+                params={"pageToken": next_page_token},
+            )
         return await bindings.http_client.get(
             Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id)
         )
@@ -169,12 +205,19 @@ def register_tools(mcp: FastMCP):
     async def list_events_by_alert(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_id: Annotated[str, Field(..., description="The ID of the alert.")],
+        next_page_token: Annotated[
+            Optional[str],
+            Field(
+                default=None,
+                description="The nextPageToken to fetch the next page of results.",
+            ),
+        ],
     ):
         """List the underlying security events associated with a specific alert within a given case.
 
         Security alerts (often derived from detection rules or IoC matches) are typically
         triggered by one or more underlying events ingested into the security platform
-        (e.g., Chronicle). These events provide the raw data (likely in UDM format) 
+        (e.g., Chronicle). These events provide the raw data (likely in UDM format)
         needed to validate the alert, understand the specific activity, and perform deep-dive investigations.
 
         Args:
@@ -200,6 +243,13 @@ def register_tools(mcp: FastMCP):
         - Correlate event details with other related events using SIEM event search tools.
         - Document findings in the relevant case management system using a commenting tool.
         """
+        if next_page_token:
+            return await bindings.http_client.get(
+                Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
+                    CASE_ID=case_id, ALERT_ID=alert_id
+                ),
+                params={"pageToken": next_page_token},
+            )
         return await bindings.http_client.get(
             Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
                 CASE_ID=case_id, ALERT_ID=alert_id
