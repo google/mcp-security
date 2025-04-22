@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.4.1",
-    "secops>=0.1.10",
+    "secops>=0.1.13",
     "google-auth>=2.38.0",
     "google-auth-httplib2>=0.2.0",
     "google-api-python-client>=2.164.0"
