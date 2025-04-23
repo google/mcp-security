@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Integration tests for Chronicle SecOps MCP tools.
+"""Integration tests for Chronicle SecOps SOAR MCP tools.
 
-These tests exercise the full functionality of the secops_mcp.py tools
-by making actual API calls to the Chronicle service. They require proper
-authentication and configuration to run.
+These tests require proper SOAR authentication and configuration to run.
 
 To run these tests:
 1. Make sure you have created a config.json file in the tests directory with

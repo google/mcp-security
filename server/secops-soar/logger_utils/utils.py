@@ -13,14 +13,15 @@
 # limitations under the License.
 import logging
 
-logging.basicConfig(
-    level=logging.WARNING,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(message)s",  # Include logger name
-)
+
+def setup_logging(verbose: bool):
+    level = logging.DEBUG if verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(message)s",
+        force=True,
+    )
 
 
 def get_logger(logger_name: str):
-    logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.INFO)
-
-    return logger
+    return logging.getLogger(logger_name)
