@@ -313,9 +313,24 @@ Instructions:
 
 3. Data Extraction and Formatting:
 
-  * From the response in Step 2, identify the related domain names, IPs, etc.
-  * For each relationship, extract key attributes such as TLD, creation/expiration dates, registrar, last analysis statistics (malicious/suspicious counts), reputation score, Mandiant IC Score, key vendor detections, and threat severity level.
-  * Format this information clearly in markdown. Include a note about the initial check too.
+  * Initialize an empty markdown string for the report content.
+  * Add a main title and summary section to the markdown string, mentioning the Collection ID being investigated.
+  * Iterate through the results gathered in Step 2 (which should be stored, perhaps in a dictionary mapping relationship names to their results).
+  * For each `relationship_name` and its corresponding list of entities:
+    * Add a markdown section header for that relationship type (e.g., `## Related Domains`, `## Related Files`).
+    * If entities were found for that relationship:
+      * Iterate through each individual entity in the list.
+      * Identify the **type** of the entity (e.g., 'domain', 'file', 'ip_address', 'url', 'threat-actor', etc. - usually available in the entity data).
+      * Extract **key attributes relevant to that specific entity type**. Examples:
+        *   **Domains:** TLD, creation/expiration dates, registrar, analysis stats, reputation, scores, categories.
+        *   **Files:** Hashes (MD5, SHA1, SHA256), file type, size, detection names, first/last submission dates, threat severity.
+        *   **IP Addresses:** ASN, country, owner, analysis stats, reputation, scores, last modification date.
+        *   **URLs:** Full URL, domain, analysis stats, reputation, scores, final URL after redirections.
+        *   **Threat Actors/Malware Families/Campaigns/Reports:** Name, aliases, description, first seen, last seen, relevant MITRE ATT&CK techniques (if available).
+        *   **Vulnerabilities:** CVE ID, description, CVSS score, related software.
+      * Format these extracted attributes clearly under a sub-heading or list item for each entity within the section.
+    * If no entities were found for that relationship, add a note indicating that (e.g., "No related files found.").
+  * Ensure the note about the initial 'associations' check (from Step 1) is included in the summary or relevant section.
 
 4. Report Creation:
 
