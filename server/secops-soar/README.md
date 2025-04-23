@@ -55,9 +55,9 @@ To use this MCP server with Claude Desktop:
       "args": [
         "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
-        "secops_soar_mcp.py"
+        "server.py"
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
@@ -79,9 +79,9 @@ To have the MCP server provide tools for specific marketplace integrations, use 
       "args": [
         "--env-file=/path/to/your/env",
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
-        "secops_soar_mcp.py",
+        "server.py",
         "--integrations",
         "ServiceNow,CSV,Siemplify"
       ],
@@ -127,5 +127,5 @@ Apache 2.0
 
 The project is structured as follows:
 
--   `secops_soar_mcp.py`: Main MCP server implementation
+-   `server.py`: Main MCP server implementation
 -   `marketplace/`: Directory containing integration modules

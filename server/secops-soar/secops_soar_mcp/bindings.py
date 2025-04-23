@@ -11,19 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#!/usr/bin/env python3
-import setuptools
+"""Bindings for the SOAR client."""
 
-setup = setuptools.setup
+import os
 
-setup(
-    name="secops-soar-mcp",
-    version="0.1.0",
-    packages=setuptools.find_packages(),
-    entry_points={
-        "console_scripts": [
-            "secops-soar-mcp=secops_soar_mcp.server:main",
-        ],
-    },
-)
+import dotenv
+from secops_soar_mcp.http_client import HttpClient
+from secops_soar_mcp.utils import consts
+
+
+dotenv.load_dotenv()
+
+http_client: HttpClient = None
+valid_scopes = set()
+
+
+async def bind():
+    """Binds global variables."""
+    global http_client, valid_scopes
+    http_client = HttpClient(
+        os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
+    )
+    valid_scopes = set(await http_client.get(consts.Endpoints.GET_SCOPES))

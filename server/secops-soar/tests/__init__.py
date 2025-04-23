@@ -11,19 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#!/usr/bin/env python3
-import setuptools
-
-setup = setuptools.setup
-
-setup(
-    name="secops-soar-mcp",
-    version="0.1.0",
-    packages=setuptools.find_packages(),
-    entry_points={
-        "console_scripts": [
-            "secops-soar-mcp=secops_soar_mcp.server:main",
-        ],
-    },
-)
