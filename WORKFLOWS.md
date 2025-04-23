@@ -274,66 +274,300 @@ sequenceDiagram
 
 ```
 
-# Investigate Google Threat Intelligence Collection ID
+# Investigate Google Threat Intelligence Collection ID (Enhanced)
 
-Objective: Investigate Google Threat Intelligence Collection ID provided by
-the user ${COLLECTION_ID} and create a timestamped markdown report summarizing
-the findings, focusing on:
-  * associations
-  * attack_techniques
-  * domains
-  * files
-  * ip_addresses
-  * urls
-  * threat_actors
-  * malware_families
-  * software_toolkits
-  * campaigns
-  * vulnerabilities
-  * reports
-  * suspected_threat_actors
+Objective: Investigate Google Threat Intelligence Collection ID provided by the user `${COLLECTION_ID}`. Enrich findings with detailed entity reports and correlate with the local environment (SIEM/SOAR). Create a timestamped markdown report summarizing findings, correlations, and recommended actions.
 
 Instructions:
 
-1. Initial Investigation (Associations):
+1.  **Initial Collection Context:**
+    *   Use the `get_collection_report` tool from the `Google Threat Intelligence MCP server` (gti-mcp).
+    *   Provide the argument: `id`: `${COLLECTION_ID}`.
+    *   Record the collection details, especially the `collection_type`.
 
-  * Use the `get_entities_related_to_a_collection` tool from the Google Threat Intelligence MCP server.
-  * Provide the following arguments:
-    * id: ${COLLECTION_ID}
-    * relationship_name: "associations"
-  * Note the result.
+2.  **Define Relationships to Investigate:**
+    *   Based on the `collection_type` (from Step 1), determine a prioritized list of relevant relationships. (Default: `["associations", "attack_techniques", "domains", "files", "ip_addresses", "urls", "threat_actors", "malware_families", "software_toolkits", "campaigns", "vulnerabilities", "reports", "suspected_threat_actors"]`, but can be narrowed). Let's call this `RELATIONSHIP_LIST`.
 
-2. Investigations:
+3.  **Iterative GTI Relationship Investigation:**
+    *   Initialize an empty data structure (e.g., `gti_findings`) to store results.
+    *   Loop through each `relationship_name` in `RELATIONSHIP_LIST`.
+    *   Use the `get_entities_related_to_a_collection` tool (gti-mcp).
+    *   Arguments: `id`: `${COLLECTION_ID}`, `relationship_name`: current relationship name.
+    *   Store the results in `gti_findings` under the corresponding `relationship_name`.
 
-  * Use the get_entities_related_to_a_collection tool from the Google Threat Intelligence MCP server again.
-  * Provide the following arguments:
-    * id: ${COLLECTION_ID}
-    * relationship_name: ___
-  * Record the response, which should contain details about related ___.
+4.  **Detailed GTI Entity Enrichment:**
+    *   Initialize an empty data structure (e.g., `enriched_entities`) to store detailed reports.
+    *   Iterate through key entity types found in `gti_findings` (e.g., domains, files, ip_addresses).
+    *   For each entity found:
+        *   If it's a domain, use `get_domain_report` (gti-mcp) with the domain name. Store the result.
+        *   If it's a file (hash), use `get_file_report` (gti-mcp) with the hash. Store the result.
+        *   If it's an IP address, use `get_ip_address_report` (gti-mcp) with the IP. Store the result.
+        *   *(Add other relevant enrichment tools if needed, e.g., `get_url_report`)*.
 
-3. Data Extraction and Formatting:
+5.  **Local Environment Correlation (SIEM/SOAR):**
+    *   Initialize an empty data structure (e.g., `local_findings`) to store correlation results.
+    *   Iterate through key IOCs found (domains, files, IPs from `gti_findings`).
+    *   For each IOC:
+        *   Use `lookup_entity` (secops-mcp) with `entity_value` = IOC. Store summary.
+        *   Use `search_security_events` (secops-mcp) with `text` query related to the IOC (e.g., "Events involving IP 1.2.3.4"). Store key event findings.
+    *   *(Optional: Check if related threat actors/campaigns match existing SOAR cases using `list_cases` (secops-soar) with appropriate filters)*.
 
-  * Initialize an empty markdown string for the report content.
-  * Add a main title and summary section to the markdown string, mentioning the Collection ID being investigated.
-  * Iterate through the results gathered in Step 2 (which should be stored, perhaps in a dictionary mapping relationship names to their results).
-  * For each `relationship_name` and its corresponding list of entities:
-    * Add a markdown section header for that relationship type (e.g., `## Related Domains`, `## Related Files`).
-    * If entities were found for that relationship:
-      * Iterate through each individual entity in the list.
-      * Identify the **type** of the entity (e.g., 'domain', 'file', 'ip_address', 'url', 'threat-actor', etc. - usually available in the entity data).
-      * Extract **key attributes relevant to that specific entity type**. Examples:
-        *   **Domains:** TLD, creation/expiration dates, registrar, analysis stats, reputation, scores, categories.
-        *   **Files:** Hashes (MD5, SHA1, SHA256), file type, size, detection names, first/last submission dates, threat severity.
-        *   **IP Addresses:** ASN, country, owner, analysis stats, reputation, scores, last modification date.
-        *   **URLs:** Full URL, domain, analysis stats, reputation, scores, final URL after redirections.
-        *   **Threat Actors/Malware Families/Campaigns/Reports:** Name, aliases, description, first seen, last seen, relevant MITRE ATT&CK techniques (if available).
-        *   **Vulnerabilities:** CVE ID, description, CVSS score, related software.
-      * Format these extracted attributes clearly under a sub-heading or list item for each entity within the section.
-    * If no entities were found for that relationship, add a note indicating that (e.g., "No related files found.").
-  * Ensure the note about the initial 'associations' check (from Step 1) is included in the summary or relevant section.
+6.  **Data Synthesis and Formatting:**
+    *   Initialize an empty markdown string for the report content.
+    *   Add a main title and summary section mentioning the Collection ID.
+    *   **Add "Key Findings & Recommendations" section:** Summarize critical entities, highlight correlations between GTI and local findings, and list actionable next steps.
+    *   Iterate through `gti_findings` and `enriched_entities`:
+        *   Add sections for each relationship type investigated.
+        *   List entities found. For enriched entities, include key details from their detailed reports (Step 4). Note relationships with no findings.
+    *   Add a "Local Environment Correlation" section:
+        *   Summarize results from `lookup_entity` and `search_security_events` for each checked IOC. Highlight any matches or significant activity.
 
-4. Report Creation:
+7.  **Report Creation:**
+    *   Generate a timestamp string (`yyyymmdd_hhmm`).
+    *   Construct filename: `./reports/enhanced_report_${COLLECTION_ID}_${timestamp}.md`.
+    *   Use the `write_to_file` tool.
+    *   Arguments: `path`: constructed filename, `content`: complete formatted markdown string.
 
-  * Use the write_to_file tool.
-  * Name the file with metadata: ./reports/related_entities_report_{COLLECTION_ID}_{yyyymmdd_hhmm}.md
-  * Provide the formatted markdown content generated in Step 3 as the content parameter.
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+    participant SOAR as secops-soar
+
+    User->>Cline: Investigate GTI Collection ID `${COLLECTION_ID}` (Enhanced)
+
+    %% Step 1: Initial Collection Context
+    Cline->>GTI: get_collection_report(id=`${COLLECTION_ID}`)
+    GTI-->>Cline: Collection Details (Type: T)
+
+    %% Step 2 & 3: Define & Investigate Relationships
+    Note over Cline: Determine RELATIONSHIP_LIST based on Type T
+    loop For each relationship_name in RELATIONSHIP_LIST
+        Cline->>GTI: get_entities_related_to_a_collection(id=`${COLLECTION_ID}`, relationship_name=...)
+        GTI-->>Cline: Related Entities (E1, E2...) for relationship
+        Note over Cline: Store entities in gti_findings
+    end
+
+    %% Step 4: Detailed GTI Entity Enrichment
+    Note over Cline: Initialize enriched_entities
+    loop For each key Entity Ei in gti_findings (Files, Domains, IPs)
+        alt Entity is File (Hash H)
+            Cline->>GTI: get_file_report(hash=H)
+            GTI-->>Cline: File Report for H
+            Note over Cline: Store in enriched_entities
+        else Entity is Domain (D)
+            Cline->>GTI: get_domain_report(domain=D)
+            GTI-->>Cline: Domain Report for D
+            Note over Cline: Store in enriched_entities
+        else Entity is IP Address (IP)
+            Cline->>GTI: get_ip_address_report(ip_address=IP)
+            GTI-->>Cline: IP Report for IP
+            Note over Cline: Store in enriched_entities
+        end
+    end
+
+    %% Step 5: Local Environment Correlation
+    Note over Cline: Initialize local_findings
+    loop For each key IOC Ii from gti_findings (Files, Domains, IPs)
+        Cline->>SIEM: lookup_entity(entity_value=Ii)
+        SIEM-->>Cline: SIEM Entity Summary for Ii
+        Note over Cline: Store in local_findings
+        Cline->>SIEM: search_security_events(text="Events involving Ii")
+        SIEM-->>Cline: Relevant SIEM Events for Ii
+        Note over Cline: Store in local_findings
+    end
+    %% Optional SOAR Check (Conceptual)
+    %% Cline->>SOAR: list_cases(filter="Related to Campaign/Actor from GTI")
+    %% SOAR-->>Cline: Potentially related SOAR cases
+
+    %% Step 6 & 7: Synthesize Report and Write File
+    Note over Cline: Synthesize report content from gti_findings, enriched_entities, local_findings
+    Note over Cline: Include Key Findings & Recommendations
+    Cline->>Cline: write_to_file(path="./reports/enhanced_report_${COLLECTION_ID}_${timestamp}.md", content=...)
+    Note over Cline: Report file created
+
+    Cline->>User: attempt_completion(result="Enhanced investigation complete. Report generated.")
+
+```
+
+
+
+# Group Cases Workflow
+
+From the last 5 cases, examine the underlying entities in the alerts and events and group the cases logically. Then, extract details from each case in each cluster to build a high fidelity understanding of each cases' disposition and involved entities. Make sure you have an in depth understanding of each case before moving on to the next step.
+
+Then determine the priority of each case "grouping". Then for each grouping analyze and interpret the alerts to understand why each case might be relevant. Then assess the impact of each case grouping and prioritize the cases with the highest potentialy impact. Then for each case grouping examine the underlying entities and enrich any observables with GTI. Finally, search for any related security events that may be relevant to a case based on their entities (hostnames) and include those as part of your case analysis. Finally, create a comprehensive analysis report in markdown in which you present the prioritized case list, your justification, and your analysis of each case or case cluster.
+
+Do not treat internal domains as indicators (such as those extracted from email addresses, or usernames)
+
+
+# Graphviz Dotfile
+
+```{graphviz}
+digraph CaseAnalysisFlow {
+    rankdir=TB;
+    // Default node style (applied if not overridden)
+    node [shape=box, style=rounded, fontname="Helvetica"];
+    // --- Legend / Key ---
+    subgraph cluster_legend {
+        label = "Key / Legend";
+        style = filled;
+        fillcolor = whitesmoke; // Light background for the legend box
+        fontsize = 10;
+        fontcolor = darkslategray;
+        node [shape=box, fontname="Helvetica", fontsize=9]; // Default style within legend
+        key_step [label="Step / Action", shape=box, style=rounded];
+        key_plan [label="Planning Step", shape=box, style="rounded,filled", fillcolor=lightyellow];
+        key_tool [label="Tool Execution", shape=ellipse, style=filled, fillcolor=lightblue];
+        key_result [label="Result / Summary", shape=note, align=left];
+        key_report [label="Final Report", shape=note, style=filled, fillcolor=lightgrey];
+        key_failed [label="Tool Not Found", shape=ellipse, style=filled, fillcolor=lightcoral]; // Added for completeness
+        key_cluster [label="Phase / Grouping\n(Subgraph Border)", shape=box, style=dashed, color=gray];
+        // Arrange legend items vertically using invisible edges
+        key_step -> key_plan -> key_tool -> key_result -> key_report -> key_failed -> key_cluster [style=invis];
+    }
+    // --- End Legend ---
+    // Start
+    Start [label="Start Task:\nAnalyze Last 5 Cases"];
+    // Planning Phase
+    PlanMode1 [label="PLAN MODE:\nOutline 7-step analysis plan", shape=box, style="rounded,filled", fillcolor=lightyellow];
+    PlanResponse1 [label="plan_mode_respond:\nPresent plan, request ACT MODE", shape=ellipse, style=filled, fillcolor=lightyellow]; // Style similar to plan
+    PlanResult1 [label="User switches to ACT MODE", shape=note];
+    Start -> PlanMode1;
+    PlanMode1 -> PlanResponse1;
+    PlanResponse1 -> PlanResult1;
+    // Step 1: List Cases
+    ListCases [label="Step 1: List Recent Cases"]; // Uses default style
+    ListCasesTool [label="secops-soar.list_cases", shape=ellipse, style=filled, fillcolor=lightblue];
+    ListCasesResult [label="Result:\nTop 5 Case IDs:\n553, 552, 551, 550, 549", shape=note];
+    PlanResult1 -> ListCases;
+    ListCases -> ListCasesTool;
+    ListCasesTool -> ListCasesResult;
+    // Step 2: Examine Cases (Parallel)
+    Step2_Label [label="Step 2: Examine Cases (Parallel)", shape=box, style=rounded]; // Explicitly default style
+    ListCasesResult -> Step2_Label;
+    // Case 553 Examination
+    subgraph cluster_case_553 {
+        label = "Examine Case 553"; style=dashed; color=gray;
+        Examine553_DetailsTool [label="Get Details (553)\nsecops-soar.get_case_full_details", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine553_EntitiesTool [label="Get Entities (553)\nsecops-soar.get_entities_by_alert_group_identifiers", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine553_EventsTool [label="List Events (553)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine553_Summary [label="Summary (553):\nImpossible Travel", shape=note];
+        Examine553_DetailsTool -> Examine553_EntitiesTool -> Examine553_EventsTool -> Examine553_Summary;
+    }
+    // Case 552 Examination
+    subgraph cluster_case_552 {
+        label = "Examine Case 552"; style=dashed; color=gray;
+        Examine552_DetailsTool [label="Get Details (552)\nsecops-soar.get_case_full_details", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine552_EntitiesTool [label="Get Entities (552)\nsecops-soar.get_entities_by_alert_group_identifiers", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine552_Events1Tool [label="List Events (Alert 793)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine552_Events2Tool [label="List Events (Alert 792)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine552_Summary [label="Summary (552):\nChrome DLP", shape=note];
+        Examine552_DetailsTool -> Examine552_EntitiesTool -> Examine552_Events1Tool -> Examine552_Events2Tool -> Examine552_Summary;
+     }
+     // Case 551 Examination
+     subgraph cluster_case_551 {
+        label = "Examine Case 551"; style=dashed; color=gray;
+        Examine551_DetailsTool [label="Get Details (551)\nsecops-soar.get_case_full_details", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine551_EntitiesTool [label="Get Entities (551)\nsecops-soar.get_entities_by_alert_group_identifiers", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine551_Events1Tool [label="List Events (Alert 791)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine551_Events2Tool [label="List Events (Alert 790)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine551_Summary [label="Summary (551):\nSideload/Malware DL", shape=note];
+        Examine551_DetailsTool -> Examine551_EntitiesTool -> Examine551_Events1Tool -> Examine551_Events2Tool -> Examine551_Summary;
+     }
+     // Case 550 Examination
+     subgraph cluster_case_550 {
+        label = "Examine Case 550"; style=dashed; color=gray;
+        Examine550_DetailsTool [label="Get Details (550)\nsecops-soar.get_case_full_details", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine550_EntitiesTool [label="Get Entities (550)\nsecops-soar.get_entities_by_alert_group_identifiers", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine550_EventsTool [label="List Events (550)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine550_Summary [label="Summary (550):\nJenkins CVE", shape=note];
+        Examine550_DetailsTool -> Examine550_EntitiesTool -> Examine550_EventsTool -> Examine550_Summary;
+     }
+     // Case 549 Examination
+     subgraph cluster_case_549 {
+        label = "Examine Case 549"; style=dashed; color=gray;
+        Examine549_DetailsTool [label="Get Details (549)\nsecops-soar.get_case_full_details", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine549_EntitiesTool [label="Get Entities (549)\nsecops-soar.get_entities_by_alert_group_identifiers", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine549_EventsTool [label="List Events (549)\nsecops-soar.list_events_by_alert", shape=ellipse, style=filled, fillcolor=lightblue];
+        Examine549_Summary [label="Summary (549):\nPhishing Sim", shape=note];
+        Examine549_DetailsTool -> Examine549_EntitiesTool -> Examine549_EventsTool -> Examine549_Summary;
+     }
+    // Edges for Parallel Step 2 - Fork
+    Step2_Label -> Examine553_DetailsTool;
+    Step2_Label -> Examine552_DetailsTool;
+    Step2_Label -> Examine551_DetailsTool;
+    Step2_Label -> Examine550_DetailsTool;
+    Step2_Label -> Examine549_DetailsTool;
+    // Step 3 & 4: Grouping and Prioritization
+    GroupPrioritize [label="Steps 3 & 4:\nAnalyze Case Summaries,\nGroup Logically &\nPrioritize Groups"]; // Uses default style
+    GroupPrioritizeResult [label="Prioritized Groups:\n1. CVE (550) - Critical\n2. Phishing (549) - High\n3. User Activity (551, 552) - Med\n4. Travel (553) - Low", shape=note, width=3];
+    // Edges for Parallel Step 2 - Join
+    Examine553_Summary -> GroupPrioritize;
+    Examine552_Summary -> GroupPrioritize;
+    Examine551_Summary -> GroupPrioritize;
+    Examine550_Summary -> GroupPrioritize;
+    Examine549_Summary -> GroupPrioritize;
+    GroupPrioritize -> GroupPrioritizeResult;
+    // Step 5: Enrichment (Iterative)
+    Enrichment [label="Step 5: Enrich Indicators (Iterative)\n(Processing Groups 1 -> 2 -> 3 -> 4)"]; // Uses default style
+    GroupPrioritizeResult -> Enrichment;
+    // Group 1 Enrichment
+    subgraph cluster_enrich_g1 {
+        label = "Enrich Group 1 (CVE)"; style=dashed; color=gray;
+        EnrichG1_IP_GTI [label="gti.get_ip_address_report\n(104.130.139.139)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG1_URL_GTI [label="gti.get_url_report\n(...:8080)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG1_CVE_GTI [label="gti.search_vulnerabilities\n(CVE-2024-23897)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG1_IP_Chron [label="secops.lookup_entity\n(104.130.139.139)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG1_Summary [label="Summary (G1):\nCVE Exploited, IP/URL Malicious", shape=note];
+        EnrichG1_IP_GTI -> EnrichG1_URL_GTI -> EnrichG1_CVE_GTI -> EnrichG1_IP_Chron -> EnrichG1_Summary;
+    }
+     // Group 2 Enrichment
+     subgraph cluster_enrich_g2 {
+        label = "Enrich Group 2 (Phishing)"; style=dashed; color=gray;
+        EnrichG2_Domain_GTI [label="gti.get_domain_report\n(bonesinoffensivebook.com)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG2_URL_GTI [label="gti.get_url_report\n(...invoke.js)", shape=ellipse, style=filled, fillcolor=lightblue];
+        // Use specific color for failed/not found lookups
+        EnrichG2_Hash1_GTI [label="gti.get_file_report\n(HTM hash) - Not Found", shape=ellipse, style=filled, fillcolor=lightcoral];
+        EnrichG2_Hash2_GTI [label="gti.get_file_report\n(PNG hash) - Not Found", shape=ellipse, style=filled, fillcolor=lightcoral];
+        EnrichG2_Domain_Chron [label="secops.lookup_entity\n(bonesinoffensivebook.com)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG2_Summary [label="Summary (G2):\nDomain/URL Malicious", shape=note];
+        EnrichG2_Domain_GTI -> EnrichG2_URL_GTI -> EnrichG2_Hash1_GTI -> EnrichG2_Hash2_GTI -> EnrichG2_Domain_Chron -> EnrichG2_Summary;
+     }
+     // Group 3 Enrichment
+     subgraph cluster_enrich_g3 {
+        label = "Enrich Group 3 (User Activity)"; style=dashed; color=gray;
+        EnrichG3_URL_GTI [label="gti.get_url_report\n(testsafebrowsing...)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG3_Hash_GTI [label="gti.get_file_report\n(test file hash)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG3_Summary [label="Summary (G3):\nSafe Browsing Test File/URL", shape=note];
+        EnrichG3_URL_GTI -> EnrichG3_Hash_GTI -> EnrichG3_Summary;
+     }
+     // Group 4 Enrichment
+     subgraph cluster_enrich_g4 {
+        label = "Enrich Group 4 (Travel)"; style=dashed; color=gray;
+        EnrichG4_IP1_GTI [label="gti.get_ip_address_report\n(SG IP)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG4_IP2_GTI [label="gti.get_ip_address_report\n(US IP)", shape=ellipse, style=filled, fillcolor=lightblue];
+        EnrichG4_Summary [label="Summary (G4):\nIPs Benign", shape=note];
+        EnrichG4_IP1_GTI -> EnrichG4_IP2_GTI -> EnrichG4_Summary;
+     }
+    // Edges for Enrichment Flow
+    Enrichment -> EnrichG1_IP_GTI [label="Group 1"];
+    EnrichG1_Summary -> EnrichG2_Domain_GTI [label="Group 2"];
+    EnrichG2_Summary -> EnrichG3_URL_GTI [label="Group 3"];
+    EnrichG3_Summary -> EnrichG4_IP1_GTI [label="Group 4"];
+    // Step 6: Related Event Search
+    RelatedEvents [label="Step 6: Search Related Events\n(Processing G3 - Host CYMBAL)"]; // Uses default style
+    EnrichG4_Summary -> RelatedEvents;
+    RelatedEvents_Tool [label="secops.search_security_events\n(hostname=CYMBAL, hours_back=72)", shape=ellipse, style=filled, fillcolor=lightblue];
+    RelatedEvents_Result [label="Result: No events found", shape=note];
+    RelatedEvents -> RelatedEvents_Tool;
+    RelatedEvents_Tool -> RelatedEvents_Result;
+    // Step 7: Generate Report
+    GenerateReport [label="Step 7: Generate Final Report"]; // Uses default style
+    RelatedEvents_Result -> GenerateReport;
+    FinalReport [label="Final Markdown Report\n(attempt_completion)", shape=note, style=filled, fillcolor=lightgrey]; // Explicit style for report
+    GenerateReport -> FinalReport;
+}
+```

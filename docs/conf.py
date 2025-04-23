@@ -19,6 +19,7 @@ import os
 import sys
 from subprocess import PIPE, Popen
 
+
 # Add parent directory to path for module imports
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -50,6 +51,7 @@ extensions = [
     "myst_parser",           # Markdown support
     "sphinx_copybutton",     # Add copy buttons to code blocks
     "sphinx.ext.autodoc",    # API documentation
+    "sphinx.ext.graphviz",   # Graphviz support
     "sphinx.ext.viewcode",   # Add links to view source code
     "sphinx.ext.napoleon",   # Support for Google-style docstrings
     "sphinx.ext.intersphinx", # Link to other projects' documentation
@@ -66,7 +68,13 @@ myst_enable_extensions = [
     "replacements",         # Text replacements
     "smartquotes",          # Smart quotes
     "tasklist",            # Task lists with checkboxes
+    "directive_enable",    # Allow directives like graphviz
 ]
+
+# Explicitly allow the graphviz directive
+myst_enable_directives = ["graphviz"]
+
+graphviz_output_format = 'png'  # or 'svg'
 
 # Support both .md and .rst files
 source_suffix = [".rst", ".md"]
