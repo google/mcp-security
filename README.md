@@ -64,11 +64,11 @@ run the mcp services locally and use the stdio transport.
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
         "--env-file",
         "/path/to/your/env",
-        "secops_soar_mcp.py",
+        "server.py",
         "--integrations",
         "CSV,OKTA"
       ],
