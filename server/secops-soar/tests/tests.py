@@ -21,7 +21,7 @@ authentication and configuration to run.
 To run these tests:
 1. Make sure you have created a config.json file in the tests directory with
    your SOAR credentials (see conftest.py for format)
-2. Run: pytest -xvs server/secops-soar/tests/test_secops_mcp.py
+2. Run: pytest -xvs server/secops-soar/tests/tests.py
 """
 
 import mcp
