@@ -571,3 +571,130 @@ digraph CaseAnalysisFlow {
     GenerateReport -> FinalReport;
 }
 ```
+
+---
+
+## Proactive Threat Hunting based on GTI Campaign/Actor
+
+Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). Summarize findings and optionally create a SOAR case for tracking.
+
+Uses Tools:
+
+*   `gti-mcp.get_collection_report`
+*   `gti-mcp.get_entities_related_to_a_collection` (for IOCs like files, domains, IPs, URLs)
+*   `gti-mcp.get_collection_timeline_events` (for TTP context)
+*   `secops-mcp.lookup_entity`
+*   `secops-mcp.search_security_events`
+*   `secops-mcp.get_ioc_matches`
+*   `secops-soar.post_case_comment` (or potentially create case tools if available/needed)
+*   `ask_followup_question`
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+    participant SOAR as secops-soar
+
+    User->>Cline: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
+    Cline->>GTI: get_collection_report(id=`${GTI_COLLECTION_ID}`)
+    GTI-->>Cline: Collection Details (Name, Type, Description)
+    Cline->>GTI: get_collection_timeline_events(id=`${GTI_COLLECTION_ID}`)
+    GTI-->>Cline: Timeline Events (TTP Context)
+
+    Note over Cline: Identify relevant IOC relationships (files, domains, ips, urls)
+    loop For each IOC Relationship R
+        Cline->>GTI: get_entities_related_to_a_collection(id=`${GTI_COLLECTION_ID}`, relationship_name=R)
+        GTI-->>Cline: List of IOCs (e.g., Hashes H1, Domains D1, IPs IP1...)
+    end
+
+    Note over Cline: Initialize local_hunt_findings
+    Cline->>SIEM: get_ioc_matches(hours_back=72)
+    SIEM-->>Cline: Recent IOC Matches in SIEM
+    Note over Cline: Correlate SIEM matches with IOCs from GTI
+
+    loop For each IOC Ii from GTI Collection
+        Cline->>SIEM: lookup_entity(entity_value=Ii, hours_back=72)
+        SIEM-->>Cline: SIEM Summary for Ii
+        Note over Cline: Store summary if activity found
+        Cline->>SIEM: search_security_events(text="Events involving Ii", hours_back=72)
+        SIEM-->>Cline: Relevant SIEM Events for Ii
+        Note over Cline: Store significant event findings
+    end
+
+    Note over Cline: Synthesize GTI context, IOCs, TTPs, and SIEM findings
+    Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case?", options=["Yes, Create New Case", "Yes, Update Case [ID]", "No"])
+    User->>Cline: Response (e.g., "Yes, Create New Case")
+
+    alt Create/Update Case Confirmed
+        Note over Cline: Prepare summary comment for SOAR
+        Cline->>SOAR: post_case_comment(case_id=[New/Existing ID], comment="Proactive Hunt Summary for `${GTI_COLLECTION_ID}`: Found IOCs [...] in SIEM. Events [...] observed. GTI Context: [...].")
+        SOAR-->>Cline: Comment confirmation
+    end
+
+    Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. SOAR case potentially created/updated.")
+
+```
+
+---
+
+## Cloud Vulnerability Triage & Contextualization
+
+Objective: Triage top critical/high SCC vulnerability findings for a given project (`${PROJECT_ID}`). Enrich the CVEs with GTI, check for related exploitation activity in SIEM, and summarize findings for remediation prioritization, potentially adding context to a SOAR case.
+
+Uses Tools:
+
+*   `scc-mcp.top_vulnerability_findings`
+*   `scc-mcp.get_finding_remediation`
+*   `gti-mcp.search_vulnerabilities` (or `get_threat_intel` for CVE summary)
+*   `secops-mcp.search_security_events`
+*   `secops-mcp.lookup_entity` (for affected resource)
+*   `secops-soar.post_case_comment` (optional)
+*   `ask_followup_question` (optional)
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant SCC as scc-mcp
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+    participant SOAR as secops-soar
+
+    User->>Cline: Triage top vulnerabilities for project `${PROJECT_ID}`
+    Cline->>SCC: top_vulnerability_findings(project_id=`${PROJECT_ID}`, max_findings=5)
+    SCC-->>Cline: List of Top Findings (F1, F2... with CVE, Resource, Score)
+
+    Note over Cline: Initialize triage_report
+    loop For each Finding Fi
+        Note over Cline: Extract CVE Ci and Resource Ri from Finding Fi
+        Cline->>SCC: get_finding_remediation(finding_id=Fi_ID)
+        SCC-->>Cline: Remediation Steps for Fi
+        Note over Cline: Add remediation to triage_report
+
+        Cline->>GTI: search_vulnerabilities(query=Ci)
+        GTI-->>Cline: GTI details for CVE Ci (Exploitation status, related threats)
+        Note over Cline: Add GTI context to triage_report
+
+        Cline->>SIEM: lookup_entity(entity_value=Ri, hours_back=168) %% Check resource activity (e.g., IP/hostname) for 7 days
+        SIEM-->>Cline: SIEM Summary for Resource Ri
+        Note over Cline: Add resource activity summary to triage_report
+
+        Cline->>SIEM: search_security_events(text="Events related to CVE Ci or exploitation attempts on Ri", hours_back=168)
+        SIEM-->>Cline: Potential exploitation events
+        Note over Cline: Add relevant event findings to triage_report
+    end
+
+    Note over Cline: Synthesize triage_report with findings, context, and prioritization based on Score/GTI/SIEM data
+    Cline->>User: ask_followup_question(question="Triage complete. Add summary to SOAR Case?", options=["Yes, Case [ID]", "No"])
+    User->>Cline: Response (e.g., "Yes, Case 123")
+
+    alt Add to SOAR Case
+        Cline->>SOAR: post_case_comment(case_id=123, comment="SCC Vuln Triage Summary (${PROJECT_ID}): Top findings analyzed. CVE [...] on Resource [...] shows GTI risk [...], SIEM activity [...]. Remediation: [...]. Full report attached/available.")
+        SOAR-->>Cline: Comment confirmation
+    end
+
+    Cline->>Cline: attempt_completion(result="Cloud vulnerability triage for project `${PROJECT_ID}` complete. Findings synthesized. SOAR case potentially updated.")
+
+```
