@@ -137,12 +137,8 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
       },
       "disabled": false,
       "autoApprove": [
-        "get_ioc_matches",
-        "search_security_events",
-        "get_security_alerts"
       ],
       "alwaysAllow": [
-        "get_ioc_matches"
       ]
     },
     "gti": {
@@ -156,16 +152,27 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
       },
       "disabled": false,
       "autoApprove": [
-        "get_domain_report",
-        "get_url_report",
-        "get_file_report",
-        "get_ip_address_report",
-        "search_threats"
       ],
       "alwaysAllow": [
-        "get_file_report"
       ]
+    },
+  "secops-soar": {
+      "autoApprove": [
+      ],
+      "disabled": false,
+      "timeout": 60,
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "cd /path/to/the/repo/server/secops-soar && pip install -e . && python secops_soar_mcp/server.py"
+      ],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "transportType": "stdio"
     }
+  }
   }
 }
 ```
