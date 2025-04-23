@@ -14,16 +14,30 @@
 """Bindings for the SOAR client."""
 
 import os
+import sys
 
 import dotenv
+from logger_utils import get_logger
 from secops_soar_mcp.http_client import HttpClient
 from secops_soar_mcp.utils import consts
 
-
 dotenv.load_dotenv()
+
+logger = get_logger(__name__)
+
 
 http_client: HttpClient = None
 valid_scopes = set()
+
+
+async def _get_valid_scopes():
+    valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
+    if valid_scopes_list is None:
+        logger.error(
+            "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."
+        )
+        sys.exit(1)
+    return set(valid_scopes_list)
 
 
 async def bind():
@@ -32,4 +46,4 @@ async def bind():
     http_client = HttpClient(
         os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
     )
-    valid_scopes = set(await http_client.get(consts.Endpoints.GET_SCOPES))
+    valid_scopes = await _get_valid_scopes()

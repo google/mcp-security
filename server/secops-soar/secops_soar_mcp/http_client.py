@@ -17,6 +17,9 @@ import json
 from typing import Any, Dict
 
 import aiohttp
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class HttpClient:
@@ -60,9 +63,9 @@ class HttpClient:
                 response.raise_for_status()  # Raise an exception for 4xx/5xx responses
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            print(f"HTTP error occurred: {e}")
+            logger.debug(f"HTTP error occurred: {e}")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.debug(f"An error occurred: {e}")
         return None
 
     async def post(
@@ -91,9 +94,9 @@ class HttpClient:
                 decoded_data = data.decode("utf-8")
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
-            print(f"HTTP error occurred: {e}")
+            logger.debug(f"HTTP error occurred: {e}")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.debug(f"An error occurred: {e}")
         return None
 
     async def patch(
@@ -120,9 +123,9 @@ class HttpClient:
                 response.raise_for_status()
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            print(f"HTTP error occurred: {e}")
+            logger.debug(f"HTTP error occurred: {e}")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.debug(f"An error occurred: {e}")
         return None
 
     async def close(self):
