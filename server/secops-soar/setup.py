@@ -20,10 +20,10 @@ setup = setuptools.setup
 setup(
     name="secops-soar-mcp",
     version="0.1.0",
-    py_modules=["secops_soar_mcp"],
+    packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": [
-            "secops-soar-mcp=secops_soar_mcp:main",
+            "secops-soar-mcp=secops_soar_mcp.server:main",
         ],
     },
 )

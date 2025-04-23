@@ -1,0 +1,369 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+from secops_soar_mcp import bindings
+from mcp.server.fastmcp import FastMCP
+from secops_soar_mcp.utils.consts import Endpoints
+from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
+import json
+from typing import Optional, Any, List, Dict, Union, Annotated
+from pydantic import Field
+
+
+def register_tools(mcp: FastMCP):
+    # This function registers all tools (actions) for the UrlScanIo integration.
+
+    @mcp.tool()
+    async def url_scan_io_search_for_scans(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_scans: Annotated[Optional[str], Field(default=None, description="Number of scans to return per entity. Default: 100, Max: 10000 (depending on subscription)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """ Search for urlscan.io existing scans by attributes such as domains, IPs, Autonomous System (AS) numbers, hashes, etc.  The action will find public scans performed by anyone as well as unlisted and private scans performed by you or your teams.
+
+        Returns:
+            dict: A dictionary containing the result of the action execution.
+        """
+        # --- Determine scope and target entities for API call ---
+        final_target_entities: Optional[List[TargetEntity]] = None
+        final_scope: Optional[str] = None
+        is_predefined_scope: Optional[bool] = None
+    
+        if target_entities:
+            # Specific target entities provided, ignore scope parameter
+            final_target_entities = target_entities
+            final_scope = None # Scope is ignored when specific entities are given
+            is_predefined_scope = False
+        else:
+            # No specific target entities, use scope parameter
+            # Check if the provided scope is valid
+            if scope not in bindings.valid_scopes:
+                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
+                return {
+                    "Status": "Failed",
+                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
+                }
+            # Scope is valid or validation is not configured
+            final_target_entities = [] # Pass empty list for entities when using scope
+            final_scope = scope
+            is_predefined_scope = True
+        # --- End scope/entity logic ---
+    
+        # Fetch integration instance identifier (assuming this pattern)
+        try:
+            instance_response = await bindings.http_client.get(
+                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="UrlScanIo")
+            )
+            instances = instance_response.get("integration_instances", [])
+        except Exception as e:
+            # Log error appropriately in real code
+            print(f"Error fetching instance for UrlScanIo: {e}")
+            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
+    
+        if instances:
+            instance_identifier = instances[0].get("identifier")
+            if not instance_identifier:
+                # Log error or handle missing identifier
+                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
+    
+            # Construct parameters dictionary for the API call
+            script_params = {}
+            if max_scans is not None:
+                script_params["Max Scans"] = max_scans
+    
+            # Prepare data model for the API request
+            action_data = ApiManualActionDataModel(
+                alertGroupIdentifiers=alert_group_identifiers,
+                caseId=case_id,
+                targetEntities=final_target_entities,
+                scope=final_scope,
+                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
+                actionProvider="Scripts", # Assuming constant based on example
+                actionName="UrlScanIo_Search for Scans",
+                properties={
+                    "IntegrationInstance": instance_identifier,
+                    "ScriptName": "UrlScanIo_Search for Scans", # Assuming same as actionName
+                    "ScriptParametersEntityFields": json.dumps(script_params)
+                }
+            )
+    
+            # Execute the action via HTTP POST
+            try:
+                execution_response = await bindings.http_client.post(
+                    Endpoints.EXECUTE_MANUAL_ACTION,
+                    req=action_data.model_dump()
+                )
+                return execution_response
+            except Exception as e:
+                # Log error appropriately
+                print(f"Error executing action UrlScanIo_Search for Scans for UrlScanIo: {e}")
+                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
+        else:
+            print(f"Warning: No active integration instance found for UrlScanIo")
+            return {"Status": "Failed", "Message": "No active instance found."}
+
+    @mcp.tool()
+    async def url_scan_io_url_check(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], visibility: Annotated[Optional[List[Any]], Field(default=None, description="Scans on urlscan.io have one of three visibility levels, make sure to use the appropriate level for your submission.")], threshold: Annotated[Optional[str], Field(default=None, description="Mark entity as suspicious if the score of verdicts is equal or above the given threshold. Default is 0, in this case, we consider every scanned url as suspicious.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], add_screenshot_to_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will add a screenshot of the website to the insight, if it\u2019s available.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Submit a URL to be scanned and get the scan details
+
+        Returns:
+            dict: A dictionary containing the result of the action execution.
+        """
+        # --- Determine scope and target entities for API call ---
+        final_target_entities: Optional[List[TargetEntity]] = None
+        final_scope: Optional[str] = None
+        is_predefined_scope: Optional[bool] = None
+    
+        if target_entities:
+            # Specific target entities provided, ignore scope parameter
+            final_target_entities = target_entities
+            final_scope = None # Scope is ignored when specific entities are given
+            is_predefined_scope = False
+        else:
+            # No specific target entities, use scope parameter
+            # Check if the provided scope is valid
+            if scope not in bindings.valid_scopes:
+                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
+                return {
+                    "Status": "Failed",
+                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
+                }
+            # Scope is valid or validation is not configured
+            final_target_entities = [] # Pass empty list for entities when using scope
+            final_scope = scope
+            is_predefined_scope = True
+        # --- End scope/entity logic ---
+    
+        # Fetch integration instance identifier (assuming this pattern)
+        try:
+            instance_response = await bindings.http_client.get(
+                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="UrlScanIo")
+            )
+            instances = instance_response.get("integration_instances", [])
+        except Exception as e:
+            # Log error appropriately in real code
+            print(f"Error fetching instance for UrlScanIo: {e}")
+            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
+    
+        if instances:
+            instance_identifier = instances[0].get("identifier")
+            if not instance_identifier:
+                # Log error or handle missing identifier
+                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
+    
+            # Construct parameters dictionary for the API call
+            script_params = {}
+            if visibility is not None:
+                script_params["Visibility"] = visibility
+            if threshold is not None:
+                script_params["Threshold"] = threshold
+            if create_insight is not None:
+                script_params["Create Insight"] = create_insight
+            if only_suspicious_insight is not None:
+                script_params["Only Suspicious Insight"] = only_suspicious_insight
+            if add_screenshot_to_insight is not None:
+                script_params["Add Screenshot To Insight"] = add_screenshot_to_insight
+    
+            # Prepare data model for the API request
+            action_data = ApiManualActionDataModel(
+                alertGroupIdentifiers=alert_group_identifiers,
+                caseId=case_id,
+                targetEntities=final_target_entities,
+                scope=final_scope,
+                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
+                actionProvider="Scripts", # Assuming constant based on example
+                actionName="UrlScanIo_Url Check",
+                properties={
+                    "IntegrationInstance": instance_identifier,
+                    "ScriptName": "UrlScanIo_Url Check", # Assuming same as actionName
+                    "ScriptParametersEntityFields": json.dumps(script_params)
+                }
+            )
+    
+            # Execute the action via HTTP POST
+            try:
+                execution_response = await bindings.http_client.post(
+                    Endpoints.EXECUTE_MANUAL_ACTION,
+                    req=action_data.model_dump()
+                )
+                return execution_response
+            except Exception as e:
+                # Log error appropriately
+                print(f"Error executing action UrlScanIo_Url Check for UrlScanIo: {e}")
+                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
+        else:
+            print(f"Warning: No active integration instance found for UrlScanIo")
+            return {"Status": "Failed", "Message": "No active instance found."}
+
+    @mcp.tool()
+    async def url_scan_io_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Test Connectivity
+
+        Returns:
+            dict: A dictionary containing the result of the action execution.
+        """
+        # --- Determine scope and target entities for API call ---
+        final_target_entities: Optional[List[TargetEntity]] = None
+        final_scope: Optional[str] = None
+        is_predefined_scope: Optional[bool] = None
+    
+        if target_entities:
+            # Specific target entities provided, ignore scope parameter
+            final_target_entities = target_entities
+            final_scope = None # Scope is ignored when specific entities are given
+            is_predefined_scope = False
+        else:
+            # No specific target entities, use scope parameter
+            # Check if the provided scope is valid
+            if scope not in bindings.valid_scopes:
+                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
+                return {
+                    "Status": "Failed",
+                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
+                }
+            # Scope is valid or validation is not configured
+            final_target_entities = [] # Pass empty list for entities when using scope
+            final_scope = scope
+            is_predefined_scope = True
+        # --- End scope/entity logic ---
+    
+        # Fetch integration instance identifier (assuming this pattern)
+        try:
+            instance_response = await bindings.http_client.get(
+                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="UrlScanIo")
+            )
+            instances = instance_response.get("integration_instances", [])
+        except Exception as e:
+            # Log error appropriately in real code
+            print(f"Error fetching instance for UrlScanIo: {e}")
+            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
+    
+        if instances:
+            instance_identifier = instances[0].get("identifier")
+            if not instance_identifier:
+                # Log error or handle missing identifier
+                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
+    
+            # Construct parameters dictionary for the API call
+            script_params = {}
+    
+            # Prepare data model for the API request
+            action_data = ApiManualActionDataModel(
+                alertGroupIdentifiers=alert_group_identifiers,
+                caseId=case_id,
+                targetEntities=final_target_entities,
+                scope=final_scope,
+                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
+                actionProvider="Scripts", # Assuming constant based on example
+                actionName="UrlScanIo_Ping",
+                properties={
+                    "IntegrationInstance": instance_identifier,
+                    "ScriptName": "UrlScanIo_Ping", # Assuming same as actionName
+                    "ScriptParametersEntityFields": json.dumps(script_params)
+                }
+            )
+    
+            # Execute the action via HTTP POST
+            try:
+                execution_response = await bindings.http_client.post(
+                    Endpoints.EXECUTE_MANUAL_ACTION,
+                    req=action_data.model_dump()
+                )
+                return execution_response
+            except Exception as e:
+                # Log error appropriately
+                print(f"Error executing action UrlScanIo_Ping for UrlScanIo: {e}")
+                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
+        else:
+            print(f"Warning: No active integration instance found for UrlScanIo")
+            return {"Status": "Failed", "Message": "No active instance found."}
+
+    @mcp.tool()
+    async def url_scan_io_get_scan_full_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], scan_id: Annotated[str, Field(..., description="Get scan report using the scan ID. Comma separated values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Get Scan Full Details by scan ID
+
+        Returns:
+            dict: A dictionary containing the result of the action execution.
+        """
+        # --- Determine scope and target entities for API call ---
+        final_target_entities: Optional[List[TargetEntity]] = None
+        final_scope: Optional[str] = None
+        is_predefined_scope: Optional[bool] = None
+    
+        if target_entities:
+            # Specific target entities provided, ignore scope parameter
+            final_target_entities = target_entities
+            final_scope = None # Scope is ignored when specific entities are given
+            is_predefined_scope = False
+        else:
+            # No specific target entities, use scope parameter
+            # Check if the provided scope is valid
+            if scope not in bindings.valid_scopes:
+                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
+                return {
+                    "Status": "Failed",
+                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
+                }
+            # Scope is valid or validation is not configured
+            final_target_entities = [] # Pass empty list for entities when using scope
+            final_scope = scope
+            is_predefined_scope = True
+        # --- End scope/entity logic ---
+    
+        # Fetch integration instance identifier (assuming this pattern)
+        try:
+            instance_response = await bindings.http_client.get(
+                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="UrlScanIo")
+            )
+            instances = instance_response.get("integration_instances", [])
+        except Exception as e:
+            # Log error appropriately in real code
+            print(f"Error fetching instance for UrlScanIo: {e}")
+            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
+    
+        if instances:
+            instance_identifier = instances[0].get("identifier")
+            if not instance_identifier:
+                # Log error or handle missing identifier
+                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
+    
+            # Construct parameters dictionary for the API call
+            script_params = {}
+            script_params["Scan ID"] = scan_id
+    
+            # Prepare data model for the API request
+            action_data = ApiManualActionDataModel(
+                alertGroupIdentifiers=alert_group_identifiers,
+                caseId=case_id,
+                targetEntities=final_target_entities,
+                scope=final_scope,
+                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
+                actionProvider="Scripts", # Assuming constant based on example
+                actionName="UrlScanIo_Get Scan Full Details",
+                properties={
+                    "IntegrationInstance": instance_identifier,
+                    "ScriptName": "UrlScanIo_Get Scan Full Details", # Assuming same as actionName
+                    "ScriptParametersEntityFields": json.dumps(script_params)
+                }
+            )
+    
+            # Execute the action via HTTP POST
+            try:
+                execution_response = await bindings.http_client.post(
+                    Endpoints.EXECUTE_MANUAL_ACTION,
+                    req=action_data.model_dump()
+                )
+                return execution_response
+            except Exception as e:
+                # Log error appropriately
+                print(f"Error executing action UrlScanIo_Get Scan Full Details for UrlScanIo: {e}")
+                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
+        else:
+            print(f"Warning: No active integration instance found for UrlScanIo")
+            return {"Status": "Failed", "Message": "No active instance found."}
