@@ -18,7 +18,7 @@ import importlib
 from pathlib import Path
 from secops_soar_mcp import bindings
 from mcp.server.fastmcp import FastMCP
-from logger_utils import get_logger
+from logger_utils import get_logger, setup_logging
 from secops_soar_mcp.case_management import (
     register_tools as register_tools_case_management,
 )
@@ -35,18 +35,21 @@ parser.add_argument(
     "--integrations",
     help="Comma-separated list of integration names to enable (e.g., CSV,SiemplifyThreatFuse). If not provided, no integrations are enabled.",
 )
+parser.add_argument(
+    "--verbose", action="store_true", help="Enable verbose (debug) logging"
+)
 
 
-def get_enabled_integrations_set(args: argparse.Namespace) -> set:
+def get_enabled_integrations_set(integrations_arg: str) -> set:
     """Get the set of enabled integrations from the command line arguments.
 
     Args:
         args: Parsed command line arguments."""
     enabled_integrations_set = set()
-    if args.integrations:
+    if integrations_arg:
         integration_list = [
             normalize_integration_name(name)
-            for name in args.integrations.split(",")
+            for name in integrations_arg.split(",")
             if name.strip()
         ]
         if integration_list:
@@ -64,12 +67,12 @@ def get_enabled_integrations_set(args: argparse.Namespace) -> set:
     return set()
 
 
-def register_tools(args: argparse.Namespace):
+def register_tools(integrations_arg: str):
     """Register tools for the MCP server.
 
     Args:
         args: Parsed command line arguments."""
-    enabled_integrations_set = get_enabled_integrations_set(args)
+    enabled_integrations_set = get_enabled_integrations_set(integrations_arg)
 
     logger.info("Starting dynamic tool registration...")
     try:
@@ -153,11 +156,17 @@ def register_tools(args: argparse.Namespace):
 
 async def main():
     """Main function."""
-    logger.info("Starting SecOps SOAR MCP server")
-    await bindings.bind()
     args = parser.parse_args()
-    register_tools(args)
-    await mcp.run_stdio_async()
+    setup_logging(args.verbose)
+    logger.info("Starting SecOps SOAR MCP server")
+    try:
+        await bindings.bind()
+        register_tools(args.integrations)
+        await mcp.run_stdio_async()
+    except Exception as e:
+        logger.error("Error: %s", e)
+    finally:
+        await bindings.cleanup()
 
 
 if __name__ == "__main__":

@@ -14,7 +14,6 @@
 """Bindings for the SOAR client."""
 
 import os
-import sys
 
 import dotenv
 from logger_utils import get_logger
@@ -33,10 +32,9 @@ valid_scopes = set()
 async def _get_valid_scopes():
     valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
     if valid_scopes_list is None:
-        logger.error(
+        raise RuntimeError(
             "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."
         )
-        sys.exit(1)
     return set(valid_scopes_list)
 
 
@@ -47,3 +45,8 @@ async def bind():
         os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
     )
     valid_scopes = await _get_valid_scopes()
+
+
+async def cleanup():
+    """Cleans up global variables."""
+    await http_client.close()

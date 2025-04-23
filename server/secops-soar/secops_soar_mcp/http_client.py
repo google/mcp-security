@@ -63,9 +63,9 @@ class HttpClient:
                 response.raise_for_status()  # Raise an exception for 4xx/5xx responses
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            logger.debug(f"HTTP error occurred: {e}")
+            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug(f"An error occurred: {e}")
+            logger.debug("An error occurred: %s", e)
         return None
 
     async def post(
@@ -94,9 +94,9 @@ class HttpClient:
                 decoded_data = data.decode("utf-8")
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
-            logger.debug(f"HTTP error occurred: {e}")
+            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug(f"An error occurred: {e}")
+            logger.debug("An error occurred: %s", e)
         return None
 
     async def patch(
@@ -123,9 +123,9 @@ class HttpClient:
                 response.raise_for_status()
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            logger.debug(f"HTTP error occurred: {e}")
+            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug(f"An error occurred: {e}")
+            logger.debug("An error occurred: %s", e)
         return None
 
     async def close(self):
