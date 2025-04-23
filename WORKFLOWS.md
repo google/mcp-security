@@ -574,9 +574,9 @@ digraph CaseAnalysisFlow {
 
 ---
 
-## Proactive Threat Hunting based on GTI Campaign/Actor
+## Proactive Threat Hunting based on GTI Campaign/Actor (Revised)
 
-Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). Summarize findings and optionally create a SOAR case for tracking.
+Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). Summarize findings and optionally create a SOAR case for tracking or generate a markdown report. *Optimization: Prioritize SIEM lookups for IOCs found in recent matches or limit checks if the IOC set is very large.*
 
 Uses Tools:
 
@@ -586,7 +586,8 @@ Uses Tools:
 *   `secops-mcp.lookup_entity`
 *   `secops-mcp.search_security_events`
 *   `secops-mcp.get_ioc_matches`
-*   `secops-soar.post_case_comment` (or potentially create case tools if available/needed)
+*   `write_to_file` (for report generation)
+*   `secops-soar.post_case_comment` (optional)
 *   `ask_followup_question`
 
 ```{mermaid}
@@ -611,29 +612,42 @@ sequenceDiagram
 
     Note over Cline: Initialize local_hunt_findings
     Cline->>SIEM: get_ioc_matches(hours_back=72)
-    SIEM-->>Cline: Recent IOC Matches in SIEM
-    Note over Cline: Correlate SIEM matches with IOCs from GTI
+    SIEM-->>Cline: Recent IOC Matches in SIEM (Matches M1, M2...)
+    Note over Cline: Identify key IOCs from GTI (I1, I2...) and SIEM matches (M1, M2...)
 
-    loop For each IOC Ii from GTI Collection
+    Note over Cline: Phase 1: Lookup key/prioritized IOCs
+    loop For each prioritized IOC Ii (from GTI/SIEM Matches)
         Cline->>SIEM: lookup_entity(entity_value=Ii, hours_back=72)
         SIEM-->>Cline: SIEM Summary for Ii
-        Note over Cline: Store summary if activity found
-        Cline->>SIEM: search_security_events(text="Events involving Ii", hours_back=72)
-        SIEM-->>Cline: Relevant SIEM Events for Ii
+        Note over Cline: Record IOCs with confirmed presence (P1, P2...)
+    end
+
+    Note over Cline: Phase 2: Search events only for IOCs with confirmed presence
+    loop For each Present IOC Pi
+        Cline->>SIEM: search_security_events(text="Events involving Pi", hours_back=72)
+        SIEM-->>Cline: Relevant SIEM Events for Pi
         Note over Cline: Store significant event findings
     end
 
     Note over Cline: Synthesize GTI context, IOCs, TTPs, and SIEM findings
-    Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case?", options=["Yes, Create New Case", "Yes, Update Case [ID]", "No"])
-    User->>Cline: Response (e.g., "Yes, Create New Case")
+    Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case or Generate Report?", options=["Create New Case", "Update Case [ID]", "Generate Report", "Do Nothing"])
+    User->>Cline: Response (e.g., "Generate Report")
 
-    alt Create/Update Case Confirmed
-        Note over Cline: Prepare summary comment for SOAR
-        Cline->>SOAR: post_case_comment(case_id=[New/Existing ID], comment="Proactive Hunt Summary for `${GTI_COLLECTION_ID}`: Found IOCs [...] in SIEM. Events [...] observed. GTI Context: [...].")
-        SOAR-->>Cline: Comment confirmation
+    alt Output Action Confirmed
+        alt Create/Update Case
+            Note over Cline: Prepare summary comment for SOAR
+            Cline->>SOAR: post_case_comment(case_id=[New/Existing ID], comment="Proactive Hunt Summary for `${GTI_COLLECTION_ID}`: Found IOCs [...] in SIEM. Events [...] observed. GTI Context: [...].")
+            SOAR-->>Cline: Comment confirmation
+            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. SOAR case created/updated.")
+        else Generate Report
+            Note over Cline: Synthesize report content
+            Cline->>Cline: write_to_file(path="./reports/proactive_hunt_report_${GTI_COLLECTION_ID}_${timestamp}.md", content=...)
+            Note over Cline: Report file created locally.
+            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Report generated.")
+        else Do Nothing
+             Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. No output action taken.")
+        end
     end
-
-    Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. SOAR case potentially created/updated.")
 
 ```
 
