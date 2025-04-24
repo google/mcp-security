@@ -809,22 +809,23 @@ Objective: Generate a detailed timeline of events for a specific SOAR case (`${C
     ```
 
 **Add "Process Execution Tree (Diagram)" section:**
-        *   Generate a Mermaid `graph TD` diagram visualizing the process flow identified in Step 4.
-        *   Example:
-            ```mermaid
-            graph TD
-                A[explorer.exe] --> B(cmd.exe PID: 6440);
-                B --> C(wscript.exe PID: 6212);
-                C --> D(rundll32.exe PID: 4016);
-                D --> E{DNS: superstarts.top};
-                D --> F{DNS: superlist.top};
-                D --> G{Net Conn: 193.106.191.163};
-            ```
+  *   Generate a Mermaid `graph TD` diagram visualizing the process flow identified in Step 4.
+  *   Example:
+      ```mermaid
+      graph LR
+          A[explorer.exe] --> B(cmd.exe PID: 6440);
+          B --> C(wscript.exe PID: 6212);
+          C --> D(rundll32.exe PID: 4016);
+          D --> E{DNS: superstarts.top};
+          D --> F{DNS: superlist.top};
+          D --> G{Net Conn: 193.106.191.163};
 
 **Add "Event Timeline Table" section:**
-        *   Iterate through the sorted `timeline_data`.
-        *   Format the data into a Markdown table including Timestamp, Delta (if requested), Alert Name, Process Info (Path/Hash/CmdLine), Classification, and MITRE TACTIC.
-    *   Add an "Analysis" section summarizing the findings and the significance of the process chain.
+  *   Iterate through the sorted `timeline_data`.
+  *   Format the data into a Markdown table including Timestamp, Delta (if requested), Alert Name, Process Info (Path/Hash/CmdLine), Classification, and MITRE TACTIC.
+
+**Analysis**
+  *   Add an "Analysis" section summarizing the findings and the significance of the process chain.
 
 
 Uses Tools:
