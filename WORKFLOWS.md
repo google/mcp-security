@@ -574,18 +574,23 @@ digraph CaseAnalysisFlow {
 
 ---
 
-## Proactive Threat Hunting based on GTI Campaign/Actor (Revised)
+## Proactive Threat Hunting based on GTI Campaign/Actor (Revised v2)
 
-Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). Summarize findings and optionally create a SOAR case for tracking or generate a markdown report. *Optimization: Prioritize SIEM lookups for IOCs found in recent matches or limit checks if the IOC set is very large.*
+Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). If any IOCs from the report are also found in the SecOps tenant (confirmed presence), perform deeper enrichment on those specific IOCs using GTI and check for related SIEM alerts or SOAR cases. Once done, summarize findings in a markdown report. Provide as much detail as possible.
 
 Uses Tools:
 
 *   `gti-mcp.get_collection_report`
-*   `gti-mcp.get_entities_related_to_a_collection` (for IOCs like files, domains, IPs, URLs)
+*   `gti-mcp.get_entities_related_to_a_collection` (Initial IOC gathering)
 *   `gti-mcp.get_collection_timeline_events` (for TTP context)
-*   `secops-mcp.lookup_entity`
-*   `secops-mcp.search_security_events`
-*   `secops-mcp.get_ioc_matches`
+*   `secops-mcp.get_ioc_matches` (Initial SIEM check)
+*   `secops-mcp.lookup_entity` (SIEM check for specific IOCs)
+*   `secops-mcp.search_security_events` (SIEM check for specific IOCs)
+*   **`gti-mcp.get_domain_report` / `get_file_report` / `get_ip_address_report` / `get_url_report` (Deeper GTI enrichment for *found* IOCs)**
+*   **`gti-mcp.get_entities_related_to_a_domain/file/ip/url` (Pivot on *found* IOCs)**
+*   **`secops-mcp.get_security_alerts` (Check related SIEM alerts for *found* IOCs/hosts)**
+*   **`secops-soar.list_cases` (Check related SOAR cases for *found* IOCs/hosts)**
+*   **(Optional) `gti-mcp.get_file_behavior_summary` (For found file hashes)**
 *   `write_to_file` (for report generation)
 *   `secops-soar.post_case_comment` (optional)
 *   `ask_followup_question`
@@ -622,14 +627,49 @@ sequenceDiagram
         Note over Cline: Record IOCs with confirmed presence (P1, P2...)
     end
 
-    Note over Cline: Phase 2: Search events only for IOCs with confirmed presence
+    Note over Cline: Phase 2: Deeper investigation for IOCs with confirmed presence (P1, P2...)
     loop For each Present IOC Pi
+        Note over Cline: Search SIEM Events
         Cline->>SIEM: search_security_events(text="Events involving Pi", hours_back=72)
-        SIEM-->>Cline: Relevant SIEM Events for Pi
+        SIEM-->>Cline: Relevant SIEM Events for Pi (Note involved hosts Hi)
         Note over Cline: Store significant event findings
+
+        Note over Cline: Deeper GTI Enrichment & Pivoting
+        alt IOC Pi is Domain
+            Cline->>GTI: get_domain_report(domain=Pi)
+            GTI-->>Cline: Detailed Domain Report
+            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="resolutions")
+            GTI-->>Cline: Related IPs
+            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="communicating_files")
+            GTI-->>Cline: Related Files
+        else IOC Pi is File Hash
+            Cline->>GTI: get_file_report(hash=Pi)
+            GTI-->>Cline: Detailed File Report
+            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_domains")
+            GTI-->>Cline: Related Domains
+            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_ips")
+            GTI-->>Cline: Related IPs
+            %% Optional: Cline->>GTI: get_file_behavior_summary(hash=Pi)
+            %% GTI-->>Cline: Behavior Summary
+        else IOC Pi is IP Address
+            Cline->>GTI: get_ip_address_report(ip_address=Pi)
+            GTI-->>Cline: Detailed IP Report
+            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="resolutions")
+            GTI-->>Cline: Related Domains
+            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="communicating_files")
+            GTI-->>Cline: Related Files
+        end
+        Note over Cline: Store enrichment and pivot findings
+
+        Note over Cline: Check Related SIEM Alerts & SOAR Cases
+        Cline->>SIEM: get_security_alerts(query="alert contains Pi or involves host Hi", hours_back=72)
+        SIEM-->>Cline: Related SIEM Alerts
+        Cline->>SOAR: list_cases(filter="Contains Pi or involves host Hi") %% Conceptual Filter
+        SOAR-->>Cline: Potentially related SOAR Cases
+        Note over Cline: Store related alert/case info
     end
 
-    Note over Cline: Synthesize GTI context, IOCs, TTPs, and SIEM findings
+    Note over Cline: Synthesize GTI context, IOCs, TTPs, SIEM findings, Enrichment, Related Alerts/Cases
     Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case or Generate Report?", options=["Create New Case", "Update Case [ID]", "Generate Report", "Do Nothing"])
     User->>Cline: Response (e.g., "Generate Report")
 
