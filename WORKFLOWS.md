@@ -792,6 +792,42 @@ sequenceDiagram
 
 Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings.
 
+
+**Data Synthesis and Formatting:**
+  *   Initialize an empty markdown string for the report content.
+  *   Add a main title and summary section mentioning the Case ID.
+  *   **Add "Process Execution Tree (Text)" section:**
+    *   Construct a text-based, indented list showing the parent-child relationships derived from the SIEM process launch searches (Step 4). Include PIDs and command lines where available.
+    *   Example:
+    ```
+      *   explorer.exe (PID: ...)
+        *   cmd.exe (PID: 6440) - `C:\Windows\system32\cmd.exe /c ""E:\me\alsoOne.bat""`
+          *   wscript.exe (PID: 6212) - `"C:\Windows\System32\WScript.exe" "E:\me\canWell.js" ...`
+             *   rundll32.exe (PID: 4016) - `me\123.com me/itsIt.db,DllRegisterServer` (LOLBIN)
+               *   DNS Lookup: `superstarts.top`
+               *   DNS Lookup: `superlist.top`
+               *   Network Connection: `193.106.191.163:80`
+    ```
+
+**Add "Process Execution Tree (Diagram)" section:**
+        *   Generate a Mermaid `graph TD` diagram visualizing the process flow identified in Step 4.
+        *   Example:
+            ```mermaid
+            graph TD
+                A[explorer.exe] --> B(cmd.exe PID: 6440);
+                B --> C(wscript.exe PID: 6212);
+                C --> D(rundll32.exe PID: 4016);
+                D --> E{DNS: superstarts.top};
+                D --> F{DNS: superlist.top};
+                D --> G{Net Conn: 193.106.191.163};
+            ```
+
+**Add "Event Timeline Table" section:**
+        *   Iterate through the sorted `timeline_data`.
+        *   Format the data into a Markdown table including Timestamp, Delta (if requested), Alert Name, Process Info (Path/Hash/CmdLine), Classification, and MITRE TACTIC.
+    *   Add an "Analysis" section summarizing the findings and the significance of the process chain.
+
+
 Uses Tools:
 
 *   `secops-soar.list_alerts_by_case`
@@ -833,9 +869,14 @@ sequenceDiagram
     end
 
     Note over Cline: Sort timeline_data by Event Time
-    Note over Cline: (Optional) Calculate time deltas if feasible/requested
 
-    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping
+    Note over Cline: Step 6: Data Synthesis and Formatting
+    Note over Cline: Add main title and summary
+    Note over Cline: Add "Process Execution Tree (Text)" section with indented list
+    Note over Cline: Add "Process Execution Tree (Diagram)" section with Mermaid graph
+    Note over Cline: Add "Event Timeline Table" section
+
+    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping (Part of Step 6)
     loop For each entry in timeline_data
         Note over Cline: Analyze event/process/alert context
         Cline->>GTI: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
@@ -930,7 +971,9 @@ sequenceDiagram
     User->>Cline: Confirmation (e.g., "Yes, exclude delta")
 
     alt Report Confirmed ("Yes...")
+        Note over Cline: Step 7: Report Creation
         Note over Cline: Format timeline_data into Markdown Table, clearly showing process chain launches and subsequent activity
+        Note over Cline: Ensure report content includes Text Tree, Mermaid Diagram, and Timeline Table
         Cline->>Cline: write_to_file(path="./reports/case_${CASE_ID}_timeline_${timestamp}.md", content=...)
         Note over Cline: Report file created locally.
         Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` including process tree complete. Report generated.")
