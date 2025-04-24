@@ -1,3 +1,15 @@
+## Table of Contents
+
+*   [Proactive Threat Hunting based on GTI Campaign/Actor](#proactive-threat-hunting-based-on-gti-campaignactor)
+*   [Close duplicate/similar Cases Workflow](#close-duplicatesimilar-cases-workflow)
+*   [Create an Investigation Report](#create-an-investigation-report)
+*   [Prioritize and Investigate a Case](#prioritize-and-investigate-a-case)
+*   [Investigate a Case + external tools](#investigate-a-case--external-tools)
+*   [Compare GTI Collection to IoCs, Events in SecOps](#compare-gti-collection-to-iocs-events-in-secops)
+*   [Group Cases Workflow](#group-cases-workflow)
+*   [Case Event Timeline & Process Analysis Workflow](#case-event-timeline--process-analysis-workflow)
+*   [Cloud Vulnerability Triage & Contextualization](#cloud-vulnerability-triage--contextualization)
+
 ---
 
 ## Proactive Threat Hunting based on GTI Campaign/Actor
