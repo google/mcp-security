@@ -1,5 +1,7 @@
 
 
+
+
 ## Close duplicate/similar Cases Workflow
 
 ```{mermaid}
@@ -827,6 +829,7 @@ Objective: Generate a detailed timeline of events for a specific SOAR case (`${C
 **Analysis**
   *   Add an "Analysis" section summarizing the findings and the significance of the process chain.
 
+After producing the report, generate a preview of the markdown report, export that to PDF (using options ` -V papersize=letter -V geometry="landscape,margin=1in`), and then attach that PDF to a comment on the Case.
 
 Uses Tools:
 
