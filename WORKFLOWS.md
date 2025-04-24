@@ -792,7 +792,6 @@ sequenceDiagram
 
 Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings.
 
-
 **Data Synthesis and Formatting:**
   *   Initialize an empty markdown string for the report content.
   *   Add a main title and summary section mentioning the Case ID.
@@ -945,7 +944,7 @@ sequenceDiagram
         end
     end
 
-    Note over Cline: Iteratively search SIEM for parent process launch events
+    Note over Cline: **CRITICAL STEP: Iteratively search SIEM for parent process launch events to build the full execution chain.**
     Note over Cline: Current PID = PP1 (Parent of initial process)
     loop While Current PID is valid and not a root process (e.g., explorer.exe)
         Cline->>SIEM: search_security_events(text="PROCESS_LAUNCH event for target PID Current PID", hours_back=...)
@@ -958,7 +957,13 @@ sequenceDiagram
     Note over Cline: Sort timeline_data by Event Time
     Note over Cline: (Optional) Calculate time deltas if feasible/requested
 
-    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping
+    Note over Cline: Step 6: Data Synthesis and Formatting (Report MUST include Process Trees)
+    Note over Cline: Add main title and summary
+    Note over Cline: Add REQUIRED "Process Execution Tree (Text)" section with indented list
+    Note over Cline: Add REQUIRED "Process Execution Tree (Diagram)" section with Mermaid graph
+    Note over Cline: Add "Event Timeline Table" section
+
+    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping (Part of Step 6)
     loop For each relevant entry (process launch/activity) in timeline_data
         Note over Cline: Analyze event/process/alert context
         Cline->>SIEM: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
