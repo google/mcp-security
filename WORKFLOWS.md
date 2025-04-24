@@ -1,6 +1,123 @@
+---
 
+## Proactive Threat Hunting based on GTI Campaign/Actor
 
+Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). If any IOCs from the report are also found in the SecOps tenant (confirmed presence), perform deeper enrichment on those specific IOCs using GTI and check for related SIEM alerts or SOAR cases. Once done, summarize findings in a markdown report. Provide as much detail as possible.
 
+Uses Tools:
+
+*   `gti-mcp.get_collection_report`
+*   `gti-mcp.get_entities_related_to_a_collection` (Initial IOC gathering)
+*   `gti-mcp.get_collection_timeline_events` (for TTP context)
+*   `secops-mcp.get_ioc_matches` (Initial SIEM check)
+*   `secops-mcp.lookup_entity` (SIEM check for specific IOCs)
+*   `secops-mcp.search_security_events` (SIEM check for specific IOCs)
+*   **`gti-mcp.get_domain_report` / `get_file_report` / `get_ip_address_report` / `get_url_report` (Deeper GTI enrichment for *found* IOCs)**
+*   **`gti-mcp.get_entities_related_to_a_domain/file/ip/url` (Pivot on *found* IOCs)**
+*   **`secops-mcp.get_security_alerts` (Check related SIEM alerts for *found* IOCs/hosts)**
+*   **`secops-soar.list_cases` (Check related SOAR cases for *found* IOCs/hosts)**
+*   **(Optional) `gti-mcp.get_file_behavior_summary` (For found file hashes)**
+*   `write_to_file` (for report generation)
+*   `secops-soar.post_case_comment` (optional)
+*   `ask_followup_question`
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+    participant SOAR as secops-soar
+
+    User->>Cline: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
+    Cline->>GTI: get_collection_report(id=`${GTI_COLLECTION_ID}`)
+    GTI-->>Cline: Collection Details (Name, Type, Description)
+    Cline->>GTI: get_collection_timeline_events(id=`${GTI_COLLECTION_ID}`)
+    GTI-->>Cline: Timeline Events (TTP Context)
+
+    Note over Cline: Identify relevant IOC relationships (files, domains, ips, urls)
+    loop For each IOC Relationship R
+        Cline->>GTI: get_entities_related_to_a_collection(id=`${GTI_COLLECTION_ID}`, relationship_name=R)
+        GTI-->>Cline: List of IOCs (e.g., Hashes H1, Domains D1, IPs IP1...)
+    end
+
+    Note over Cline: Initialize local_hunt_findings
+    Cline->>SIEM: get_ioc_matches(hours_back=72)
+    SIEM-->>Cline: Recent IOC Matches in SIEM (Matches M1, M2...)
+    Note over Cline: Identify key IOCs from GTI (I1, I2...) and SIEM matches (M1, M2...)
+
+    Note over Cline: Phase 1: Lookup key/prioritized IOCs
+    loop For each prioritized IOC Ii (from GTI/SIEM Matches)
+        Cline->>SIEM: lookup_entity(entity_value=Ii, hours_back=72)
+        SIEM-->>Cline: SIEM Summary for Ii
+        Note over Cline: Record IOCs with confirmed presence (P1, P2...)
+    end
+
+    Note over Cline: Phase 2: Deeper investigation for IOCs with confirmed presence (P1, P2...)
+    loop For each Present IOC Pi
+        Note over Cline: Search SIEM Events
+        Cline->>SIEM: search_security_events(text="Events involving Pi", hours_back=72)
+        SIEM-->>Cline: Relevant SIEM Events for Pi (Note involved hosts Hi)
+        Note over Cline: Store significant event findings
+
+        Note over Cline: Deeper GTI Enrichment & Pivoting
+        alt IOC Pi is Domain
+            Cline->>GTI: get_domain_report(domain=Pi)
+            GTI-->>Cline: Detailed Domain Report
+            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="resolutions")
+            GTI-->>Cline: Related IPs
+            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="communicating_files")
+            GTI-->>Cline: Related Files
+        else IOC Pi is File Hash
+            Cline->>GTI: get_file_report(hash=Pi)
+            GTI-->>Cline: Detailed File Report
+            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_domains")
+            GTI-->>Cline: Related Domains
+            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_ips")
+            GTI-->>Cline: Related IPs
+            %% Optional: Cline->>GTI: get_file_behavior_summary(hash=Pi)
+            %% GTI-->>Cline: Behavior Summary
+        else IOC Pi is IP Address
+            Cline->>GTI: get_ip_address_report(ip_address=Pi)
+            GTI-->>Cline: Detailed IP Report
+            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="resolutions")
+            GTI-->>Cline: Related Domains
+            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="communicating_files")
+            GTI-->>Cline: Related Files
+        end
+        Note over Cline: Store enrichment and pivot findings
+
+        Note over Cline: Check Related SIEM Alerts & SOAR Cases
+        Cline->>SIEM: get_security_alerts(query="alert contains Pi or involves host Hi", hours_back=72)
+        SIEM-->>Cline: Related SIEM Alerts
+        Cline->>SOAR: list_cases(filter="Contains Pi or involves host Hi") %% Conceptual Filter
+        SOAR-->>Cline: Potentially related SOAR Cases
+        Note over Cline: Store related alert/case info
+    end
+
+    Note over Cline: Synthesize GTI context, IOCs, TTPs, SIEM findings, Enrichment, Related Alerts/Cases
+    Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case or Generate Report?", options=["Create New Case", "Update Case [ID]", "Generate Report", "Do Nothing"])
+    User->>Cline: Response (e.g., "Generate Report")
+
+    alt Output Action Confirmed
+        alt Create/Update Case
+            Note over Cline: Prepare summary comment for SOAR
+            Cline->>SOAR: post_case_comment(case_id=[New/Existing ID], comment="Proactive Hunt Summary for `${GTI_COLLECTION_ID}`: Found IOCs [...] in SIEM. Events [...] observed. GTI Context: [...].")
+            SOAR-->>Cline: Comment confirmation
+            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. SOAR case created/updated.")
+        else Generate Report
+            Note over Cline: Synthesize report content
+            Cline->>Cline: write_to_file(path="./reports/proactive_hunt_report_${GTI_COLLECTION_ID}_${timestamp}.md", content=...)
+            Note over Cline: Report file created locally.
+            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Report generated.")
+        else Do Nothing
+             Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. No output action taken.")
+        end
+    end
+
+```
+
+---
 
 ## Close duplicate/similar Cases Workflow
 
@@ -671,242 +788,9 @@ sequenceDiagram
 
 ---
 
-## Proactive Threat Hunting based on GTI Campaign/Actor (Revised v2)
-
-Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). If any IOCs from the report are also found in the SecOps tenant (confirmed presence), perform deeper enrichment on those specific IOCs using GTI and check for related SIEM alerts or SOAR cases. Once done, summarize findings in a markdown report. Provide as much detail as possible.
-
-Uses Tools:
-
-*   `gti-mcp.get_collection_report`
-*   `gti-mcp.get_entities_related_to_a_collection` (Initial IOC gathering)
-*   `gti-mcp.get_collection_timeline_events` (for TTP context)
-*   `secops-mcp.get_ioc_matches` (Initial SIEM check)
-*   `secops-mcp.lookup_entity` (SIEM check for specific IOCs)
-*   `secops-mcp.search_security_events` (SIEM check for specific IOCs)
-*   **`gti-mcp.get_domain_report` / `get_file_report` / `get_ip_address_report` / `get_url_report` (Deeper GTI enrichment for *found* IOCs)**
-*   **`gti-mcp.get_entities_related_to_a_domain/file/ip/url` (Pivot on *found* IOCs)**
-*   **`secops-mcp.get_security_alerts` (Check related SIEM alerts for *found* IOCs/hosts)**
-*   **`secops-soar.list_cases` (Check related SOAR cases for *found* IOCs/hosts)**
-*   **(Optional) `gti-mcp.get_file_behavior_summary` (For found file hashes)**
-*   `write_to_file` (for report generation)
-*   `secops-soar.post_case_comment` (optional)
-*   `ask_followup_question`
-
-```{mermaid}
-sequenceDiagram
-    participant User
-    participant Cline as Cline (MCP Client)
-    participant GTI as gti-mcp
-    participant SIEM as secops-mcp
-    participant SOAR as secops-soar
-
-    User->>Cline: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
-    Cline->>GTI: get_collection_report(id=`${GTI_COLLECTION_ID}`)
-    GTI-->>Cline: Collection Details (Name, Type, Description)
-    Cline->>GTI: get_collection_timeline_events(id=`${GTI_COLLECTION_ID}`)
-    GTI-->>Cline: Timeline Events (TTP Context)
-
-    Note over Cline: Identify relevant IOC relationships (files, domains, ips, urls)
-    loop For each IOC Relationship R
-        Cline->>GTI: get_entities_related_to_a_collection(id=`${GTI_COLLECTION_ID}`, relationship_name=R)
-        GTI-->>Cline: List of IOCs (e.g., Hashes H1, Domains D1, IPs IP1...)
-    end
-
-    Note over Cline: Initialize local_hunt_findings
-    Cline->>SIEM: get_ioc_matches(hours_back=72)
-    SIEM-->>Cline: Recent IOC Matches in SIEM (Matches M1, M2...)
-    Note over Cline: Identify key IOCs from GTI (I1, I2...) and SIEM matches (M1, M2...)
-
-    Note over Cline: Phase 1: Lookup key/prioritized IOCs
-    loop For each prioritized IOC Ii (from GTI/SIEM Matches)
-        Cline->>SIEM: lookup_entity(entity_value=Ii, hours_back=72)
-        SIEM-->>Cline: SIEM Summary for Ii
-        Note over Cline: Record IOCs with confirmed presence (P1, P2...)
-    end
-
-    Note over Cline: Phase 2: Deeper investigation for IOCs with confirmed presence (P1, P2...)
-    loop For each Present IOC Pi
-        Note over Cline: Search SIEM Events
-        Cline->>SIEM: search_security_events(text="Events involving Pi", hours_back=72)
-        SIEM-->>Cline: Relevant SIEM Events for Pi (Note involved hosts Hi)
-        Note over Cline: Store significant event findings
-
-        Note over Cline: Deeper GTI Enrichment & Pivoting
-        alt IOC Pi is Domain
-            Cline->>GTI: get_domain_report(domain=Pi)
-            GTI-->>Cline: Detailed Domain Report
-            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="resolutions")
-            GTI-->>Cline: Related IPs
-            Cline->>GTI: get_entities_related_to_a_domain(domain=Pi, relationship_name="communicating_files")
-            GTI-->>Cline: Related Files
-        else IOC Pi is File Hash
-            Cline->>GTI: get_file_report(hash=Pi)
-            GTI-->>Cline: Detailed File Report
-            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_domains")
-            GTI-->>Cline: Related Domains
-            Cline->>GTI: get_entities_related_to_a_file(hash=Pi, relationship_name="contacted_ips")
-            GTI-->>Cline: Related IPs
-            %% Optional: Cline->>GTI: get_file_behavior_summary(hash=Pi)
-            %% GTI-->>Cline: Behavior Summary
-        else IOC Pi is IP Address
-            Cline->>GTI: get_ip_address_report(ip_address=Pi)
-            GTI-->>Cline: Detailed IP Report
-            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="resolutions")
-            GTI-->>Cline: Related Domains
-            Cline->>GTI: get_entities_related_to_an_ip_address(ip_address=Pi, relationship_name="communicating_files")
-            GTI-->>Cline: Related Files
-        end
-        Note over Cline: Store enrichment and pivot findings
-
-        Note over Cline: Check Related SIEM Alerts & SOAR Cases
-        Cline->>SIEM: get_security_alerts(query="alert contains Pi or involves host Hi", hours_back=72)
-        SIEM-->>Cline: Related SIEM Alerts
-        Cline->>SOAR: list_cases(filter="Contains Pi or involves host Hi") %% Conceptual Filter
-        SOAR-->>Cline: Potentially related SOAR Cases
-        Note over Cline: Store related alert/case info
-    end
-
-    Note over Cline: Synthesize GTI context, IOCs, TTPs, SIEM findings, Enrichment, Related Alerts/Cases
-    Cline->>User: ask_followup_question(question="Hunt found potential activity related to `${GTI_COLLECTION_ID}`. Create/Update SOAR Case or Generate Report?", options=["Create New Case", "Update Case [ID]", "Generate Report", "Do Nothing"])
-    User->>Cline: Response (e.g., "Generate Report")
-
-    alt Output Action Confirmed
-        alt Create/Update Case
-            Note over Cline: Prepare summary comment for SOAR
-            Cline->>SOAR: post_case_comment(case_id=[New/Existing ID], comment="Proactive Hunt Summary for `${GTI_COLLECTION_ID}`: Found IOCs [...] in SIEM. Events [...] observed. GTI Context: [...].")
-            SOAR-->>Cline: Comment confirmation
-            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. SOAR case created/updated.")
-        else Generate Report
-            Note over Cline: Synthesize report content
-            Cline->>Cline: write_to_file(path="./reports/proactive_hunt_report_${GTI_COLLECTION_ID}_${timestamp}.md", content=...)
-            Note over Cline: Report file created locally.
-            Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Report generated.")
-        else Do Nothing
-             Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. No output action taken.")
-        end
-    end
-
-```
-
----
-
 ## Case Event Timeline & Process Analysis Workflow
 
-Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings.
-
-**Data Synthesis and Formatting:**
-  *   Initialize an empty markdown string for the report content.
-  *   Add a main title and summary section mentioning the Case ID.
-  *   **Add "Process Execution Tree (Text)" section:**
-    *   Construct a text-based, indented list showing the parent-child relationships derived from the SIEM process launch searches (Step 4). Include PIDs and command lines where available.
-    *   Example:
-    ```
-      *   explorer.exe (PID: ...)
-        *   cmd.exe (PID: 6440) - `C:\Windows\system32\cmd.exe /c ""E:\me\alsoOne.bat""`
-          *   wscript.exe (PID: 6212) - `"C:\Windows\System32\WScript.exe" "E:\me\canWell.js" ...`
-             *   rundll32.exe (PID: 4016) - `me\123.com me/itsIt.db,DllRegisterServer` (LOLBIN)
-               *   DNS Lookup: `superstarts.top`
-               *   DNS Lookup: `superlist.top`
-               *   Network Connection: `193.106.191.163:80`
-    ```
-
-**Add "Process Execution Tree (Diagram)" section:**
-  *   Generate a Mermaid `graph TD` diagram visualizing the process flow identified in Step 4.
-  *   Example:
-      ```mermaid
-      graph LR
-          A[explorer.exe] --> B(cmd.exe PID: 6440);
-          B --> C(wscript.exe PID: 6212);
-          C --> D(rundll32.exe PID: 4016);
-          D --> E{DNS: superstarts.top};
-          D --> F{DNS: superlist.top};
-          D --> G{Net Conn: 193.106.191.163};
-
-**Add "Event Timeline Table" section:**
-  *   Iterate through the sorted `timeline_data`.
-  *   Format the data into a Markdown table including Timestamp, Delta (if requested), Alert Name, Process Info (Path/Hash/CmdLine), Classification, and MITRE TACTIC.
-
-**Analysis**
-  *   Add an "Analysis" section summarizing the findings and the significance of the process chain.
-
-After producing the report, generate a preview of the markdown report, export that to PDF (using options ` -V papersize=letter -V geometry="landscape,margin=1in`), and then attach that PDF to a comment on the Case.
-
-Uses Tools:
-
-*   `secops-soar.list_alerts_by_case`
-*   `secops-soar.list_events_by_alert`
-*   `gti-mcp.get_file_report` (for process hash classification)
-*   `gti-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment)
-*   `write_to_file` (for report generation)
-*   `ask_followup_question` (for report format/content confirmation)
-*   `attempt_completion`
-
-```{mermaid}
-sequenceDiagram
-    participant User
-    participant Cline as Cline (MCP Client)
-    participant SOAR as secops-soar
-    participant GTI as gti-mcp
-
-    User->>Cline: Generate timeline for Case `${CASE_ID}` with process details & classification
-    Cline->>SOAR: list_alerts_by_case(case_id=`${CASE_ID}`)
-    SOAR-->>Cline: List of Alerts (A1, A2...) for Case `${CASE_ID}`
-
-    Note over Cline: Initialize timeline_data = []
-    loop For each Alert Ai
-        Cline->>SOAR: list_events_by_alert(case_id=`${CASE_ID}`, alert_id=Ai)
-        SOAR-->>Cline: Events for Alert Ai (E1, E2...)
-        loop For each Event Ej
-            Note over Cline: Extract Event Time, Alert Name (Summarized), Process Info (Path, Hash, CmdLine) if available
-            Note over Cline: Store basic event info in timeline_data
-            alt Process Hash Ph available
-                Cline->>GTI: get_file_report(hash=Ph)
-                GTI-->>Cline: GTI Report for Hash Ph
-                Note over Cline: Classify process based on GTI report (Legit/LOLBIN/Malicious)
-                Note over Cline: Update timeline_data with classification
-            else Process Path Pp available
-                Note over Cline: Classify process based on path/name (Heuristic: e.g., powershell.exe -> LOLBIN)
-                Note over Cline: Update timeline_data with classification
-            end
-        end
-    end
-
-    Note over Cline: Sort timeline_data by Event Time
-
-    Note over Cline: Step 6: Data Synthesis and Formatting
-    Note over Cline: Add main title and summary
-    Note over Cline: Add "Process Execution Tree (Text)" section with indented list
-    Note over Cline: Add "Process Execution Tree (Diagram)" section with Mermaid graph
-    Note over Cline: Add "Event Timeline Table" section
-
-    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping (Part of Step 6)
-    loop For each entry in timeline_data
-        Note over Cline: Analyze event/process/alert context
-        Cline->>GTI: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
-        GTI-->>Cline: Potential MITRE TACTIC(s)
-        Note over Cline: Add TACTIC to timeline_data entry
-    end
-
-    User->>Cline: (Implicit/Follow-up) Request Markdown Report
-    Cline->>User: ask_followup_question(question="Generate report table with Time, Alert, Process Tree (Classified), MITRE TACTIC?", options=["Yes", "Yes, without Time Delta", "No"])
-    User->>Cline: Confirmation (e.g., "Yes")
-
-    alt Report Confirmed
-        Note over Cline: Format timeline_data into Markdown Table
-        Cline->>Cline: write_to_file(path="./reports/case_${CASE_ID}_timeline_${timestamp}.md", content=...)
-        Note over Cline: Report file created locally.
-        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. Report generated.")
-    else Report Not Confirmed
-        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. No report generated.")
-    end
-
-```
-
----
-
-## Case Event Timeline & Process Analysis Workflow (Revised for Full Process Tree)
-
-Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including the **full process execution chain** leading to the alerted activity. Classify relevant processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
+Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including the **full process execution chain** leading to the alerted activity. Classify relevant processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report summarizing the findings. Optionally convert the report to PDF and attempt to attach it to the SOAR case.
 
 Uses Tools:
 
@@ -916,8 +800,31 @@ Uses Tools:
 *   `gti-mcp.get_file_report` (for process hash classification)
 *   `secops-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment)
 *   `write_to_file` (for report generation)
-*   `ask_followup_question` (for report format/content confirmation)
+*   `execute_command` (using `pandoc` for PDF conversion)
+*   `secops-soar.post_case_comment` (to note report location/attach if possible)
+*   `ask_followup_question` (for report format/content/attachment confirmation)
 *   `attempt_completion`
+
+**Workflow Steps & Diagram:**
+
+1.  List alerts for the given `${CASE_ID}`.
+2.  For each alert, list the associated events.
+3.  Extract key process information (PID, Parent PID, Hash, Path, CmdLine) from the events.
+4.  **CRITICAL STEP:** Iteratively search SIEM (`search_security_events`) for `PROCESS_LAUNCH` events targeting the parent PIDs found in the previous step, working backward up the chain until a root process (like `explorer.exe`) or the beginning of available logs is reached. Store all launch event details.
+5.  Enrich process hashes using GTI (`get_file_report`) to classify processes (Legitimate, LOLBIN, Malicious).
+6.  (Optional) Enrich activities with potential MITRE TACTICs using `get_threat_intel`.
+7.  Synthesize the collected data, sorting events chronologically.
+8.  Format the report in Markdown, ensuring it **MUST** include:
+    *   A summary section.
+    *   A **Process Execution Tree (Text)** showing the full parent-child chain.
+    *   A **Process Execution Tree (Diagram)** using Mermaid.
+    *   An **Event Timeline Table** including timestamps, classifications, and optional MITRE TACTICs/time deltas.
+    *   An analysis section.
+9.  Ask the user to confirm report generation and format preferences (e.g., include time delta).
+10. Write the Markdown report to a timestamped file (e.g., `./reports/case_${CASE_ID}_timeline_${timestamp}.md`).
+11. (Optional, based on user feedback) Convert the Markdown report to PDF using `pandoc` via `execute_command`.
+12. (Optional, based on user feedback) Attempt to attach the PDF to the SOAR case. *Note: Direct PDF attachment might require specific SOAR tools not always available. If attachment fails, post a comment with the local path to the MD/PDF report.*
+13. Conclude with `attempt_completion`.
 
 ```{mermaid}
 sequenceDiagram
@@ -929,65 +836,61 @@ sequenceDiagram
 
     User->>Cline: Generate timeline for Case `${CASE_ID}` with full process tree
     Cline->>SOAR: list_alerts_by_case(case_id=`${CASE_ID}`)
-    SOAR-->>Cline: List of Alerts (A1, A2...) for Case `${CASE_ID}`
+    SOAR-->>Cline: List of Alerts (A1, A2...)
 
     Note over Cline: Initialize timeline_data = [], process_chain = {}
     loop For each Alert Ai
         Cline->>SOAR: list_events_by_alert(case_id=`${CASE_ID}`, alert_id=Ai)
         SOAR-->>Cline: Events for Alert Ai (E1, E2...)
-        loop For each Event Ej
-            Note over Cline: Extract Event Time, Alert Name, Process Info (PID P1, Parent PID PP1, Path, Hash H1, CmdLine)
-            Note over Cline: Store event info in timeline_data
-            Note over Cline: Add P1 and PP1 to process_chain if not present
-            alt Process Hash H1 available
-                Cline->>GTI: get_file_report(hash=H1)
-                GTI-->>Cline: GTI Report for Hash H1
-                Note over Cline: Classify process P1 (Legit/LOLBIN/Malicious)
-                Note over Cline: Update timeline_data with classification
-            end
+        Note over Cline: Extract Process Info (PID P1, Parent PID PP1, Hash H1...) & store in timeline_data
+        Note over Cline: Add P1, PP1 to process_chain
+        alt Process Hash H1 available
+            Cline->>GTI: get_file_report(hash=H1)
+            GTI-->>Cline: GTI Report for Hash H1 -> Classify P1
         end
     end
 
-    Note over Cline: **CRITICAL STEP: Iteratively search SIEM for parent process launch events to build the full execution chain.**
-    Note over Cline: Current PID = PP1 (Parent of initial process)
-    loop While Current PID is valid and not a root process (e.g., explorer.exe)
-        Cline->>SIEM: search_security_events(text="PROCESS_LAUNCH event for target PID Current PID", hours_back=...)
-        SIEM-->>Cline: Launch Event for Current PID (Parent PID PP_Next, Timestamp T_Launch, CmdLine...)
-        Note over Cline: Store launch event info in timeline_data
-        Note over Cline: Add Current PID and PP_Next to process_chain
+    Note over Cline: **CRITICAL: Find Parent Processes**
+    Note over Cline: Current PID = PP1
+    loop While Current PID is valid & not root
+        Cline->>SIEM: search_security_events(text="PROCESS_LAUNCH for target PID Current PID")
+        SIEM-->>Cline: Launch Event (Parent PID PP_Next, CmdLine...)
+        Note over Cline: Store launch event in timeline_data
+        Note over Cline: Add Current PID, PP_Next to process_chain
         Note over Cline: Current PID = PP_Next
     end
 
-    Note over Cline: Sort timeline_data by Event Time
-    Note over Cline: (Optional) Calculate time deltas if feasible/requested
+    Note over Cline: Sort timeline_data by time
 
-    Note over Cline: Step 6: Data Synthesis and Formatting (Report MUST include Process Trees)
-    Note over Cline: Add main title and summary
-    Note over Cline: Add REQUIRED "Process Execution Tree (Text)" section with indented list
-    Note over Cline: Add REQUIRED "Process Execution Tree (Diagram)" section with Mermaid graph
-    Note over Cline: Add "Event Timeline Table" section
-
-    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping (Part of Step 6)
-    loop For each relevant entry (process launch/activity) in timeline_data
-        Note over Cline: Analyze event/process/alert context
-        Cline->>SIEM: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
-        SIEM-->>Cline: Potential MITRE TACTIC(s)
-        Note over Cline: Add TACTIC to timeline_data entry
+    Note over Cline: (Optional) Enrich with MITRE TACTICs
+    loop For each relevant entry
+        Cline->>SIEM: get_threat_intel(query="MITRE TACTIC for [activity]")
+        SIEM-->>Cline: Potential TACTIC(s)
     end
 
-    User->>Cline: (Implicit/Follow-up) Request Markdown Report (Table Format)
-    Cline->>User: ask_followup_question(question="Generate report table showing full process chain, Time, Alert, Process (Classified), MITRE TACTIC? Include time delta?", options=["Yes, include delta", "Yes, exclude delta", "No Report"])
+    Cline->>User: ask_followup_question(question="Generate MD report (incl. Process Trees)? Include delta?", options=["Yes, include delta", "Yes, exclude delta", "No Report"])
     User->>Cline: Confirmation (e.g., "Yes, exclude delta")
 
     alt Report Confirmed ("Yes...")
-        Note over Cline: Step 7: Report Creation
-        Note over Cline: Format timeline_data into Markdown Table, clearly showing process chain launches and subsequent activity
-        Note over Cline: Ensure report content includes Text Tree, Mermaid Diagram, and Timeline Table
+        Note over Cline: Format report content (MUST include Trees & Table)
         Cline->>Cline: write_to_file(path="./reports/case_${CASE_ID}_timeline_${timestamp}.md", content=...)
-        Note over Cline: Report file created locally.
-        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` including process tree complete. Report generated.")
+        Note over Cline: MD Report file created.
+
+        Cline->>User: ask_followup_question(question="Convert report to PDF and attach to SOAR?", options=["Yes", "No"])
+        User->>Cline: Confirmation (e.g., "Yes")
+
+        alt PDF & Attach Confirmed
+            Cline->>Cline: execute_command(pandoc MD_PATH -o PDF_PATH ...)
+            Note over Cline: PDF Generated locally.
+            Note over Cline: Attempt SOAR attachment (Tool dependent)
+            Cline->>SOAR: post_case_comment(case_id=`${CASE_ID}`, comment="Generated report. PDF available at: PDF_PATH") %% Fallback if attach fails
+            SOAR-->>Cline: Comment Confirmation
+            Cline->>Cline: attempt_completion(result="Timeline analysis complete. Report generated (MD/PDF). SOAR case updated.")
+        else PDF & Attach Not Confirmed
+            Cline->>Cline: attempt_completion(result="Timeline analysis complete. MD Report generated.")
+        end
     else Report Not Confirmed ("No Report")
-        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` including process tree complete. No report generated.")
+        Cline->>Cline: attempt_completion(result="Timeline analysis complete. No report generated.")
     end
 
 ```
@@ -1051,5 +954,3 @@ sequenceDiagram
     end
 
     Cline->>Cline: attempt_completion(result="Cloud vulnerability triage for project `${PROJECT_ID}` complete. Findings synthesized. SOAR case potentially updated.")
-
-```
