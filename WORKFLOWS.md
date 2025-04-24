@@ -862,7 +862,7 @@ sequenceDiagram
 
 ## Case Event Timeline & Process Analysis Workflow
 
-Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines) and **process tree context**. Classify processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
+Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines) and **process tree context derived from SIEM event searches**. Classify processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
 
 Uses Tools:
 
