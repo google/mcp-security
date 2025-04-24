@@ -862,14 +862,15 @@ sequenceDiagram
 
 ## Case Event Timeline & Process Analysis Workflow
 
-Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
+Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines) and **process tree context**. Classify processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
 
 Uses Tools:
 
 *   `secops-soar.list_alerts_by_case`
 *   `secops-soar.list_events_by_alert`
+*   **`secops-mcp.search_security_events` (for process tree context)**
 *   `gti-mcp.get_file_report` (for process hash classification)
-*   `gti-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment)
+*   `secops-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment - **Note: Use secops-mcp, not gti-mcp**)
 *   `write_to_file` (for report generation)
 *   `ask_followup_question` (for report format/content confirmation)
 *   `attempt_completion`
@@ -879,6 +880,7 @@ sequenceDiagram
     participant User
     participant Cline as Cline (MCP Client)
     participant SOAR as secops-soar
+    participant SIEM as secops-mcp %% Added SIEM participant
     participant GTI as gti-mcp
 
     User->>Cline: Generate timeline for Case `${CASE_ID}` with process details & classification
@@ -904,14 +906,19 @@ sequenceDiagram
         end
     end
 
+    Note over Cline: Search SIEM for related process events (parent/child)
+    Cline->>SIEM: search_security_events(text="Process events related to PID/Hash from initial events", hours_back=...)
+    SIEM-->>Cline: Related Process Events (Launch/Termination)
+    Note over Cline: Use SIEM events to build process tree context
+
     Note over Cline: Sort timeline_data by Event Time
     Note over Cline: (Optional) Calculate time deltas if feasible/requested
 
     User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping
     loop For each entry in timeline_data
         Note over Cline: Analyze event/process/alert context
-        Cline->>GTI: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
-        GTI-->>Cline: Potential MITRE TACTIC(s)
+        Cline->>SIEM: get_threat_intel(query="MITRE TACTIC for [process/activity description]") %% Corrected Server
+        SIEM-->>Cline: Potential MITRE TACTIC(s)
         Note over Cline: Add TACTIC to timeline_data entry
     end
 
