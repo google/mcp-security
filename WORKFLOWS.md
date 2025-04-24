@@ -574,6 +574,101 @@ digraph CaseAnalysisFlow {
 
 ---
 
+## Group Cases Workflow
+
+From the last 5 cases, examine the underlying entities in the alerts and events and group the cases logically. Then, extract details from each case in each cluster to build a high fidelity understanding of each cases' disposition and involved entities. Make sure you have an in depth understanding of each case before moving on to the next step.
+
+Then determine the priority of each case "grouping". Then for each grouping analyze and interpret the alerts to understand why each case might be relevant. Then assess the impact of each case grouping and prioritize the cases with the highest potentialy impact. Then for each case grouping examine the underlying entities and enrich any observables with GTI. Finally, search for any related security events that may be relevant to a case based on their entities (hostnames) and include those as part of your case analysis. Finally, create a comprehensive analysis report in markdown in which you present the prioritized case list, your justification, and your analysis of each case or case cluster.
+
+Do not treat internal domains as indicators (such as those extracted from email addresses, or usernames)
+
+Uses Tools:
+
+*   `secops-soar.list_cases`
+*   `secops-soar.get_case_full_details`
+*   `secops-soar.get_entities_by_alert_group_identifiers`
+*   `secops-soar.list_events_by_alert`
+*   `gti-mcp.get_ip_address_report`
+*   `gti-mcp.get_url_report`
+*   `gti-mcp.search_vulnerabilities`
+*   `gti-mcp.get_domain_report`
+*   `gti-mcp.get_file_report`
+*   `secops-mcp.lookup_entity`
+*   `secops-mcp.search_security_events`
+*   `write_to_file` (Implicit for report generation)
+*   `attempt_completion`
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant SOAR as secops-soar
+    participant GTI as gti-mcp
+    participant SIEM as secops-mcp
+
+    User->>Cline: Start Task: Analyze Last 5 Cases
+    Cline->>SOAR: list_cases()
+    SOAR-->>Cline: Top 5 Case IDs (e.g., 553, 552, 551, 550, 549)
+
+    Note over Cline: Step 2: Examine Cases (Parallel/Iterative)
+    loop For each Case Ci in [553, 552, 551, 550, 549]
+        Cline->>SOAR: get_case_full_details(case_id=Ci)
+        SOAR-->>Cline: Details for Ci
+        Cline->>SOAR: list_alerts_by_case(case_id=Ci)
+        SOAR-->>Cline: Alerts for Ci (A1, A2...)
+        loop For each Alert Ai in Ci
+            Cline->>SOAR: list_events_by_alert(case_id=Ci, alert_id=Ai)
+            SOAR-->>Cline: Events for Ai (Entities E1, E2...)
+        end
+        Note over Cline: Summarize Case Ci findings (Entities, Alert Types)
+    end
+
+    Note over Cline: Steps 3 & 4: Group Logically & Prioritize
+    Note over Cline: Analyze summaries, create groups (e.g., G1: CVE(550), G2: Phishing(549), G3: UserActivity(551, 552), G4: Travel(553))
+    Note over Cline: Prioritize Groups (e.g., G1 > G2 > G3 > G4)
+
+    Note over Cline: Step 5: Enrich Indicators (Iterative per Group)
+    loop For each Group Gp (Prioritized Order)
+        Note over Cline: Extract key indicators (IPs, Domains, Hashes, URLs, CVEs) for Group Gp
+        loop For each Indicator Ii in Group Gp
+            alt Indicator is IP
+                Cline->>GTI: get_ip_address_report(ip_address=Ii)
+                GTI-->>Cline: IP Report
+                Cline->>SIEM: lookup_entity(entity_value=Ii)
+                SIEM-->>Cline: SIEM IP Summary
+            else Indicator is Domain
+                Cline->>GTI: get_domain_report(domain=Ii)
+                GTI-->>Cline: Domain Report
+                Cline->>SIEM: lookup_entity(entity_value=Ii)
+                SIEM-->>Cline: SIEM Domain Summary
+            else Indicator is File Hash
+                Cline->>GTI: get_file_report(hash=Ii)
+                GTI-->>Cline: File Report (May be Not Found)
+            else Indicator is URL
+                Cline->>GTI: get_url_report(url=Ii)
+                GTI-->>Cline: URL Report
+            else Indicator is CVE
+                Cline->>GTI: search_vulnerabilities(query=Ii)
+                GTI-->>Cline: Vulnerability Details
+            end
+        end
+    end
+
+    Note over Cline: Step 6: Search Related Events (Example for G3 Host)
+    Note over Cline: Identify relevant entities for event search (e.g., Host H from G3)
+    Cline->>SIEM: search_security_events(text="Events involving host H", hours_back=72)
+    SIEM-->>Cline: Related SIEM events for Host H (or None)
+
+    Note over Cline: Step 7: Generate Final Report
+    Note over Cline: Synthesize all findings: Grouping, Prioritization, Enrichment, Related Events
+    Cline->>Cline: write_to_file(path="./reports/grouped_case_analysis_${timestamp}.md", content=...)
+    Note over Cline: Report file created locally.
+    Cline->>Cline: attempt_completion(result="Case grouping and analysis complete. Report generated.")
+
+```
+
+---
+
 ## Proactive Threat Hunting based on GTI Campaign/Actor (Revised v2)
 
 Objective: Given a GTI Campaign or Threat Actor Collection ID (`${GTI_COLLECTION_ID}`), proactively search the local environment (SIEM) for related IOCs and TTPs (approximated by searching related entities). If any IOCs from the report are also found in the SecOps tenant (confirmed presence), perform deeper enrichment on those specific IOCs using GTI and check for related SIEM alerts or SOAR cases. Once done, summarize findings in a markdown report. Provide as much detail as possible.
@@ -687,6 +782,150 @@ sequenceDiagram
         else Do Nothing
              Cline->>Cline: attempt_completion(result="Proactive threat hunt for `${GTI_COLLECTION_ID}` complete. Findings summarized. No output action taken.")
         end
+    end
+
+```
+
+---
+
+## Case Event Timeline & Process Analysis Workflow
+
+Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings.
+
+Uses Tools:
+
+*   `secops-soar.list_alerts_by_case`
+*   `secops-soar.list_events_by_alert`
+*   `gti-mcp.get_file_report` (for process hash classification)
+*   `gti-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment)
+*   `write_to_file` (for report generation)
+*   `ask_followup_question` (for report format/content confirmation)
+*   `attempt_completion`
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant SOAR as secops-soar
+    participant GTI as gti-mcp
+
+    User->>Cline: Generate timeline for Case `${CASE_ID}` with process details & classification
+    Cline->>SOAR: list_alerts_by_case(case_id=`${CASE_ID}`)
+    SOAR-->>Cline: List of Alerts (A1, A2...) for Case `${CASE_ID}`
+
+    Note over Cline: Initialize timeline_data = []
+    loop For each Alert Ai
+        Cline->>SOAR: list_events_by_alert(case_id=`${CASE_ID}`, alert_id=Ai)
+        SOAR-->>Cline: Events for Alert Ai (E1, E2...)
+        loop For each Event Ej
+            Note over Cline: Extract Event Time, Alert Name (Summarized), Process Info (Path, Hash, CmdLine) if available
+            Note over Cline: Store basic event info in timeline_data
+            alt Process Hash Ph available
+                Cline->>GTI: get_file_report(hash=Ph)
+                GTI-->>Cline: GTI Report for Hash Ph
+                Note over Cline: Classify process based on GTI report (Legit/LOLBIN/Malicious)
+                Note over Cline: Update timeline_data with classification
+            else Process Path Pp available
+                Note over Cline: Classify process based on path/name (Heuristic: e.g., powershell.exe -> LOLBIN)
+                Note over Cline: Update timeline_data with classification
+            end
+        end
+    end
+
+    Note over Cline: Sort timeline_data by Event Time
+    Note over Cline: (Optional) Calculate time deltas if feasible/requested
+
+    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping
+    loop For each entry in timeline_data
+        Note over Cline: Analyze event/process/alert context
+        Cline->>GTI: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
+        GTI-->>Cline: Potential MITRE TACTIC(s)
+        Note over Cline: Add TACTIC to timeline_data entry
+    end
+
+    User->>Cline: (Implicit/Follow-up) Request Markdown Report
+    Cline->>User: ask_followup_question(question="Generate report table with Time, Alert, Process Tree (Classified), MITRE TACTIC?", options=["Yes", "Yes, without Time Delta", "No"])
+    User->>Cline: Confirmation (e.g., "Yes")
+
+    alt Report Confirmed
+        Note over Cline: Format timeline_data into Markdown Table
+        Cline->>Cline: write_to_file(path="./reports/case_${CASE_ID}_timeline_${timestamp}.md", content=...)
+        Note over Cline: Report file created locally.
+        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. Report generated.")
+    else Report Not Confirmed
+        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. No report generated.")
+    end
+
+```
+
+---
+
+## Case Event Timeline & Process Analysis Workflow
+
+Objective: Generate a detailed timeline of events for a specific SOAR case (`${CASE_ID}`), including associated process activity (command lines). Classify processes as legitimate, LOLBIN, or malicious using GTI enrichment. Optionally enrich with MITRE TACTICs and generate a markdown report (table format) summarizing the findings, potentially excluding time deltas based on user preference.
+
+Uses Tools:
+
+*   `secops-soar.list_alerts_by_case`
+*   `secops-soar.list_events_by_alert`
+*   `gti-mcp.get_file_report` (for process hash classification)
+*   `gti-mcp.get_threat_intel` (for MITRE TACTIC mapping/general enrichment)
+*   `write_to_file` (for report generation)
+*   `ask_followup_question` (for report format/content confirmation)
+*   `attempt_completion`
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant Cline as Cline (MCP Client)
+    participant SOAR as secops-soar
+    participant GTI as gti-mcp
+
+    User->>Cline: Generate timeline for Case `${CASE_ID}` with process details & classification
+    Cline->>SOAR: list_alerts_by_case(case_id=`${CASE_ID}`)
+    SOAR-->>Cline: List of Alerts (A1, A2...) for Case `${CASE_ID}`
+
+    Note over Cline: Initialize timeline_data = []
+    loop For each Alert Ai
+        Cline->>SOAR: list_events_by_alert(case_id=`${CASE_ID}`, alert_id=Ai)
+        SOAR-->>Cline: Events for Alert Ai (E1, E2...)
+        loop For each Event Ej
+            Note over Cline: Extract Event Time, Alert Name (Summarized), Process Info (Path, Hash, CmdLine) if available
+            Note over Cline: Store basic event info in timeline_data
+            alt Process Hash Ph available
+                Cline->>GTI: get_file_report(hash=Ph)
+                GTI-->>Cline: GTI Report for Hash Ph
+                Note over Cline: Classify process based on GTI report (Legit/LOLBIN/Malicious)
+                Note over Cline: Update timeline_data with classification
+            else Process Path Pp available
+                Note over Cline: Classify process based on path/name (Heuristic: e.g., powershell.exe -> LOLBIN)
+                Note over Cline: Update timeline_data with classification
+            end
+        end
+    end
+
+    Note over Cline: Sort timeline_data by Event Time
+    Note over Cline: (Optional) Calculate time deltas if feasible/requested
+
+    User->>Cline: (Implicit/Follow-up) Request MITRE TACTIC mapping
+    loop For each entry in timeline_data
+        Note over Cline: Analyze event/process/alert context
+        Cline->>GTI: get_threat_intel(query="MITRE TACTIC for [process/activity description]")
+        GTI-->>Cline: Potential MITRE TACTIC(s)
+        Note over Cline: Add TACTIC to timeline_data entry
+    end
+
+    User->>Cline: (Implicit/Follow-up) Request Markdown Report (Table Format)
+    Cline->>User: ask_followup_question(question="Generate report table with Time, Alert, Process Tree (Classified), MITRE TACTIC? Include time delta?", options=["Yes, include delta", "Yes, exclude delta", "No Report"])
+    User->>Cline: Confirmation (e.g., "Yes, exclude delta")
+
+    alt Report Confirmed ("Yes...")
+        Note over Cline: Format timeline_data into Markdown Table (with/without delta per choice)
+        Cline->>Cline: write_to_file(path="./reports/case_${CASE_ID}_timeline_${timestamp}.md", content=...)
+        Note over Cline: Report file created locally.
+        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. Report generated.")
+    else Report Not Confirmed ("No Report")
+        Cline->>Cline: attempt_completion(result="Timeline analysis for Case `${CASE_ID}` complete. No report generated.")
     end
 
 ```
