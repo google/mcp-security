@@ -6,22 +6,26 @@ This guide will help you get started with using the MCP servers to access Google
 
 Before you begin, make sure you have:
 
-1. **Google Cloud Authentication** set up using one of these methods:
-   - Application Default Credentials (ADC)
-   - GOOGLE_APPLICATION_CREDENTIALS environment variable
-   - `gcloud auth application-default login`
+1. **Google Cloud Authentication** set up using one of these two methods:
+   - Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to a service account key file
+   - Application Default Credentials (ADC) configured with:
+     - `gcloud config set project ...`  # needed when switching projects
+     - `gcloud auth application-default set-quota-project ...` # needed when switching projects
+     - `gcloud auth application-default login`
 
 2. **Service-specific API keys** (as needed):
-   - VirusTotal API key for Google Threat Intelligence
-   - SOAR application key for SecOps SOAR
-   - Chronicle customer ID and project ID for Chronicle SecOps
+   - VirusTotal API key for Google Threat Intelligence (as env var `VT_APIKEY`)
+   - SOAR application key for SecOps SOAR (as env var `SOAR_APP_KEY`)
+   - Chronicle customer ID (`CHRONICLE_CUSTOMER_ID`) and project ID (`CHRONICLE_PROJECT_ID`) for Chronicle SecOps.
+     - `CHRONICLE_REGION` is also needed if not=`us`.
 
 3. **An MCP client** such as:
-   - Claude Desktop
-   - cline.bot VS Code extension
+   - [Claude Desktop](https://claude.ai/download)
+   - [cline.bot](https://cline.bot/) [VS Code extension](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
 
 4. **Python environment tools**:
-   - `uv` - The Python package installer used to run the MCP servers with isolated environments
+   - `uv` - [The Python package installer](https://docs.astral.sh/uv/) used to run the MCP servers with isolated environments
+     - See [Installing uv](https://docs.astral.sh/uv/getting-started/installation/) on the [Astral docs site](https://docs.astral.sh/uv/)
 
 ## Getting Started
 
@@ -30,7 +34,7 @@ Before you begin, make sure you have:
 Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/your-org/mcp-security.git
+git clone https://github.com/google/mcp-security.git
 cd mcp-security
 ```
 
@@ -48,8 +52,8 @@ No additional installation is needed as `uv` will handle dependencies when runni
 
 #### For cline.bot VS Code Extension:
 
-1. Install the cline.bot extension in VS Code
-2. Update your `cline_mcp_settings.json` with the appropriate configuration
+1. Install the [cline.bot](https://cline.bot/) [extension in VS Code](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
+2. Update your `cline_mcp_settings.json` with the appropriate configuration. See [sample on GitHub](https://github.com/google/mcp-security/blob/main/cline_mcp_settings.json.example)
 3. Restart VS Code
 
 ### Step 3: Using the Tools
@@ -63,7 +67,7 @@ Once configured, you can interact with the MCP servers by asking Claude to perfo
 
 ## MCP Server Configuration Reference
 
-Here's a complete reference configuration for all available MCP servers. We strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
+Here's a complete reference configuration for all available MCP servers. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
 
 ```json
 {
@@ -71,16 +75,15 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "secops": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/secops/secops_mcp",
         "run",
         "server.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
       },
       "disabled": false,
       "autoApprove": []
@@ -88,17 +91,16 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "secops-soar": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
         "secops_soar_mcp.py",
         "--integrations",
-        "${SOAR_INTEGRATIONS}"
+        "CSV,OKTA"
       ],
       "env": {
-        "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+        "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
       },
       "disabled": false,
       "autoApprove": []
@@ -106,14 +108,13 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "gti": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/gti/gti_mcp",
         "run",
         "server.py"
       ],
       "env": {
-        "VT_APIKEY": "${VT_APIKEY}"
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       },
       "disabled": false,
       "autoApprove": []
@@ -121,7 +122,6 @@ Here's a complete reference configuration for all available MCP servers. We stro
     "scc-mcp": {
       "command": "uv",
       "args": [
-        "--env-file=/path/to/your/env",
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
@@ -133,6 +133,21 @@ Here's a complete reference configuration for all available MCP servers. We stro
     }
   }
 }
+```
+
+### Using .env and Env Vars
+
+`uv` supports passing an `.env` file like so:
+```
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/...",
+        "run",
+        "--env-file",
+        "/path/to/the/repo/server/.env",
+        "server.py"
+      ]
 ```
 
 The `--env-file` option in the configuration allows `uv` to use a .env file for environment variables. Make sure to create this file with your sensitive information, or use system environment variables as described below.
@@ -158,7 +173,7 @@ export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 export VT_APIKEY="your-vt-api-key"
 ```
 
-Then restart your terminal or run `source ~/.bashrc` (or equivalent).
+Then restart your terminal, restart VS Code, or run `source ~/.bashrc` (or equivalent).
 
 #### For Windows:
 
@@ -226,4 +241,4 @@ If you encounter issues with the MCP servers:
 2. **Verify API keys**: Make sure all required API keys are correctly configured
 3. **Check server logs**: Look for error messages in the server output
 4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
-5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH 
+5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
