@@ -30,12 +30,21 @@ async def fetch_object(
     resource_collection_type: str,
     resource_type: str,
     resource_id: str,
+    attributes: list[str] | None = None,
     relationships: list[str] | None = None,
     params: dict[str, typing.Any] | None = None):
   """Fetches objects from Google Threat Intelligence API."""
   logging.info(
       f"Fetching comprehensive {resource_collection_type} "
       f"report for id: {resource_id}")
+  
+  params = {k: v for k, v in params.items()} if params else {}
+
+  # Retrieve a selection of object attributes and/or relationships.
+  if attributes:
+    params["attributes"] = ",".join(attributes)
+  if relationships:
+    params["relationships"] = ",".join(relationships)
 
   obj = await vt_client.get_object_async(
       f"/{resource_collection_type}/{resource_id}", params=params)
@@ -55,10 +64,6 @@ async def fetch_object(
   if 'aggregations' in obj_dict['attributes']:
     del obj_dict['attributes']['aggregations']
 
-  if relationships:
-    obj_dict["relationships"] = await fetch_object_relationships(
-        vt_client, resource_collection_type, resource_id, relationships, params=params)
-
   logging.info(
       f"Successfully generated concise threat summary for id: {resource_id}")
   return obj_dict
@@ -70,14 +75,15 @@ async def fetch_object_relationships(
     resource_id: str,
     relationships: typing.List[str],
     params: dict[str, typing.Any] | None = None):
-  """Fetches the given relationships from the given object."""
+  """Fetches the given relationships descriptors from the given object."""
   rel_futures = {}
   async with asyncio.TaskGroup() as tg:
     for rel_name in relationships:
       rel_futures[rel_name] = tg.create_task(
           consume_vt_iterator(
               vt_client,
-              f"/{resource_collection_type}/{resource_id}/{rel_name}", params=params))
+              f"/{resource_collection_type}/{resource_id}"
+              f"/relationship/{rel_name}", params=params))
 
   data = {}
   for name, items in rel_futures.items():

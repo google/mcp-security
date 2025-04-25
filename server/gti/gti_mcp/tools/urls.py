@@ -79,9 +79,13 @@ async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]
     Report with insights about the URL.
   """
   url_id = url_to_base64(url)
-  res = await utils.fetch_object(vt_client(ctx), "urls", "url", url_id, [
-      "associations",
-  ])
+  res = await utils.fetch_object(
+      vt_client(ctx),
+      "urls",
+      "url",
+      url_id,
+      ["associations"],
+      params={"exclude_attributes": "last_analysis_results"})
   return res
 
 

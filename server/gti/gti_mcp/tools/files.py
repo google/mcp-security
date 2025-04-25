@@ -97,7 +97,8 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
       "files",
       "file",
       hash,
-      FILE_KEY_RELATIONSHIPS,
+      relationships=FILE_KEY_RELATIONSHIPS,
+      params={"exclude_attributes": "last_analysis_results"}
   )
   return res
 

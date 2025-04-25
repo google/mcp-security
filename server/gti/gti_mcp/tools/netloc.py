@@ -98,7 +98,12 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
     Report with insights about the domain.
   """
   res = await utils.fetch_object(
-      vt_client(ctx), "domains", "domain", domain, DOMAIN_KEY_RELATIONSHIPS)
+      vt_client(ctx),
+      "domains",
+      "domain",
+      domain,
+      relationships=DOMAIN_KEY_RELATIONSHIPS,
+      params={"exclude_attributes": "last_analysis_results"})
   return res
 
 
@@ -168,7 +173,11 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
     Report with insights about the IP address.
   """
   res = await utils.fetch_object(
-      vt_client(ctx), "ip_addresses", "ip", ip_address, IP_KEY_RELATIONSHIPS)
+      vt_client(ctx),
+      "ip_addresses",
+      "ip", ip_address,
+      relationships=IP_KEY_RELATIONSHIPS,
+      params={"exclude_attributes": "last_analysis_results"})
   return res
 
 
