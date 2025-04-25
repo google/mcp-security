@@ -1,0 +1,63 @@
+{
+    "mcpServers": {
+        "secops": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/the/repo/server/secops/secops_mcp",
+                "run",
+                "server.py"
+            ],
+            "env": {
+                "CHRONICLE_PROJECT_ID": "your-project-id",
+                "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+                "CHRONICLE_REGION": "us"
+            },
+            "disabled": false,
+            "autoApprove": []
+        },
+        "secops-soar": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
+                "run",
+                "server.py",
+                "--integrations",
+                "CSV,OKTA"
+            ],
+            "env": {
+                "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+                "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
+            },
+            "disabled": false,
+            "autoApprove": []
+        },
+        "gti": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/the/repo/server/gti/gti_mcp",
+                "run",
+                "server.py"
+            ],
+            "env": {
+                "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+            },
+            "disabled": false,
+            "autoApprove": []
+        },
+        "scc-mcp": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/path/to/the/repo/server/scc",
+                "run",
+                "scc_mcp.py"
+            ],
+            "env": {},
+            "disabled": false,
+            "autoApprove": []
+        }
+    }
+}
