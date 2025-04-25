@@ -22,22 +22,48 @@ Add the following configuration to your MCP client's settings file:
       "args": [
         "--directory",
         "/path/to/the/repo/server/secops/secops_mcp",
-        "--env-file",
-        "/path/to/your/env",
         "run",
         "server.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_PROJECT_ID": "your-gcp-project-id",
+        "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
+        "CHRONICLE_REGION": "us"
       },
+      "disabled": false,
+      "autoApprove": []
       "disabled": false,
       "autoApprove": []
     }
 ```
 
-The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+#### `--env-file`
+
+Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
+
+Your revised config would then be:
+
+```json
+      ...
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/secops/secops_mcp",
+        "run",
+        "--env-file",
+        "/path/to/the/repo/.env",
+        "server.py"
+      ],
+      "env": {},
+      ...
+```
+
+Example .env file:
+```
+CHRONICLE_PROJECT_ID=your-gcp-project-id
+CHRONICLE_CUSTOMER_ID=your-chronicle-customer-id
+CHRONICLE_REGION=us
+```
 
 ### Environment Variable Setup
 
@@ -145,7 +171,7 @@ The service account or user credentials need the following Chronicle roles:
       STATUS: NEW
       DESCRIPTION: Large outbound data transfer to rare external domain
       AFFECTED ASSETS: ['workstation-1234', '10.0.0.25']
-      
+
       ALERT ID: d67e8f90
       RULE NAME: Suspicious PowerShell Command
       SEVERITY: Medium
@@ -171,11 +197,11 @@ The service account or user credentials need the following Chronicle roles:
       CLASSIFICATION: Known Command & Control Server
       FIRST SEEN: 2023-09-10T08:15:30Z
       LAST SEEN: 2023-09-15T14:22:10Z
-      
+
       ASSOCIATED ALERTS:
       - Potential C2 Communication (High) - 2023-09-15T14:22:10Z
       - Suspicious Outbound Connection (Medium) - 2023-09-12T09:30:45Z
-      
+
       RECENT ACTIVITIES:
       - 12 DNS resolution requests from 3 internal hosts
       - 8 blocked connection attempts from 2 internal hosts
@@ -232,13 +258,13 @@ The service account or user credentials need the following Chronicle roles:
     - **Returns:** Formatted string listing the found IoC matches.
     - **Return Example:**
       ```
-      IOC MATCH: 
+      IOC MATCH:
       INDICATOR: evil-domain.com (Domain)
       CATEGORY: Command & Control
       SOURCE: AlienVault OTX
       SEVERITY: High
       MATCHED EVENT: DNS Query from workstation-1234 at 2023-09-15T11:22:33Z
-      
+
       IOC MATCH:
       INDICATOR: 4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s (File Hash)
       CATEGORY: Malware
@@ -257,16 +283,16 @@ The service account or user credentials need the following Chronicle roles:
     - **Returns:** Formatted text response with information about the requested threat intelligence topic.
     - **Return Example:**
       ```
-      The threat actor APT28 (also known as Fancy Bear, Sofacy, or Strontium) is a 
-      Russian state-sponsored advanced persistent threat group associated with 
-      Russia's military intelligence agency, the GRU. 
-      
+      The threat actor APT28 (also known as Fancy Bear, Sofacy, or Strontium) is a
+      Russian state-sponsored advanced persistent threat group associated with
+      Russia's military intelligence agency, the GRU.
+
       Key characteristics:
       - Active since approximately 2004
       - Primarily targets government, military, and security organizations
       - Known for spear-phishing campaigns and exploitation of zero-day vulnerabilities
       - Has been linked to major operations including the 2016 DNC hack and Olympics-related attacks
-      
+
       Common TTPs include:
       - Spear-phishing with malicious attachments
       - Credential harvesting through fake login pages
@@ -282,7 +308,7 @@ The service account or user credentials need the following Chronicle roles:
 User: Can you find security events related to PowerShell running encoded commands in the last 48 hours?
 
 AI uses: search_security_events(
-  text="PowerShell encoded commands", 
+  text="PowerShell encoded commands",
   hours_back=48
 )
 
@@ -290,9 +316,9 @@ AI: I found 5 instances of PowerShell with encoded commands:
 
 1. 2023-09-15T09:12:34Z - User admin-john on workstation-1234
    Command: powershell.exe -EncodedCommand ZQBjAGgAbwAgACIASABlAGwAbABvACIAIAA=
-   
+
 2. 2023-09-14T15:30:22Z - System account on server-db01
-   Command: powershell.exe -enc <base64 data> 
+   Command: powershell.exe -enc <base64 data>
    [Detected by rule: "Suspicious PowerShell Activity"]
 ```
 
@@ -303,20 +329,20 @@ User: We've identified a suspicious IP 203.0.113.100 in our logs. Can you tell m
 
 AI uses: lookup_entity("203.0.113.100")
 
-AI: The IP 203.0.113.100 is a high-risk (score 7.5) entity classified as a known C2 server. 
+AI: The IP 203.0.113.100 is a high-risk (score 7.5) entity classified as a known C2 server.
 It was first seen in your environment 5 days ago and last seen today.
 
 It's associated with 2 alerts:
 - "Potential C2 Communication" (High severity)
 - "Suspicious Outbound Connection" (Medium severity)
 
-Recent activity shows 12 DNS requests from 3 hosts, with 2 successful connections 
+Recent activity shows 12 DNS requests from 3 hosts, with 2 successful connections
 from workstation-1234.
 
 User: Can you find all the events related to this IP?
 
 AI uses: search_security_events(
-  text="communications with IP 203.0.113.100", 
+  text="communications with IP 203.0.113.100",
   hours_back=72
 )
 
@@ -335,11 +361,11 @@ AI: I found 3 open alerts from the last 24 hours:
 1. Potential Data Exfiltration (High)
    Created: 2023-09-15T12:34:56Z
    Affected assets: workstation-1234, 10.0.0.25
-   
+
 2. Suspicious PowerShell Command (Medium)
    Created: 2023-09-15T10:11:12Z
    Affected assets: admin-laptop, 10.0.0.42
-   
+
 3. Unusual Authentication Pattern (Low)
    Created: 2023-09-15T08:07:06Z
    Affected assets: user-john, 10.0.0.35
