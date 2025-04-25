@@ -8,11 +8,20 @@ on:
       - 'docs/**' # Trigger only on changes within the docs directory
   workflow_dispatch: # Allows manual triggering
 
+# Required for GitHub Pages API deployment
 permissions:
-  contents: write # Needed to push to gh-pages branch
+  contents: read
+  pages: write  # Needed to push to gh-pages branch
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 
 jobs:
-  deploy-docs:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -44,19 +53,22 @@ jobs:
           # Run make html inside the docs directory
           make -C docs html
 
-      - name: Create .nojekyll file
+      - name: Create .nojekyll file again
         run: |
           touch docs/_build/html/.nojekyll
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/html # Directory containing the built HTML
-          publish_branch: gh-pages # Target branch
-          force_orphan: true # Creates a clean history for the gh-pages branch
-          # Optional: Configure user for commits
-          # user_name: 'github-actions[bot]'
-          # user_email: 'github-actions[bot]@users.noreply.github.com'
-          # Optional: Commit message
-          # commit_message: ${{ github.event.head_commit.message }}
+          path: docs/_build/html
+
+   deploy:
+     needs: build-docs
+     environment:
+       name: github-pages
+       url: ${{ steps.deployment.outputs.page_url }}
+     runs-on: ubuntu-latest
+     steps:
+       - name: Deploy to GitHub Pages
+         id: deployment
+         uses: actions/deploy-pages@v4
