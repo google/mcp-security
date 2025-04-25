@@ -37,7 +37,7 @@ Add the following configuration to your MCP client's settings file:
     }
 ```
 
-#### --env
+#### `--env-file`
 
 Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
 
