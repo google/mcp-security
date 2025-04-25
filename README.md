@@ -192,11 +192,16 @@ Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables)
 ### Troubleshooting
 
 Running the MCP Server from the CLI (and outside of your MCP client) can reveal issues:
-````
-uv --verbose --directory "/Users/dandye/Projects/google-mcp-security/server/scc" run --env-file "/Users/dandye/Projects/google-mcp-security/.env" scc_mcp.py
+```
+uv --verbose \
+  --directory "/Users/dandye/Projects/google-mcp-security/server/scc" \
+  run \
+  --env-file "/Users/dandye/Projects/google-mcp-security/.env" \
+  scc_mcp.py
 ```
 
-Check your PATH(s)
+Check your PATH(s):
+
 ```which uv``` # you may need to restart MCP Client after installing uv
 
 ```which python || which python3```
