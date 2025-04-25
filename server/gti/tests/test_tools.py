@@ -36,7 +36,7 @@ async def test_server_connection():
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
-        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "abridged_relationships", "expected",
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
     ],
     argvalues=[
         (
@@ -48,15 +48,18 @@ async def test_server_connection():
                     "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
                     "type": "file",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in tools.FILE_KEY_RELATIONSHIPS
+                    }
                 }
             },
-            tools.FILE_KEY_RELATIONSHIPS,
             {
                 "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
                 "type": "file",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.FILE_KEY_RELATIONSHIPS
                 }
             },
@@ -70,24 +73,27 @@ async def test_server_connection():
                     "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
                     "type": "file_behaviour",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in [
+                            "contacted_domains",
+                            "contacted_ips",
+                            "contacted_urls",
+                            "dropped_files",
+                            "embedded_domains",
+                            "embedded_ips",
+                            "embedded_urls",
+                            "associations",
+                        ]
+                    }
                 }
             },
-            [
-                "contacted_domains",
-                "contacted_ips",
-                "contacted_urls",
-                "dropped_files",
-                "embedded_domains",
-                "embedded_ips",
-                "embedded_urls",
-                "associations",
-            ],
             {
                 "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
                 "type": "file_behaviour",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in [
                         "contacted_domains",
                         "contacted_ips",
@@ -110,15 +116,18 @@ async def test_server_connection():
                     "id": "theevil.com",
                     "type": "domain",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in tools.DOMAIN_KEY_RELATIONSHIPS
+                    }
                 }
             },
-            tools.DOMAIN_KEY_RELATIONSHIPS,
             {
                 "id": "theevil.com",
                 "type": "domain",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.DOMAIN_KEY_RELATIONSHIPS
                 }
             },
@@ -132,15 +141,18 @@ async def test_server_connection():
                     "id": "8.8.8.8",
                     "type": "ip_address",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in tools.IP_KEY_RELATIONSHIPS
+                    }
                 }
             },
-            tools.IP_KEY_RELATIONSHIPS,
             {
                 "id": "8.8.8.8",
                 "type": "ip_address",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.IP_KEY_RELATIONSHIPS
                 }
             },
@@ -154,15 +166,18 @@ async def test_server_connection():
                     "id": "970281e76715a46d571ac5bbcef540145f54e1a112751ccf616df2b3c6fe9de4",
                     "type": "url",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in tools.URL_KEY_RELATIONSHIPS
+                    }
                 }
             },
-            tools.URL_KEY_RELATIONSHIPS,
             {
                 "id": "970281e76715a46d571ac5bbcef540145f54e1a112751ccf616df2b3c6fe9de4",
                 "type": "url",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.URL_KEY_RELATIONSHIPS
                 }
             },
@@ -176,21 +191,24 @@ async def test_server_connection():
                     "id": "collection_id",
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
+                    "relationships": {
+                        rel_name: [{"type": "object", "id": "obj-id"}]
+                        for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
+                    }
                 }
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "collection_id",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
         ),
     ],
-    indirect=["vt_endpoint", "vt_object_response", "abridged_relationships"],
+    indirect=["vt_endpoint", "vt_object_response"],
 )
 @pytest.mark.usefixtures("vt_get_object_mock")
 async def test_get_reports(
@@ -220,7 +238,7 @@ async def test_get_reports(
         (
             "get_entities_related_to_a_file",
             {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f", "relationship_name": "associations"},
-            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/associations",
+            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
@@ -229,7 +247,7 @@ async def test_get_reports(
         (
             "get_entities_related_to_a_domain",
             {"domain": "theevil.com", "relationship_name": "associations"},
-            "/api/v3/domains/theevil.com/associations",
+            "/api/v3/domains/theevil.com/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
@@ -238,7 +256,7 @@ async def test_get_reports(
         (
             "get_entities_related_to_an_ip_address",
             {"ip_address": "8.8.8.8", "relationship_name": "associations"},
-            "/api/v3/ip_addresses/8.8.8.8/associations",
+            "/api/v3/ip_addresses/8.8.8.8/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
@@ -247,7 +265,7 @@ async def test_get_reports(
         (
             "get_entities_related_to_an_url",
             {"url": "http://theevil.com/", "relationship_name": "associations"},
-            "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/associations",
+            "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
@@ -256,7 +274,7 @@ async def test_get_reports(
         (
             "get_entities_related_to_a_collection",
             {"id": "collection_id", "relationship_name": "associations"},
-            "/api/v3/collections/collection_id/associations",
+            "/api/v3/collections/collection_id/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}],
             },
@@ -265,9 +283,9 @@ async def test_get_reports(
     ],
     indirect=["vt_endpoint", "vt_object_response"],
 )
-@pytest.mark.usefixtures("vt_get_request_mock")
+@pytest.mark.usefixtures("vt_get_object_mock")
 async def test_get_entities_related(
-    vt_get_request_mock,
+    vt_get_object_mock,
     tool_name,
     tool_arguments,
     expected    
@@ -320,9 +338,9 @@ async def test_get_entities_related(
     ],
     indirect=["vt_endpoint", "vt_object_response"],
 )
-@pytest.mark.usefixtures("vt_get_request_mock")
+@pytest.mark.usefixtures("vt_get_object_mock")
 async def test_get_simple_tools(
-    vt_get_request_mock,
+    vt_get_object_mock,
     tool_name,
     tool_arguments,
     expected):
@@ -341,7 +359,7 @@ async def test_get_simple_tools(
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
-        "tool_name", "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "abridged_relationships", "expected",
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "expected",
     ],
     argvalues=[
         (
@@ -360,18 +378,17 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
@@ -397,7 +414,6 @@ async def test_get_simple_tools(
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
@@ -424,18 +440,17 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
@@ -456,18 +471,17 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
@@ -488,18 +502,18 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
+
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
@@ -520,18 +534,17 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
@@ -552,24 +565,23 @@ async def test_get_simple_tools(
                     "type": "collection",
                     "attributes": {"foo": "foo", "bar": "bar"},
                     "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                        rel_name: [{"type": "object", "id": "obj-id"}]
                         for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                     }
                 }]
             },
-            tools.COLLECTION_KEY_RELATIONSHIPS,
             {
                 "id": "apt44",
                 "type": "collection",
                 "attributes": {"foo": "foo", "bar": "bar"},
                 "relationships": {
-                    rel_name: [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}]
+                    rel_name: [{"type": "object", "id": "obj-id"}]
                     for rel_name in tools.COLLECTION_KEY_RELATIONSHIPS
                 }
             },
         ),
     ],
-    indirect=["vt_endpoint", "vt_request_params", "vt_object_response", "abridged_relationships"],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
 )
 @pytest.mark.usefixtures("vt_get_object_with_params_mock")
 async def test_search_threats(
