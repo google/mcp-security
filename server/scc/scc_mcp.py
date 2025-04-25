@@ -13,7 +13,7 @@
 # limitations under the License.
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from google.api_core import exceptions as google_exceptions
 from google.cloud import asset_v1
@@ -73,7 +73,7 @@ def proto_message_to_dict(message: Any) -> Dict[str, Any]:
 @mcp.tool()
 async def top_vulnerability_findings(
     project_id: str,
-    max_findings: Optional[int] = 20,
+    max_findings: int = 20,
 ) -> Dict[str, Any]:
     """Name: top_vulnerability_findings
 
@@ -170,9 +170,9 @@ async def top_vulnerability_findings(
 @mcp.tool()
 async def get_finding_remediation(
     project_id: str,
-    resource_name: Optional[str] = None,
-    category: Optional[str] = None,
-    finding_id: Optional[str] = None
+    resource_name: str = None,
+    category: str = None,
+    finding_id: str = None
 ) -> Dict[str, Any]:
     """Name: get_finding_remediation
 
