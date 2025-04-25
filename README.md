@@ -47,15 +47,13 @@ run the mcp services locally and use the stdio transport.
       "args": [
         "--directory",
         "/path/to/the/repo/server/secops/secops_mcp",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
         "run",
         "server.py"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
       },
       "disabled": false,
       "autoApprove": []
@@ -66,15 +64,13 @@ run the mcp services locally and use the stdio transport.
         "--directory",
         "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
         "server.py",
         "--integrations",
         "CSV,OKTA"
       ],
       "env": {
-        "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+        "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
       },
       "disabled": false,
       "autoApprove": []
@@ -85,12 +81,10 @@ run the mcp services locally and use the stdio transport.
         "--directory",
         "/path/to/the/repo/server/gti/gti_mcp",
         "run",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
         "server.py"
       ],
       "env": {
-        "VT_APIKEY": "${VT_APIKEY}"
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       },
       "disabled": false,
       "autoApprove": []
@@ -101,8 +95,6 @@ run the mcp services locally and use the stdio transport.
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
         "scc_mcp.py"
       ],
       "env": {
@@ -113,6 +105,22 @@ run the mcp services locally and use the stdio transport.
   }
 }
 ```
+
+NOTE: `uv` also supports passing an `.env` file like so:
+```
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/...",
+        "run",
+        "--env-file",
+        "/path/to/the/repo/server/.env",
+        "server.py"
+      ]
+```
+
+`SOAR_APP_KEY` and `VT_APIKEY` are good candidates for `.env`
+
 
 ### Using pip
 
@@ -131,9 +139,9 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
         "cd /path/to/the/repo/server/secops && pip install -e . && secops_mcp"
       ],
       "env": {
-        "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
-        "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
       },
       "disabled": false,
       "autoApprove": [
@@ -148,7 +156,7 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
         "cd /path/to/the/repo/server/gti && pip install -e . && gti_mcp"
       ],
       "env": {
-        "VT_APIKEY": "${VT_APIKEY}"
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       },
       "disabled": false,
       "autoApprove": [
@@ -167,8 +175,8 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
         "cd /path/to/the/repo/server/secops-soar && pip install -e . && python secops_soar_mcp/server.py"
       ],
       "env": {
-        "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+        "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
       },
       "transportType": "stdio"
     }
@@ -181,6 +189,8 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
 
 - **uv**: Recommended for most users because it offers faster package installation, better dependency resolution, and isolated environments. It also supports loading environment variables from a file.
 - **pip**: Use when you prefer the standard Python package manager or when you have specific environment setup requirements.
+
+#### `UV_ENV_FILE`
 
 The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described in the usage guide.
 
