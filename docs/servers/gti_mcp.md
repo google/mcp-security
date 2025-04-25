@@ -21,19 +21,41 @@ Add the following configuration to your MCP client's settings file:
         "--directory",
         "/path/to/the/repo/server/gti/gti_mcp",
         "run",
-        "--env-file",
-        "/path/to/your/env",
         "server.py"
       ],
       "env": {
-        "VT_APIKEY": "${VT_APIKEY}"
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       },
       "disabled": false,
       "autoApprove": []
     }
 ```
 
-The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+#### --env
+
+Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
+
+Your revised config would then be:
+
+```json
+      ...
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/gti/gti_mcp",
+        "run",
+        "--env-file",
+        "/path/to/the/repo/.env",
+        "server.py"
+      ],
+      "env": {},
+      ...
+```
+
+Example .env file:
+```
+VT_APIKEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+```
 
 ### Environment Variable Setup
 
@@ -43,7 +65,7 @@ Set up the `VT_APIKEY` environment variable in your system:
 ```bash
 export VT_APIKEY="your-vt-api-key"
 ```
-   
+
 **For Windows PowerShell:**
 ```powershell
 $Env:VT_APIKEY = "your-vt-api-key"
@@ -151,7 +173,7 @@ GTI tools that accept a query parameter use specific syntax:
 
 For additional query syntax modifiers and search capabilities, refer to the VirusTotal documentation:
 - File search modifiers: https://docs.virustotal.com/docs/file-search-modifiers
-- Domain search modifiers: https://docs.virustotal.com/docs/domain-search-modifiers  
+- Domain search modifiers: https://docs.virustotal.com/docs/domain-search-modifiers
 - IP address search modifiers: https://docs.virustotal.com/docs/ip-address-search-modifiers
 - URL search modifiers: https://docs.virustotal.com/docs/url-search-modifiers
 
@@ -172,7 +194,7 @@ For additional query syntax modifiers and search capabilities, refer to the Viru
 1. Use search_threat_actors("APT28") to find the threat actor
 2. Get the full report with get_collection_report(id) using the returned ID
 3. View timeline events with get_collection_timeline_events(id)
-4. Explore related malware with get_entities_related_to_a_collection(id, "embedded_collections") 
+4. Explore related malware with get_entities_related_to_a_collection(id, "embedded_collections")
 ```
 
 ### Example 3: Domain investigation

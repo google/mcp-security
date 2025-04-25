@@ -22,22 +22,50 @@ Add the following configuration to your MCP client's settings file:
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
-        "--env-file",
-        "/path/to/your/env",
         "secops_soar_mcp.py",
         "--integrations",
-        "CSV, OKTA"
+        "CSV,OKTA"
       ],
       "env": {
-        "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_URL": "https://your-soar-instance.example.com",
+        "SOAR_APP_KEY": "your-soar-api-key"
       },
+      "disabled": false,
+      "autoApprove": []
+          },
       "disabled": false,
       "autoApprove": []
     }
 ```
 
-The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described below.
+#### --env
+
+Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
+
+Your revised config would then be:
+
+```json
+      ...
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/the/repo/server/secops-soar",
+        "run",
+        "--env-file",
+        "/path/to/the/repo/.env",
+        "secops_soar_mcp.py",
+        "--integrations",
+        "CSV,OKTA"
+      ],
+      "env": {},
+      ...
+```
+
+Example .env file:
+```
+SOAR_URL=https://your-soar-instance.example.com
+SOAR_APP_KEY=your-soar-api-key
+```
 
 ### Environment Variable Setup
 
@@ -424,7 +452,7 @@ Tools for creating and managing ServiceNow tickets:
 
 - **`servicenow_create_ticket(case_id, summary=None, description=None, priority=None, ticket_type="Incident")`**
   - Creates a ServiceNow ticket linked to a SOAR case
-  
+
 - **`servicenow_update_ticket(case_id, ticket_number, status=None, resolution_notes=None)`**
   - Updates an existing ServiceNow ticket
 
@@ -432,9 +460,9 @@ Tools for creating and managing ServiceNow tickets:
 
 Tools for exporting data to CSV files:
 
-- **`csv_export_case(case_id, file_path=None)`** 
+- **`csv_export_case(case_id, file_path=None)`**
   - Exports case details to a CSV file
-  
+
 - **`csv_export_entities(case_id, entity_types=None, file_path=None)`**
   - Exports entities from a case to a CSV file
 
@@ -444,7 +472,7 @@ Tools for creating and managing Jira issues:
 
 - **`jira_create_issue(case_id, project_key, issue_type="Bug", summary=None, description=None, priority=None)`**
   - Creates a Jira issue linked to a SOAR case
-  
+
 - **`jira_update_issue(case_id, issue_key, status=None, resolution=None, comment=None)`**
   - Updates an existing Jira issue
 
@@ -475,10 +503,10 @@ AI: I found 3 open cases:
 
 1. SEC-12345: Suspicious Login Attempts (High Priority)
    Status: In Progress, Assigned to: john.analyst
-   
+
 2. SEC-12346: Malware Detection - Emotet (Critical Priority)
    Status: New, Unassigned
-   
+
 3. SEC-12347: Data Exfiltration Alert (Medium Priority)
    Status: New, Unassigned
 
@@ -568,10 +596,10 @@ AI: I found 3 entities that have had communications with this IP:
 
 1. workstation-1234 (Hostname)
    Status: Suspicious, Last communication: 2023-09-15 11:22:10
-   
+
 2. workstation-5678 (Hostname)
    Status: Suspicious, Last communication: 2023-09-15 09:15:30
-   
+
 3. user456 (User)
    Status: Under investigation
 ```

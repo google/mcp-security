@@ -30,18 +30,17 @@ Add the following configuration to your MCP client's settings file:
         "--directory",
         "/path/to/the/repo/server/scc",
         "run",
-        "--env-file",
-        "/path/to/your/env",
         "scc_mcp.py"
       ],
-      "env": {
-      },
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
       "disabled": false,
       "autoApprove": []
     }
 ```
 
-The `--env-file` option allows `uv` to use a .env file for environment variables. This server relies primarily on Google Cloud Authentication, which is typically set up system-wide rather than through environment variables in the configuration.
+This server relies primarily on Google Cloud Authentication, which is typically set up system-wide rather than through environment variables in the configuration.
 
 ## Tools
 
@@ -139,7 +138,7 @@ Here's how to fix this vulnerability:
      `gsutil iam ch -d allUsers:objectViewer gs://sensitive-data-bucket`
 
 2. Consider using IAM Conditions to restrict access based on:
-   - IP ranges 
+   - IP ranges
    - Time-based access
    - Resource attributes
 
