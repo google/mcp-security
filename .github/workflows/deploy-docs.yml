@@ -32,13 +32,21 @@ jobs:
           else
             echo "docs/requirements.txt not found, skipping dependency installation."
             # Install Sphinx directly if no requirements file
-            pip install sphinx sphinx-rtd-theme
+            pip install sphinx furo myst-parser sphinx-copybutton sphinx-click
           fi
+
+      - name: Create .nojekyll file
+        run: |
+          touch docs/.nojekyll
 
       - name: Build documentation
         run: |
           # Run make html inside the docs directory
           make -C docs html
+
+      - name: Create .nojekyll file
+        run: |
+          touch docs/_build/html/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
