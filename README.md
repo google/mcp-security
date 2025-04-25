@@ -48,7 +48,7 @@ run the mcp services locally and use the stdio transport.
         "--directory",
         "/path/to/the/repo/server/secops/secops_mcp",
         "--env-file",
-        "/path/to/your/env",
+        "/path/to/the/repo/server/.env",
         "run",
         "server.py"
       ],
@@ -67,7 +67,7 @@ run the mcp services locally and use the stdio transport.
         "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
         "--env-file",
-        "/path/to/your/env",
+        "/path/to/the/repo/server/.env",
         "server.py",
         "--integrations",
         "CSV,OKTA"
@@ -86,7 +86,7 @@ run the mcp services locally and use the stdio transport.
         "/path/to/the/repo/server/gti/gti_mcp",
         "run",
         "--env-file",
-        "/path/to/your/env",
+        "/path/to/the/repo/server/.env",
         "server.py"
       ],
       "env": {
@@ -102,7 +102,7 @@ run the mcp services locally and use the stdio transport.
         "/path/to/the/repo/server/scc",
         "run",
         "--env-file",
-        "/path/to/your/env",
+        "/path/to/the/repo/server/.env",
         "scc_mcp.py"
       ],
       "env": {
@@ -187,6 +187,23 @@ The `--env-file` option allows `uv` to use a .env file for environment variables
 Alternatively, you can set `UV_ENV_FILE` to your `.env` file and omit the `--env-file` portion of the configuration.
 
 Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
+
+
+### Troubleshooting
+
+Running the MCP Server from the CLI (and outside of your MCP client) can reveal issues:
+````
+uv --verbose --directory "/Users/dandye/Projects/google-mcp-security/server/scc" run --env-file "/Users/dandye/Projects/google-mcp-security/.env" scc_mcp.py
+```
+
+Check your PATH(s)
+```which uv``` # you may need to restart MCP Client after installing uv
+
+```which python || which python3```
+
+```python --version || python3 --version```
+
+
 
 ### Installing in Claude Desktop
 
