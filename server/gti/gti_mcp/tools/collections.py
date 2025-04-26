@@ -71,7 +71,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
       "collection",
       id,
       relationships=COLLECTION_KEY_RELATIONSHIPS,
-      params={"exclude_attributes": "last_analysis_results"})
+      params={"exclude_attributes": COLLECTION_EXCLUDED_ATTRS})
   return res
 
 
