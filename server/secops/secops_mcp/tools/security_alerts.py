@@ -13,23 +13,23 @@
 # limitations under the License.
 """Security Operations MCP tools for security alerts."""
 
-from datetime import datetime, timedelta, timezone
 import logging
-from typing import Optional
+from datetime import datetime, timedelta, timezone
 
-from secops_mcp.server import server, get_chronicle_client
+from secops_mcp.server import get_chronicle_client, server
+
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def get_security_alerts(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str = None,
+    customer_id: str = None,
     hours_back: int = 24,
     max_alerts: int = 10,
     status_filter: str = 'feedback_summary.status != "CLOSED"',
-    region: Optional[str] = None,
+    region: str = None,
 ) -> str:
     """Get security alerts directly from Chronicle SIEM.
 

@@ -14,18 +14,19 @@
 """Security Operations MCP tools for security rules."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
-from secops_mcp.server import server, get_chronicle_client
+from secops_mcp.server import get_chronicle_client, server
+
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def list_security_rules(
-    project_id: Optional[str] = None, 
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str = None,
+    customer_id: str = None,
+    region: str = None,
 ) -> Dict[str, Any]:
     """List security detection rules configured in Chronicle SIEM.
 

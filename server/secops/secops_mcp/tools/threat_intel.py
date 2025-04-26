@@ -14,9 +14,9 @@
 """Security Operations MCP tools for threat intelligence."""
 
 import logging
-from typing import Optional
 
-from secops_mcp.server import server, get_chronicle_client
+from secops_mcp.server import get_chronicle_client, server
+
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
@@ -24,9 +24,9 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def get_threat_intel(
     query: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str = None,
+    customer_id: str = None,
+    region: str = None,
 ) -> str:
     """Get answers to security questions using Chronicle's integrated Gemini model.
 
@@ -69,12 +69,12 @@ async def get_threat_intel(
     """
     try:
         logger.info(f'Getting threat intelligence for query: {query}')
-        
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        
+
         # Call the Gemini method from the SecOps SDK
         response = chronicle.gemini(query)
-        
+
         # Handle GeminiResponse object
         if hasattr(response, 'get_text_content'):
             # This is a GeminiResponse object, extract text content
@@ -96,7 +96,7 @@ async def get_threat_intel(
         else:
             # If response is in an unexpected format, try to convert it to string
             return str(response)
-            
+
     except Exception as e:
         logger.error(f'Error getting threat intelligence: {str(e)}', exc_info=True)
         return f'Error retrieving threat intelligence: {str(e)}'

@@ -13,11 +13,12 @@
 # limitations under the License.
 """Security Operations MCP tools for searching security events."""
 
-from datetime import datetime, timedelta, timezone
 import logging
-from typing import Any, Dict, Optional
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict
 
-from secops_mcp.server import server, get_chronicle_client
+from secops_mcp.server import get_chronicle_client, server
+
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
@@ -25,11 +26,11 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def search_security_events(
     text: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str = None,
+    customer_id: str = None,
     hours_back: int = 24,
     max_events: int = 100,
-    region: Optional[str] = None,
+    region: str = None,
 ) -> Dict[str, Any]:
     """Search for security events in Chronicle SIEM using natural language.
 
