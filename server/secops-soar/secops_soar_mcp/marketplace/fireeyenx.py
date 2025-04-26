@@ -24,17 +24,17 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FireEyeNX integration.
 
     @mcp.tool()
-    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[List[Any], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[List[Any], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[Optional[str], Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[List[Any], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[List[Any], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[str | None, Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IPS Policy Exception in FireEye NX. Note: IP entities are treated as "Attacker IP Address".
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,13 +65,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for FireEyeNX: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Victim IP Subnet"] = victim_ip_subnet
@@ -79,7 +79,7 @@ def register_tools(mcp: FastMCP):
             script_params["Mode"] = mode
             if name is not None:
                 script_params["Name"] = name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -95,7 +95,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -119,10 +119,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -153,16 +153,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for FireEyeNX: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -178,7 +178,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -202,10 +202,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -225,7 +225,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -236,18 +236,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for FireEyeNX: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Alert UUID"] = alert_uuid
             script_params["Download Path"] = download_path
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -263,7 +263,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

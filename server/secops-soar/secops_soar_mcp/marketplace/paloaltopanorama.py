@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the PaloAltoPanorama integration.
 
     @mcp.tool()
-    async def palo_alto_panorama_edit_blocked_applications(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], device_name: Annotated[str, Field(..., description="Specify name of the device. The default device name for Palo Alto Panorama is localhost.localdomain. Visit action documentation to get more insights on where you can find this value.")], device_group_name: Annotated[str, Field(..., description="Specify name of the device group. Visit action documentation to get more insights on where you can find this value.")], policy_name: Annotated[str, Field(..., description="Specify name of the policy.")], applications_to_block: Annotated[Optional[str], Field(default=None, description="Specify what kind of application should be blocked. Example: apple-siri,windows-azure.")], applications_to_un_block: Annotated[Optional[str], Field(default=None, description="Specify what kind of application should be unblocked. Example: apple-siri,windows-azure.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_panorama_edit_blocked_applications(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], device_name: Annotated[str, Field(..., description="Specify name of the device. The default device name for Palo Alto Panorama is localhost.localdomain. Visit action documentation to get more insights on where you can find this value.")], device_group_name: Annotated[str, Field(..., description="Specify name of the device group. Visit action documentation to get more insights on where you can find this value.")], policy_name: Annotated[str, Field(..., description="Specify name of the policy.")], applications_to_block: Annotated[str | None, Field(default=None, description="Specify what kind of application should be blocked. Example: apple-siri,windows-azure.")], applications_to_un_block: Annotated[str | None, Field(default=None, description="Specify what kind of application should be unblocked. Example: apple-siri,windows-azure.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Block and unblock applications. Each application is added to or removed from a given policy
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -121,9 +121,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -201,16 +201,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_panorama_get_correlated_traffic_between_i_ps(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_ip: Annotated[str, Field(..., description="Specify source IP that will be used to get traffic.")], destination_ip: Annotated[str, Field(..., description="Specify destination IP that will be used to get traffic.")], max_hours_backwards: Annotated[Optional[str], Field(default=None, description="Specify the amount of hours from where to fetch logs.")], max_logs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many logs to return. Maximum is 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_panorama_get_correlated_traffic_between_i_ps(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_ip: Annotated[str, Field(..., description="Specify source IP that will be used to get traffic.")], destination_ip: Annotated[str, Field(..., description="Specify destination IP that will be used to get traffic.")], max_hours_backwards: Annotated[str | None, Field(default=None, description="Specify the amount of hours from where to fetch logs.")], max_logs_to_return: Annotated[str | None, Field(default=None, description="Specify how many logs to return. Maximum is 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action returns correlated network traffic logs from Palo Alto Panorama between Source IP Address and Destination IP Address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -297,9 +297,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -376,16 +376,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_panorama_search_logs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], log_type: Annotated[List[Any], Field(..., description="Specify which log type should be returned.")], query: Annotated[Optional[str], Field(default=None, description="Specify what query filter should be used to return logs.")], max_hours_backwards: Annotated[Optional[str], Field(default=None, description="Specify the amount of hours from where to fetch logs.")], max_logs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many logs to return. Maximum is 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_panorama_search_logs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], log_type: Annotated[List[Any], Field(..., description="Specify which log type should be returned.")], query: Annotated[str | None, Field(default=None, description="Specify what query filter should be used to return logs.")], max_hours_backwards: Annotated[str | None, Field(default=None, description="Specify the amount of hours from where to fetch logs.")], max_logs_to_return: Annotated[str | None, Field(default=None, description="Specify how many logs to return. Maximum is 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search logs in Palo Alto Panorama based on the query.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -473,9 +473,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -557,9 +557,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -640,9 +640,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -726,9 +726,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -810,9 +810,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -896,9 +896,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -982,9 +982,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1069,9 +1069,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

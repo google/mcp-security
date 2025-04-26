@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the MicroFocusITSMA integration.
 
     @mcp.tool()
-    async def micro_focus_itsma_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], display_label: Annotated[Optional[str], Field(default=None, description="The updated display label of the incident")], description: Annotated[Optional[str], Field(default=None, description="The updated description of the incident")], impact_scope: Annotated[Optional[str], Field(default=None, description="The updated impact score of the incident")], urgency: Annotated[Optional[str], Field(default=None, description="The updated urgency of the incident")], service_id: Annotated[Optional[str], Field(default=None, description="The updated Id of the category of the incident")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def micro_focus_itsma_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], display_label: Annotated[str | None, Field(default=None, description="The updated display label of the incident")], description: Annotated[str | None, Field(default=None, description="The updated description of the incident")], impact_scope: Annotated[str | None, Field(default=None, description="The updated impact score of the incident")], urgency: Annotated[str | None, Field(default=None, description="The updated urgency of the incident")], service_id: Annotated[str | None, Field(default=None, description="The updated Id of the category of the incident")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an existing incident
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -125,9 +125,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -208,9 +208,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -296,9 +296,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

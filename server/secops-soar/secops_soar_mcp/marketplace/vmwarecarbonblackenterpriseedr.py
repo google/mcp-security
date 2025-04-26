@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Any, List, Dict, Union, Annotated
 from pydantic import Field
 
 
@@ -31,10 +31,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,16 +65,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CBEnterpriseEDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -90,7 +90,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -107,17 +107,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cb_enterprise_edr_process_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_limit: Annotated[str, Field(..., description="Specify how many records can be returned by the action.")], query: Annotated[Optional[str], Field(default=None, description="Query to execute in process search. For example, process_name:svchost.exe - to search based by process name, process_hash:9520a99e77d6196d0d09833146424113 - to search based by process hash.")], time_frame: Annotated[Optional[str], Field(default=None, description="Specify a time frame in hours for which to fetch alerts.")], sort_by: Annotated[Optional[str], Field(default=None, description="Specify a parameter for sorting the data.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cb_enterprise_edr_process_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_limit: Annotated[str, Field(..., description="Specify how many records can be returned by the action.")], query: Annotated[str | None, Field(default=None, description="Query to execute in process search. For example, process_name:svchost.exe - to search based by process name, process_hash:9520a99e77d6196d0d09833146424113 - to search based by process hash.")], time_frame: Annotated[str | None, Field(default=None, description="Specify a time frame in hours for which to fetch alerts.")], sort_by: Annotated[str | None, Field(default=None, description="Specify a parameter for sorting the data.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search information about process activity on the host with CB sensor based on the provided search parameters. The action accepts Host Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -148,13 +148,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CBEnterpriseEDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if query is not None:
@@ -166,7 +166,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Sort By"] = sort_by
             if sort_order is not None:
                 script_params["Sort Order"] = sort_order
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -182,7 +182,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -206,10 +206,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -229,7 +229,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -240,16 +240,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CBEnterpriseEDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -265,7 +265,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -282,17 +282,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cb_enterprise_edr_get_events_associated_with_process_by_process_guid(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], process_guid: Annotated[str, Field(..., description="Specify a process guid to search events for.")], query: Annotated[str, Field(..., description="Query to execute in process search.For example, \u201cnetconn_action:ACTION_CONNECTION_CREATE OR netconn_action:ACTION_CONNECTION_ESTABLISHED\u201d")], record_limit: Annotated[str, Field(..., description="Specify how many records can be returned by the action.")], search_criteria: Annotated[Optional[str], Field(default=None, description="Specify a search criteria for the request. Currently, only \u201cevent_type\u201d values are accepted as the search criteria, for example, netconn. Multiple values are accepted as a comma separated string.")], time_frame: Annotated[Optional[str], Field(default=None, description="Specify a time frame in hours for which to fetch events.")], sort_by: Annotated[Optional[str], Field(default=None, description="Specify a parameter for sorting the data.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cb_enterprise_edr_get_events_associated_with_process_by_process_guid(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], process_guid: Annotated[str, Field(..., description="Specify a process guid to search events for.")], query: Annotated[str, Field(..., description="Query to execute in process search.For example, \u201cnetconn_action:ACTION_CONNECTION_CREATE OR netconn_action:ACTION_CONNECTION_ESTABLISHED\u201d")], record_limit: Annotated[str, Field(..., description="Specify how many records can be returned by the action.")], search_criteria: Annotated[str | None, Field(default=None, description="Specify a search criteria for the request. Currently, only \u201cevent_type\u201d values are accepted as the search criteria, for example, netconn. Multiple values are accepted as a comma separated string.")], time_frame: Annotated[str | None, Field(default=None, description="Specify a time frame in hours for which to fetch events.")], sort_by: Annotated[str | None, Field(default=None, description="Specify a parameter for sorting the data.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get events associated with specific processes based on the information from the VMware Carbon Black Enterprise EDR. This action can get more detailed results on specific process activity than “Process Search” action. Note for the action to work, Siemplify process artifact passed to action should be a process guid type.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -312,7 +312,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -323,13 +323,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for CBEnterpriseEDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Process GUID"] = process_guid
@@ -343,7 +343,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Sort By"] = sort_by
             if sort_order is not None:
                 script_params["Sort Order"] = sort_order
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -359,7 +359,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

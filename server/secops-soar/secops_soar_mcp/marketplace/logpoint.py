@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the LogPoint integration.
 
     @mcp.tool()
-    async def log_point_list_repos(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_repos_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many reports should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_point_list_repos(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_repos_to_return: Annotated[str | None, Field(default=None, description="Specify how many reports should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available repos in Logpoint.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -109,16 +109,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_point_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed in Logpoint.")], time_frame: Annotated[List[Any], Field(..., description="Specify the time frame for the query. If \u201cCustom\u201d is selected, you need to also provide start time and end time.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp.")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the query.Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time.")], repos: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_point_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed in Logpoint.")], time_frame: Annotated[List[Any], Field(..., description="Specify the time frame for the query. If \u201cCustom\u201d is selected, you need to also provide start time and end time.")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp.")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the query.Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time.")], repos: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute search query in Logpoint.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -209,9 +209,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -292,9 +292,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -370,16 +370,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_point_execute_entity_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed. Please refer to the action documentation for details.")], time_frame: Annotated[List[Any], Field(..., description="Specify the time frame for the query. If \"Custom\" is selected, you need also provide start time, end time by default will be current time.")], stop_if_not_enough_entities: Annotated[bool, Field(..., description="If enabled, action will not start execution, unless all of the entity types are available for the specified \".. Entity Keys\". Example: if \"IP Entity Key\" and \"File Hash Entity Keys\" are specified, but in the scope there are no file hashes then if this parameter is enabled, action will not execute the query.")], cross_entity_operator: Annotated[List[Any], Field(..., description="Specify what should be the logical operator used between different entity types.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp.")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time.")], repos: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos.")], ip_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with IP entities. Please refer to the action documentation for details.")], hostname_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with Hostname entities, when preparing the filter. Please refer to the action documentation for details.")], file_hash_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with File Hash entities. Please refer to the action documentation for details.")], user_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with User entities. Please refer to the action documentation for details.")], url_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with URL entities. Please refer to the action documentation for details.")], email_address_entity_key: Annotated[Optional[str], Field(default=None, description="Specify what key should be used with Email Address entities. Please refer to the action documentation for details.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_point_execute_entity_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed. Please refer to the action documentation for details.")], time_frame: Annotated[List[Any], Field(..., description="Specify the time frame for the query. If \"Custom\" is selected, you need also provide start time, end time by default will be current time.")], stop_if_not_enough_entities: Annotated[bool, Field(..., description="If enabled, action will not start execution, unless all of the entity types are available for the specified \".. Entity Keys\". Example: if \"IP Entity Key\" and \"File Hash Entity Keys\" are specified, but in the scope there are no file hashes then if this parameter is enabled, action will not execute the query.")], cross_entity_operator: Annotated[List[Any], Field(..., description="Specify what should be the logical operator used between different entity types.")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp.")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time.")], repos: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos.")], ip_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with IP entities. Please refer to the action documentation for details.")], hostname_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with Hostname entities, when preparing the filter. Please refer to the action documentation for details.")], file_hash_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with File Hash entities. Please refer to the action documentation for details.")], user_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with User entities. Please refer to the action documentation for details.")], url_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with URL entities. Please refer to the action documentation for details.")], email_address_entity_key: Annotated[str | None, Field(default=None, description="Specify what key should be used with Email Address entities. Please refer to the action documentation for details.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute query in Logpoint based on entities. Currently supported entity types: User, IP, Email Address, URL, File Hash, Hostname. Note: Email Address is a User entity that matches the format of email address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

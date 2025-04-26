@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the IBoss integration.
 
     @mcp.tool()
-    async def i_boss_list_policy_block_list_entries(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify in which policy category do you want to list Block List entries.")], max_entries_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many entries to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_list_policy_block_list_entries(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify in which policy category do you want to list Block List entries.")], max_entries_to_return: Annotated[str | None, Field(default=None, description="Specify how many entries to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return iBoss Block List entries in a specific group.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -110,16 +110,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def i_boss_remove_url_from_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify from which policy category do you want to remove the URL.")], start_port: Annotated[Optional[str], Field(default=None, description="Specify start port related to the URL that needs to be deleted. This parameter is mandatory, if the desired URL has a defined start port. This is an IBoss limitation.")], end_port: Annotated[Optional[str], Field(default=None, description="Specify end port related to the URL that needs to be deleted. This parameter is mandatory, if the desired URL has a defined end port. This is an IBoss limitation.")], strip_scheme: Annotated[Optional[bool], Field(default=None, description="If enabled, action will strip the scheme related to the URL.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_remove_url_from_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify from which policy category do you want to remove the URL.")], start_port: Annotated[str | None, Field(default=None, description="Specify start port related to the URL that needs to be deleted. This parameter is mandatory, if the desired URL has a defined start port. This is an IBoss limitation.")], end_port: Annotated[str | None, Field(default=None, description="Specify end port related to the URL that needs to be deleted. This parameter is mandatory, if the desired URL has a defined end port. This is an IBoss limitation.")], strip_scheme: Annotated[bool | None, Field(default=None, description="If enabled, action will strip the scheme related to the URL.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove URL from iBoss Block List.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -200,16 +200,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def i_boss_url_lookup(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], group_id: Annotated[Optional[str], Field(default=None, description="Specify for which group to perform  a URL Lookup. If nothing is specified, \u201cDefault\u201d group will be used.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_url_lookup(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], group_id: Annotated[str | None, Field(default=None, description="Specify for which group to perform  a URL Lookup. If nothing is specified, \u201cDefault\u201d group will be used.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Perform URL Lookup.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -292,9 +292,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -375,9 +375,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -451,16 +451,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def i_boss_remove_ip_from_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify from which policy category do you want to remove IP.")], start_port: Annotated[Optional[str], Field(default=None, description="Specify start port related to the IP that needs to be deleted. This parameter is mandatory, if the desired URL has a defined start port. This is an IBoss limitation.")], end_port: Annotated[Optional[str], Field(default=None, description="Specify end port related to the IP that needs to be deleted. This parameter is mandatory, if the desired IP has a defined end port. This is an IBoss limitation.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_remove_ip_from_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify from which policy category do you want to remove IP.")], start_port: Annotated[str | None, Field(default=None, description="Specify start port related to the IP that needs to be deleted. This parameter is mandatory, if the desired URL has a defined start port. This is an IBoss limitation.")], end_port: Annotated[str | None, Field(default=None, description="Specify end port related to the IP that needs to be deleted. This parameter is mandatory, if the desired IP has a defined end port. This is an IBoss limitation.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove IP from iBoss Block List.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -539,16 +539,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def i_boss_add_ip_to_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify to which policy category you want to add the IP.")], priority: Annotated[str, Field(..., description="Specify priority of the IP that needs to be blocked.")], direction: Annotated[List[Any], Field(..., description="Specify what is the direction of the IP.")], start_port: Annotated[Optional[str], Field(default=None, description="Specify the start port related to the IP that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], end_port: Annotated[Optional[str], Field(default=None, description="Specify the end port related to the IP that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], note: Annotated[Optional[str], Field(default=None, description="Add a note related to the IP that needs to be blocked.")], is_regular_expression: Annotated[Optional[bool], Field(default=None, description="If enabled, IP will be considered as a regular expression.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_add_ip_to_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify to which policy category you want to add the IP.")], priority: Annotated[str, Field(..., description="Specify priority of the IP that needs to be blocked.")], direction: Annotated[List[Any], Field(..., description="Specify what is the direction of the IP.")], start_port: Annotated[str | None, Field(default=None, description="Specify the start port related to the IP that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], end_port: Annotated[str | None, Field(default=None, description="Specify the end port related to the IP that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], note: Annotated[str | None, Field(default=None, description="Add a note related to the IP that needs to be blocked.")], is_regular_expression: Annotated[bool | None, Field(default=None, description="If enabled, IP will be considered as a regular expression.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IP to iBoss Block List.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -633,16 +633,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def i_boss_add_url_to_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify to which policy category you want to add the URL.")], priority: Annotated[str, Field(..., description="Specify priority of the URL that needs to be blocked.")], direction: Annotated[List[Any], Field(..., description="Specify what is the direction of the URL.")], start_port: Annotated[Optional[str], Field(default=None, description="Specify the start port related to the URL that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], end_port: Annotated[Optional[str], Field(default=None, description="Specify the end port related to the URL that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], note: Annotated[Optional[str], Field(default=None, description="Add a note related to the URL that needs to be blocked.")], is_regular_expression: Annotated[Optional[bool], Field(default=None, description="If enabled, URL will be considered as a regular expression.")], strip_scheme: Annotated[Optional[bool], Field(default=None, description="If enabled, action will strip the scheme related to the URL.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def i_boss_add_url_to_policy_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category_id: Annotated[str, Field(..., description="Specify to which policy category you want to add the URL.")], priority: Annotated[str, Field(..., description="Specify priority of the URL that needs to be blocked.")], direction: Annotated[List[Any], Field(..., description="Specify what is the direction of the URL.")], start_port: Annotated[str | None, Field(default=None, description="Specify the start port related to the URL that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], end_port: Annotated[str | None, Field(default=None, description="Specify the end port related to the URL that needs to be blocked. Note: if only \"Start Port\" or \"End Port\" is specified, the value will be added to both action parameters.")], note: Annotated[str | None, Field(default=None, description="Add a note related to the URL that needs to be blocked.")], is_regular_expression: Annotated[bool | None, Field(default=None, description="If enabled, URL will be considered as a regular expression.")], strip_scheme: Annotated[bool | None, Field(default=None, description="If enabled, action will strip the scheme related to the URL.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add URL to iBoss Block List.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

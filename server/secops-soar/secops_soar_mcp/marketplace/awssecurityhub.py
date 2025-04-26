@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the AWSSecurityHub integration.
 
     @mcp.tool()
-    async def aws_security_hub_get_insight_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], insight_arn: Annotated[str, Field(..., description="Specify the ARN of the insight.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_security_hub_get_insight_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], insight_arn: Annotated[str, Field(..., description="Specify the ARN of the insight.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return detailed information about an insight in AWS Security Hub.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -117,9 +117,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -203,9 +203,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -279,16 +279,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_security_hub_update_finding(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], id: Annotated[str, Field(..., description="Specify ID of the finding that you want to update.")], product_arn: Annotated[str, Field(..., description="Specify the product ARN of the finding that you want to update.")], note: Annotated[Optional[str], Field(default=None, description="Specify new text for the note on the finding. Note: If the \u201cNote\u201d parameter has a value, you should also fill out the \u201cNote Author\u201d parameter. This is an AWS Security Hub limitation.")], note_author: Annotated[Optional[str], Field(default=None, description="Specify the author of the note. Note: If the \u201cNote Author\u201d parameter has a value, you should also fill out the \u201cNote\u201d parameter. This is an AWS Security Hub limitation.")], severity: Annotated[Optional[List[Any]], Field(default=None, description="Specify new severity for the finding.")], verification_state: Annotated[Optional[List[Any]], Field(default=None, description="Specify a new verification state for the finding.")], confidence: Annotated[Optional[str], Field(default=None, description="Specify new confidence for the finding.")], criticality: Annotated[Optional[str], Field(default=None, description="Specify new criticality for the finding.")], types: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of types for the finding. Example: type1,type2")], workflow_status: Annotated[Optional[List[Any]], Field(default=None, description="Specify new workflow status for the finding.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify custom fields that should be updated in the finding. Format Custom_field_1:value,Custom_field_2:value")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_security_hub_update_finding(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], id: Annotated[str, Field(..., description="Specify ID of the finding that you want to update.")], product_arn: Annotated[str, Field(..., description="Specify the product ARN of the finding that you want to update.")], note: Annotated[str | None, Field(default=None, description="Specify new text for the note on the finding. Note: If the \u201cNote\u201d parameter has a value, you should also fill out the \u201cNote Author\u201d parameter. This is an AWS Security Hub limitation.")], note_author: Annotated[str | None, Field(default=None, description="Specify the author of the note. Note: If the \u201cNote Author\u201d parameter has a value, you should also fill out the \u201cNote\u201d parameter. This is an AWS Security Hub limitation.")], severity: Annotated[List[Any] | None, Field(default=None, description="Specify new severity for the finding.")], verification_state: Annotated[List[Any] | None, Field(default=None, description="Specify a new verification state for the finding.")], confidence: Annotated[str | None, Field(default=None, description="Specify new confidence for the finding.")], criticality: Annotated[str | None, Field(default=None, description="Specify new criticality for the finding.")], types: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of types for the finding. Example: type1,type2")], workflow_status: Annotated[List[Any] | None, Field(default=None, description="Specify new workflow status for the finding.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify custom fields that should be updated in the finding. Format Custom_field_1:value,Custom_field_2:value")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update findings in AWS Security Hub.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -382,16 +382,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_security_hub_update_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], insight_arn: Annotated[str, Field(..., description="Specify the ARN of the insight.")], insight_name: Annotated[Optional[str], Field(default=None, description="Specify the new name of the insight.")], group_by_attribute: Annotated[Optional[List[Any]], Field(default=None, description="Specify a new name of the attribute by which findings should be grouped under one insight.")], filter_json_object: Annotated[Optional[Union[str, dict]], Field(default=None, description="Specify a new filter for the findings. Filter is represented as a JSON object, where you can specify different attributes and values. Please refer to action documentation for more details.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_security_hub_update_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], insight_arn: Annotated[str, Field(..., description="Specify the ARN of the insight.")], insight_name: Annotated[str | None, Field(default=None, description="Specify the new name of the insight.")], group_by_attribute: Annotated[List[Any] | None, Field(default=None, description="Specify a new name of the attribute by which findings should be grouped under one insight.")], filter_json_object: Annotated[Union[str, dict] | None, Field(default=None, description="Specify a new filter for the findings. Filter is represented as a JSON object, where you can specify different attributes and values. Please refer to action documentation for more details.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an insight in AWS Security Hub.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

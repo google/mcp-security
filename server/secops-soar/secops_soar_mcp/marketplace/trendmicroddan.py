@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the TrendMicroDDAN integration.
 
     @mcp.tool()
-    async def trend_micro_ddan_submit_file_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_ur_ls: Annotated[str, Field(..., description="Specify a comma-separated list of the URLs that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[Optional[bool], Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[Optional[bool], Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_ddan_submit_file_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_ur_ls: Annotated[str, Field(..., description="Specify a comma-separated list of the URLs that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool | None, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool | None, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str | None, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str | None, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a file via URLs in Trend Micro DDAN. Note: Action is running as async, adjust the script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -127,9 +127,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -203,16 +203,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_ddan_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of the absolute file paths that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[Optional[bool], Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[Optional[bool], Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_ddan_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of the absolute file paths that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool | None, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool | None, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str | None, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str | None, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit files in Trend Micro DDAN. Note: Action is running as async, adjust the script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Attivo integration.
 
     @mcp.tool()
-    async def attivo_update_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], event_id: Annotated[str, Field(..., description="Specify the ID of the event, which needs to be updated.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the event.")], comment: Annotated[Optional[str], Field(default=None, description="Specify a comment that needs to be added to the event.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def attivo_update_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], event_id: Annotated[str, Field(..., description="Specify the ID of the event, which needs to be updated.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the event.")], comment: Annotated[str | None, Field(default=None, description="Specify a comment that needs to be added to the event.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update event in Attivo.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -112,16 +112,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def attivo_list_service_threat_paths(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], services: Annotated[str, Field(..., description="Specify a comma-separated list of services for which action needs to return ThreatPaths.")], max_threat_paths_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many ThreatPaths to return. If nothing is provided, action will return 50 ThreatPaths.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def attivo_list_service_threat_paths(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], services: Annotated[str, Field(..., description="Specify a comma-separated list of services for which action needs to return ThreatPaths.")], max_threat_paths_to_return: Annotated[str | None, Field(default=None, description="Specify how many ThreatPaths to return. If nothing is provided, action will return 50 ThreatPaths.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List ThreatPaths related to services in Attivo.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -205,9 +205,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -281,16 +281,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def attivo_list_vulnerability_hosts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], vulnerabilities: Annotated[str, Field(..., description="Specify a comma-separated list of vulnerabilities for which action needs to return hostnames.")], max_hosts_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many hosts to return. If nothing is provided, action will return 50 hosts.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def attivo_list_vulnerability_hosts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], vulnerabilities: Annotated[str, Field(..., description="Specify a comma-separated list of vulnerabilities for which action needs to return hostnames.")], max_hosts_to_return: Annotated[str | None, Field(default=None, description="Specify how many hosts to return. If nothing is provided, action will return 50 hosts.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List hosts related to the vulnerability in Attivo.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -367,16 +367,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def attivo_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], include_threat_paths: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about ThreatPaths related to the entity.")], include_vulnerabilities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about vulnerabilities related to the entity.")], include_credential_info: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about credential information related to the entity.")], create_insights: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], max_threat_paths_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many ThreatPaths to return per entity. Default: 50.")], max_vulnerabilities_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many vulnerabilities to return per entity. Default: 50.")], max_credentials_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many credentials to return per entity. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def attivo_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], include_threat_paths: Annotated[bool | None, Field(default=None, description="If enabled, action will return information about ThreatPaths related to the entity.")], include_vulnerabilities: Annotated[bool | None, Field(default=None, description="If enabled, action will return information about vulnerabilities related to the entity.")], include_credential_info: Annotated[bool | None, Field(default=None, description="If enabled, action will return information about credential information related to the entity.")], create_insights: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], max_threat_paths_to_return: Annotated[str | None, Field(default=None, description="Specify how many ThreatPaths to return per entity. Default: 50.")], max_vulnerabilities_to_return: Annotated[str | None, Field(default=None, description="Specify how many vulnerabilities to return per entity. Default: 50.")], max_credentials_to_return: Annotated[str | None, Field(default=None, description="Specify how many credentials to return per entity. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich entities using information from Attivo. Supported entities: Hostname, IP Address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -464,16 +464,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def attivo_list_critical_threat_path(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[Optional[List[Any]], Field(default=None, description="Specify the key that needs to be used to filter critical paths.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def attivo_list_critical_threat_path(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[List[Any] | None, Field(default=None, description="Specify the key that needs to be used to filter critical paths.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], filter_value: Annotated[str | None, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available critical ThreatPaths in Attivo.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

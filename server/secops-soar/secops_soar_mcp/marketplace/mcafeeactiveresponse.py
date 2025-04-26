@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the McAfeeActiveResponse integration.
 
     @mcp.tool()
-    async def mc_afee_active_response_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], collectors: Annotated[str, Field(..., description="The collectors to search in")], filter_collector: Annotated[Optional[str], Field(default=None, description="The collector filter")], filter_by: Annotated[Optional[str], Field(default=None, description="The field to filter by")], filter_operator: Annotated[Optional[str], Field(default=None, description="The operator of the filter. Must be on of those: GreaterEqualThan,GreaterThan,LessEqualThan,LessThan,Equals,Contains,StartWith,EndsWith,Before,After")], filter_value: Annotated[Optional[str], Field(default=None, description="The filter value")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_active_response_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], collectors: Annotated[str, Field(..., description="The collectors to search in")], filter_collector: Annotated[str | None, Field(default=None, description="The collector filter")], filter_by: Annotated[str | None, Field(default=None, description="The field to filter by")], filter_operator: Annotated[str | None, Field(default=None, description="The operator of the filter. Must be on of those: GreaterEqualThan,GreaterThan,LessEqualThan,LessThan,Equals,Contains,StartWith,EndsWith,Before,After")], filter_value: Annotated[str | None, Field(default=None, description="The filter value")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Provide searchat McAfee Active Response.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -123,9 +123,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

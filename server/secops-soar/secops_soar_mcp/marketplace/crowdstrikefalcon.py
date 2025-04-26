@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -109,16 +109,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_submit_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ur_ls: Annotated[str, Field(..., description="Specify the URLs that need to be submitted.")], sandbox_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the network environment for the analysis.")], check_duplicate: Annotated[Optional[bool], Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns an available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_submit_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ur_ls: Annotated[str, Field(..., description="Specify the URLs that need to be submitted.")], sandbox_environment: Annotated[List[Any] | None, Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[List[Any] | None, Field(default=None, description="Specify the network environment for the analysis.")], check_duplicate: Annotated[bool | None, Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns an available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit urls to a sandbox in Crowdstrike. Note: This action requires a Falcon Sandbox license.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -199,16 +199,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the ID of the incident that needs to be updated.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the incident.")], assign_to: Annotated[Optional[str], Field(default=None, description="Specify the name or email of the analyst to whom the incident needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the incident. Note: for name you need to provide first and last name of the analyst in the following format \"{first name} {last name}\"")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the ID of the incident that needs to be updated.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the incident.")], assign_to: Annotated[str | None, Field(default=None, description="Specify the name or email of the analyst to whom the incident needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the incident. Note: for name you need to provide first and last name of the analyst in the following format \"{first name} {last name}\"")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update incident in Crowdstrike.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -289,16 +289,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_run_script(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], script_name: Annotated[Optional[str], Field(default=None, description="The name of the script file that needs to be executed. Note: either \u201cScript Name\u201d or \u201cRaw Script\u201d should be provided. If both \u201cScript Name\u201d and \u201cRaw Script\u201d are provided, then \u201cRaw Script\u201d will have the priority.")], raw_script: Annotated[Optional[str], Field(default=None, description="Raw powershell script payload that needs to be executed on the endpoints. Note: either \u201cScript Name\u201d or \u201cRaw Script\u201d should be provided. If both \u201cScript Name\u201d and \u201cRaw Script\u201d are provided, then \u201cRaw Script\u201d will have the priority.")], hostname: Annotated[Optional[str], Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_run_script(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], script_name: Annotated[str | None, Field(default=None, description="The name of the script file that needs to be executed. Note: either \u201cScript Name\u201d or \u201cRaw Script\u201d should be provided. If both \u201cScript Name\u201d and \u201cRaw Script\u201d are provided, then \u201cRaw Script\u201d will have the priority.")], raw_script: Annotated[str | None, Field(default=None, description="Raw powershell script payload that needs to be executed on the endpoints. Note: either \u201cScript Name\u201d or \u201cRaw Script\u201d should be provided. If both \u201cScript Name\u201d and \u201cRaw Script\u201d are provided, then \u201cRaw Script\u201d will have the priority.")], hostname: Annotated[str | None, Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute a powershell script on the endpoints in Crowdstrike. Supported entities: IP Address, Hostname. Note: Action is running as async, please adjust script timeout value in Google SecOps IDE for the action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -380,16 +380,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_execute_command(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], command: Annotated[str, Field(..., description="Specify what command to execute on the hosts.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], admin_command: Annotated[Optional[bool], Field(default=None, description="If enabled, action will execute commands with the admin level permissions. This is necessary for certain commands like \"put\".")], hostname: Annotated[Optional[str], Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_execute_command(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], command: Annotated[str, Field(..., description="Specify what command to execute on the hosts.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], admin_command: Annotated[bool | None, Field(default=None, description="If enabled, action will execute commands with the admin level permissions. This is necessary for certain commands like \"put\".")], hostname: Annotated[str | None, Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute commands on the hosts in Crowdstrike Falcon. Supported entities: IP Address and Hostname.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -470,16 +470,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_close_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the id of the detection that needs to be closed.")], hide_detection: Annotated[Optional[bool], Field(default=None, description="If enabled, action will hide the detection in the UI.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_close_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the id of the detection that needs to be closed.")], hide_detection: Annotated[bool | None, Field(default=None, description="If enabled, action will hide the detection in the UI.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Close a Crowdstrike Falcon detection. Note: Action "Update Detection" is the best practice for this use case.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -563,9 +563,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -641,16 +641,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert that needs to be updated.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the alert.")], verdict: Annotated[Optional[List[Any]], Field(default=None, description="Specify the verdict for the alert.")], assign_to: Annotated[Optional[str], Field(default=None, description="Specify the name of the analyst to whom the alert needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the alert. Note: API will accept any value that is provided, even if the underlying user doesn\u2019t exist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert that needs to be updated.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the alert.")], verdict: Annotated[List[Any] | None, Field(default=None, description="Specify the verdict for the alert.")], assign_to: Annotated[str | None, Field(default=None, description="Specify the name of the analyst to whom the alert needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the alert. Note: API will accept any value that is provided, even if the underlying user doesn\u2019t exist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an alert in Crowdstrike.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -731,16 +731,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_list_hosts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what logic should be used, when searching for hosts.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify the value that should be used to filter hosts.")], max_hosts_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many hosts to return. Default: 50. Maximum: 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_list_hosts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what logic should be used, when searching for hosts.")], filter_value: Annotated[str | None, Field(default=None, description="Specify the value that should be used to filter hosts.")], max_hosts_to_return: Annotated[str | None, Field(default=None, description="Specify how many hosts to return. Default: 50. Maximum: 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available hosts in Crowdstrike Falcon.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -829,9 +829,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -914,9 +914,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -997,9 +997,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1073,16 +1073,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_contain_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], fail_if_timeout: Annotated[Optional[bool], Field(default=None, description="If enabled, action will be failed, if not all of the endpoints were contained.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_contain_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], fail_if_timeout: Annotated[bool | None, Field(default=None, description="If enabled, action will be failed, if not all of the endpoints were contained.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Contain endpoint in Crowdstrike Falcon. Supported entities: Hostname and IP address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1167,9 +1167,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1245,16 +1245,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_update_ioc_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[Optional[str], Field(default=None, description="Specify a new description for custom IOCs.")], source: Annotated[Optional[str], Field(default=None, description="Specify the source for custom IOCs.")], expiration_days: Annotated[Optional[str], Field(default=None, description="Specify the amount of days till expiration.")], detect_policy: Annotated[Optional[bool], Field(default=None, description="If enabled, IOCs that have been identifed, will send a notification. In other case, no action will be taken")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_update_ioc_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[str | None, Field(default=None, description="Specify a new description for custom IOCs.")], source: Annotated[str | None, Field(default=None, description="Specify the source for custom IOCs.")], expiration_days: Annotated[str | None, Field(default=None, description="Specify the amount of days till expiration.")], detect_policy: Annotated[bool | None, Field(default=None, description="If enabled, IOCs that have been identifed, will send a notification. In other case, no action will be taken")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update information about custom IOCs in Crowdstrike Falcon. Supported entities: Hostname, URL, IP address and Hash. Note: Hostname entities are treated as domain IOCs and action will extract domain part out of URLs. Only MD5 and SHA-256 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1336,16 +1336,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_download_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], download_folder_path: Annotated[str, Field(..., description="Specify the path to the folder, where you want to store the threat file.")], overwrite: Annotated[bool, Field(..., description="If enabled, action will overwrite the file with the same name.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_download_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], download_folder_path: Annotated[str, Field(..., description="Specify the path to the folder, where you want to store the threat file.")], overwrite: Annotated[bool, Field(..., description="If enabled, action will overwrite the file with the same name.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Download files from the hosts in Crowdstrike Falcon. Supported entities: File Name, IP Address and Hostname. Note: action requires both File Name and IP Address/Hostname entity to be in the scope of the Siemplify alert. The downloaded file will be in password-protected zip. Password is "infected".
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1430,9 +1430,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1507,16 +1507,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_upload_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], platform: Annotated[str, Field(..., description="Specify a comma-separated list of the platforms related to the IOC. Possible values: Windows, Linux, Mac.")], severity: Annotated[List[Any], Field(..., description="Specify the severity for the IOC.")], comment: Annotated[Optional[str], Field(default=None, description="Specify a comment with more context related to IOC.")], host_group_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the host group.")], action: Annotated[Optional[List[Any]], Field(default=None, description="Specify the action for the uploaded IOCs. Note: \"Block\" action can only be applied to hashes. Action will always apply \"Detect\" policy to all other IOC types.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_upload_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], platform: Annotated[str, Field(..., description="Specify a comma-separated list of the platforms related to the IOC. Possible values: Windows, Linux, Mac.")], severity: Annotated[List[Any], Field(..., description="Specify the severity for the IOC.")], comment: Annotated[str | None, Field(default=None, description="Specify a comment with more context related to IOC.")], host_group_name: Annotated[str | None, Field(default=None, description="Specify the name of the host group.")], action: Annotated[List[Any] | None, Field(default=None, description="Specify the action for the uploaded IOCs. Note: \"Block\" action can only be applied to hashes. Action will always apply \"Detect\" policy to all other IOC types.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add custom IOCs in Crowdstrike Falcon. Supported entities: Hostname, URL, IP address and Hash. Note: Hostname entities are treated as domain IOCs and action will extract domain part out of URLs. Only MD5 and SHA-256 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1598,16 +1598,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_get_host_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create insights containing information regarding entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_get_host_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create insights containing information regarding entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about the hostname from Crowdstrike Falcon. Supported entities: Hostname, IP Address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1685,16 +1685,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_on_demand_scan(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths_to_scan: Annotated[str, Field(..., description="Comma-separated list of paths to scan.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], file_paths_to_exclude_from_scan: Annotated[Optional[str], Field(default=None, description="Comma-separated list of paths to exclude from scanning.")], host_group_name: Annotated[Optional[str], Field(default=None, description="Comma-separated list of host group names to initiate scanning for. Note: Separate scanning process is created for each host group.")], scan_description: Annotated[Optional[str], Field(default=None, description="Description for the scan. If no value is provided, the action sets the description to the following: \"Scan initialized by Chronicle SecOps.\"")], cpu_priority: Annotated[Optional[List[Any]], Field(default=None, description="The amount of CPU to  use for the underlying host during scanning.")], sensor_anti_malware_detection_level: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sensor anti-malware detection level. Note: Detection level must be equal to or higher than the Prevention level.")], sensor_anti_malware_prevention_level: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sensor anti-malware prevention level. Note: Detection level must be equal to or higher than the Prevention level.")], cloud_anti_malware_detection_level: Annotated[Optional[List[Any]], Field(default=None, description="Specify the cloud anti-malware detection level. Note: Detection level must be equal to or higher than the Prevention level.")], cloud_anti_malware_prevention_level: Annotated[Optional[List[Any]], Field(default=None, description="Specify the cloud anti-malware prevention level. Note: Detection level must be equal to or higher than the Prevention level.")], quarantine_hosts: Annotated[Optional[bool], Field(default=None, description="If enabled, underlying hosts are quarantined as part of scanning.")], create_endpoint_notification: Annotated[Optional[bool], Field(default=None, description="If enabled, the scanning process creates an endpoint notification.")], max_scan_duration: Annotated[Optional[str], Field(default=None, description="Number of hours for a scan to run. If no value is provided, the scan runs continuously.")], hostname: Annotated[Optional[str], Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_on_demand_scan(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths_to_scan: Annotated[str, Field(..., description="Comma-separated list of paths to scan.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], file_paths_to_exclude_from_scan: Annotated[str | None, Field(default=None, description="Comma-separated list of paths to exclude from scanning.")], host_group_name: Annotated[str | None, Field(default=None, description="Comma-separated list of host group names to initiate scanning for. Note: Separate scanning process is created for each host group.")], scan_description: Annotated[str | None, Field(default=None, description="Description for the scan. If no value is provided, the action sets the description to the following: \"Scan initialized by Chronicle SecOps.\"")], cpu_priority: Annotated[List[Any] | None, Field(default=None, description="The amount of CPU to  use for the underlying host during scanning.")], sensor_anti_malware_detection_level: Annotated[List[Any] | None, Field(default=None, description="Specify the sensor anti-malware detection level. Note: Detection level must be equal to or higher than the Prevention level.")], sensor_anti_malware_prevention_level: Annotated[List[Any] | None, Field(default=None, description="Specify the sensor anti-malware prevention level. Note: Detection level must be equal to or higher than the Prevention level.")], cloud_anti_malware_detection_level: Annotated[List[Any] | None, Field(default=None, description="Specify the cloud anti-malware detection level. Note: Detection level must be equal to or higher than the Prevention level.")], cloud_anti_malware_prevention_level: Annotated[List[Any] | None, Field(default=None, description="Specify the cloud anti-malware prevention level. Note: Detection level must be equal to or higher than the Prevention level.")], quarantine_hosts: Annotated[bool | None, Field(default=None, description="If enabled, underlying hosts are quarantined as part of scanning.")], create_endpoint_notification: Annotated[bool | None, Field(default=None, description="If enabled, the scanning process creates an endpoint notification.")], max_scan_duration: Annotated[str | None, Field(default=None, description="Number of hours for a scan to run. If no value is provided, the scan runs continuously.")], hostname: Annotated[str | None, Field(default=None, description="Comma-separated list of hostnames on which you want to execute the action. Note: action will run the action on both entities + this parameter values.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Scan the endpoint on demand in Crowdstrike. Note: only Windows hosts are supported. Supported entities: IP Address, Hostname. Note: Action is running as async, please adjust script timeout value in Chronicle SecOps IDE for action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1795,16 +1795,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_update_identity_protection_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the ID of the detection that needs to be updated.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the detection.")], assign_to: Annotated[Optional[str], Field(default=None, description="Specify the name of the analyst to whom the detection needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the detection. Note: API will accept any value that is provided, even if the underlying user doesn't exist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_update_identity_protection_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the ID of the detection that needs to be updated.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the detection.")], assign_to: Annotated[str | None, Field(default=None, description="Specify the name of the analyst to whom the detection needs to be assigned. If \"Unassign\" is provided, action will remove assignment from the detection. Note: API will accept any value that is provided, even if the underlying user doesn't exist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an identity protection detection in Crowdstrike. Note: this action requires an Identity Protection license.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1890,9 +1890,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1974,9 +1974,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2050,16 +2050,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_list_uploaded_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ioc_type_filter: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of IOC types that should be returned. If nothing is provided, action will return IOCs from all types. Possible values: ipv4,ipv6,md5,sha256,domain.")], value_filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify the value filter logic. If \"Equal\" is selected, action will try to find the exact match among IOCs and if \"Contains\" is selected, action will try to find IOCs that contain that substring.")], value_filter_string: Annotated[Optional[str], Field(default=None, description="Specify the string that should be searched among IOCs.")], max_io_cs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many IOCs to return. Default: 50. Maximum: 500.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_list_uploaded_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ioc_type_filter: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of IOC types that should be returned. If nothing is provided, action will return IOCs from all types. Possible values: ipv4,ipv6,md5,sha256,domain.")], value_filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify the value filter logic. If \"Equal\" is selected, action will try to find the exact match among IOCs and if \"Contains\" is selected, action will try to find IOCs that contain that substring.")], value_filter_string: Annotated[str | None, Field(default=None, description="Specify the string that should be searched among IOCs.")], max_io_cs_to_return: Annotated[str | None, Field(default=None, description="Specify how many IOCs to return. Default: 50. Maximum: 500.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available custom IOCs in CrowdStrike Falcon.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2141,16 +2141,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify the file paths to the files that need to be submitted. Refer to the documentation portal for a list of the supported file formats.")], sandbox_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[Optional[List[Any]], Field(default=None, description="Specify the network environment for the analysis.")], archive_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with archive files.")], document_password: Annotated[Optional[str], Field(default=None, description="Specify the password that would need to be used, when working with Adobe or Office files. Maximum: 32 characters.")], check_duplicate: Annotated[Optional[bool], Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns the available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], comment: Annotated[Optional[str], Field(default=None, description="Specify the comment for the submission.")], confidential_submission: Annotated[Optional[bool], Field(default=None, description="If enabled, the file is only shown to users within your customer account.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify the file paths to the files that need to be submitted. Refer to the documentation portal for a list of the supported file formats.")], sandbox_environment: Annotated[List[Any] | None, Field(default=None, description="Specify the sandbox environment for the analysis.")], network_environment: Annotated[List[Any] | None, Field(default=None, description="Specify the network environment for the analysis.")], archive_password: Annotated[str | None, Field(default=None, description="Specify the password that would need to be used, when working with archive files.")], document_password: Annotated[str | None, Field(default=None, description="Specify the password that would need to be used, when working with Adobe or Office files. Maximum: 32 characters.")], check_duplicate: Annotated[bool | None, Field(default=None, description="If enabled, the action checks if the file was already submitted previously and returns the available report. Note: during the validation \u201cNetwork Environment\u201d and \u201cSandbox Environment\u201d are not taken into consideration.")], comment: Annotated[str | None, Field(default=None, description="Specify the comment for the submission.")], confidential_submission: Annotated[bool | None, Field(default=None, description="If enabled, the file is only shown to users within your customer account.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit files to a sandbox in Crowdstrike. Note: This action requires a Falcon Sandbox license. For the list of supported file formats, refer to the documentation portal.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2239,16 +2239,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_update_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the ID of the detection that needs to be updated.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the detection.")], assign_detection_to: Annotated[Optional[str], Field(default=None, description="Specify the email address of the Crowdstrike Falcon user, who needs to be assigned to this detection")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_update_detection(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the ID of the detection that needs to be updated.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the detection.")], assign_detection_to: Annotated[str | None, Field(default=None, description="Specify the email address of the Crowdstrike Falcon user, who needs to be assigned to this detection")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update detection in Crowdstrike Falcon.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2326,16 +2326,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_list_host_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], severity_filter: Annotated[Optional[str], Field(default=None, description="Specify the comma-separated list of severities for vulnerabilities.If nothing is provided, action will ingest all related vulnerabilities. Possible values: Critical, High, Medium, Low, Unknown.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight per entity containing statistical information about related vulnerabilities.")], max_vulnerabilities_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many vulnerabilities to return per host. If nothing is provided action will process all of the related vulnerabilities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_list_host_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], severity_filter: Annotated[str | None, Field(default=None, description="Specify the comma-separated list of severities for vulnerabilities.If nothing is provided, action will ingest all related vulnerabilities. Possible values: Critical, High, Medium, Low, Unknown.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight per entity containing statistical information about related vulnerabilities.")], max_vulnerabilities_to_return: Annotated[str | None, Field(default=None, description="Specify how many vulnerabilities to return per host. If nothing is provided action will process all of the related vulnerabilities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List vulnerabilities found on the host in Crowdstrike Falcon. Supported entities: IP Address and Hostname. Note: requires Falcon Spotlight license and permissions. 
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2417,16 +2417,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def crowd_strike_falcon_lift_contained_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], fail_if_timeout: Annotated[Optional[bool], Field(default=None, description="If enabled, action will be failed, if containment was not lifted on all endpoints.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def crowd_strike_falcon_lift_contained_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], customer_id: Annotated[str | None, Field(default=None, description="Specify the ID of the customer for which you want to execute the action.")], fail_if_timeout: Annotated[bool | None, Field(default=None, description="If enabled, action will be failed, if containment was not lifted on all endpoints.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Lift endpoint containment in Crowdstrike Falcon. Supported entities: Hostname and IP address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

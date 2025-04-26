@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -107,16 +107,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def web_risk_submit_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], abuse_type: Annotated[Optional[List[Any]], Field(default=None, description="The abuse type that is associated with the submission. For more information about abuse types, see AbuseType (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#abusetype).")], confidence_level: Annotated[Optional[List[Any]], Field(default=None, description="The confidence level for the submission. For more information about confidence levels, see Confidence (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#confidence) and ConfidenceLevel (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#confidencelevel).")], justification: Annotated[Optional[List[Any]], Field(default=None, description="The justification for the submission. For more information about justification options, see JustificationLabel (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#justificationlabel).")], comment: Annotated[Optional[str], Field(default=None, description="A comment to explain the submission justification.")], region_code: Annotated[Optional[str], Field(default=None, description="A comma-separated list of the Common Locale Data Repository (CLDR) codes for countries or regions that associate with the submission. For more information about submissions, see Submission (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#submission).")], platform: Annotated[Optional[List[Any]], Field(default=None, description="A platform type on which the submission was detected.")], skip_waiting: Annotated[Optional[bool], Field(default=None, description="If enabled, action will just initialize the submission and not wait for it to be finished.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def web_risk_submit_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], abuse_type: Annotated[List[Any] | None, Field(default=None, description="The abuse type that is associated with the submission. For more information about abuse types, see AbuseType (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#abusetype).")], confidence_level: Annotated[List[Any] | None, Field(default=None, description="The confidence level for the submission. For more information about confidence levels, see Confidence (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#confidence) and ConfidenceLevel (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#confidencelevel).")], justification: Annotated[List[Any] | None, Field(default=None, description="The justification for the submission. For more information about justification options, see JustificationLabel (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#justificationlabel).")], comment: Annotated[str | None, Field(default=None, description="A comment to explain the submission justification.")], region_code: Annotated[str | None, Field(default=None, description="A comma-separated list of the Common Locale Data Repository (CLDR) codes for countries or regions that associate with the submission. For more information about submissions, see Submission (https://cloud.google.com/web-risk/docs/reference/rest/v1/projects.uris/submit#submission).")], platform: Annotated[List[Any] | None, Field(default=None, description="A platform type on which the submission was detected.")], skip_waiting: Annotated[bool | None, Field(default=None, description="If enabled, action will just initialize the submission and not wait for it to be finished.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Use the Submit Entities action to submit entities to Web Risk for analysis. This action runs on the Google SecOps URL entity. This action is asynchronous. Adjust the script timeout value in the Google SecOps IDE for the action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -211,9 +211,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -31,10 +31,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,18 +65,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for RSAArcher: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Destination Content ID"] = destination_content_id
             script_params["Text"] = text
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -92,7 +92,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -109,17 +109,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def rsa_archer_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], content_id: Annotated[str, Field(..., description="Content Id of the incident to update.")], application_name: Annotated[Optional[str], Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], incident_summary: Annotated[Optional[str], Field(default=None, description="The new summary of the incident.")], incident_details: Annotated[Optional[str], Field(default=None, description="The new details (decsription) of the incident.")], incident_owner: Annotated[Optional[str], Field(default=None, description="The new owner of the incident.")], incident_status: Annotated[Optional[str], Field(default=None, description="The new status of the incident.")], priority: Annotated[Optional[str], Field(default=None, description="The new priority of the incident.")], category: Annotated[Optional[str], Field(default=None, description="The new category of the incident.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object of fields that need to be updated. Example: {\u201cCategory\u201d:\u201cMalware\u201d}.")], custom_mapping_file: Annotated[Optional[str], Field(default=None, description="Specify an absolute path to the file that contains all of the required mapping. If \u201cRemote File\u201c is enabled, then provide a URL that contains the mapping file. Please refer to action documentation for the additional information.")], remote_file: Annotated[Optional[bool], Field(default=None, description="If enabled, action will treat value provided in \u201cCustom Mapping File\u201c as a URL and try to fetch a file from it.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def rsa_archer_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], content_id: Annotated[str, Field(..., description="Content Id of the incident to update.")], application_name: Annotated[str | None, Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], incident_summary: Annotated[str | None, Field(default=None, description="The new summary of the incident.")], incident_details: Annotated[str | None, Field(default=None, description="The new details (decsription) of the incident.")], incident_owner: Annotated[str | None, Field(default=None, description="The new owner of the incident.")], incident_status: Annotated[str | None, Field(default=None, description="The new status of the incident.")], priority: Annotated[str | None, Field(default=None, description="The new priority of the incident.")], category: Annotated[str | None, Field(default=None, description="The new category of the incident.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object of fields that need to be updated. Example: {\u201cCategory\u201d:\u201cMalware\u201d}.")], custom_mapping_file: Annotated[str | None, Field(default=None, description="Specify an absolute path to the file that contains all of the required mapping. If \u201cRemote File\u201c is enabled, then provide a URL that contains the mapping file. Please refer to action documentation for the additional information.")], remote_file: Annotated[bool | None, Field(default=None, description="If enabled, action will treat value provided in \u201cCustom Mapping File\u201c as a URL and try to fetch a file from it.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an incident
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -150,13 +150,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for RSAArcher: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Content ID"] = content_id
@@ -180,7 +180,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Custom Mapping File"] = custom_mapping_file
             if remote_file is not None:
                 script_params["Remote File"] = remote_file
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -196,7 +196,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -220,10 +220,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -243,7 +243,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -254,16 +254,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for RSAArcher: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -279,7 +279,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -296,17 +296,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def rsa_archer_get_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], content_id: Annotated[str, Field(..., description="Specify ID of the content for which you want to retrieve details.")], application_name: Annotated[Optional[str], Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def rsa_archer_get_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], content_id: Annotated[str, Field(..., description="Specify ID of the content for which you want to retrieve details.")], application_name: Annotated[str | None, Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about the incident from RSA Archer.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -326,7 +326,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -337,19 +337,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for RSAArcher: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Content ID"] = content_id
             if application_name is not None:
                 script_params["Application Name"] = application_name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -365,7 +365,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -382,17 +382,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def rsa_archer_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_summary: Annotated[Optional[str], Field(default=None, description="The summary of the new incident.")], application_name: Annotated[Optional[str], Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], incident_details: Annotated[Optional[str], Field(default=None, description="The details (description) of the new incident.")], incident_owner: Annotated[Optional[str], Field(default=None, description="The owner of the new incident.")], incident_status: Annotated[Optional[str], Field(default=None, description="The status of the new incident.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the new incident.")], category: Annotated[Optional[str], Field(default=None, description="The category of the new incident.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object of fields that need to be used, when creating an incident . Example: {\u201cCategory\u201d:\u201cMalware\u201d}.")], custom_mapping_file: Annotated[Optional[str], Field(default=None, description="Specify an absolute path to the file that contains all of the required mapping. If \u201cRemote File\u201c is enabled, then provide a URL that contains the mapping file. Please refer to action documentation for the additional information.")], remote_file: Annotated[Optional[bool], Field(default=None, description="If enabled, action will treat value provided in \u201cCustom Mapping File\u201c as a URL and try to fetch a file from it.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def rsa_archer_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_summary: Annotated[str | None, Field(default=None, description="The summary of the new incident.")], application_name: Annotated[str | None, Field(default=None, description="Specify an application name for the incident. Default: Incidents.")], incident_details: Annotated[str | None, Field(default=None, description="The details (description) of the new incident.")], incident_owner: Annotated[str | None, Field(default=None, description="The owner of the new incident.")], incident_status: Annotated[str | None, Field(default=None, description="The status of the new incident.")], priority: Annotated[str | None, Field(default=None, description="The priority of the new incident.")], category: Annotated[str | None, Field(default=None, description="The category of the new incident.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object of fields that need to be used, when creating an incident . Example: {\u201cCategory\u201d:\u201cMalware\u201d}.")], custom_mapping_file: Annotated[str | None, Field(default=None, description="Specify an absolute path to the file that contains all of the required mapping. If \u201cRemote File\u201c is enabled, then provide a URL that contains the mapping file. Please refer to action documentation for the additional information.")], remote_file: Annotated[bool | None, Field(default=None, description="If enabled, action will treat value provided in \u201cCustom Mapping File\u201c as a URL and try to fetch a file from it.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new incident
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -412,7 +412,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -423,13 +423,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for RSAArcher: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if incident_summary is not None:
@@ -452,7 +452,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Custom Mapping File"] = custom_mapping_file
             if remote_file is not None:
                 script_params["Remote File"] = remote_file
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -468,7 +468,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

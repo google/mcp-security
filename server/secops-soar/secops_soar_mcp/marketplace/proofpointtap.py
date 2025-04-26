@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ProofPointTAP integration.
 
     @mcp.tool()
-    async def proof_point_tap_get_campaign(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], campaign_id: Annotated[str, Field(..., description="Specify a comma-separated list of campaign IDs for which you want to return info.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the campaign.")], create_threat_campaign_entity: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create a threat campaign entity from the enriched campaigns.")], fetch_forensics_info: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return forensics information about the campaigns.")], forensic_evidence_type_filter: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of evidence types that need to be returned, when fetching forensic info. Possible values: attachment, cookie, dns, dropper, file, ids, mutex, network, process, registry, screenshot, url, redirect_chain, behavior.")], max_forensics_evidence_to_return: Annotated[Optional[str], Field(default=None, description="Specify how much evidence to return per campaign. Default: 50. Maximum: 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def proof_point_tap_get_campaign(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], campaign_id: Annotated[str, Field(..., description="Specify a comma-separated list of campaign IDs for which you want to return info.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about the campaign.")], create_threat_campaign_entity: Annotated[bool | None, Field(default=None, description="If enabled, action will create a threat campaign entity from the enriched campaigns.")], fetch_forensics_info: Annotated[bool | None, Field(default=None, description="If enabled, action will return forensics information about the campaigns.")], forensic_evidence_type_filter: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of evidence types that need to be returned, when fetching forensic info. Possible values: attachment, cookie, dns, dropper, file, ids, mutex, network, process, registry, screenshot, url, redirect_chain, behavior.")], max_forensics_evidence_to_return: Annotated[str | None, Field(default=None, description="Specify how much evidence to return per campaign. Default: 50. Maximum: 1000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about campaigns in Proofpoint TAP.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,16 +118,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def proof_point_tap_decode_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], encoded_ur_ls: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of URLs that need to be decoded. Note: URL entities in the scope of the alert will be decoded together.")], create_url_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create URL entities that were successfully decoded.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def proof_point_tap_decode_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], encoded_ur_ls: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of URLs that need to be decoded. Note: URL entities in the scope of the alert will be decoded together.")], create_url_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will create URL entities that were successfully decoded.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Decode URLs in Proofpoint TAP. Supported entities: URL.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -212,9 +212,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

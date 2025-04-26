@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -114,9 +114,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -190,16 +190,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_ax_submit_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], vm_profile: Annotated[str, Field(..., description="Specify the virtual machine profile that should be used during analysis. Available VM profiles are available in the action \"Get Appliance Details\"")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about the submitted file.")], application_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the application that needs to be used during the analysis of the file. By default, FireEye AX will select the needed application automatically. In order to get a list of available applications on the profile, please execute action \"Get Appliance Details\"")], priority: Annotated[Optional[List[Any]], Field(default=None, description="Specify the priority for the submission. \"Normal\" puts submission at the bottom of the queue, while \"Urgent\" puts submission at the top of the queue.")], force_rescan: Annotated[Optional[bool], Field(default=None, description="If enabled, action will force FireEye AX to rescan the submitted file.")], analysis_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the analysis. If \"Live\" is selected, FireEye AX will analyze suspected files live within the Malware Analysis Multi-Vector Virtual Execution (MVX) analysis engine. If \"Sandbox\" is selected FireEye AX will analyze suspected files in a closed, protected environment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_ax_submit_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], vm_profile: Annotated[str, Field(..., description="Specify the virtual machine profile that should be used during analysis. Available VM profiles are available in the action \"Get Appliance Details\"")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about the submitted file.")], application_id: Annotated[str | None, Field(default=None, description="Specify the ID of the application that needs to be used during the analysis of the file. By default, FireEye AX will select the needed application automatically. In order to get a list of available applications on the profile, please execute action \"Get Appliance Details\"")], priority: Annotated[List[Any] | None, Field(default=None, description="Specify the priority for the submission. \"Normal\" puts submission at the bottom of the queue, while \"Urgent\" puts submission at the top of the queue.")], force_rescan: Annotated[bool | None, Field(default=None, description="If enabled, action will force FireEye AX to rescan the submitted file.")], analysis_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the analysis. If \"Live\" is selected, FireEye AX will analyze suspected files live within the Malware Analysis Multi-Vector Virtual Execution (MVX) analysis engine. If \"Sandbox\" is selected FireEye AX will analyze suspected files in a closed, protected environment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit file for analysis using URL in FireEye AX. Supported entities: URL. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -283,16 +283,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_ax_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separate list of absolute file paths for submission.")], vm_profile: Annotated[str, Field(..., description="Specify the virtual machine profile that should be used during analysis. Available VM profiles are available in the action \"Get Appliance Details\"")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about the submitted file.")], application_id: Annotated[Optional[str], Field(default=None, description="Specify the ID of the application that needs to be used during the analysis of the file. By default, FireEye AX will select the needed application automatically. In order to get a list of available applications on the profile, please execute action \"Get Appliance Details\"")], priority: Annotated[Optional[List[Any]], Field(default=None, description="Specify the priority for the submission. \"Normal\" puts submission at the bottom of the queue, while \"Urgent\" puts submission at the top of the queue.")], force_rescan: Annotated[Optional[bool], Field(default=None, description="If enabled, action will force FireEye AX to rescan the submitted file.")], analysis_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the analysis. If \"Live\" is selected, FireEye AX will analyze suspected files live within the Malware Analysis Multi-Vector Virtual Execution (MVX) analysis engine. If \"Sandbox\" is selected FireEye AX will analyze suspected files in a closed, protected environment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_ax_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separate list of absolute file paths for submission.")], vm_profile: Annotated[str, Field(..., description="Specify the virtual machine profile that should be used during analysis. Available VM profiles are available in the action \"Get Appliance Details\"")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about the submitted file.")], application_id: Annotated[str | None, Field(default=None, description="Specify the ID of the application that needs to be used during the analysis of the file. By default, FireEye AX will select the needed application automatically. In order to get a list of available applications on the profile, please execute action \"Get Appliance Details\"")], priority: Annotated[List[Any] | None, Field(default=None, description="Specify the priority for the submission. \"Normal\" puts submission at the bottom of the queue, while \"Urgent\" puts submission at the top of the queue.")], force_rescan: Annotated[bool | None, Field(default=None, description="If enabled, action will force FireEye AX to rescan the submitted file.")], analysis_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the analysis. If \"Live\" is selected, FireEye AX will analyze suspected files live within the Malware Analysis Multi-Vector Virtual Execution (MVX) analysis engine. If \"Sandbox\" is selected FireEye AX will analyze suspected files in a closed, protected environment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit file for analysis in FireEye AX. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

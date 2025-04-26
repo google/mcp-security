@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -107,16 +107,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a Hash to be marked malicious. Has a range of 0-89. Has the bands levels: \n No Suspicious/Malicious content: 0 \n Unusual: 5-24 \n Suspicious: 25-64 \n Malicious: 65-89")], include_related_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a Hash to be marked malicious. Has a range of 0-89. Has the bands levels: \n No Suspicious/Malicious content: 0 \n Unusual: 5-24 \n Suspicious: 25-64 \n Malicious: 65-89")], include_related_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Query the RecordedFuture to get more information about the hash.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -200,9 +200,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -276,16 +276,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_add_analyst_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], note_title: Annotated[str, Field(..., description="Specify the title for the note")], note_text: Annotated[str, Field(..., description="Specify the Text for the note")], note_source: Annotated[str, Field(..., description="Specify the RF ID for note source; the API explorer shows what the RF IDs are accessible to the user whose API token is enabled. For example,  VWKdVr is the RF ID for an analyst note and is only available to user in the same enterprise account in Recorded Future.")], enrich_entity: Annotated[bool, Field(..., description="Specify whether the action should enrich the entity with the \u201cEnrich IOC\u201d output.")], topic: Annotated[Optional[List[Any]], Field(default=None, description="Specify the relevant Note topic from the list, if needed.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_add_analyst_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], note_title: Annotated[str, Field(..., description="Specify the title for the note")], note_text: Annotated[str, Field(..., description="Specify the Text for the note")], note_source: Annotated[str, Field(..., description="Specify the RF ID for note source; the API explorer shows what the RF IDs are accessible to the user whose API token is enabled. For example,  VWKdVr is the RF ID for an analyst note and is only available to user in the same enterprise account in Recorded Future.")], enrich_entity: Annotated[bool, Field(..., description="Specify whether the action should enrich the entity with the \u201cEnrich IOC\u201d output.")], topic: Annotated[List[Any] | None, Field(default=None, description="Specify the relevant Note topic from the list, if needed.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add an analyst note to previously enriched entities in Siemplify, to Recorded Future entities. Action will add the note to the relevant scope entities. Note: If entity will not contain the Recorded Future ID field - this action will perform “Enrich IOC” action on it for better results. You can choose whether to update the entity with the enrichment data or not.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -365,16 +365,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert that needs to be updated.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the alert.")], assign_to: Annotated[Optional[str], Field(default=None, description="Specify to whom to assign the alert. You can provide id, username, user hash, or email.")], note: Annotated[Optional[str], Field(default=None, description="Specify a note that should be updated on the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert that needs to be updated.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the alert.")], assign_to: Annotated[str | None, Field(default=None, description="Specify to whom to assign the alert. You can provide id, username, user hash, or email.")], note: Annotated[str | None, Field(default=None, description="Specify a note that should be updated on the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update alert in Recorded Future.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -454,16 +454,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_enrich_cve(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a CVE to be marked malicious. Has a range of 0-99. Has the following levels: \n Very Critical: 90-99 \n Critical: 80-89 \n High: 65-79 \n Medium: 25-64 \n Low: 5-24 \n None: 0")], include_related_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_enrich_cve(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a CVE to be marked malicious. Has a range of 0-99. Has the following levels: \n Very Critical: 90-99 \n Critical: 80-89 \n High: 65-79 \n Medium: 25-64 \n Low: 5-24 \n None: 0")], include_related_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Query the RecordedFuture to get more information about the CVE.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -540,16 +540,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for an IP to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for an IP to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Query the RecordedFuture to get more information about the IP address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -633,9 +633,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -716,9 +716,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -800,9 +800,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -883,9 +883,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -960,16 +960,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_enrich_host(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a Host to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_enrich_host(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a Host to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Query the RecordedFuture to get more information about the Host.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1053,9 +1053,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1129,16 +1129,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def recorded_future_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a URL to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def recorded_future_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Represents the minimum malicious risk score for a URL to be marked malicious. Has a range of 0-99. Below is the band levels: \n Very Malicious: 90-99 \n Malicious: 65-89 \n Suspicious: 25-64 \n Unusual: 5-24 \n No Malicious content: 0")], include_related_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will get information about related entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Query the RecordedFuture to get more information about the URL.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

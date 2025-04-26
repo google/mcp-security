@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the SymantecESCC integration.
 
     @mcp.tool()
-    async def symantec_escc_get_related_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_filter: Annotated[Optional[str], Field(default=None, description="Specify the source filter. If nothing is provided, action will return related entities, based on all sources. Possible Values: byThreatActor, byProcessChain, bySignature, bySampleTraits, byNetworkingTrait, bySimilarIncidents.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def symantec_escc_get_related_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_filter: Annotated[str | None, Field(default=None, description="Specify the source filter. If nothing is provided, action will return related entities, based on all sources. Possible Values: byThreatActor, byProcessChain, bySignature, bySampleTraits, byNetworkingTrait, bySimilarIncidents.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get IOCs related to the entities from Symantec Endpoint Security Complete. Supported entities: Hash, URL and IP Address. Only SHA256 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -116,9 +116,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -192,16 +192,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def symantec_escc_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], device_group: Annotated[str, Field(..., description="Specify the name of the device group that should be used to retrieve information about endpoints.")], create_endpoint_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about the endpoints.")], create_ioc_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about enriched IOCs.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def symantec_escc_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], device_group: Annotated[str, Field(..., description="Specify the name of the device group that should be used to retrieve information about endpoints.")], create_endpoint_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about the endpoints.")], create_ioc_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about enriched IOCs.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich entities using information from Symantec Endpoint Security Complete. Supported entities: Hostname, Hash, URL and IP Address. Only SHA256 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -280,16 +280,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def symantec_escc_list_device_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify what value should be used in the filter.")], max_groups_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many groups to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def symantec_escc_list_device_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[str | None, Field(default=None, description="Specify what value should be used in the filter.")], max_groups_to_return: Annotated[str | None, Field(default=None, description="Specify how many groups to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available device groups in Symantec Endpoint Security Complete.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

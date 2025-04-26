@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -114,9 +114,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -197,9 +197,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -273,16 +273,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_threat_grid_upload_sample(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_path: Annotated[str, Field(..., description="The sample file path")], private: Annotated[bool, Field(..., description="if checked, the sample will be marked private")], vm: Annotated[Optional[str], Field(default=None, description="The vm to run the analysis on. e.g. win7-x64")], playbook: Annotated[Optional[str], Field(default=None, description="Name of a playbook to apply to this sample run. e.g. default")], network_exit: Annotated[Optional[str], Field(default=None, description="Any outgoing network traffic that is generated during the analysis to appear to exit from the Network Exit Location.")], linux_server_address: Annotated[Optional[str], Field(default=None, description="Specify the IP address of the remote linux server, where the file is located.")], linux_username: Annotated[Optional[str], Field(default=None, description="Specify the username of the remote linux server, where the file is located.")], linux_password: Annotated[Optional[str], Field(default=None, description="Specify the password of the remote linux server, where the file is located.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_threat_grid_upload_sample(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_path: Annotated[str, Field(..., description="The sample file path")], private: Annotated[bool, Field(..., description="if checked, the sample will be marked private")], vm: Annotated[str | None, Field(default=None, description="The vm to run the analysis on. e.g. win7-x64")], playbook: Annotated[str | None, Field(default=None, description="Name of a playbook to apply to this sample run. e.g. default")], network_exit: Annotated[str | None, Field(default=None, description="Any outgoing network traffic that is generated during the analysis to appear to exit from the Network Exit Location.")], linux_server_address: Annotated[str | None, Field(default=None, description="Specify the IP address of the remote linux server, where the file is located.")], linux_username: Annotated[str | None, Field(default=None, description="Specify the username of the remote linux server, where the file is located.")], linux_password: Annotated[str | None, Field(default=None, description="Specify the password of the remote linux server, where the file is located.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Upload and analyze a sample. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -370,16 +370,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_threat_grid_get_submissions(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threshold: Annotated[str, Field(..., description="Mark as suspicious if max threat score pass the threshold")], max_submissions_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many submissions to return per entitiy. Default: 10. Maximum: 100")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_threat_grid_get_submissions(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threshold: Annotated[str, Field(..., description="Mark as suspicious if max threat score pass the threshold")], max_submissions_to_return: Annotated[str | None, Field(default=None, description="Specify how many submissions to return per entitiy. Default: 10. Maximum: 100")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get submissions by entity
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

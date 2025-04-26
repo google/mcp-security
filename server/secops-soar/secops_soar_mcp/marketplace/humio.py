@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Humio integration.
 
     @mcp.tool()
-    async def humio_execute_custom_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], repository_name: Annotated[str, Field(..., description="Specify the name of the repository that should be searched.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed in Humio. Note: \"head()\" function shouldn't be a part of this string.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results the action should return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def humio_execute_custom_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], repository_name: Annotated[str, Field(..., description="Specify the name of the repository that should be searched.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed in Humio. Note: \"head()\" function shouldn't be a part of this string.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results the action should return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search events using custom query in Humio.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,9 +118,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -194,16 +194,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def humio_execute_simple_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], repository_name: Annotated[str, Field(..., description="Specify the name of the repository that should be searched.")], query_filter: Annotated[Optional[str], Field(default=None, description="Specify the query that should be executed during the search. Note: functions \"head()\" and \"select()\" shouldn't be provided.")], time_frame: Annotated[Optional[List[Any]], Field(default=None, description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify what fields to return. If nothing is provided, action will return all fields.")], sort_field: Annotated[Optional[str], Field(default=None, description="Specify what parameter should be used for sorting. By default the query sorts data by timestamp in the ascending order.")], sort_field_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the field that will be used for sorting. This parameter is needed to ensure that the correct results are returned.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Specify the order of sorting.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def humio_execute_simple_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], repository_name: Annotated[str, Field(..., description="Specify the name of the repository that should be searched.")], query_filter: Annotated[str | None, Field(default=None, description="Specify the query that should be executed during the search. Note: functions \"head()\" and \"select()\" shouldn't be provided.")], time_frame: Annotated[List[Any] | None, Field(default=None, description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_return: Annotated[str | None, Field(default=None, description="Specify what fields to return. If nothing is provided, action will return all fields.")], sort_field: Annotated[str | None, Field(default=None, description="Specify what parameter should be used for sorting. By default the query sorts data by timestamp in the ascending order.")], sort_field_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the field that will be used for sorting. This parameter is needed to ensure that the correct results are returned.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Specify the order of sorting.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search events based on parameters in Humio.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

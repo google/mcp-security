@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the TrendMicroApexCentral integration.
 
     @mcp.tool()
-    async def trend_micro_apex_central_create_file_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of file paths that needs to be used to create a UDSO.")], action: Annotated[List[Any], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[Optional[str], Field(default=None, description="Specify an additional note for the provided UDSO.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_apex_central_create_file_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of file paths that needs to be used to create a UDSO.")], action: Annotated[List[Any], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[str | None, Field(default=None, description="Specify an additional note for the provided UDSO.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a User-defined suspicious object based on a file in Trend Micro Apex Central.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,9 +118,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -194,16 +194,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_apex_central_create_entity_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], action: Annotated[List[Any], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[Optional[str], Field(default=None, description="Specify an additional note for the provided UDSO. Warning: this note can't contain more than 256 characters.")], expire_in_days: Annotated[Optional[str], Field(default=None, description="Specify in how many days the UDSO should expire. If nothing is provided, UDSO will never expire.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_apex_central_create_entity_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], action: Annotated[List[Any], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[str | None, Field(default=None, description="Specify an additional note for the provided UDSO. Warning: this note can't contain more than 256 characters.")], expire_in_days: Annotated[str | None, Field(default=None, description="Specify in how many days the UDSO should expire. If nothing is provided, UDSO will never expire.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a User-defined suspicious object based on the entities in Trend Micro Apex Central. Supported entities: IP, URL, Hash. Note: only SHA-1 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -289,9 +289,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -372,9 +372,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -448,16 +448,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_apex_central_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_endpoint_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight consisting of the information regarding the endpoints that were enriched.")], create_udso_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight consising of the information regarding the entities that matched UDSO.")], mark_udso_entities: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark all of the entities that were seen in the User-Defined Suspicious Objects list as suspicious.")], extract_domain: Annotated[Optional[bool], Field(default=None, description="If enabled, action will extract domain part of the URL entity and use it for enrichment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_apex_central_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_endpoint_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight consisting of the information regarding the endpoints that were enriched.")], create_udso_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight consising of the information regarding the entities that matched UDSO.")], mark_udso_entities: Annotated[bool | None, Field(default=None, description="If enabled, action will mark all of the entities that were seen in the User-Defined Suspicious Objects list as suspicious.")], extract_domain: Annotated[bool | None, Field(default=None, description="If enabled, action will extract domain part of the URL entity and use it for enrichment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich entities with information from Trend Micro Apex Central. Supported entities: IP Address, MAC Address, Hostname, URL, Hash. Note: only SHA-1 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

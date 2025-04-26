@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -107,16 +107,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_ise_terminate_session(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], node_server_name: Annotated[str, Field(..., description="ISE node server name, e.g. ciscoISE.")], calling_station_id: Annotated[str, Field(..., description="The ID value of the calling station, e.g. 1.")], terminate_type: Annotated[Optional[str], Field(default=None, description="Terminate Type value will be an integer between 0 and 2, e.g. 0 (0=DYNAMIC_AUTHZ_PORT_DEFAULT, 1=DYNAMIC_AUTHZ_PORT_BOUNCE, 2=DYNAMIC_AUTHZ_PORT_SHUTDOWN)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_ise_terminate_session(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], node_server_name: Annotated[str, Field(..., description="ISE node server name, e.g. ciscoISE.")], calling_station_id: Annotated[str, Field(..., description="The ID value of the calling station, e.g. 1.")], terminate_type: Annotated[str | None, Field(default=None, description="Terminate Type value will be an integer between 0 and 2, e.g. 0 (0=DYNAMIC_AUTHZ_PORT_DEFAULT, 1=DYNAMIC_AUTHZ_PORT_BOUNCE, 2=DYNAMIC_AUTHZ_PORT_SHUTDOWN)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Session disconnect via an API call
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -194,16 +194,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_ise_update_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[Optional[str], Field(default=None, description="endpoint's description")], group_id: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], portal_user: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], identity_store: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], identity_store_id: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], custom_attributes: Annotated[Optional[str], Field(default=None, description="Custom attributes will be added to the entity object, e.g. {'param':'val'}.")], mdm_server_name: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], mdm_reachable: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_enrolled: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_compliance_status: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_os: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], mdm_manufacturer: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], mdm_model: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], mdm_encrypted: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_pinlock: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_jail_broken: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_imei: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], mdm_phone_number: Annotated[Optional[str], Field(default=None, description="Endpoint's property to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_ise_update_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[str | None, Field(default=None, description="endpoint's description")], group_id: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], portal_user: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], identity_store: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], identity_store_id: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], custom_attributes: Annotated[str | None, Field(default=None, description="Custom attributes will be added to the entity object, e.g. {'param':'val'}.")], mdm_server_name: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], mdm_reachable: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_enrolled: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_compliance_status: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_os: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], mdm_manufacturer: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], mdm_model: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], mdm_encrypted: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_pinlock: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_jail_broken: Annotated[str | None, Field(default=None, description="Endpoint's property to update, e.g. true or false.")], mdm_imei: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], mdm_phone_number: Annotated[str | None, Field(default=None, description="Endpoint's property to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update endpoint object
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -313,16 +313,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_ise_list_endpoint_identity_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[Optional[List[Any]], Field(default=None, description="Specify the key that needs to be used to filter endpoint entity groups.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 100 records. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_ise_list_endpoint_identity_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[List[Any] | None, Field(default=None, description="Specify the key that needs to be used to filter endpoint entity groups.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], filter_value: Annotated[str | None, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 100 records. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available endpoint entity groups in Cisco ISE.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -411,9 +411,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -495,9 +495,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -578,9 +578,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -661,9 +661,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -744,9 +744,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -828,9 +828,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

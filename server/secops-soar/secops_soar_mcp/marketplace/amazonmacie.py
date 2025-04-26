@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -108,16 +108,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_list_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_type: Annotated[Optional[str], Field(default=None, description="Finding type to search for, for example SensitiveData:S3Object/Credentials or SensitiveData:S3Object/Multiple. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all types of findings.")], time_frame: Annotated[Optional[str], Field(default=None, description="Specify a time frame in hours for which to fetch findings.")], severity: Annotated[Optional[str], Field(default=None, description="Finding severity to search - High, Medium or Low. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all findings regardless of severity.")], include_archived_findings: Annotated[Optional[bool], Field(default=None, description="Specify whether to include archived findings in results or not.")], record_limit: Annotated[Optional[str], Field(default=None, description="Specify how many records can be returned by the action.")], sort_by: Annotated[Optional[str], Field(default=None, description="Specify a parameter for sorting the data, eg updatedAt")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_list_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_type: Annotated[str | None, Field(default=None, description="Finding type to search for, for example SensitiveData:S3Object/Credentials or SensitiveData:S3Object/Multiple. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all types of findings.")], time_frame: Annotated[str | None, Field(default=None, description="Specify a time frame in hours for which to fetch findings.")], severity: Annotated[str | None, Field(default=None, description="Finding severity to search - High, Medium or Low. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all findings regardless of severity.")], include_archived_findings: Annotated[bool | None, Field(default=None, description="Specify whether to include archived findings in results or not.")], record_limit: Annotated[str | None, Field(default=None, description="Specify how many records can be returned by the action.")], sort_by: Annotated[str | None, Field(default=None, description="Specify a parameter for sorting the data, eg updatedAt")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Amazon Macie findings based on the specified action input parameters.  Note: Action is not working with Siemplify entities, only with action input parameters.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -212,9 +212,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -296,9 +296,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -379,9 +379,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -462,9 +462,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -538,16 +538,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_create_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_name: Annotated[str, Field(..., description="Amazon Macie new custom data identifier name.")], custom_data_identifier_regular_expression: Annotated[str, Field(..., description="Amazon Macie new custom data identifier regular expression, eg I[a@]mAB[a@]dRequest")], custom_data_identifier_description: Annotated[Optional[str], Field(default=None, description="Amazon Macie new custom data identifier description.")], custom_data_identifier_keywords: Annotated[Optional[str], Field(default=None, description="Amazon Macie new custom data identifier keywords.")], custom_data_identifier_ignore_words: Annotated[Optional[str], Field(default=None, description="Amazon Macie new custom data identifier ignore words.")], custom_data_identifier_maximum_match_distance: Annotated[Optional[str], Field(default=None, description="Amazon Macie new custom data identifier maximum match distance. Default value is 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_create_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_name: Annotated[str, Field(..., description="Amazon Macie new custom data identifier name.")], custom_data_identifier_regular_expression: Annotated[str, Field(..., description="Amazon Macie new custom data identifier regular expression, eg I[a@]mAB[a@]dRequest")], custom_data_identifier_description: Annotated[str | None, Field(default=None, description="Amazon Macie new custom data identifier description.")], custom_data_identifier_keywords: Annotated[str | None, Field(default=None, description="Amazon Macie new custom data identifier keywords.")], custom_data_identifier_ignore_words: Annotated[str | None, Field(default=None, description="Amazon Macie new custom data identifier ignore words.")], custom_data_identifier_maximum_match_distance: Annotated[str | None, Field(default=None, description="Amazon Macie new custom data identifier maximum match distance. Default value is 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create Amazon Macie Custom Data Identifier. Note: Action is not working with Siemplify Entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

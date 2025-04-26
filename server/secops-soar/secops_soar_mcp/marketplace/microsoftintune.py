@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Any, List, Dict, Union, Annotated
 from pydantic import Field
 
 
@@ -24,17 +24,17 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the MicrosoftIntune integration.
 
     @mcp.tool()
-    async def microsoft_intune_remote_lock_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_remote_lock_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remote lock managed device. The action starts the task, to check the current task status, run "Get Managed Device" action and see "deviceActionResults" section for task status.  The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority.  Please refer to our doc portal for more details.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,20 +65,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
                 script_params["Host Name"] = host_name
             if host_id is not None:
                 script_params["Host Id"] = host_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -94,7 +94,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -111,17 +111,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_list_managed_devices(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[Optional[List[Any]], Field(default=None, description="Specify the key that needs to be used to filter managed devices.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify what value should be used in the filter. If \u201cEqual\u201c is selected, action will try to find the exact match among results and if \u201cContains\u201c is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_list_managed_devices(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[List[Any] | None, Field(default=None, description="Specify the key that needs to be used to filter managed devices.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], filter_value: Annotated[str | None, Field(default=None, description="Specify what value should be used in the filter. If \u201cEqual\u201c is selected, action will try to find the exact match among results and if \u201cContains\u201c is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List managed devices available in the Microsoft Intune instance based on provided criteria. Note: This action doesn't run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -152,13 +152,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if filter_key is not None:
@@ -169,7 +169,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Filter Value"] = filter_value
             if max_records_to_return is not None:
                 script_params["Max Records To Return"] = max_records_to_return
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -185,7 +185,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -202,17 +202,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_sync_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_sync_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Sync managed device with the Microsoft Intune service. The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority. Please refer to our doc portal for more details.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -232,7 +232,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -243,20 +243,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
                 script_params["Host Name"] = host_name
             if host_id is not None:
                 script_params["Host Id"] = host_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -272,7 +272,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -296,10 +296,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -319,7 +319,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -330,16 +330,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -355,7 +355,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -372,17 +372,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_locate_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_locate_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Locate managed device with the Microsoft Intune service. The action starts the task, to check the current task status, run "Get Managed Device" action and see "deviceActionResults" section for task status.  The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority.  Please refer to our doc portal for more details.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -402,7 +402,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -413,20 +413,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
                 script_params["Host Name"] = host_name
             if host_id is not None:
                 script_params["Host Id"] = host_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -442,7 +442,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -459,17 +459,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_wipe_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], keep_enrollment_data: Annotated[Optional[bool], Field(default=None, description="If enabled, keep enrollment data on the device.")], keep_user_data: Annotated[Optional[bool], Field(default=None, description="If enabled, keep user data on the device.")], persist_esim_data_plan: Annotated[Optional[bool], Field(default=None, description="If enabled, persist esim data plan for the device.")], mac_os_unlock_code: Annotated[Optional[str], Field(default=None, description="Specify if applicable Mac OS unlock code.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_wipe_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], keep_enrollment_data: Annotated[bool | None, Field(default=None, description="If enabled, keep enrollment data on the device.")], keep_user_data: Annotated[bool | None, Field(default=None, description="If enabled, keep user data on the device.")], persist_esim_data_plan: Annotated[bool | None, Field(default=None, description="If enabled, persist esim data plan for the device.")], mac_os_unlock_code: Annotated[str | None, Field(default=None, description="Specify if applicable Mac OS unlock code.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Wipe managed device with the Microsoft Intune service. The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority. Please refer to our doc portal for more details.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -489,7 +489,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -500,13 +500,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
@@ -521,7 +521,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Persist Esim Data Plan"] = persist_esim_data_plan
             if mac_os_unlock_code is not None:
                 script_params["Mac OS Unlock Code"] = mac_os_unlock_code
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -537,7 +537,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -554,17 +554,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_get_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify the host name to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify the host id to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_get_managed_device(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify the host name to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify the host id to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get managed device information from the Microsoft Intune service, including information on specific actions, for example locate device ("deviceActionResults" section of the json result). The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -584,7 +584,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -595,20 +595,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
                 script_params["Host Name"] = host_name
             if host_id is not None:
                 script_params["Host Id"] = host_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -624,7 +624,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -641,17 +641,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def microsoft_intune_reset_managed_device_passcode(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def microsoft_intune_reset_managed_device_passcode(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], host_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host names to run the action on. Host name is case insensitive. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], host_id: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of host ids to run the action on. If the action does not run on a hostname entity, it can run either on Host Name or Host ID. Note: if both \"Host Name\" and \"Host Id\" are provided, then \"Host Id\" value will have priority. Multiple values can be as a comma-separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Reset managed device passcode. The action starts the task, to check the current task status, run "Get Managed Device" action and see "deviceActionResults" section for task status.  The host name to run the action on can be provided either as a Siemplify entity or as an action input parameter. If the host name is passed to action both as an entity and input parameter - action will be executed on the input parameter. Host name is case insensitive. Action also can be provided with the host id to run on. If both host id and hostname are provided, action will run on the host id as a priority.  Please refer to our doc portal for more details.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -671,7 +671,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -682,20 +682,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for MicrosoftIntune: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if host_name is not None:
                 script_params["Host Name"] = host_name
             if host_id is not None:
                 script_params["Host Id"] = host_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -711,7 +711,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

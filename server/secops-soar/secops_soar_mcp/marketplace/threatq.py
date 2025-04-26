@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ThreatQ integration.
 
     @mcp.tool()
-    async def threat_q_enrich_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[Optional[str], Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_enrich_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[str | None, Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[bool | None, Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich an email address using ThreatQ information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -117,16 +117,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_add_source(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type source should be added.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], source_name: Annotated[str, Field(..., description="Specify the name of the source.")], indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the indicator. This parameter is only used, if Source Object Type is Indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_add_source(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type source should be added.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], source_name: Annotated[str, Field(..., description="Specify the name of the source.")], indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the indicator. This parameter is only used, if Source Object Type is Indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action adds a source to the object.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -205,16 +205,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[Optional[str], Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_enrich_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[str | None, Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[bool | None, Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich a Hash using ThreatQ information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -305,9 +305,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -381,16 +381,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_enrich_cve(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[Optional[str], Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_enrich_cve(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[str | None, Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[bool | None, Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich a CVE using ThreatQ information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -481,9 +481,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -558,16 +558,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_create_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], event_type: Annotated[List[Any], Field(..., description="Specify the type of the event.")], title: Annotated[str, Field(..., description="Specify the title of the event.")], happened_at: Annotated[Optional[str], Field(default=None, description="Specify when the event happened. If nothing is entered in this field, action will use current time. Format: YYYY-MM-DD hh:mm:ss")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_create_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], event_type: Annotated[List[Any], Field(..., description="Specify the type of the event.")], title: Annotated[str, Field(..., description="Specify the title of the event.")], happened_at: Annotated[str | None, Field(default=None, description="Specify when the event happened. If nothing is entered in this field, action will use current time. Format: YYYY-MM-DD hh:mm:ss")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an event in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -652,9 +652,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -728,16 +728,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_list_related_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_object_type: Annotated[List[Any], Field(..., description="Specify the type of the source object.")], source_object_identifier: Annotated[str, Field(..., description="Specify identifier of the source object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], related_object_type: Annotated[List[Any], Field(..., description="Specify the type of the related object that needs to be returned.")], source_indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the source indicator. This parameter is only used, if Source Object Type is Indicator.")], max_related_objects_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many related objects to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_list_related_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_object_type: Annotated[List[Any], Field(..., description="Specify the type of the source object.")], source_object_identifier: Annotated[str, Field(..., description="Specify identifier of the source object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], related_object_type: Annotated[List[Any], Field(..., description="Specify the type of the related object that needs to be returned.")], source_indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the source indicator. This parameter is only used, if Source Object Type is Indicator.")], max_related_objects_to_return: Annotated[str | None, Field(default=None, description="Specify how many related objects to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action lists related objects in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -818,16 +818,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_list_entity_related_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], related_object_type: Annotated[List[Any], Field(..., description="Specify the type of the related object that needs to be returned.")], max_related_objects_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many related objects to return. Maximum is 1000. This is a ThreatQ limitation.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_list_entity_related_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], related_object_type: Annotated[List[Any], Field(..., description="Specify the type of the related object that needs to be returned.")], max_related_objects_to_return: Annotated[str | None, Field(default=None, description="Specify how many related objects to return. Maximum is 1000. This is a ThreatQ limitation.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action lists related objects for entities in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -904,16 +904,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[Optional[str], Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_enrich_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[str | None, Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[bool | None, Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich an IP using ThreatQ information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1004,9 +1004,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1087,9 +1087,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1163,16 +1163,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_list_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_fields: Annotated[Optional[str], Field(default=None, description="Specify what additional fields should be included in the response. Possible values: adversaries, attachments, attributes, comments, events, indicators, signatures, sources, spearphish, tags, type, watchlist.")], sort_field: Annotated[Optional[List[Any]], Field(default=None, description="Specify what field should be used for sorting events.")], sort_direction: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sorting direction.")], max_events_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many events to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_list_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_fields: Annotated[str | None, Field(default=None, description="Specify what additional fields should be included in the response. Possible values: adversaries, attachments, attributes, comments, events, indicators, signatures, sources, spearphish, tags, type, watchlist.")], sort_field: Annotated[List[Any] | None, Field(default=None, description="Specify what field should be used for sorting events.")], sort_direction: Annotated[List[Any] | None, Field(default=None, description="Specify the sorting direction.")], max_events_to_return: Annotated[str | None, Field(default=None, description="Specify how many events to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List events from ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1261,9 +1261,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1339,16 +1339,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_link_entities_to_object(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify the type of the object to which you want to link entities.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object to which you want to link entities. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the  indicator to which you want to link entities. This parameter is only used, if Source Object Type is \u201cIndicator\u201d.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_link_entities_to_object(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify the type of the object to which you want to link entities.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object to which you want to link entities. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the  indicator to which you want to link entities. This parameter is only used, if Source Object Type is \u201cIndicator\u201d.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action links all of the entities in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1426,16 +1426,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_add_attribute(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type attribute should be added.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], attribute_name: Annotated[str, Field(..., description="Specify the name of the attribute.")], attribute_value: Annotated[str, Field(..., description="Specify the value of the attribute.")], indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the indicator. This parameter is only used, if Source Object Type is Indicator.")], attribute_source: Annotated[Optional[str], Field(default=None, description="Specify the source of the attribute.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_add_attribute(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type attribute should be added.")], object_identifier: Annotated[str, Field(..., description="Specify identifier of the object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], attribute_name: Annotated[str, Field(..., description="Specify the name of the attribute.")], attribute_value: Annotated[str, Field(..., description="Specify the value of the attribute.")], indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the indicator. This parameter is only used, if Source Object Type is Indicator.")], attribute_source: Annotated[str | None, Field(default=None, description="Specify the source of the attribute.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action adds an attribute to the object.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1517,16 +1517,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_create_object(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type attribute should be added.")], value: Annotated[str, Field(..., description="Specify the value of the new object.")], description: Annotated[Optional[str], Field(default=None, description="Specify description of the new object.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_create_object(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_type: Annotated[List[Any], Field(..., description="Specify to which object type attribute should be added.")], value: Annotated[str, Field(..., description="Specify the value of the new object.")], description: Annotated[str | None, Field(default=None, description="Specify description of the new object.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an object in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1604,16 +1604,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_get_malware_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_information: Annotated[Optional[str], Field(default=None, description="Specify what additional fields should be included in the response. Possible values: adversaries, attackPattern, campaign, courseOfAction, attachments, attributes, comments, events, indicators, signatures, sources, status, tags, type, watchlist, exploitTarget, identity, incident, intrusionSet, malware, report, tool, ttp, vulnerability, tasks")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_get_malware_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_information: Annotated[str | None, Field(default=None, description="Specify what additional fields should be included in the response. Possible values: adversaries, attackPattern, campaign, courseOfAction, attachments, attributes, comments, events, indicators, signatures, sources, status, tags, type, watchlist, exploitTarget, identity, incident, intrusionSet, malware, report, tool, ttp, vulnerability, tasks")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action returns information about malware based on entities from ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1689,16 +1689,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_create_indicator(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], indicator_type: Annotated[List[Any], Field(..., description="Specify the type of the new indicator.")], status: Annotated[List[Any], Field(..., description="Specify the status of the new indicator.")], description: Annotated[Optional[str], Field(default=None, description="Specify description of the new indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_create_indicator(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], indicator_type: Annotated[List[Any], Field(..., description="Specify the type of the new indicator.")], status: Annotated[List[Any], Field(..., description="Specify the status of the new indicator.")], description: Annotated[str | None, Field(default=None, description="Specify description of the new indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an indicator in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1776,16 +1776,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_link_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_object_type: Annotated[List[Any], Field(..., description="Specify the type of the source object.")], source_object_identifier: Annotated[str, Field(..., description="Specify identifier of the source object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], destination_object_type: Annotated[List[Any], Field(..., description="Specify the type of the destination object.")], destination_object_identifier: Annotated[str, Field(..., description="Specify identifier of the destination object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], source_indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the source indicator. This parameter is only used, if Source Object Type is Indicator.")], destination_indicator_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the destination indicator. This parameter is only used, if Destination Object Type is Indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_link_objects(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], source_object_type: Annotated[List[Any], Field(..., description="Specify the type of the source object.")], source_object_identifier: Annotated[str, Field(..., description="Specify identifier of the source object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], destination_object_type: Annotated[List[Any], Field(..., description="Specify the type of the destination object.")], destination_object_identifier: Annotated[str, Field(..., description="Specify identifier of the destination object. For example, it can be an MD5 hash, title of the event, name of the adversary etc.")], source_indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the source indicator. This parameter is only used, if Source Object Type is Indicator.")], destination_indicator_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the destination indicator. This parameter is only used, if Destination Object Type is Indicator.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action links two objects in ThreatQ.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1867,16 +1867,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def threat_q_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[Optional[str], Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[Optional[bool], Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def threat_q_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], score_threshold: Annotated[str | None, Field(default=None, description="Set the acceptable score threshold for the entity. If the score exceeds the specified threshold, entity will be marked as suspicious.")], show_sources: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related sources.")], show_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related comments.")], show_attributes: Annotated[bool | None, Field(default=None, description="If enabled, action will return an additional table with related attributes.")], mark_whitelisted_entities_as_suspicious: Annotated[bool | None, Field(default=None, description="If enabled, action will mark entities as suspicious if they passed the allowed threshold, even if the entity is whitelisted in ThreatQ.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich an URL using ThreatQ information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

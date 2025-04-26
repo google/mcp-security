@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,9 +115,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -193,16 +193,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mc_afee_esm_send_query_to_esm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], time_range: Annotated[List[Any], Field(..., description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_field_name: Annotated[str, Field(..., description="Specify the field name that will be used for filtering.")], filter_operator: Annotated[List[Any], Field(..., description="Specify the operator that should be used in the filter.")], filter_values: Annotated[str, Field(..., description="Specify a comma-separated list of values that will be used in the filter.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_fetch: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields that should be returned. If nothing is provided, action will use the predefined fields.")], sort_field: Annotated[Optional[str], Field(default=None, description="Specify what parameter should be used for sorting. Note: this parameter expects the field in the format {table}.{key name}. If the parameter is provided in another format, action will skip it. Example: Alert.LastTime.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Specify the order of sorting.")], query_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify what needs to be queried.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return. Default: 50. Maximum: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_esm_send_query_to_esm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], time_range: Annotated[List[Any], Field(..., description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_field_name: Annotated[str, Field(..., description="Specify the field name that will be used for filtering.")], filter_operator: Annotated[List[Any], Field(..., description="Specify the operator that should be used in the filter.")], filter_values: Annotated[str, Field(..., description="Specify a comma-separated list of values that will be used in the filter.")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_fetch: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields that should be returned. If nothing is provided, action will use the predefined fields.")], sort_field: Annotated[str | None, Field(default=None, description="Specify what parameter should be used for sorting. Note: this parameter expects the field in the format {table}.{key name}. If the parameter is provided in another format, action will skip it. Example: Alert.LastTime.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Specify the order of sorting.")], query_type: Annotated[List[Any] | None, Field(default=None, description="Specify what needs to be queried.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return. Default: 50. Maximum: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Send a query to ESM. Note: Action is running as async, please adjust script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -301,9 +301,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -379,16 +379,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mc_afee_esm_send_entity_query_to_esm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ip_address_entity_key: Annotated[str, Field(..., description="Specify the key that will be used with the IP Address entity during filtering. Note: if invalid key is provided, the action will still return results, but they will be unexpected.")], hostname_entity_key: Annotated[str, Field(..., description="Specify the key that will be used with the Hostname entity during filtering. Note: if invalid key is provided, the action will still return results, but they will be unexpected.")], time_range: Annotated[List[Any], Field(..., description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_field_name: Annotated[str, Field(..., description="Specify the field name that will be used for filtering.")], filter_operator: Annotated[List[Any], Field(..., description="Specify the operator that should be used in the filter.")], filter_values: Annotated[str, Field(..., description="Specify a comma-separated list of values that will be used in the filter.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_fetch: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields that should be returned. If nothing is provided, action will use the predefined fields.")], sort_field: Annotated[Optional[str], Field(default=None, description="Specify what parameter should be used for sorting. Note: this parameter expects the field in the format {table}.{key name}. If the parameter is provided in another format, action will skip it. Example: Alert.LastTime.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Specify the order of sorting.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return. Default: 50. Maximum: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_esm_send_entity_query_to_esm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ip_address_entity_key: Annotated[str, Field(..., description="Specify the key that will be used with the IP Address entity during filtering. Note: if invalid key is provided, the action will still return results, but they will be unexpected.")], hostname_entity_key: Annotated[str, Field(..., description="Specify the key that will be used with the Hostname entity during filtering. Note: if invalid key is provided, the action will still return results, but they will be unexpected.")], time_range: Annotated[List[Any], Field(..., description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_field_name: Annotated[str, Field(..., description="Specify the field name that will be used for filtering.")], filter_operator: Annotated[List[Any], Field(..., description="Specify the operator that should be used in the filter.")], filter_values: Annotated[str, Field(..., description="Specify a comma-separated list of values that will be used in the filter.")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], fields_to_fetch: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields that should be returned. If nothing is provided, action will use the predefined fields.")], sort_field: Annotated[str | None, Field(default=None, description="Specify what parameter should be used for sorting. Note: this parameter expects the field in the format {table}.{key name}. If the parameter is provided in another format, action will skip it. Example: Alert.LastTime.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Specify the order of sorting.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return. Default: 50. Maximum: 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Send a query to ESM based on entities. Supported entities: IP Address, Hostname. Note: Action is running as async, please adjust script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -487,9 +487,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -563,16 +563,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mc_afee_esm_get_similar_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], hours_back: Annotated[str, Field(..., description="Specify how many hours backwards to search.")], ips_id: Annotated[Optional[str], Field(default=None, description="Specify the IP SID for the search.")], result_limit: Annotated[Optional[str], Field(default=None, description="Specify how many results to return. Max: 200 per entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_esm_get_similar_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], hours_back: Annotated[str, Field(..., description="Specify how many hours backwards to search.")], ips_id: Annotated[str | None, Field(default=None, description="Specify the IP SID for the search.")], result_limit: Annotated[str | None, Field(default=None, description="Specify how many results to return. Max: 200 per entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get events related to the entities in McAfee ESM. Supported entities: Hostname, IP Address, User. Note: Action is running as async, please adjust script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

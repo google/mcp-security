@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ServiceDeskPlus integration.
 
     @mcp.tool()
-    async def service_desk_plus_create_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[Optional[str], Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[Optional[str], Field(default=None, description="The description of the request.")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode of the request.")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="The site of the request.")], group: Annotated[Optional[str], Field(default=None, description="The group of the request.")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_create_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str | None, Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[str | None, Field(default=None, description="The description of the request.")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode of the request.")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="The site of the request.")], group: Annotated[str | None, Field(default=None, description="The group of the request.")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -138,16 +138,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_create_alert_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[Optional[str], Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode of the request.")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="The site of the request.")], group: Annotated[Optional[str], Field(default=None, description="The group of the request.")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_create_alert_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str | None, Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode of the request.")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="The site of the request.")], group: Annotated[str | None, Field(default=None, description="The group of the request.")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an request related to a Siemplify alert
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -257,9 +257,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -343,9 +343,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -419,16 +419,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_update_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The id of the request to update.")], requester: Annotated[Optional[str], Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[Optional[str], Field(default=None, description="The description of the request.")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode of the request.")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="The site of the request.")], group: Annotated[Optional[str], Field(default=None, description="The group of the request.")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_update_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The id of the request to update.")], requester: Annotated[str | None, Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[str | None, Field(default=None, description="The description of the request.")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. I.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode of the request.")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="The site of the request.")], group: Annotated[str | None, Field(default=None, description="The group of the request.")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -540,9 +540,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -624,9 +624,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -710,9 +710,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -796,9 +796,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -882,9 +882,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

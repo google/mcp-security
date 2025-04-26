@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FalconSandbox integration.
 
     @mcp.tool()
-    async def falcon_sandbox_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_name: Annotated[Optional[str], Field(default=None, description="Filename e.g. invoice.exe")], file_type: Annotated[Optional[str], Field(default=None, description="e.g. docx")], file_type_description: Annotated[Optional[str], Field(default=None, description="e.g. PE32 executable")], verdict: Annotated[Optional[str], Field(default=None, description="e.g. 1 (1=whitelisted, 2=no verdict, 3=no specific threat, 4=suspicious, 5=malicious)")], av_multiscan_range: Annotated[Optional[str], Field(default=None, description="e.g. 50-70 (min 0, max 100)")], av_family_substring: Annotated[Optional[str], Field(default=None, description="e.g. Agent.AD, nemucod")], hashtag: Annotated[Optional[str], Field(default=None, description="e.g. ransomware")], port: Annotated[Optional[str], Field(default=None, description="e.g. 8080")], host: Annotated[Optional[str], Field(default=None, description="x.x.x.x")], domain: Annotated[Optional[str], Field(default=None, description="e.g. checkip.dyndns.org")], http_request_substring: Annotated[Optional[str], Field(default=None, description="e.g. google")], similar_samples: Annotated[Optional[str], Field(default=None, description="e.g. <sha256>")], sample_context: Annotated[Optional[str], Field(default=None, description="e.g. <sha256>")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def falcon_sandbox_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_name: Annotated[str | None, Field(default=None, description="Filename e.g. invoice.exe")], file_type: Annotated[str | None, Field(default=None, description="e.g. docx")], file_type_description: Annotated[str | None, Field(default=None, description="e.g. PE32 executable")], verdict: Annotated[str | None, Field(default=None, description="e.g. 1 (1=whitelisted, 2=no verdict, 3=no specific threat, 4=suspicious, 5=malicious)")], av_multiscan_range: Annotated[str | None, Field(default=None, description="e.g. 50-70 (min 0, max 100)")], av_family_substring: Annotated[str | None, Field(default=None, description="e.g. Agent.AD, nemucod")], hashtag: Annotated[str | None, Field(default=None, description="e.g. ransomware")], port: Annotated[str | None, Field(default=None, description="e.g. 8080")], host: Annotated[str | None, Field(default=None, description="x.x.x.x")], domain: Annotated[str | None, Field(default=None, description="e.g. checkip.dyndns.org")], http_request_substring: Annotated[str | None, Field(default=None, description="e.g. google")], similar_samples: Annotated[str | None, Field(default=None, description="e.g. <sha256>")], sample_context: Annotated[str | None, Field(default=None, description="e.g. <sha256>")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search Falcon databases for existing scan reports and information about files, and file Urls
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -133,16 +133,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def falcon_sandbox_analyze_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_path: Annotated[str, Field(..., description="The full path of the file to analyze")], environment: Annotated[str, Field(..., description="Environment ID. e.g. 100 (100=Windows 7 32 bit)")], include_report: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch report related to the attachment. Note: this feature requires a premium key.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def falcon_sandbox_analyze_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_path: Annotated[str, Field(..., description="The full path of the file to analyze")], environment: Annotated[str, Field(..., description="Environment ID. e.g. 100 (100=Windows 7 32 bit)")], include_report: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch report related to the attachment. Note: this feature requires a premium key.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a file for analysis and fetch report
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -227,9 +227,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -311,9 +311,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -394,9 +394,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -479,9 +479,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -562,9 +562,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -647,9 +647,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

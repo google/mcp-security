@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the SiemplifyUtilities integration.
 
     @mcp.tool()
-    async def siemplify_utilities_parse_eml_to_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], eml_content: Annotated[str, Field(..., description="The base64 encoded content of the EML file.")], blacklisted_headers: Annotated[Optional[str], Field(default=None, description="Headers to exclude from the response.")], use_blacklist_as_whitelist: Annotated[Optional[bool], Field(default=None, description="To only include the listed headers.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_parse_eml_to_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], eml_content: Annotated[str, Field(..., description="The base64 encoded content of the EML file.")], blacklisted_headers: Annotated[str | None, Field(default=None, description="Headers to exclude from the response.")], use_blacklist_as_whitelist: Annotated[bool | None, Field(default=None, description="To only include the listed headers.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Parse EML to JSON
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -112,16 +112,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_list_operations(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], first_list: Annotated[Optional[str], Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], second_list: Annotated[Optional[str], Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], delimiter: Annotated[Optional[str], Field(default=None, description="Define a symbol, which is used for separation of values in both lists.")], operator: Annotated[Optional[str], Field(default=None, description="Has to be one of the following: intersection, union, subtract or xor.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_list_operations(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], first_list: Annotated[str | None, Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], second_list: Annotated[str | None, Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], delimiter: Annotated[str | None, Field(default=None, description="Define a symbol, which is used for separation of values in both lists.")], operator: Annotated[str | None, Field(default=None, description="Has to be one of the following: intersection, union, subtract or xor.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Provide operations on lists.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -203,16 +203,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_query_joiner(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], values: Annotated[str, Field(..., description="Comma separated string list. For example: value1,value2,value3.")], query_field: Annotated[str, Field(..., description="Query target field ex. SrcIP, DestHost, etc..")], query_operator: Annotated[str, Field(..., description="Query operator(OR, AND, etc.)")], add_quotes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will add quotes to every item in the \"Values\" list.")], add_double_quotes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will add double quotes to every item in the \"Values\" list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_query_joiner(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], values: Annotated[str, Field(..., description="Comma separated string list. For example: value1,value2,value3.")], query_field: Annotated[str, Field(..., description="Query target field ex. SrcIP, DestHost, etc..")], query_operator: Annotated[str, Field(..., description="Query operator(OR, AND, etc.)")], add_quotes: Annotated[bool | None, Field(default=None, description="If enabled, action will add quotes to every item in the \"Values\" list.")], add_double_quotes: Annotated[bool | None, Field(default=None, description="If enabled, action will add double quotes to every item in the \"Values\" list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Form query string from given parameters.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -293,16 +293,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_count_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], input_string: Annotated[Optional[str], Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], delimiter: Annotated[Optional[str], Field(default=None, description="Define a symbol, which is used for separation of values from the input list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_count_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], input_string: Annotated[str | None, Field(default=None, description="Comma separated string list. For example: value1,value2,value3.")], delimiter: Annotated[str | None, Field(default=None, description="Define a symbol, which is used for separation of values from the input list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Count the number of items on a list - separated by a configurable delimiter.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -387,9 +387,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -463,16 +463,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_export_entities_as_open_ioc_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], export_folder_path: Annotated[str, Field(..., description="Specify the folder that should store the OpenIOC files.")], ioc_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the IOC.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_export_entities_as_open_ioc_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], export_folder_path: Annotated[str, Field(..., description="Specify the folder that should store the OpenIOC files.")], ioc_name: Annotated[str | None, Field(default=None, description="Specify the name of the IOC.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Export entities as OpenIOC file. Supported entities: Filehash, IP address, URL, Hostname, User.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -549,16 +549,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_extract_top_from_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], json_data: Annotated[Union[str, dict], Field(..., description="JSON data to process.")], key_to_sort_by: Annotated[str, Field(..., description="Nested key separated by dots. Use * as a wildcard. Example: Host.*.wassap_list.Severity")], field_type: Annotated[str, Field(..., description="The type of the field to sort by. Valid values: int (numeric field), string (a text field) or date")], reverse_desc_to_asc: Annotated[Optional[bool], Field(default=None, description="Sort results by DESC or ASC (Z -> A).")], top_rows: Annotated[Optional[str], Field(default=None, description="Retrieve number of rows from JSON to process.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_extract_top_from_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], json_data: Annotated[Union[str, dict], Field(..., description="JSON data to process.")], key_to_sort_by: Annotated[str, Field(..., description="Nested key separated by dots. Use * as a wildcard. Example: Host.*.wassap_list.Severity")], field_type: Annotated[str, Field(..., description="The type of the field to sort by. Valid values: int (numeric field), string (a text field) or date")], reverse_desc_to_asc: Annotated[bool | None, Field(default=None, description="Sort results by DESC or ASC (Z -> A).")], top_rows: Annotated[str | None, Field(default=None, description="Retrieve number of rows from JSON to process.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """The action gets Json as input, sort it by a specific key and return the TOP x of the relevant branches
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -646,9 +646,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -729,9 +729,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -806,16 +806,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_utilities_filter_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], json_data: Annotated[Union[str, dict], Field(..., description="The json dict data to filter.")], condition_path: Annotated[str, Field(..., description="The path to the field to filter by, dot separated.")], condition_operator: Annotated[str, Field(..., description="The condition operator. Can be one of the following: = / != / > / < / >= / <= / in / not in.")], condition_value: Annotated[str, Field(..., description="The value of the condition to filter by.")], root_key_path: Annotated[Optional[str], Field(default=None, description="The path to the Root Key. Note: The system uses dot notation for JSON search. For example: json.message.status.")], output_path: Annotated[Optional[str], Field(default=None, description="The path to the desired results in the filtered dict, dot separated.")], delimeter: Annotated[Optional[str], Field(default=None, description="The delimiter to join the values in the output path. Default: comma.")], escape_json_data_input: Annotated[Optional[bool], Field(default=None, description="If enabled, the action will try to escape input inside JSON Data, if it couldn't detect a valid JSON immediately. Note: escaping operation is unstable and should be used with caution. If the parameter is disabled, action will never try to escape the JSON Data.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_utilities_filter_json(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], json_data: Annotated[Union[str, dict], Field(..., description="The json dict data to filter.")], condition_path: Annotated[str, Field(..., description="The path to the field to filter by, dot separated.")], condition_operator: Annotated[str, Field(..., description="The condition operator. Can be one of the following: = / != / > / < / >= / <= / in / not in.")], condition_value: Annotated[str, Field(..., description="The value of the condition to filter by.")], root_key_path: Annotated[str | None, Field(default=None, description="The path to the Root Key. Note: The system uses dot notation for JSON search. For example: json.message.status.")], output_path: Annotated[str | None, Field(default=None, description="The path to the desired results in the filtered dict, dot separated.")], delimeter: Annotated[str | None, Field(default=None, description="The delimiter to join the values in the output path. Default: comma.")], escape_json_data_input: Annotated[bool | None, Field(default=None, description="If enabled, the action will try to escape input inside JSON Data, if it couldn't detect a valid JSON immediately. Note: escaping operation is unstable and should be used with caution. If the parameter is disabled, action will never try to escape the JSON Data.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Filter JSON dict
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -908,9 +908,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

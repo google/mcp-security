@@ -31,10 +31,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,16 +65,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -90,7 +90,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -107,17 +107,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_iam_create_service_account(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], service_account_id: Annotated[str, Field(..., description="Specify service account id to create.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project to create service accounts in. If nothing is provided, the project will be extracted from integration configuration.")], service_account_display_name: Annotated[Optional[str], Field(default=None, description="Specify service account display name to create.")], service_account_description: Annotated[Optional[str], Field(default=None, description="Specify service account description to create.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_iam_create_service_account(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], service_account_id: Annotated[str, Field(..., description="Specify service account id to create.")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project to create service accounts in. If nothing is provided, the project will be extracted from integration configuration.")], service_account_display_name: Annotated[str | None, Field(default=None, description="Specify service account display name to create.")], service_account_description: Annotated[str | None, Field(default=None, description="Specify service account description to create.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a Google Cloud IAM Service Account.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -148,13 +148,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if project_id is not None:
@@ -164,7 +164,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Service Account Display Name"] = service_account_display_name
             if service_account_description is not None:
                 script_params["Service Account Description"] = service_account_description
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -180,7 +180,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -204,10 +204,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -227,7 +227,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -238,16 +238,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -263,7 +263,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -287,10 +287,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -310,7 +310,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -321,16 +321,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -346,7 +346,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -363,17 +363,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_iam_create_role(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], role_id: Annotated[str, Field(..., description="Specify role id for newly created IAM role.")], role_definition: Annotated[str, Field(..., description="Specify JSON policy document to use as the role definition.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project, where you want to create the role. If nothing is provided, the project will be extracted from integration configuration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_iam_create_role(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], role_id: Annotated[str, Field(..., description="Specify role id for newly created IAM role.")], role_definition: Annotated[str, Field(..., description="Specify JSON policy document to use as the role definition.")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project, where you want to create the role. If nothing is provided, the project will be extracted from integration configuration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a Google Cloud IAM Role.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -393,7 +393,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -404,20 +404,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if project_id is not None:
                 script_params["Project ID"] = project_id
             script_params["Role ID"] = role_id
             script_params["Role Definition"] = role_definition
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -433,7 +433,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -450,17 +450,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_iam_delete_role(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], role_id: Annotated[str, Field(..., description="Specify role id for newly created IAM role.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project, where you want to delete the role. If nothing is provided, the project will be extracted from integration configuration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_iam_delete_role(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], role_id: Annotated[str, Field(..., description="Specify role id for newly created IAM role.")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project, where you want to delete the role. If nothing is provided, the project will be extracted from integration configuration.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Delete a Google Cloud IAM Role.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -480,7 +480,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -491,19 +491,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if project_id is not None:
                 script_params["Project ID"] = project_id
             script_params["Role ID"] = role_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -519,7 +519,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -543,10 +543,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str = None
+        is_predefined_scope: bool = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -566,7 +566,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -575,479 +575,4 @@ def register_tools(mcp: FastMCP):
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
             # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_Enrich Entities",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_Enrich Entities", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_Enrich Entities for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
-
-    @mcp.tool()
-    async def google_cloud_iam_disable_service_account(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Disable service account. Supported entities: Username, Deployment. Note: the supported formats for entities are IAM service account email and resource name.
-
-        Returns:
-            dict: A dictionary containing the result of the action execution.
-        """
-        # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
-        if target_entities:
-            # Specific target entities provided, ignore scope parameter
-            final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
-            is_predefined_scope = False
-        else:
-            # No specific target entities, use scope parameter
-            # Check if the provided scope is valid
-            if scope not in bindings.valid_scopes:
-                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
-                return {
-                    "Status": "Failed",
-                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
-                }
-            # Scope is valid or validation is not configured
-            final_target_entities = [] # Pass empty list for entities when using scope
-            final_scope = scope
-            is_predefined_scope = True
-        # --- End scope/entity logic ---
-    
-        # Fetch integration instance identifier (assuming this pattern)
-        try:
-            instance_response = await bindings.http_client.get(
-                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="GoogleCloudIAM")
-            )
-            instances = instance_response.get("integration_instances", [])
-        except Exception as e:
-            # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_Disable Service Account",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_Disable Service Account", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_Disable Service Account for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
-
-    @mcp.tool()
-    async def google_cloud_iam_delete_service_account(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Delete service account. Supported entities: Username, Deployment. Note: the supported formats for entities are IAM service account email and resource name.
-
-        Returns:
-            dict: A dictionary containing the result of the action execution.
-        """
-        # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
-        if target_entities:
-            # Specific target entities provided, ignore scope parameter
-            final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
-            is_predefined_scope = False
-        else:
-            # No specific target entities, use scope parameter
-            # Check if the provided scope is valid
-            if scope not in bindings.valid_scopes:
-                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
-                return {
-                    "Status": "Failed",
-                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
-                }
-            # Scope is valid or validation is not configured
-            final_target_entities = [] # Pass empty list for entities when using scope
-            final_scope = scope
-            is_predefined_scope = True
-        # --- End scope/entity logic ---
-    
-        # Fetch integration instance identifier (assuming this pattern)
-        try:
-            instance_response = await bindings.http_client.get(
-                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="GoogleCloudIAM")
-            )
-            instances = instance_response.get("integration_instances", [])
-        except Exception as e:
-            # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_Delete Service Account",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_Delete Service Account", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_Delete Service Account for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
-
-    @mcp.tool()
-    async def google_cloud_iam_list_roles(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project, where you want to list the roles. If nothing is provided, the project will be extracted from integration configuration.")], view: Annotated[Optional[List[Any]], Field(default=None, description="Specify which view should be used to return role information.")], max_rows_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many roles the action should return.")], list_custom_roles_only: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return only custom roles defined for the current project or orgranization.")], show_deleted: Annotated[Optional[bool], Field(default=None, description="If enabled, action will also return deleted roles.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """List Google Cloud IAM roles based on the specified search criteria. Note that action is not working on Siemplify entities.
-
-        Returns:
-            dict: A dictionary containing the result of the action execution.
-        """
-        # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
-        if target_entities:
-            # Specific target entities provided, ignore scope parameter
-            final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
-            is_predefined_scope = False
-        else:
-            # No specific target entities, use scope parameter
-            # Check if the provided scope is valid
-            if scope not in bindings.valid_scopes:
-                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
-                return {
-                    "Status": "Failed",
-                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
-                }
-            # Scope is valid or validation is not configured
-            final_target_entities = [] # Pass empty list for entities when using scope
-            final_scope = scope
-            is_predefined_scope = True
-        # --- End scope/entity logic ---
-    
-        # Fetch integration instance identifier (assuming this pattern)
-        try:
-            instance_response = await bindings.http_client.get(
-                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="GoogleCloudIAM")
-            )
-            instances = instance_response.get("integration_instances", [])
-        except Exception as e:
-            # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-            if project_id is not None:
-                script_params["Project ID"] = project_id
-            if view is not None:
-                script_params["View"] = view
-            if max_rows_to_return is not None:
-                script_params["Max Rows To Return"] = max_rows_to_return
-            if list_custom_roles_only is not None:
-                script_params["List Custom Roles Only?"] = list_custom_roles_only
-            if show_deleted is not None:
-                script_params["Show Deleted"] = show_deleted
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_List Roles",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_List Roles", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_List Roles for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
-
-    @mcp.tool()
-    async def google_cloud_iam_list_service_accounts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project to list service accounts in. If nothing is provided, the project will be extracted from integration configuration.")], service_account_display_name: Annotated[Optional[str], Field(default=None, description="Specify service account display name to return. Parameter accepts multiple values as a comma separated string.")], service_account_email: Annotated[Optional[str], Field(default=None, description="Specify service account email to return. Parameter accepts multiple values as a comma separated string.")], max_rows_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many service accounts the action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """List service accounts available in Google Cloud IAM.
-
-        Returns:
-            dict: A dictionary containing the result of the action execution.
-        """
-        # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
-        if target_entities:
-            # Specific target entities provided, ignore scope parameter
-            final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
-            is_predefined_scope = False
-        else:
-            # No specific target entities, use scope parameter
-            # Check if the provided scope is valid
-            if scope not in bindings.valid_scopes:
-                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
-                return {
-                    "Status": "Failed",
-                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
-                }
-            # Scope is valid or validation is not configured
-            final_target_entities = [] # Pass empty list for entities when using scope
-            final_scope = scope
-            is_predefined_scope = True
-        # --- End scope/entity logic ---
-    
-        # Fetch integration instance identifier (assuming this pattern)
-        try:
-            instance_response = await bindings.http_client.get(
-                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="GoogleCloudIAM")
-            )
-            instances = instance_response.get("integration_instances", [])
-        except Exception as e:
-            # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-            if project_id is not None:
-                script_params["Project ID"] = project_id
-            if service_account_display_name is not None:
-                script_params["Service Account Display Name"] = service_account_display_name
-            if service_account_email is not None:
-                script_params["Service Account Email"] = service_account_email
-            if max_rows_to_return is not None:
-                script_params["Max Rows To Return"] = max_rows_to_return
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_List Service Accounts",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_List Service Accounts", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_List Service Accounts for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
-
-    @mcp.tool()
-    async def google_cloud_iam_set_service_account_iam_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy: Annotated[str, Field(..., description="Specify JSON policy document to set for service account.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Sets the access control policy on the specified service account. Supported entities: Username, Deployment. Note: the supported formats for entities are IAM service account email and resource name.
-
-        Returns:
-            dict: A dictionary containing the result of the action execution.
-        """
-        # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
-        if target_entities:
-            # Specific target entities provided, ignore scope parameter
-            final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
-            is_predefined_scope = False
-        else:
-            # No specific target entities, use scope parameter
-            # Check if the provided scope is valid
-            if scope not in bindings.valid_scopes:
-                allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
-                return {
-                    "Status": "Failed",
-                    "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
-                }
-            # Scope is valid or validation is not configured
-            final_target_entities = [] # Pass empty list for entities when using scope
-            final_scope = scope
-            is_predefined_scope = True
-        # --- End scope/entity logic ---
-    
-        # Fetch integration instance identifier (assuming this pattern)
-        try:
-            instance_response = await bindings.http_client.get(
-                Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="GoogleCloudIAM")
-            )
-            instances = instance_response.get("integration_instances", [])
-        except Exception as e:
-            # Log error appropriately in real code
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
-            return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
-        if instances:
-            instance_identifier = instances[0].get("identifier")
-            if not instance_identifier:
-                # Log error or handle missing identifier
-                return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
-            # Construct parameters dictionary for the API call
-            script_params = {}
-            script_params["Policy"] = policy
-    
-            # Prepare data model for the API request
-            action_data = ApiManualActionDataModel(
-                alertGroupIdentifiers=alert_group_identifiers,
-                caseId=case_id,
-                targetEntities=final_target_entities,
-                scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
-                actionName="GoogleCloudIAM_Set Service Account IAM Policy",
-                properties={
-                    "IntegrationInstance": instance_identifier,
-                    "ScriptName": "GoogleCloudIAM_Set Service Account IAM Policy", # Assuming same as actionName
-                    "ScriptParametersEntityFields": json.dumps(script_params)
-                }
-            )
-    
-            # Execute the action via HTTP POST
-            try:
-                execution_response = await bindings.http_client.post(
-                    Endpoints.EXECUTE_MANUAL_ACTION,
-                    req=action_data.model_dump()
-                )
-                return execution_response
-            except Exception as e:
-                # Log error appropriately
-                print(f"Error executing action GoogleCloudIAM_Set Service Account IAM Policy for GoogleCloudIAM: {e}")
-                return {"Status": "Failed", "Message": f"Error executing action: {e}"}
-        else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
-            return {"Status": "Failed", "Message": "No active instance found."}
+            print(f"Error fetching instance for GoogleCloudIAM:

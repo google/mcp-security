@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the BMCRemedyITSM integration.
 
     @mcp.tool()
-    async def bmc_remedy_itsm_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the id of the  incident that needs to be updated.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the incident. Note: if status is \"Pending\" or \"Resolved\", then you also need to provide \"Status Reason\" value.")], status_reason: Annotated[Optional[str], Field(default=None, description="Specify the status reason for the incident.")], impact: Annotated[Optional[List[Any]], Field(default=None, description="Specify the impact for the incident.")], urgency: Annotated[Optional[List[Any]], Field(default=None, description="Specify the urgency for the incident.")], description: Annotated[Optional[str], Field(default=None, description="Specify the description of the incident")], incident_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the incident type for the incident.")], assigned_group: Annotated[Optional[str], Field(default=None, description="Specify the assigned group for the incident")], assignee: Annotated[Optional[str], Field(default=None, description="Specify the assignee for the incident")], resolution: Annotated[Optional[str], Field(default=None, description="Specify the resolution for the incident.")], resolution_category_tier_1: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_category_tier_2: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_category_tier_3: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 3 for the incident.")], resolution_product_category_tier_1: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_product_category_tier_2: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_product_category_tier_3: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 3 for the incident.")], reported_source: Annotated[Optional[List[Any]], Field(default=None, description="Specify the reported source.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object containing all of the needed fields and  values that need to be updated. Note: this parameter will overwrite other provided parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bmc_remedy_itsm_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the id of the  incident that needs to be updated.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the incident. Note: if status is \"Pending\" or \"Resolved\", then you also need to provide \"Status Reason\" value.")], status_reason: Annotated[str | None, Field(default=None, description="Specify the status reason for the incident.")], impact: Annotated[List[Any] | None, Field(default=None, description="Specify the impact for the incident.")], urgency: Annotated[List[Any] | None, Field(default=None, description="Specify the urgency for the incident.")], description: Annotated[str | None, Field(default=None, description="Specify the description of the incident")], incident_type: Annotated[List[Any] | None, Field(default=None, description="Specify the incident type for the incident.")], assigned_group: Annotated[str | None, Field(default=None, description="Specify the assigned group for the incident")], assignee: Annotated[str | None, Field(default=None, description="Specify the assignee for the incident")], resolution: Annotated[str | None, Field(default=None, description="Specify the resolution for the incident.")], resolution_category_tier_1: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_category_tier_2: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_category_tier_3: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 3 for the incident.")], resolution_product_category_tier_1: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_product_category_tier_2: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_product_category_tier_3: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 3 for the incident.")], reported_source: Annotated[List[Any] | None, Field(default=None, description="Specify the reported source.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object containing all of the needed fields and  values that need to be updated. Note: this parameter will overwrite other provided parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an incident in BMC Remedy ITSM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -149,9 +149,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -228,16 +228,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bmc_remedy_itsm_get_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_type: Annotated[str, Field(..., description="Specify the type of the record for which you want to retrieve details.")], record_i_ds: Annotated[str, Field(..., description="Specify the ids of records for which you want to return details.")], fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify what fields to return. If invalid fields are provided, action will fail. If nothing is provided, action will return all fields.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bmc_remedy_itsm_get_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_type: Annotated[str, Field(..., description="Specify the type of the record for which you want to retrieve details.")], record_i_ds: Annotated[str, Field(..., description="Specify the ids of records for which you want to return details.")], fields_to_return: Annotated[str | None, Field(default=None, description="Specify what fields to return. If invalid fields are provided, action will fail. If nothing is provided, action will return all fields.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get detailed information about the record from BMC Remedy ITSM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -322,9 +322,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -407,9 +407,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -494,9 +494,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -578,9 +578,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -661,9 +661,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -739,16 +739,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bmc_remedy_itsm_get_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_i_ds: Annotated[str, Field(..., description="Specify the ids of incidents for which you want to return details.")], fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify what fields to return. If invalid fields are provided, action will fail. If nothing is provided, action will return all fields.")], fetch_work_notes: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return work notes related to the incident.")], max_work_notes_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many Work Notes to return. If nothing is provided, action will return 50 Work Notes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bmc_remedy_itsm_get_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_i_ds: Annotated[str, Field(..., description="Specify the ids of incidents for which you want to return details.")], fields_to_return: Annotated[str | None, Field(default=None, description="Specify what fields to return. If invalid fields are provided, action will fail. If nothing is provided, action will return all fields.")], fetch_work_notes: Annotated[bool | None, Field(default=None, description="If enabled, action will return work notes related to the incident.")], max_work_notes_to_return: Annotated[str | None, Field(default=None, description="Specify how many Work Notes to return. If nothing is provided, action will return 50 Work Notes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get detailed information about the incidents from BMC Remedy ITSM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -836,9 +836,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -914,16 +914,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bmc_remedy_itsm_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the incident.")], impact: Annotated[Optional[List[Any]], Field(default=None, description="Specify the impact for the incident.")], urgency: Annotated[Optional[List[Any]], Field(default=None, description="Specify the urgency for the incident.")], description: Annotated[Optional[str], Field(default=None, description="Specify the description of the incident")], company: Annotated[Optional[str], Field(default=None, description="Specify the company for the incident")], customer: Annotated[Optional[str], Field(default=None, description="Specify the customer for the incident. Note: Customer needs to be provide in the format \"{Last Name} {First Name}\". Example: Allbrook Allen.")], template_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the template for the incident. Note: action will try to find the ID of the template in the background. For better precision you can provide the template ID directly via Custom Fields.")], incident_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the incident type for the incident.")], assigned_group: Annotated[Optional[str], Field(default=None, description="Specify the assigned group for the incident")], assignee: Annotated[Optional[str], Field(default=None, description="Specify the assignee for the incident")], resolution: Annotated[Optional[str], Field(default=None, description="Specify the resolution for the incident.")], resolution_category_tier_1: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_category_tier_2: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_category_tier_3: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 3 for the incident.")], resolution_product_category_tier_1: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_product_category_tier_2: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_product_category_tier_3: Annotated[Optional[str], Field(default=None, description="Specify the resolution category tier 3 for the incident.")], reported_source: Annotated[Optional[List[Any]], Field(default=None, description="Specify the reported source")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object containing all of the needed fields and  values that need to be used during the creation. Note: this parameter will overwrite other provided parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bmc_remedy_itsm_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the incident.")], impact: Annotated[List[Any] | None, Field(default=None, description="Specify the impact for the incident.")], urgency: Annotated[List[Any] | None, Field(default=None, description="Specify the urgency for the incident.")], description: Annotated[str | None, Field(default=None, description="Specify the description of the incident")], company: Annotated[str | None, Field(default=None, description="Specify the company for the incident")], customer: Annotated[str | None, Field(default=None, description="Specify the customer for the incident. Note: Customer needs to be provide in the format \"{Last Name} {First Name}\". Example: Allbrook Allen.")], template_name: Annotated[str | None, Field(default=None, description="Specify the name of the template for the incident. Note: action will try to find the ID of the template in the background. For better precision you can provide the template ID directly via Custom Fields.")], incident_type: Annotated[List[Any] | None, Field(default=None, description="Specify the incident type for the incident.")], assigned_group: Annotated[str | None, Field(default=None, description="Specify the assigned group for the incident")], assignee: Annotated[str | None, Field(default=None, description="Specify the assignee for the incident")], resolution: Annotated[str | None, Field(default=None, description="Specify the resolution for the incident.")], resolution_category_tier_1: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_category_tier_2: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_category_tier_3: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 3 for the incident.")], resolution_product_category_tier_1: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 1 for the incident.")], resolution_product_category_tier_2: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 2 for the incident.")], resolution_product_category_tier_3: Annotated[str | None, Field(default=None, description="Specify the resolution category tier 3 for the incident.")], reported_source: Annotated[List[Any] | None, Field(default=None, description="Specify the reported source")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object containing all of the needed fields and  values that need to be used during the creation. Note: this parameter will overwrite other provided parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an incident in BMC Remedy ITSM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1035,16 +1035,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bmc_remedy_itsm_wait_for_incident_fields_update(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the ID of the incident that needs to be updated.")], fail_if_timeout: Annotated[bool, Field(..., description="If enabled, action will be failed, if not all of the fields were updated.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify what is the expected status for the incident.")], fields_to_check: Annotated[Optional[str], Field(default=None, description="Specify a JSON object containing all of the needed fields and values. Note: this parameter has priority over \"Status\" field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bmc_remedy_itsm_wait_for_incident_fields_update(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="Specify the ID of the incident that needs to be updated.")], fail_if_timeout: Annotated[bool, Field(..., description="If enabled, action will be failed, if not all of the fields were updated.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify what is the expected status for the incident.")], fields_to_check: Annotated[str | None, Field(default=None, description="Specify a JSON object containing all of the needed fields and values. Note: this parameter has priority over \"Status\" field.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Wait for incident fields update in BMC Remedy ITSM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

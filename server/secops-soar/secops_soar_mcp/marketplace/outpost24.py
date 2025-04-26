@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -107,16 +107,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def outpost24_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_risk_level_filter: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of risk level findings that will be used during filtering. Possible values: Initial, Recommendation, Low, Medium, High, Critical. If nothing is provided, action will fetch findings with all risk levels.")], max_findings_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many findings to process per entity. If nothing is provided, action will return 100 findings.")], return_finding_information: Annotated[Optional[bool], Field(default=None, description="If enabled, action will also retrieve information about findings that were found on the endpoint.")], finding_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify what kind of findings should be returned.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def outpost24_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_risk_level_filter: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of risk level findings that will be used during filtering. Possible values: Initial, Recommendation, Low, Medium, High, Critical. If nothing is provided, action will fetch findings with all risk levels.")], max_findings_to_return: Annotated[str | None, Field(default=None, description="Specify how many findings to process per entity. If nothing is provided, action will return 100 findings.")], return_finding_information: Annotated[bool | None, Field(default=None, description="If enabled, action will also retrieve information about findings that were found on the endpoint.")], finding_type: Annotated[List[Any] | None, Field(default=None, description="Specify what kind of findings should be returned.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich entities using information from Outpost24. Supported entities: IP Address, Hostname.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

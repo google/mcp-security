@@ -24,17 +24,17 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ServiceDeskPlusV3 integration.
 
     @mcp.tool()
-    async def service_desk_plus_v3_create_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[Optional[str], Field(default=None, description="The description of the request.")], assets: Annotated[Optional[str], Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[Optional[str], Field(default=None, description="Group to which this request belongs")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_create_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[str | None, Field(default=None, description="The description of the request.")], assets: Annotated[str | None, Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[str | None, Field(default=None, description="Group to which this request belongs")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,13 +65,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Subject"] = subject
@@ -106,7 +106,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Group"] = group
             if impact is not None:
                 script_params["Impact"] = impact
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -122,7 +122,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -139,17 +139,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_create_alert_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], assets: Annotated[Optional[str], Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[Optional[str], Field(default=None, description="Group to which this request belongs")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_create_alert_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], assets: Annotated[str | None, Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[str | None, Field(default=None, description="Group to which this request belongs")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a request related to a Siemplify alert
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -169,7 +169,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -180,13 +180,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Subject"] = subject
@@ -219,7 +219,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Group"] = group
             if impact is not None:
                 script_params["Impact"] = impact
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -235,7 +235,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -252,17 +252,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_create_request_dropdown_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[Optional[str], Field(default=None, description="The description of the request.")], assets: Annotated[Optional[str], Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[Optional[List[Any]], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[List[Any]], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[List[Any]], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[List[Any]], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[List[Any]], Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[List[Any]], Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[Optional[List[Any]], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[Optional[str], Field(default=None, description="Group to which this request belongs")], impact: Annotated[Optional[List[Any]], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_create_request_dropdown_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject of the request.")], requester: Annotated[str, Field(..., description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[str | None, Field(default=None, description="The description of the request.")], assets: Annotated[str | None, Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[List[Any] | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[List[Any] | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[List[Any] | None, Field(default=None, description="The urgency of the request.")], category: Annotated[List[Any] | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[List[Any] | None, Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[List[Any] | None, Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[List[Any] | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[str | None, Field(default=None, description="Group to which this request belongs")], impact: Annotated[List[Any] | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -282,7 +282,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -293,13 +293,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Subject"] = subject
@@ -334,7 +334,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Group"] = group
             if impact is not None:
                 script_params["Impact"] = impact
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -350,7 +350,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -367,17 +367,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_add_note_and_wait_for_reply(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], note: Annotated[str, Field(..., description="The note's content.")], show_to_requester: Annotated[Optional[bool], Field(default=None, description="Specify whether the note should be shown to the requester or not.")], notify_technician: Annotated[Optional[bool], Field(default=None, description="Specify whether the note should be shown to the requester or not")], mark_first_response: Annotated[Optional[bool], Field(default=None, description="Specify whether this note should be marked as first response")], add_to_linked_requests: Annotated[Optional[bool], Field(default=None, description="Specify whether this note should be added to the linked requests")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_add_note_and_wait_for_reply(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], note: Annotated[str, Field(..., description="The note's content.")], show_to_requester: Annotated[bool | None, Field(default=None, description="Specify whether the note should be shown to the requester or not.")], notify_technician: Annotated[bool | None, Field(default=None, description="Specify whether the note should be shown to the requester or not")], mark_first_response: Annotated[bool | None, Field(default=None, description="Specify whether this note should be marked as first response")], add_to_linked_requests: Annotated[bool | None, Field(default=None, description="Specify whether this note should be added to the linked requests")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a note to a request. Note: Please update the actual time you would like the action to run in the IDE timeout section for this action.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -397,7 +397,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -408,13 +408,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
@@ -427,7 +427,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Mark First Response"] = mark_first_response
             if add_to_linked_requests is not None:
                 script_params["Add To Linked Requests"] = add_to_linked_requests
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -443,7 +443,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -467,10 +467,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -490,7 +490,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -501,16 +501,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -526,7 +526,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -543,17 +543,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_update_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The ID of the request to update.")], subject: Annotated[Optional[str], Field(default=None, description="The subject of the request.")], requester: Annotated[Optional[str], Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[Optional[str], Field(default=None, description="The description of the request.")], assets: Annotated[Optional[str], Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[Optional[str], Field(default=None, description="The status of the request.")], technician: Annotated[Optional[str], Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[Optional[str], Field(default=None, description="The priority of the request.")], urgency: Annotated[Optional[str], Field(default=None, description="The urgency of the request.")], category: Annotated[Optional[str], Field(default=None, description="The category of the request.")], request_template: Annotated[Optional[str], Field(default=None, description="The template of the request.")], request_type: Annotated[Optional[str], Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[Optional[str], Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[Optional[str], Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[Optional[str], Field(default=None, description="The level of the request.")], site: Annotated[Optional[str], Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[Optional[str], Field(default=None, description="Group to which this request belongs")], impact: Annotated[Optional[str], Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_update_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The ID of the request to update.")], subject: Annotated[str | None, Field(default=None, description="The subject of the request.")], requester: Annotated[str | None, Field(default=None, description="The requester of the request. If not specified, set to the user of the API key.")], description: Annotated[str | None, Field(default=None, description="The description of the request.")], assets: Annotated[str | None, Field(default=None, description="Names of Assets to be associated with the request")], status: Annotated[str | None, Field(default=None, description="The status of the request.")], technician: Annotated[str | None, Field(default=None, description="The name of the technician assigned to the request.")], priority: Annotated[str | None, Field(default=None, description="The priority of the request.")], urgency: Annotated[str | None, Field(default=None, description="The urgency of the request.")], category: Annotated[str | None, Field(default=None, description="The category of the request.")], request_template: Annotated[str | None, Field(default=None, description="The template of the request.")], request_type: Annotated[str | None, Field(default=None, description="The type of the request. i.e: Incident, Service Request, etc.")], due_by_time_ms: Annotated[str | None, Field(default=None, description="The due date of the request in milliseconds.")], mode: Annotated[str | None, Field(default=None, description="The mode in which this request is created.Example : E-mail")], level: Annotated[str | None, Field(default=None, description="The level of the request.")], site: Annotated[str | None, Field(default=None, description="Denotes the site to which this request belongs")], group: Annotated[str | None, Field(default=None, description="Group to which this request belongs")], impact: Annotated[str | None, Field(default=None, description="The impact of the request.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a ServiceDesk Plus request via it’s ID
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -573,7 +573,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -584,13 +584,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
@@ -628,7 +628,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Group"] = group
             if impact is not None:
                 script_params["Impact"] = impact
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -644,7 +644,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -668,10 +668,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -691,7 +691,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -702,17 +702,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -728,7 +728,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -745,17 +745,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_close_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], comment: Annotated[str, Field(..., description="Closing comment.")], resolution_acknowledged: Annotated[Optional[bool], Field(default=None, description="Whether the resolution of the request is acknowledged or not.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_close_request(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], comment: Annotated[str, Field(..., description="Closing comment.")], resolution_acknowledged: Annotated[bool | None, Field(default=None, description="Whether the resolution of the request is acknowledged or not.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Close a request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -775,7 +775,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -786,20 +786,20 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
             script_params["Comment"] = comment
             if resolution_acknowledged is not None:
                 script_params["Resolution Acknowledged"] = resolution_acknowledged
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -815,7 +815,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -839,10 +839,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -862,7 +862,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -873,19 +873,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
             script_params["Values"] = values
             script_params["Field Name"] = field_name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -901,7 +901,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -918,17 +918,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_desk_plus_v3_add_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], note: Annotated[str, Field(..., description="The note's content.")], show_to_requester: Annotated[Optional[bool], Field(default=None, description="Specify whether the note should be shown to the requester or not.")], notify_technician: Annotated[Optional[bool], Field(default=None, description="Specify whether the note should be shown to the requester or not")], mark_first_response: Annotated[Optional[bool], Field(default=None, description="Specify whether this note should be marked as first response")], add_to_linked_requests: Annotated[Optional[bool], Field(default=None, description="Specify whether this note should be added to the linked requests")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_desk_plus_v3_add_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], request_id: Annotated[str, Field(..., description="The requests' ID.")], note: Annotated[str, Field(..., description="The note's content.")], show_to_requester: Annotated[bool | None, Field(default=None, description="Specify whether the note should be shown to the requester or not.")], notify_technician: Annotated[bool | None, Field(default=None, description="Specify whether the note should be shown to the requester or not")], mark_first_response: Annotated[bool | None, Field(default=None, description="Specify whether this note should be marked as first response")], add_to_linked_requests: Annotated[bool | None, Field(default=None, description="Specify whether this note should be added to the linked requests")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a note to a request
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -948,7 +948,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -959,13 +959,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
@@ -978,7 +978,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Mark First Response"] = mark_first_response
             if add_to_linked_requests is not None:
                 script_params["Add To Linked Requests"] = add_to_linked_requests
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -994,7 +994,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -1018,10 +1018,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -1041,7 +1041,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -1052,18 +1052,18 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ServiceDeskPlusV3: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Request ID"] = request_id
             script_params["Values"] = values
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -1079,7 +1079,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

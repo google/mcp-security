@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the VaronisDataSecurityPlatform integration.
 
     @mcp.tool()
-    async def varonis_data_security_platform_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_guid: Annotated[str, Field(..., description="Specify alert GUID for the update. This action can run on multiple alerts. Multiple alerts can be specified as a comma-separated string.")], alert_status: Annotated[List[Any], Field(..., description="Specify the alert status to update to.")], closing_reason: Annotated[Optional[List[Any]], Field(default=None, description="Specify the closing reason for the alert. When the alert status is changed to \"closed\", closing reason must be specified.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def varonis_data_security_platform_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_guid: Annotated[str, Field(..., description="Specify alert GUID for the update. This action can run on multiple alerts. Multiple alerts can be specified as a comma-separated string.")], alert_status: Annotated[List[Any], Field(..., description="Specify the alert status to update to.")], closing_reason: Annotated[List[Any] | None, Field(default=None, description="Specify the closing reason for the alert. When the alert status is changed to \"closed\", closing reason must be specified.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update status of alerts ingested from the Varonis Data Security Platform connector with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,9 +118,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

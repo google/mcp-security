@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the MandiantASM integration.
 
     @mcp.tool()
-    async def mandiant_asm_search_issues(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], issue_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of issue ids, for which you want to return details.")], entity_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of entity ids for which you want to find related issues.")], entity_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of entity names for which you want to find related issues.")], time_parameter: Annotated[Optional[List[Any]], Field(default=None, description="Specify what parameter should be used for filtering time.")], time_frame: Annotated[Optional[List[Any]], Field(default=None, description="Specify a time frame for the issues. If \u201cCustom\u201d is selected, you also need to provide \u201cStart Time\u201d.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter. Format: ISO 8601")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter then this parameter will use current time.")], lowest_severity_to_return: Annotated[Optional[List[Any]], Field(default=None, description="Specify the lowest severity that should be used to return the issues. If \u201cSelect One\u201d is selected, this filter is not applied during the search.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status filter for the search. If \u201cSelect One\u201d is selected, this filter is not applied during the search.")], tags: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of tag names, which should be used, when searching for the issues.")], max_issues_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many issues to return. Default: 50. Maximum is 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_asm_search_issues(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], issue_i_ds: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of issue ids, for which you want to return details.")], entity_i_ds: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of entity ids for which you want to find related issues.")], entity_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of entity names for which you want to find related issues.")], time_parameter: Annotated[List[Any] | None, Field(default=None, description="Specify what parameter should be used for filtering time.")], time_frame: Annotated[List[Any] | None, Field(default=None, description="Specify a time frame for the issues. If \u201cCustom\u201d is selected, you also need to provide \u201cStart Time\u201d.")], start_time: Annotated[str | None, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter. Format: ISO 8601")], end_time: Annotated[str | None, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter then this parameter will use current time.")], lowest_severity_to_return: Annotated[List[Any] | None, Field(default=None, description="Specify the lowest severity that should be used to return the issues. If \u201cSelect One\u201d is selected, this filter is not applied during the search.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status filter for the search. If \u201cSelect One\u201d is selected, this filter is not applied during the search.")], tags: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of tag names, which should be used, when searching for the issues.")], max_issues_to_return: Annotated[str | None, Field(default=None, description="Specify how many issues to return. Default: 50. Maximum is 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search Issues that match the specified criteria in the action Parameters.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -136,9 +136,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -219,9 +219,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -304,9 +304,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -381,16 +381,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mandiant_asm_search_asm_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], entity_name: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of entity names for which you want to find entities.")], critical_or_high_issue: Annotated[Optional[bool], Field(default=None, description="Specify whether to include only entities with High or Critical Issues.")], minimum_vulnerabilities_count: Annotated[Optional[str], Field(default=None, description="Specify how many vulnerabilities should be related to the entity for it to be returned.")], minimum_issues_count: Annotated[Optional[str], Field(default=None, description="Specify how many issues should be related to the entity for it to be returned.")], tags: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of tag names, which should be used, when searching for the entities.")], max_entities_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many entities to return. Default: 50. Maximum is 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_asm_search_asm_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], entity_name: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of entity names for which you want to find entities.")], critical_or_high_issue: Annotated[bool | None, Field(default=None, description="Specify whether to include only entities with High or Critical Issues.")], minimum_vulnerabilities_count: Annotated[str | None, Field(default=None, description="Specify how many vulnerabilities should be related to the entity for it to be returned.")], minimum_issues_count: Annotated[str | None, Field(default=None, description="Specify how many issues should be related to the entity for it to be returned.")], tags: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of tag names, which should be used, when searching for the entities.")], max_entities_to_return: Annotated[str | None, Field(default=None, description="Specify how many entities to return. Default: 50. Maximum is 200.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Search entities in Mandiant ASM.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

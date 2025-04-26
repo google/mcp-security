@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,9 +115,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -193,16 +193,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_create_sample_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector to create sample findings for.")], finding_types: Annotated[Optional[str], Field(default=None, description="The types of sample findings to generate. Comma separated values. If empty, example findings of all supported finding types will be generated. Types can be found in the UI at \u2018Findings\u2019 section under \u2018Finding Type\u2019 column")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_create_sample_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector to create sample findings for.")], finding_types: Annotated[str | None, Field(default=None, description="The types of sample findings to generate. Comma separated values. If empty, example findings of all supported finding types will be generated. Types can be found in the UI at \u2018Findings\u2019 section under \u2018Finding Type\u2019 column")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Generates example findings of types specified by the list of findings.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -286,9 +286,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -363,16 +363,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_get_all_trusted_ip_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to list IP sets. This parameter can be found in the \"Settings\" tab.")], max_trusted_ip_lists_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many Trusted IPs lists to return. Default is 50.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_get_all_trusted_ip_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to list IP sets. This parameter can be found in the \"Settings\" tab.")], max_trusted_ip_lists_to_return: Annotated[str | None, Field(default=None, description="Specify how many Trusted IPs lists to return. Default is 50.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get all trusted IP lists (IPSets) of the GuardDuty service specified by the detector ID.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -458,9 +458,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -536,16 +536,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_update_threat_intelligence_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to update a Threat Intelligence Set. This parameter can be found in the \"Settings\" tab.")], id: Annotated[str, Field(..., description="Specify the ID of the Threat Intelligence set that should be updated.")], active: Annotated[bool, Field(..., description="If enabled, the Threat Intelligence Set will be activated.")], name: Annotated[Optional[str], Field(default=None, description="Specify the new name of the Threat Intelligence Set.")], file_location: Annotated[Optional[str], Field(default=None, description="Specify a new URI location, where the file is located.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_update_threat_intelligence_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to update a Threat Intelligence Set. This parameter can be found in the \"Settings\" tab.")], id: Annotated[str, Field(..., description="Specify the ID of the Threat Intelligence set that should be updated.")], active: Annotated[bool, Field(..., description="If enabled, the Threat Intelligence Set will be activated.")], name: Annotated[str | None, Field(default=None, description="Specify the new name of the Threat Intelligence Set.")], file_location: Annotated[str | None, Field(default=None, description="Specify a new URI location, where the file is located.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a threat intelligence set in AWS GuardDuty. Note: iam:PutRolePolicy permission.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -626,16 +626,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_get_threat_intelligence_set_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to get threat intelligence sets details. This parameter can be found in the \"Settings\" tab.")], threat_intelligence_set_i_ds: Annotated[str, Field(..., description="Specify the comma-separated list of ids of threat intelligence sets. Example: id_1,id_2.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_get_threat_intelligence_set_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to get threat intelligence sets details. This parameter can be found in the \"Settings\" tab.")], threat_intelligence_set_i_ds: Annotated[str, Field(..., description="Specify the comma-separated list of ids of threat intelligence sets. Example: id_1,id_2.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get details about a threat intelligence set in AWS GuardDuty.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -713,16 +713,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_archive_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector.")], finding_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to archive. Comma separated ids.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_archive_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector.")], finding_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to archive. Comma separated ids.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Archive GuardDuty findings that are specified by finding IDs.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -807,9 +807,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -885,16 +885,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_update_a_trusted_ip_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to update a Trusted IP List. This parameter can be found in the \"Settings\" tab.")], trusted_ip_list_id: Annotated[str, Field(..., description="Specify the ID of the Trusted IP List that should be updated.")], activate: Annotated[bool, Field(..., description="If enabled, the Trusted IP List will be activated.")], name: Annotated[Optional[str], Field(default=None, description="Specify the new name of the Trusted IP List.")], file_location: Annotated[Optional[str], Field(default=None, description="Specify a new URI location, where the file is located.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_update_a_trusted_ip_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to update a Trusted IP List. This parameter can be found in the \"Settings\" tab.")], trusted_ip_list_id: Annotated[str, Field(..., description="Specify the ID of the Trusted IP List that should be updated.")], activate: Annotated[bool, Field(..., description="If enabled, the Trusted IP List will be activated.")], name: Annotated[str | None, Field(default=None, description="Specify the new name of the Trusted IP List.")], file_location: Annotated[str | None, Field(default=None, description="Specify a new URI location, where the file is located.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a trusted IP list in AWS GuardDuty.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -977,16 +977,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_list_detectors(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_detectors_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many detectors to return. Default is 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_list_detectors(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_detectors_to_return: Annotated[str | None, Field(default=None, description="Specify how many detectors to return. Default is 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Lists detectorIds of all the existing Amazon GuardDuty detector resources.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1069,9 +1069,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1145,16 +1145,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_update_findings_feedback(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector associated with the findings to update feedback for.")], useful: Annotated[bool, Field(..., description="The feedback for the finding.")], findings_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to mark as useful or not useful. Comma separated values.")], comment: Annotated[Optional[str], Field(default=None, description="Additional feedback about the GuardDuty findings.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_update_findings_feedback(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector associated with the findings to update feedback for.")], useful: Annotated[bool, Field(..., description="The feedback for the finding.")], findings_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to mark as useful or not useful. Comma separated values.")], comment: Annotated[str | None, Field(default=None, description="Additional feedback about the GuardDuty findings.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Mark the specified Amazon GuardDuty findings as useful or not useful.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1235,16 +1235,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_create_threat_intelligence_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to create a Threat Intelligence Set. This parameter can be found in the \"Settings\" tab.")], name: Annotated[str, Field(..., description="Specify the name of the Threat Intelligence Set.")], file_format: Annotated[List[Any], Field(..., description="Select the format of the file that should be used to create a threat intelligence set.")], file_location: Annotated[str, Field(..., description="Specify the URI location, where the file is located.")], active: Annotated[bool, Field(..., description="If enabled, the newly created Threat Intelligence Set will be activated.")], tags: Annotated[Optional[str], Field(default=None, description="Specify additional tags that should be added to the Threat Intelligence Set. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_create_threat_intelligence_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to create a Threat Intelligence Set. This parameter can be found in the \"Settings\" tab.")], name: Annotated[str, Field(..., description="Specify the name of the Threat Intelligence Set.")], file_format: Annotated[List[Any], Field(..., description="Select the format of the file that should be used to create a threat intelligence set.")], file_location: Annotated[str, Field(..., description="Specify the URI location, where the file is located.")], active: Annotated[bool, Field(..., description="If enabled, the newly created Threat Intelligence Set will be activated.")], tags: Annotated[str | None, Field(default=None, description="Specify additional tags that should be added to the Threat Intelligence Set. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a threat intelligence set in AWS GuardDuty. Note: iam:PutRolePolicy permission. Maximum number of Threat Intel sets is 6.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1325,16 +1325,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_list_threat_intelligence_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to list threat intelligence sets. This parameter can be found in the \"Settings\" tab.")], max_threat_intelligence_sets_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many threat intelligence sets to return. Default is 50.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_list_threat_intelligence_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to list threat intelligence sets. This parameter can be found in the \"Settings\" tab.")], max_threat_intelligence_sets_to_return: Annotated[str | None, Field(default=None, description="Specify how many threat intelligence sets to return. Default is 50.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available threat intelligence sets in AWS GuardDuty.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1413,16 +1413,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_update_a_detector(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to update.")], enable: Annotated[Optional[bool], Field(default=None, description="Specifies whether the detector should be enabled")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_update_a_detector(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to update.")], enable: Annotated[bool | None, Field(default=None, description="Specifies whether the detector should be enabled")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update the Amazon GuardDuty detector specified by the detector ID.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1499,16 +1499,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_create_a_trusted_ip_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to create a Trusted IP List. This parameter can be found in the \"Settings\" tab.")], name: Annotated[str, Field(..., description="Specify the name of the Trusted IP List.")], file_format: Annotated[List[Any], Field(..., description="Select the format of the file that should be used to create a Trusted IP List.")], file_location: Annotated[str, Field(..., description="Specify the URI location, where the file is located.")], activate: Annotated[bool, Field(..., description="If enabled, the newly created Trusted IP List will be activated.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_create_a_trusted_ip_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="Specify the detector ID that should be used to create a Trusted IP List. This parameter can be found in the \"Settings\" tab.")], name: Annotated[str, Field(..., description="Specify the name of the Trusted IP List.")], file_format: Annotated[List[Any], Field(..., description="Select the format of the file that should be used to create a Trusted IP List.")], file_location: Annotated[str, Field(..., description="Specify the URI location, where the file is located.")], activate: Annotated[bool, Field(..., description="If enabled, the newly created Trusted IP List will be activated.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Creates a new list of trusted IP addresses (IPSet) that were white listed for secure communication with AWS infrastructure and applications. Note: Only 1 Trusted IP set can be created and activated. GuardDuty doesn't generate findings for IP addresses that are included in IPSets. Only users from the master account can use this operation.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1596,9 +1596,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1673,16 +1673,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_get_finding_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to retrieve. Comma separated ids.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to retrieve.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_get_finding_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_i_ds: Annotated[str, Field(..., description="The IDs of the findings that you want to retrieve. Comma separated ids.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to retrieve.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return detailed information about a finding in AWS Guard Duty.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1760,16 +1760,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def aws_guard_duty_list_findings_for_a_detector(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to retrieve.")], max_findings_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many detectors to return. Default is 50.")], sort_by: Annotated[Optional[str], Field(default=None, description="Represents the finding attribute (for example, accountId) to sort findings by.")], order_by: Annotated[Optional[List[Any]], Field(default=None, description="The order by which the sorted findings are to be displayed.")], aws_region: Annotated[Optional[str], Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def aws_guard_duty_list_findings_for_a_detector(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detector_id: Annotated[str, Field(..., description="The unique ID of the detector that you want to retrieve.")], max_findings_to_return: Annotated[str | None, Field(default=None, description="Specify how many detectors to return. Default is 50.")], sort_by: Annotated[str | None, Field(default=None, description="Represents the finding attribute (for example, accountId) to sort findings by.")], order_by: Annotated[List[Any] | None, Field(default=None, description="The order by which the sorted findings are to be displayed.")], aws_region: Annotated[str | None, Field(default=None, description="Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Lists all Amazon GuardDuty findings for the specified detector ID.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1859,9 +1859,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

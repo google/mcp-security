@@ -27,7 +27,7 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def list_cases(
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -107,7 +107,7 @@ def register_tools(mcp: FastMCP):
     async def list_alerts_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -157,7 +157,7 @@ def register_tools(mcp: FastMCP):
     async def list_alert_group_identifiers_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -206,7 +206,7 @@ def register_tools(mcp: FastMCP):
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_id: Annotated[str, Field(..., description="The ID of the alert.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -397,49 +397,49 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def search_entity(
         term: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The term to search for",
             ),
         ],
         type: Annotated[
-            Optional[List[str]],
+            List[str] | None,
             Field(
                 default=None,
                 description="The type of the entity",
             ),
         ],
         is_suspicious: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is suspicious",
             ),
         ],
         is_internal_asset: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is an internal asset",
             ),
         ],
         is_enriched: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is enriched",
             ),
         ],
         network_name: Annotated[
-            Optional[List[str]],
+            List[str] | None,
             Field(
                 default=None,
                 description="The network name",
             ),
         ],
         environment_name: Annotated[
-            Optional[List[str]],
+            List[str] | None,
             Field(
                 default=None,
                 description="The environment name",
@@ -456,13 +456,13 @@ def register_tools(mcp: FastMCP):
         specific characteristics.
 
         Args:
-            term (Optional[str]): A search term (e.g., partial IP, hostname fragment) to match against entity identifiers or names.
-            type (Optional[List[str]]): A list of entity types to filter by (e.g., ['IP Address', 'Hostname']).
-            is_suspicious (Optional[bool]): Filter for entities marked as suspicious.
-            is_internal_asset (Optional[bool]): Filter for entities identified as internal assets.
-            is_enriched (Optional[bool]): Filter for entities that have undergone enrichment processes.
-            network_name (Optional[List[str]]): Filter entities belonging to specific networks.
-            environment_name (Optional[List[str]]): Filter entities belonging to specific environments.
+            term (str | None): A search term (e.g., partial IP, hostname fragment) to match against entity identifiers or names.
+            type (List[str] | None): A list of entity types to filter by (e.g., ['IP Address', 'Hostname']).
+            is_suspicious (bool | None): Filter for entities marked as suspicious.
+            is_internal_asset (bool | None): Filter for entities identified as internal assets.
+            is_enriched (bool | None): Filter for entities that have undergone enrichment processes.
+            network_name (List[str] | None): Filter entities belonging to specific networks.
+            environment_name (List[str] | None): Filter entities belonging to specific environments.
 
         Returns:
             dict: A dictionary representing the raw API response from the SOAR platform,

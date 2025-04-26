@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ZohoDesk integration.
 
     @mcp.tool()
-    async def zoho_desk_create_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Specify the title for the ticket.")], description: Annotated[str, Field(..., description="Specify the description of the ticket.")], department_name: Annotated[str, Field(..., description="Specify the name of the department in which you want to create a ticket.")], contact: Annotated[str, Field(..., description="Specify the email of the contact for the ticket.")], assignee_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the assignee. If \"Agent\" or \"Team\" is selected \"Assignee Name\" is required.")], assignee_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the assignee for the ticket. For the agent type you can provide an email address or display name.")], priority: Annotated[Optional[List[Any]], Field(default=None, description="Specify the priority for the ticket.")], classification: Annotated[Optional[List[Any]], Field(default=None, description="Specify the classification type for the ticket.")], channel: Annotated[Optional[List[Any]], Field(default=None, description="Specify the channel for the ticket.")], category: Annotated[Optional[str], Field(default=None, description="Specify the category for the ticket.")], sub_category: Annotated[Optional[str], Field(default=None, description="Specify the subcategory for the ticket.")], due_date: Annotated[Optional[str], Field(default=None, description="Specify the due date for the ticket. Format: ISO 8601. Example: 2022-07-06T07:05:43Z.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a json object containing the custom fields that need to be added. Note: you need to provide the API names of the keys.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def zoho_desk_create_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Specify the title for the ticket.")], description: Annotated[str, Field(..., description="Specify the description of the ticket.")], department_name: Annotated[str, Field(..., description="Specify the name of the department in which you want to create a ticket.")], contact: Annotated[str, Field(..., description="Specify the email of the contact for the ticket.")], assignee_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the assignee. If \"Agent\" or \"Team\" is selected \"Assignee Name\" is required.")], assignee_name: Annotated[str | None, Field(default=None, description="Specify the name of the assignee for the ticket. For the agent type you can provide an email address or display name.")], priority: Annotated[List[Any] | None, Field(default=None, description="Specify the priority for the ticket.")], classification: Annotated[List[Any] | None, Field(default=None, description="Specify the classification type for the ticket.")], channel: Annotated[List[Any] | None, Field(default=None, description="Specify the channel for the ticket.")], category: Annotated[str | None, Field(default=None, description="Specify the category for the ticket.")], sub_category: Annotated[str | None, Field(default=None, description="Specify the subcategory for the ticket.")], due_date: Annotated[str | None, Field(default=None, description="Specify the due date for the ticket. Format: ISO 8601. Example: 2022-07-06T07:05:43Z.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a json object containing the custom fields that need to be added. Note: you need to provide the API names of the keys.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a ticket in Zoho Desk.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -129,16 +129,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zoho_desk_get_ticket_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of ids for which you want to return details.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about tickets.")], additional_fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify what additional fields to return. Possible values: contacts, products, assignee, departments, contract, isRead, team, skills.")], fetch_comments: Annotated[Optional[bool], Field(default=None, description="If enabled, action will fetch comments related to the tickets.")], max_comments_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many comments to return per ticket. Default: 50. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def zoho_desk_get_ticket_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of ids for which you want to return details.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about tickets.")], additional_fields_to_return: Annotated[str | None, Field(default=None, description="Specify what additional fields to return. Possible values: contacts, products, assignee, departments, contract, isRead, team, skills.")], fetch_comments: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch comments related to the tickets.")], max_comments_to_return: Annotated[str | None, Field(default=None, description="Specify how many comments to return per ticket. Default: 50. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get detailed information about the ticket from Zoho Desk.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -221,16 +221,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zoho_desk_add_comment_to_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket to which you want to add a comment.")], text: Annotated[str, Field(..., description="Specify the content of the comment.")], visibility: Annotated[Optional[List[Any]], Field(default=None, description="Specify if the comment should be public or private.")], type: Annotated[Optional[List[Any]], Field(default=None, description="Specify what should be the type of the comment.")], wait_for_reply: Annotated[Optional[bool], Field(default=None, description="If enabled, action will wait for reply.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def zoho_desk_add_comment_to_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket to which you want to add a comment.")], text: Annotated[str, Field(..., description="Specify the content of the comment.")], visibility: Annotated[List[Any] | None, Field(default=None, description="Specify if the comment should be public or private.")], type: Annotated[List[Any] | None, Field(default=None, description="Specify what should be the type of the comment.")], wait_for_reply: Annotated[bool | None, Field(default=None, description="If enabled, action will wait for reply.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a comment to a ticket in Zoho Desk. Note: Action is running as async if "Wait For Reply" is enabled, please adjust script timeout value in Siemplify IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -312,16 +312,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zoho_desk_mark_ticket_as_spam(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket that needs to be marked as spam.")], mark_contact: Annotated[Optional[bool], Field(default=None, description="If enabled, the contact that created the ticket will be marked as spammer.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def zoho_desk_mark_ticket_as_spam(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket that needs to be marked as spam.")], mark_contact: Annotated[bool | None, Field(default=None, description="If enabled, the contact that created the ticket will be marked as spammer.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Mark ticket as spam in Zoho Desk.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -405,9 +405,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -490,9 +490,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -566,16 +566,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def zoho_desk_update_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket that needs to be updated.")], title: Annotated[Optional[str], Field(default=None, description="Specify the title that should be set for the ticket.")], description: Annotated[Optional[str], Field(default=None, description="Specify the description for the ticket.")], department_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the department that should be set for the ticket.")], contact: Annotated[Optional[str], Field(default=None, description="Specify the email of the contact for the ticket.")], assignee_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the assignee. If \u201cAgent\u201d or \u201cTeam\u201d is selected \u201cAssignee Name\u201d is required.")], assignee_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the assignee for the ticket. For the agent type you can provide an email address or display name.")], resolution: Annotated[Optional[str], Field(default=None, description="Specify the resolution for the ticket.")], priority: Annotated[Optional[List[Any]], Field(default=None, description="Specify the priority for the ticket.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the status for the ticket.")], mark_state: Annotated[Optional[List[Any]], Field(default=None, description="Specify the mark state for the ticket.")], classification: Annotated[Optional[List[Any]], Field(default=None, description="Specify the classification type for the ticket.")], channel: Annotated[Optional[List[Any]], Field(default=None, description="Specify the channel for the ticket.")], category: Annotated[Optional[str], Field(default=None, description="Specify the category for the ticket.")], sub_category: Annotated[Optional[str], Field(default=None, description="Specify the subcategory for the ticket.")], due_date: Annotated[Optional[str], Field(default=None, description="Specify the due date for the ticket. Format: ISO 8601. Example: 2022-07-06T07:05:43Z. Note: this parameter doesn\u2019t have an impact, when status is \u201cOn Hold\u201d.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a json object containing the custom fields that need to be added. Note: you need to provide the API names of the keys.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def zoho_desk_update_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify an id of the ticket that needs to be updated.")], title: Annotated[str | None, Field(default=None, description="Specify the title that should be set for the ticket.")], description: Annotated[str | None, Field(default=None, description="Specify the description for the ticket.")], department_name: Annotated[str | None, Field(default=None, description="Specify the name of the department that should be set for the ticket.")], contact: Annotated[str | None, Field(default=None, description="Specify the email of the contact for the ticket.")], assignee_type: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the assignee. If \u201cAgent\u201d or \u201cTeam\u201d is selected \u201cAssignee Name\u201d is required.")], assignee_name: Annotated[str | None, Field(default=None, description="Specify the name of the assignee for the ticket. For the agent type you can provide an email address or display name.")], resolution: Annotated[str | None, Field(default=None, description="Specify the resolution for the ticket.")], priority: Annotated[List[Any] | None, Field(default=None, description="Specify the priority for the ticket.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify the status for the ticket.")], mark_state: Annotated[List[Any] | None, Field(default=None, description="Specify the mark state for the ticket.")], classification: Annotated[List[Any] | None, Field(default=None, description="Specify the classification type for the ticket.")], channel: Annotated[List[Any] | None, Field(default=None, description="Specify the channel for the ticket.")], category: Annotated[str | None, Field(default=None, description="Specify the category for the ticket.")], sub_category: Annotated[str | None, Field(default=None, description="Specify the subcategory for the ticket.")], due_date: Annotated[str | None, Field(default=None, description="Specify the due date for the ticket. Format: ISO 8601. Example: 2022-07-06T07:05:43Z. Note: this parameter doesn\u2019t have an impact, when status is \u201cOn Hold\u201d.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a json object containing the custom fields that need to be added. Note: you need to provide the API names of the keys.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a ticket in Zoho Desk.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

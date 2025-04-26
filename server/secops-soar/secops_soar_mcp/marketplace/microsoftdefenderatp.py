@@ -56,9 +56,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -147,28 +147,28 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         status: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Statuses of the alert to look for. Comma-separated string",
             ),
         ],
         severity: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Severities of the alert to look for. Comma-separated string.",
             ),
         ],
         category: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Categories of the alert to look for. Comma-separated string.",
             ),
         ],
         incident_id: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Microsoft Defender Incident ID for which you want to find related alerts.",
@@ -194,9 +194,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -314,9 +314,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -405,33 +405,33 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         machine_name: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Full Machine Name to look for"),
         ],
         machine_ip_address: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Machine IP Address to look for"),
         ],
         machine_risk_score: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Machine risk score to look for. Comma-separated string.",
             ),
         ],
         machine_health_status: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Machine health status to look for. Comma-separated string",
             ),
         ],
         machine_os_platform: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Machine OS platform to look for."),
         ],
         rbac_group_id: Annotated[
-            Optional[str], Field(default=None, description="RBAC Group ID to look for.")
+            str | None, Field(default=None, description="RBAC Group ID to look for.")
         ],
         target_entities: Annotated[
             List[TargetEntity],
@@ -453,9 +453,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -577,9 +577,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -693,9 +693,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -808,9 +808,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -903,18 +903,18 @@ def register_tools(mcp: FastMCP):
             str, Field(..., description="Microsoft Defender ATP Alert ID to update.")
         ],
         status: Annotated[
-            Optional[List[Any]], Field(default=None, description="Status of the alert")
+            List[Any] | None, Field(default=None, description="Status of the alert")
         ],
         assigned_to: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="User who is assigned to this alert"),
         ],
         classification: Annotated[
-            Optional[List[Any]],
+            List[Any] | None,
             Field(default=None, description="Classification to update alert with"),
         ],
         determination: Annotated[
-            Optional[List[Any]],
+            List[Any] | None,
             Field(default=None, description="Determination to update alert with"),
         ],
         target_entities: Annotated[
@@ -937,9 +937,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1036,35 +1036,35 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         time_frame: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Time frame in hours for which to fetch Alerts",
             ),
         ],
         status: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Statuses of the alert to look for. Comma-separated string",
             ),
         ],
         severity: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Severities of the alert to look for. Comma-separated string.",
             ),
         ],
         category: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Categories of the alert to look for. Comma-separated string.",
             ),
         ],
         incident_id: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Microsoft Defender Incident ID for which you want to find related alerts.",
@@ -1090,9 +1090,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1209,9 +1209,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1318,9 +1318,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1408,40 +1408,40 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         last_seen_time_frame: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Time frame in hours for which to fetch Machines",
             ),
         ],
         machine_name: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Full Machine Name to look for"),
         ],
         machine_ip_address: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Machine IP Address to look for"),
         ],
         machine_risk_score: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Machine risk score to look for. Comma-separated string.",
             ),
         ],
         machine_health_status: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Machine health status to look for. Comma-separated string",
             ),
         ],
         machine_os_platform: Annotated[
-            Optional[str],
+            str | None,
             Field(default=None, description="Machine OS platform to look for."),
         ],
         rbac_group_id: Annotated[
-            Optional[str], Field(default=None, description="RBAC Group ID to look for.")
+            str | None, Field(default=None, description="RBAC Group ID to look for.")
         ],
         target_entities: Annotated[
             List[TargetEntity],
@@ -1463,9 +1463,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1567,35 +1567,35 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         indicators: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify a comma-separated list of indicators that you would like to retrieve.",
             ),
         ],
         indicator_types: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify a comma-separated list of indicator types that you want to retrieve. Possible values: FileSha1, FileSha256, FileMd5, CertificateThumbprint, IpAddress, DomainName, Url.",
             ),
         ],
         actions: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify a comma-separated list of indicator actions that you want to use for filtering. Possible values: Warn,Block,Audit,Alert,AlertAndBlock,BlockAndRemediate,Allowed.",
             ),
         ],
         severity: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify a comma-separated list of severities that you want to use for filtering. Possible values: Informational,Low,Medium,High.",
             ),
         ],
         max_results_to_return: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify how many indicators to return. Default: 50.",
@@ -1621,9 +1621,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1742,14 +1742,14 @@ def register_tools(mcp: FastMCP):
             str, Field(..., description="Specify the description for the entities.")
         ],
         application: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify an application that is related to the entities.",
             ),
         ],
         recommended_action: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Specify what should be the recommended actions for the handling of the entities.",
@@ -1775,9 +1775,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1873,28 +1873,28 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         status: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Statuses of the alert to look for. Comma-separated string",
             ),
         ],
         severity: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Severities of the alert to look for. Comma-separated string.",
             ),
         ],
         category: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Categories of the alert to look for. Comma-separated string.",
             ),
         ],
         incident_id: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Microsoft Defender Incident ID for which you want to find related alerts.",
@@ -1920,9 +1920,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2037,9 +2037,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2156,9 +2156,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2270,9 +2270,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2380,9 +2380,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter

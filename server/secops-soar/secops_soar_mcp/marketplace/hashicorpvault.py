@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the HashiCorpVault integration.
 
     @mcp.tool()
-    async def hashi_corp_vault_generate_aws_credentials(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], aws_role_name: Annotated[str, Field(..., description="Specify the role name to generate credentials for.")], aws_secret_engine_path: Annotated[Optional[str], Field(default=None, description="Specify the path used for the aws secret storage. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/aws/roles/")], aws_role_arn: Annotated[Optional[str], Field(default=None, description="Specify the ARN of the role to assume if credential_type on the Vault role is assumed_role. Must match one of the allowed role ARNs in the Vault role.")], aws_role_session_name: Annotated[Optional[str], Field(default=None, description="Specify the role session name to attach to the assumed role ARN. If not provided it will be generated dynamically by default.")], ttl_seconds: Annotated[Optional[str], Field(default=None, description="Specifies the TTL in seconds for the use of the STS token. This is specified as a string with a duration suffix. Valid only when AWS role credential_type in Vault is assumed_role or federation_token. When not specified, the default_sts_ttl set for the role will be used. If that is also not set, then the default value of 3600 seconds will be used.")], json_expression_builder: Annotated[Optional[Union[str, dict]], Field(default=None, description="Specify a JSON Expression Builder expression to filter a specific subset of data from secret, for example:  | \u201cdata\u201d | \u201cdata\u201d | \u201ckey0\u201d")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def hashi_corp_vault_generate_aws_credentials(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], aws_role_name: Annotated[str, Field(..., description="Specify the role name to generate credentials for.")], aws_secret_engine_path: Annotated[str | None, Field(default=None, description="Specify the path used for the aws secret storage. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/aws/roles/")], aws_role_arn: Annotated[str | None, Field(default=None, description="Specify the ARN of the role to assume if credential_type on the Vault role is assumed_role. Must match one of the allowed role ARNs in the Vault role.")], aws_role_session_name: Annotated[str | None, Field(default=None, description="Specify the role session name to attach to the assumed role ARN. If not provided it will be generated dynamically by default.")], ttl_seconds: Annotated[str | None, Field(default=None, description="Specifies the TTL in seconds for the use of the STS token. This is specified as a string with a duration suffix. Valid only when AWS role credential_type in Vault is assumed_role or federation_token. When not specified, the default_sts_ttl set for the role will be used. If that is also not set, then the default value of 3600 seconds will be used.")], json_expression_builder: Annotated[Union[str, dict] | None, Field(default=None, description="Specify a JSON Expression Builder expression to filter a specific subset of data from secret, for example:  | \u201cdata\u201d | \u201cdata\u201d | \u201ckey0\u201d")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Generate credentials based on AWS role stored in HashiCorp Vault. Note: This action doesn’t run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -125,9 +125,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -201,16 +201,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def hashi_corp_vault_list_key_value_secret_keys(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], key_value_secret_engine_path: Annotated[Optional[str], Field(default=None, description="Specify the path used for the key-value secret storage. Currently only version 2 is supported. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/secret/data/<secret to fetch from kv store>")], secret_path: Annotated[Optional[str], Field(default=None, description="Specify secret path to fetch, action accept folder names, example secret path folder name is my-secret, key-value store path is secret, so full path to fetch would be \"https://x.x.x.x:8200/v1/secret/data/my-secret\". If not provided, action will return all secret keys stored in the secret engine.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def hashi_corp_vault_list_key_value_secret_keys(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], key_value_secret_engine_path: Annotated[str | None, Field(default=None, description="Specify the path used for the key-value secret storage. Currently only version 2 is supported. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/secret/data/<secret to fetch from kv store>")], secret_path: Annotated[str | None, Field(default=None, description="Specify secret path to fetch, action accept folder names, example secret path folder name is my-secret, key-value store path is secret, so full path to fetch would be \"https://x.x.x.x:8200/v1/secret/data/my-secret\". If not provided, action will return all secret keys stored in the secret engine.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List secrets keys available in the HashiCorp Vault based on provided criteria. Action returns key names stored in secret path without values. Folder names should be specified for secret path, action does not work if secret key is provided. Note: This action doesn't run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -290,16 +290,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def hashi_corp_vault_list_aws_roles(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], aws_secret_engine_path: Annotated[Optional[str], Field(default=None, description="Specify the path used for the aws secret storage. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/aws/roles/")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def hashi_corp_vault_list_aws_roles(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], aws_secret_engine_path: Annotated[str | None, Field(default=None, description="Specify the path used for the aws secret storage. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/aws/roles/")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List AWS roles available in the HashiCorp Vault based on provided criteria. Note: This action doesn’t run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -377,16 +377,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def hashi_corp_vault_read_key_value_secret(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], secret_path: Annotated[str, Field(..., description="Specify secret path to fetch, example secret path is my-secret, key-value store path is secret, so full path to fetch would be \"https://x.x.x.x:8200/v1/secret/data/my-secret\".")], key_value_secret_engine_path: Annotated[Optional[str], Field(default=None, description="Specify the path used for the key-value secret storage. Currently only version 2 is supported. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/secret/data/<secret to fetch from kv store>")], secret_version: Annotated[Optional[str], Field(default=None, description="Specify a secret version to fetch.")], json_expression_builder: Annotated[Optional[Union[str, dict]], Field(default=None, description="Specify a JSON Expression Builder expression to filter a specific subset of data from secret, for example: data | data | key0")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def hashi_corp_vault_read_key_value_secret(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], secret_path: Annotated[str, Field(..., description="Specify secret path to fetch, example secret path is my-secret, key-value store path is secret, so full path to fetch would be \"https://x.x.x.x:8200/v1/secret/data/my-secret\".")], key_value_secret_engine_path: Annotated[str | None, Field(default=None, description="Specify the path used for the key-value secret storage. Currently only version 2 is supported. Parameter is used to interact with secrets stored in storage, it is used to construct the urls like https://x.x.x.x:8200/v1/secret/data/<secret to fetch from kv store>")], secret_version: Annotated[str | None, Field(default=None, description="Specify a secret version to fetch.")], json_expression_builder: Annotated[Union[str, dict] | None, Field(default=None, description="Specify a JSON Expression Builder expression to filter a specific subset of data from secret, for example: data | data | key0")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Read Key-Value secret stored in HashiCorp Vault based on provided criteria. Note: This action doesn't run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

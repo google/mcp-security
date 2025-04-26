@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,9 +115,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -191,16 +191,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_security_command_center_list_asset_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_resource_names: Annotated[str, Field(..., description="Specify a comma-separated list of resource names of the assets for which you want to return data.")], timeframe: Annotated[Optional[List[Any]], Field(default=None, description="Specify the timeframe for the vulnerabilities/misconfiguration search.")], record_types: Annotated[Optional[List[Any]], Field(default=None, description="Specify what kind of records should be returned.")], output_type: Annotated[Optional[List[Any]], Field(default=None, description="Specify what kind of output should be returned in the JSON result for the asset.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return per record type per assets: Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_security_command_center_list_asset_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_resource_names: Annotated[str, Field(..., description="Specify a comma-separated list of resource names of the assets for which you want to return data.")], timeframe: Annotated[List[Any] | None, Field(default=None, description="Specify the timeframe for the vulnerabilities/misconfiguration search.")], record_types: Annotated[List[Any] | None, Field(default=None, description="Specify what kind of records should be returned.")], output_type: Annotated[List[Any] | None, Field(default=None, description="Specify what kind of output should be returned in the JSON result for the asset.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return per record type per assets: Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List vulnerabilities related to the entities in Google Security Command Center.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -283,16 +283,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_security_command_center_update_finding(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_name: Annotated[str, Field(..., description="Specify a comma-separated list of finding names which you want to update. Note: finding name has the following structure: organizations/{organization_id}/sources/{source_id}/findings/{finding_id}")], mute_status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the mute status for the finding.")], state_status: Annotated[Optional[List[Any]], Field(default=None, description="Specify the state status for the finding.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_security_command_center_update_finding(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_name: Annotated[str, Field(..., description="Specify a comma-separated list of finding names which you want to update. Note: finding name has the following structure: organizations/{organization_id}/sources/{source_id}/findings/{finding_id}")], mute_status: Annotated[List[Any] | None, Field(default=None, description="Specify the mute status for the finding.")], state_status: Annotated[List[Any] | None, Field(default=None, description="Specify the state status for the finding.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update finding in Google Security Command Center.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -378,9 +378,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Sumologic integration.
 
     @mcp.tool()
-    async def sumologic_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Sumologic query to run. e.g: _collector=*")], delete_search_job: Annotated[Optional[bool], Field(default=None, description="If checked, delete the jobs after a search is completed.")], since: Annotated[Optional[str], Field(default=None, description="Start date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: Last 30 days.")], to: Annotated[Optional[str], Field(default=None, description="End date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: now (current utc unixtime).")], limit: Annotated[Optional[str], Field(default=None, description="Number of results to return. e.g. 10. Default: 25.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def sumologic_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Sumologic query to run. e.g: _collector=*")], delete_search_job: Annotated[bool | None, Field(default=None, description="If checked, delete the jobs after a search is completed.")], since: Annotated[str | None, Field(default=None, description="Start date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: Last 30 days.")], to: Annotated[str | None, Field(default=None, description="End date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: now (current utc unixtime).")], limit: Annotated[str | None, Field(default=None, description="Number of results to return. e.g. 10. Default: 25.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Run a query and get search resutls from Sumologic
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -123,9 +123,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

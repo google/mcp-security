@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Any, List, Dict, Union, Annotated
 from pydantic import Field
 
 
@@ -24,17 +24,17 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ExchangeExtensionPack integration.
 
     @mcp.tool()
-    async def exchange_extension_pack_add_senders_to_exchange_siemplify_mail_flow_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_add_senders_to: Annotated[List[Any], Field(..., description="Specify the rule to add the sender to. If the rule doesn't exist - action will create it where it's missing.")], email_addresses: Annotated[Optional[str], Field(default=None, description="Specify the email addresses you would like to add to the rule, in a comma separated list. If no parameter will be provided, action will work with User entities.")], should_add_senders_domain_to_the_corresponding_domains_list_rule_as_well: Annotated[Optional[bool], Field(default=None, description="Specify whether the action should automatically take the domains of the provided email addresses and add them as well to the corresponding domain rules (same rule action for domains)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Action will get as a parameter a list of Email Addresses, or will work on User entities with Email regexes (if parameters are not provided), and will be able to create a new rule,filtering the senders from your Exchange Server. Actions can be modified in the parameters using the rule parameter. Note - to use this action, please make sure you have Organization Management permissions, as stated here: https://docs.microsoft.com/en-us/exchange/permissions-exo/feature-permissions
+    async def exchange_extension_pack_purge_compliance_search_results(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], perform_a_hard_delete_for_deleted_emails: Annotated[bool | None, Field(default=None, description="Specify whether HardDelete should be performed. This option is applies only to O365 and mark emails for permanent removal from the mailbox.")], remove_compliance_search_once_action_completes: Annotated[bool | None, Field(default=None, description="Specify whether action should remove from Exchange server the search action and any related fetch or purge tasks once the action completes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Purge emails found by the completed Compliance Search. Note: Action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -54,7 +54,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -65,13 +65,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if email_addresses is not None:
@@ -79,7 +79,7 @@ def register_tools(mcp: FastMCP):
             script_params["Rule to add senders to"] = rule_to_add_senders_to
             if should_add_senders_domain_to_the_corresponding_domains_list_rule_as_well is not None:
                 script_params["Should add senders' domain to the corresponding Domains List rule as well?"] = should_add_senders_domain_to_the_corresponding_domains_list_rule_as_well
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -95,7 +95,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -112,17 +112,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_fetch_compliance_search_results(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], max_emails_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many emails action can return.")], remove_compliance_search_once_action_completes: Annotated[Optional[bool], Field(default=None, description="Specify whether action should remove from Exchange server the search action and any related fetch or purge tasks once the action completes.")], create_case_wall_output_table: Annotated[Optional[bool], Field(default=None, description="Specify if action should create case wall output table. If Max Emails To Return is set to a bigger number, its recommended to uncheck this to increase action performance.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
-        """Fetch results for the completed Compliance Search. Note: Action is not working on Siemplify entities. Note2: Maximum of 200 elements will be displayed, but actual search can have more findings that are shown.
+    async def exchange_extension_pack_add_domains_to_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_add_domains_to: Annotated[List[Any], Field(..., description="Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.")], domains: Annotated[str | None, Field(default=None, description="Specify the Domains you would like to add to the rule, in a comma separated list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+        """Action will get as a parameter a list of Domains, and will be able to create a new rule, filtering the domains from your Exchange Server. Actions to take can be modified in the parameters using rule parameters. Note - to use this action, please make sure you have Organization Management permissions, as stated here: https://docs.microsoft.com/en-us/exchange/permissions-exo/feature-permissions
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -153,13 +153,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Compliance Search Name"] = compliance_search_name
@@ -169,7 +169,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Remove Compliance Search Once Action Completes?"] = remove_compliance_search_once_action_completes
             if create_case_wall_output_table is not None:
                 script_params["Create Case Wall Output Table?"] = create_case_wall_output_table
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -185,7 +185,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -202,17 +202,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_remove_domains_from_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_remove_domains_from: Annotated[List[Any], Field(..., description="Specify the rule to remove the Domains from. If the rule doesn't exist - action will do nothing.")], domains: Annotated[Optional[str], Field(default=None, description="Specify the Domains you would like to remove from the rule, in a comma separated list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exchange_extension_pack_remove_domains_from_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_remove_domains_from: Annotated[List[Any], Field(..., description="Specify the rule to remove the Domains from. If the rule doesn't exist - action will do nothing.")], domains: Annotated[str | None, Field(default=None, description="Specify the Domains you would like to remove from the rule, in a comma separated list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action will get as a parameter a list of Domains, and will be able to remove the provided domains from the existing rules. Note - to use this action, please make sure you have Organization Management permissions, as stated here: https://docs.microsoft.com/en-us/exchange/permissions-exo/feature-permissions
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -232,7 +232,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -243,19 +243,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if domains is not None:
                 script_params["Domains"] = domains
             script_params["Rule to remove Domains from"] = rule_to_remove_domains_from
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -271,7 +271,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -295,10 +295,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -318,7 +318,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -329,17 +329,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Compliance Search Name"] = compliance_search_name
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -355,7 +355,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -372,17 +372,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_purge_compliance_search_results(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], perform_a_hard_delete_for_deleted_emails: Annotated[Optional[bool], Field(default=None, description="Specify whether HardDelete should be performed. This option is applies only to O365 and mark emails for permanent removal from the mailbox.")], remove_compliance_search_once_action_completes: Annotated[Optional[bool], Field(default=None, description="Specify whether action should remove from Exchange server the search action and any related fetch or purge tasks once the action completes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exchange_extension_pack_purge_compliance_search_results(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], perform_a_hard_delete_for_deleted_emails: Annotated[bool | None, Field(default=None, description="Specify whether HardDelete should be performed. This option is applies only to O365 and mark emails for permanent removal from the mailbox.")], remove_compliance_search_once_action_completes: Annotated[bool | None, Field(default=None, description="Specify whether action should remove from Exchange server the search action and any related fetch or purge tasks once the action completes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Purge emails found by the completed Compliance Search. Note: Action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -402,7 +402,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -413,13 +413,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Compliance Search Name"] = compliance_search_name
@@ -427,7 +427,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Perform a HardDelete for deleted emails?"] = perform_a_hard_delete_for_deleted_emails
             if remove_compliance_search_once_action_completes is not None:
                 script_params["Remove Compliance Search Once Action Completes?"] = remove_compliance_search_once_action_completes
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -443,7 +443,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -460,17 +460,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_add_domains_to_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_add_domains_to: Annotated[List[Any], Field(..., description="Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.")], domains: Annotated[Optional[str], Field(default=None, description="Specify the Domains you would like to add to the rule, in a comma separated list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exchange_extension_pack_add_domains_to_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_add_domains_to: Annotated[List[Any], Field(..., description="Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.")], domains: Annotated[str | None, Field(default=None, description="Specify the Domains you would like to add to the rule, in a comma separated list.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action will get as a parameter a list of Domains, and will be able to create a new rule, filtering the domains from your Exchange Server. Actions to take can be modified in the parameters using rule parameters. Note - to use this action, please make sure you have Organization Management permissions, as stated here: https://docs.microsoft.com/en-us/exchange/permissions-exo/feature-permissions
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -490,7 +490,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -501,19 +501,19 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if domains is not None:
                 script_params["Domains"] = domains
             script_params["Rule to add Domains to"] = rule_to_add_domains_to
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -529,7 +529,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -546,17 +546,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_remove_senders_from_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_remove_senders_from: Annotated[List[Any], Field(..., description="Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.")], email_addresses: Annotated[Optional[str], Field(default=None, description="Specify the email addresses you would like to remove from the rule, in a comma separated list. If no parameter will be provided, action will work with entities.")], should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well: Annotated[Optional[bool], Field(default=None, description="Specify whether the action should automatically take the domains of the provided email addresses and remove them as well from the corresponding domain rules (same rule action for domains)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exchange_extension_pack_remove_senders_from_exchange_siemplify_mail_flow_rules(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_to_remove_senders_from: Annotated[List[Any], Field(..., description="Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.")], email_addresses: Annotated[str | None, Field(default=None, description="Specify the email addresses you would like to remove from the rule, in a comma separated list. If no parameter will be provided, action will work with entities.")], should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well: Annotated[bool | None, Field(default=None, description="Specify whether the action should automatically take the domains of the provided email addresses and remove them as well from the corresponding domain rules (same rule action for domains)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action will get as a parameter a list of Senders, or will work on User entities (if parameters are not provided), and will be able to remove the provided Senders from the existing rules. Note - to use this action, please make sure you have Organization Management permissions, as stated here: https://docs.microsoft.com/en-us/exchange/permissions-exo/feature-permissions
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -576,7 +576,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -587,13 +587,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             if email_addresses is not None:
@@ -601,7 +601,7 @@ def register_tools(mcp: FastMCP):
             script_params["Rule to remove Senders from"] = rule_to_remove_senders_from
             if should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well is not None:
                 script_params["Should remove senders' domains from the corresponding Domains List rule as well?"] = should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -617,7 +617,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -641,10 +641,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -664,7 +664,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -675,16 +675,16 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -700,7 +700,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -717,17 +717,17 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exchange_extension_pack_run_compliance_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], location_to_search_emails_in: Annotated[str, Field(..., description="Location to search emails in, can be one of the following: Comma separate list of mailboxes. A distribution group or mail-enabled security group All - for all mailboxes in organization.")], subject_filter: Annotated[Optional[str], Field(default=None, description="Filter condition, specify what subject to search for emails")], sender_filter: Annotated[Optional[str], Field(default=None, description="Filter condition, specify who should be the sender of needed emails")], recipient_filter: Annotated[Optional[str], Field(default=None, description="Filter condition, specify who should be the recipient of needed emails")], operator: Annotated[Optional[List[Any]], Field(default=None, description="Operator to use to construct query from conditions above.")], time_frame_hours: Annotated[Optional[str], Field(default=None, description="Time frame interval in hours to search for emails.")], fetch_compliance_search_results: Annotated[Optional[bool], Field(default=None, description="Specify whether the action should immediately fetch the compliance search results. Note that maximum of 200 elements will be displayed, but actual search can have more findings that are shown.")], max_emails_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many emails action can return.")], create_case_wall_output_table: Annotated[Optional[bool], Field(default=None, description="Specify if action should create case wall output table. If Max Emails To Return is set to a bigger number, its recommended to uncheck this to increase action performance.")], advanced_query: Annotated[Optional[str], Field(default=None, description="Instead of subject, sender or recipient filters, provide a query you want to run compliance search on. Consider https://docs.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference and https://docs.microsoft.com/en-us/exchange/message-properties-indexed-by-exchange-search-exchange-2013-help?redirectedfrom=MSDN for reference on query syntax.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exchange_extension_pack_run_compliance_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], compliance_search_name: Annotated[str, Field(..., description="Name for the Compliance Search. Note that name shouldn't contain special characters.")], location_to_search_emails_in: Annotated[str, Field(..., description="Location to search emails in, can be one of the following: Comma separate list of mailboxes. A distribution group or mail-enabled security group All - for all mailboxes in organization.")], subject_filter: Annotated[str | None, Field(default=None, description="Filter condition, specify what subject to search for emails")], sender_filter: Annotated[str | None, Field(default=None, description="Filter condition, specify who should be the sender of needed emails")], recipient_filter: Annotated[str | None, Field(default=None, description="Filter condition, specify who should be the recipient of needed emails")], operator: Annotated[List[Any] | None, Field(default=None, description="Operator to use to construct query from conditions above.")], time_frame_hours: Annotated[str | None, Field(default=None, description="Time frame interval in hours to search for emails.")], fetch_compliance_search_results: Annotated[bool | None, Field(default=None, description="Specify whether the action should immediately fetch the compliance search results. Note that maximum of 200 elements will be displayed, but actual search can have more findings that are shown.")], max_emails_to_return: Annotated[str | None, Field(default=None, description="Specify how many emails action can return.")], create_case_wall_output_table: Annotated[bool | None, Field(default=None, description="Specify if action should create case wall output table. If Max Emails To Return is set to a bigger number, its recommended to uncheck this to increase action performance.")], advanced_query: Annotated[str | None, Field(default=None, description="Instead of subject, sender or recipient filters, provide a query you want to run compliance search on. Consider https://docs.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference and https://docs.microsoft.com/en-us/exchange/message-properties-indexed-by-exchange-search-exchange-2013-help?redirectedfrom=MSDN for reference on query syntax.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Run Exchange Compliance Search based on the provided search conditions. If the fetch compliance search results checkbox is set, action returns the search results similarly to the fetch compliance search results action. Exchange Compliance Search provides a fast mechanism to search in multiple mailboxes that will be most useful for large Organizations with 1000+ mailboxes. Note: Action is not working on Siemplify entities.  Note2: If "Fetch Compliance Search Results?" checkbox is checked, maximum of 200 elements will be displayed, but actual search can have more findings that are shown.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -747,7 +747,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -758,13 +758,13 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Compliance Search Name"] = compliance_search_name
@@ -787,7 +787,7 @@ def register_tools(mcp: FastMCP):
                 script_params["Create Case Wall Output Table?"] = create_case_wall_output_table
             if advanced_query is not None:
                 script_params["Advanced Query"] = advanced_query
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -803,7 +803,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -827,10 +827,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -850,7 +850,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -861,17 +861,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Rule Name To List"] = rule_name_to_list
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -887,7 +887,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
@@ -911,10 +911,10 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
-    
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
+
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
@@ -934,7 +934,7 @@ def register_tools(mcp: FastMCP):
             final_scope = scope
             is_predefined_scope = True
         # --- End scope/entity logic ---
-    
+
         # Fetch integration instance identifier (assuming this pattern)
         try:
             instance_response = await bindings.http_client.get(
@@ -945,17 +945,17 @@ def register_tools(mcp: FastMCP):
             # Log error appropriately in real code
             print(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
-    
+
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
                 # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
-    
+
             # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Rule Name To Delete"] = rule_name_to_delete
-    
+
             # Prepare data model for the API request
             action_data = ApiManualActionDataModel(
                 alertGroupIdentifiers=alert_group_identifiers,
@@ -971,7 +971,7 @@ def register_tools(mcp: FastMCP):
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
-    
+
             # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(

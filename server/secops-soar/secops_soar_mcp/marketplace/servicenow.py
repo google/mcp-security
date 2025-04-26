@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ServiceNow integration.
 
     @mcp.tool()
-    async def service_now_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_number: Annotated[str, Field(..., description="Specify number of the incident. Format: INCxxxxxxx")], short_description: Annotated[Optional[str], Field(default=None, description="Specify short description of the incident.")], impact: Annotated[Optional[str], Field(default=None, description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[Optional[str], Field(default=None, description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[Optional[str], Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[Optional[str], Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[Optional[str], Field(default=None, description="Specify email address or the username of the user that was assigned to the incident.")], description: Annotated[Optional[str], Field(default=None, description="Specify description of the incident.")], incident_state: Annotated[Optional[str], Field(default=None, description="Status name or status id.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields and values. Format: field_1:value_1,field_2:value_2. You can also specify a JSON object as input. Note: this parameter has priority and all of the fields will be overwritten with the value that is provided for this parameter. Example: {\"field\":\"value\"}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_number: Annotated[str, Field(..., description="Specify number of the incident. Format: INCxxxxxxx")], short_description: Annotated[str | None, Field(default=None, description="Specify short description of the incident.")], impact: Annotated[str | None, Field(default=None, description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[str | None, Field(default=None, description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[str | None, Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[str | None, Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[str | None, Field(default=None, description="Specify email address or the username of the user that was assigned to the incident.")], description: Annotated[str | None, Field(default=None, description="Specify description of the incident.")], incident_state: Annotated[str | None, Field(default=None, description="Status name or status id.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields and values. Format: field_1:value_1,field_2:value_2. You can also specify a JSON object as input. Note: this parameter has priority and all of the fields will be overwritten with the value that is provided for this parameter. Example: {\"field\":\"value\"}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update incident information
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -126,16 +126,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_update_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_json_data: Annotated[Union[str, dict], Field(..., description="Specify JSON data that is needed to update a record.")], record_sys_id: Annotated[str, Field(..., description="Specify Sys ID of the needed record.")], table_name: Annotated[Optional[str], Field(default=None, description="Specify what table should be used to update a record.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_update_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], object_json_data: Annotated[Union[str, dict], Field(..., description="Specify JSON data that is needed to update a record.")], record_sys_id: Annotated[str, Field(..., description="Specify Sys ID of the needed record.")], table_name: Annotated[str | None, Field(default=None, description="Specify what table should be used to update a record.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update available records in different tables of Service Now.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -213,16 +213,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_get_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where you want to search for the record. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID for which you want to retrieve details.")], fields: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields that should be returned for that record. If nothing is specified, action will return the default fields for that record. Example: field_1,field_2.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_get_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where you want to search for the record. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID for which you want to retrieve details.")], fields: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields that should be returned for that record. If nothing is specified, action will return the default fields for that record. Example: field_1,field_2.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about specific table records in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -300,16 +300,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_get_child_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], parent_incident_number: Annotated[str, Field(..., description="Specify a number of the incident for which you want to retrieve child incident details. Format: INCxxxxxxx")], max_child_incident_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many child incidents to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_get_child_incident_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], parent_incident_number: Annotated[str, Field(..., description="Specify a number of the incident for which you want to retrieve child incident details. Format: INCxxxxxxx")], max_child_incident_to_return: Annotated[str | None, Field(default=None, description="Specify how many child incidents to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about child incidents based on the parent incident in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -386,16 +386,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_create_alert_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], impact: Annotated[str, Field(..., description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[str, Field(..., description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[Optional[str], Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[Optional[str], Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[Optional[str], Field(default=None, description="Specify full name of the user that was assigned to the incident.")], description: Annotated[Optional[str], Field(default=None, description="Specify description of the incident.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_create_alert_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], impact: Annotated[str, Field(..., description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[str, Field(..., description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[str | None, Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[str | None, Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[str | None, Field(default=None, description="Specify full name of the user that was assigned to the incident.")], description: Annotated[str | None, Field(default=None, description="Specify description of the incident.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an incident related to a Siemplify alert
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -486,9 +486,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -569,9 +569,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -647,16 +647,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_add_attachment(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where is located the record to which you want to add attachment.")], record_sys_id: Annotated[str, Field(..., description="Specify sys id of the record to which you want to add attachment.")], file_path: Annotated[str, Field(..., description="Specify a comma-separated list of absolute paths to the files that need to be attached.")], mode: Annotated[Optional[List[Any]], Field(default=None, description="Specify the mode for the action. If \u201cAdd New Attachment\u201d is selected, action will add a new attachment, if it even has the same name. If \u201cOverwrite Existing Attachment\u201d is selected, action will remove other attachments with the same name and add a new attachment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_add_attachment(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where is located the record to which you want to add attachment.")], record_sys_id: Annotated[str, Field(..., description="Specify sys id of the record to which you want to add attachment.")], file_path: Annotated[str, Field(..., description="Specify a comma-separated list of absolute paths to the files that need to be attached.")], mode: Annotated[List[Any] | None, Field(default=None, description="Specify the mode for the action. If \u201cAdd New Attachment\u201d is selected, action will add a new attachment, if it even has the same name. If \u201cOverwrite Existing Attachment\u201d is selected, action will remove other attachments with the same name and add a new attachment.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add attachment to a table record in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -742,9 +742,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -818,16 +818,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_get_cmdb_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], class_name: Annotated[str, Field(..., description="Specify name of the class, from where you want to list records. Example: cmdb_ci_appl.")], sys_id: Annotated[str, Field(..., description="Specify a comma-separated list of record sys ids for which you want to retrieve details.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many record relations per type to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_get_cmdb_record_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], class_name: Annotated[str, Field(..., description="Specify name of the class, from where you want to list records. Example: cmdb_ci_appl.")], sys_id: Annotated[str, Field(..., description="Specify a comma-separated list of record sys ids for which you want to retrieve details.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many record relations per type to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get detailed CMDB records from the same class in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -912,9 +912,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -990,16 +990,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_get_user_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], user_sys_i_ds: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of sys_ids of the users for which you want to retrieve details. Example: sys_id_1,sys_id_2")], emails: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of emails of the users for which you want to retrieve details. Example: email1@example.com,email2@example.com")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_get_user_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], user_sys_i_ds: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of sys_ids of the users for which you want to retrieve details. Example: sys_id_1,sys_id_2")], emails: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of emails of the users for which you want to retrieve details. Example: email1@example.com,email2@example.com")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about the user by the sys_id or email in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1084,9 +1084,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1171,9 +1171,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1258,9 +1258,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1343,9 +1343,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1431,9 +1431,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1508,16 +1508,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_create_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[Optional[str], Field(default=None, description="Specify what table should be used to create a record.")], object_json_data: Annotated[Optional[Union[str, dict]], Field(default=None, description="Specify JSON data that is needed to create a record.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_create_record(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str | None, Field(default=None, description="Specify what table should be used to create a record.")], object_json_data: Annotated[Union[str, dict] | None, Field(default=None, description="Specify JSON data that is needed to create a record.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create new records in different tables of Service Now.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1595,16 +1595,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_wait_for_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify the name of the table in which you want to wait for a comment or work note. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID in which you want to wait for a comment or work note.")], type: Annotated[List[Any], Field(..., description="Specify for what type of object action needs to wait.")], wait_mode: Annotated[List[Any], Field(..., description="Specify the wait mode for the action. If \"Until Timeout\" is selected, action will wait until and return all of the comments in that timeframe. If \"Until First Message\" is selected, action will wait until a new message appears after action execution. If \"Until Specific Text\" is selected, action will wait until there is a message that is equal to the string provided in the \"Text\" parameter. Note: \"Text\" parameter is mandatory, if \"Until Specific Text\" is provided.")], text: Annotated[Optional[str], Field(default=None, description="Specify the text for which action needs to wait. Note: this parameter is only relevant, if \"Until Specific Text\" is selected for \"Wait Mode\" parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_wait_for_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify the name of the table in which you want to wait for a comment or work note. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID in which you want to wait for a comment or work note.")], type: Annotated[List[Any], Field(..., description="Specify for what type of object action needs to wait.")], wait_mode: Annotated[List[Any], Field(..., description="Specify the wait mode for the action. If \"Until Timeout\" is selected, action will wait until and return all of the comments in that timeframe. If \"Until First Message\" is selected, action will wait until a new message appears after action execution. If \"Until Specific Text\" is selected, action will wait until there is a message that is equal to the string provided in the \"Text\" parameter. Note: \"Text\" parameter is mandatory, if \"Until Specific Text\" is provided.")], text: Annotated[str | None, Field(default=None, description="Specify the text for which action needs to wait. Note: this parameter is only relevant, if \"Until Specific Text\" is selected for \"Wait Mode\" parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Wait for comments related to a specific table record in ServiceNow. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1691,9 +1691,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1771,16 +1771,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], short_description: Annotated[str, Field(..., description="Specify short description of the incident.")], impact: Annotated[str, Field(..., description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[str, Field(..., description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[Optional[str], Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[Optional[str], Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[Optional[str], Field(default=None, description="Specify full name or the username of the user that was assigned to the incident.")], description: Annotated[Optional[str], Field(default=None, description="Specify description of the incident.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields and values. Format: field_1:value_1,field_2:value_2. You can also specify a JSON object as input. Note: this parameter has priority and all of the fields will be overwritten with the value that is provided for this parameter. Example: {\"field\":\"value\"}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], short_description: Annotated[str, Field(..., description="Specify short description of the incident.")], impact: Annotated[str, Field(..., description="Specify impact of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], urgency: Annotated[str, Field(..., description="Specify urgency of the incident. Possible values: 1 for High, 2 for Medium and 3 for Low.")], category: Annotated[str | None, Field(default=None, description="Specify category of the incident.")], assignment_group_id: Annotated[str | None, Field(default=None, description="Specify full name of the group that was assigned to the incident.")], assigned_user_id: Annotated[str | None, Field(default=None, description="Specify full name or the username of the user that was assigned to the incident.")], description: Annotated[str | None, Field(default=None, description="Specify description of the incident.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields and values. Format: field_1:value_1,field_2:value_2. You can also specify a JSON object as input. Note: this parameter has priority and all of the fields will be overwritten with the value that is provided for this parameter. Example: {\"field\":\"value\"}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new incident in the ServiceNow system
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1867,16 +1867,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_list_records_related_to_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where you want to search for related records. Example: incident.")], usernames: Annotated[str, Field(..., description="Specify a comma-separated list of usernames for which you want to retrieve related records.")], max_days_backwards: Annotated[str, Field(..., description="Specify how many days backwards to fetch related records.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return per user. Default: 50")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_list_records_related_to_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify name of the table, where you want to search for related records. Example: incident.")], usernames: Annotated[str, Field(..., description="Specify a comma-separated list of usernames for which you want to retrieve related records.")], max_days_backwards: Annotated[str, Field(..., description="Specify how many days backwards to fetch related records.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return per user. Default: 50")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List records from a table related to a user in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1955,16 +1955,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_list_record_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify the name of the table for which you want to list comments or work notes. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID for which you want to list comments or work notes.")], type: Annotated[List[Any], Field(..., description="Specify whether comment or work note should be listed.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_list_record_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify the name of the table for which you want to list comments or work notes. Example: incident.")], record_sys_id: Annotated[str, Field(..., description="Specify the record ID for which you want to list comments or work notes.")], type: Annotated[List[Any], Field(..., description="Specify whether comment or work note should be listed.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List comments related to a specific table record in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2043,16 +2043,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def service_now_list_cmdb_records(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], class_name: Annotated[str, Field(..., description="Specify name of the class, from where you want to list records. Example: cmdb_ci_appl.")], query_filter: Annotated[Optional[str], Field(default=None, description="Specify query filter for the results. Visit documentation to get more details. Example of the filter: sys_idLIKE1^sys_idSTARTSWITH0.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def service_now_list_cmdb_records(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], class_name: Annotated[str, Field(..., description="Specify name of the class, from where you want to list records. Example: cmdb_ci_appl.")], query_filter: Annotated[str | None, Field(default=None, description="Specify query filter for the results. Visit documentation to get more details. Example of the filter: sys_idLIKE1^sys_idSTARTSWITH0.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List CMDB records from the same class in ServiceNow.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2138,9 +2138,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

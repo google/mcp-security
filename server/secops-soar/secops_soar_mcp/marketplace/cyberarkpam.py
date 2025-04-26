@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the CyberArkPAM integration.
 
     @mcp.tool()
-    async def cyber_ark_pam_list_accounts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], search_query: Annotated[Optional[str], Field(default=None, description="Specify the search query to use in action.")], search_operator: Annotated[Optional[List[Any]], Field(default=None, description="Specify the search operator action should use to search based on the provided search query.")], max_records_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records (API default).")], records_offset: Annotated[Optional[str], Field(default=None, description="Specify the offset the action should use to return the values.")], filter_query: Annotated[Optional[str], Field(default=None, description="Specify the filter query action should use. Filter can be based on safeName or modificationTime parameters.")], saved_filter: Annotated[Optional[str], Field(default=None, description="Specify the saved filter query action should use. Takes priority over the Filter Query parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cyber_ark_pam_list_accounts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], search_query: Annotated[str | None, Field(default=None, description="Specify the search query to use in action.")], search_operator: Annotated[List[Any] | None, Field(default=None, description="Specify the search operator action should use to search based on the provided search query.")], max_records_to_return: Annotated[str | None, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records (API default).")], records_offset: Annotated[str | None, Field(default=None, description="Specify the offset the action should use to return the values.")], filter_query: Annotated[str | None, Field(default=None, description="Specify the filter query action should use. Filter can be based on safeName or modificationTime parameters.")], saved_filter: Annotated[str | None, Field(default=None, description="Specify the saved filter query action should use. Takes priority over the Filter Query parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List accounts available in the CyberArk PAM based on provided criteria. Note: This action doesn’t run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -126,9 +126,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -202,16 +202,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cyber_ark_pam_get_account_password_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], account: Annotated[str, Field(..., description="Specify the account id to retrieve the password value for. Note that you can get the account id from the List Accounts action.")], reason: Annotated[str, Field(..., description="Specify the reason that account password value is accessed.")], ticketing_system_name: Annotated[Optional[str], Field(default=None, description="Specify the name of the ticketing system.")], ticket_id: Annotated[Optional[str], Field(default=None, description="Specify the ticketing system ticket id.")], version: Annotated[Optional[str], Field(default=None, description="Specify the account password value version to retrieve.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cyber_ark_pam_get_account_password_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], account: Annotated[str, Field(..., description="Specify the account id to retrieve the password value for. Note that you can get the account id from the List Accounts action.")], reason: Annotated[str, Field(..., description="Specify the reason that account password value is accessed.")], ticketing_system_name: Annotated[str | None, Field(default=None, description="Specify the name of the ticketing system.")], ticket_id: Annotated[str | None, Field(default=None, description="Specify the ticketing system ticket id.")], version: Annotated[str | None, Field(default=None, description="Specify the account password value version to retrieve.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get account password value from CyberArk PAM. Note: Both password and SSH Key can be retrieved with this action.  Note 2: This action doesn’t run on Chronicle SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

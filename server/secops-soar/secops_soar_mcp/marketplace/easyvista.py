@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the EasyVista integration.
 
     @mcp.tool()
-    async def easy_vista_close_easy_vista_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], comment: Annotated[Optional[str], Field(default=None, description="Comment explaining the closing of the ticket.")], actions_close_date: Annotated[Optional[str], Field(default=None, description="Closing date of open actions associated with the ticket and the anticipated closure action. Date should be in the following format: MM/DD/YYYY HH:MM:SS. If the wrong format is provided, action will use current datetime as close date.")], delete_ongoing_actions: Annotated[Optional[bool], Field(default=None, description="Specify whether to delete the ticket's ongoing actions on ticket closing.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def easy_vista_close_easy_vista_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], comment: Annotated[str | None, Field(default=None, description="Comment explaining the closing of the ticket.")], actions_close_date: Annotated[str | None, Field(default=None, description="Closing date of open actions associated with the ticket and the anticipated closure action. Date should be in the following format: MM/DD/YYYY HH:MM:SS. If the wrong format is provided, action will use current datetime as close date.")], delete_ongoing_actions: Annotated[bool | None, Field(default=None, description="Specify whether to delete the ticket's ongoing actions on ticket closing.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Close EasyVista ticket based on the provided parameters. Note: action is not working on Siemplify entities, ticket identifier (rfc_number) should be provided.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -121,9 +121,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -206,9 +206,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -290,9 +290,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -366,16 +366,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def easy_vista_wait_for_the_ticket_update(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], field_to_monitor: Annotated[Optional[List[Any]], Field(default=None, description="EasyVista ticket field to monitor for the update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def easy_vista_wait_for_the_ticket_update(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], field_to_monitor: Annotated[List[Any] | None, Field(default=None, description="EasyVista ticket field to monitor for the update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action pauses the playbook execution and periodically connects to EasyVista until timeout and checks if the specified ticket got an update. Action also can monitor specific field for the update, once that field is updated - action completes and fetches back the updated ticket information. 
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

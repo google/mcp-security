@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -107,16 +107,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def devo_advanced_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify a query to execute against Devo instance. Example format: 'from siem.logtrust.alert.info'.")], time_frame: Annotated[Optional[List[Any]], Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the query. This parameter is mandatory, if 'Custom' is selected for the 'Time Frame' parameter. Format: ISO 8601. Example: 2021-08-05T05:18:42Z")], max_rows_to_return: Annotated[Optional[str], Field(default=None, description="Specify max number of rows the action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def devo_advanced_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify a query to execute against Devo instance. Example format: 'from siem.logtrust.alert.info'.")], time_frame: Annotated[List[Any] | None, Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], start_time: Annotated[str | None, Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], end_time: Annotated[str | None, Field(default=None, description="Specify the start time for the query. This parameter is mandatory, if 'Custom' is selected for the 'Time Frame' parameter. Format: ISO 8601. Example: 2021-08-05T05:18:42Z")], max_rows_to_return: Annotated[str | None, Field(default=None, description="Specify max number of rows the action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute an advanced query based on the provided parameters. Note that action is not working on Siemplify entities. If its planned to query table other than siem.logtrust.alert.info, please create an additional token for that table following the documentation at https://docs.devo.com/confluence/ndt/latest/domain-administration/security-credentials/authentication-tokens and specify it on the integration configuration page.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -199,16 +199,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def devo_simple_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify what table should be queried.")], fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify what fields to return. If nothing is provided, action will return all fields.")], where_filter: Annotated[Optional[str], Field(default=None, description="Specify the WHERE filter for the query  that needs to be executed.")], time_frame: Annotated[Optional[List[Any]], Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], start_time: Annotated[Optional[str], Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], end_time: Annotated[Optional[str], Field(default=None, description="Specify the start time for the query. This parameter is mandatory, if 'Custom' is selected for the 'Time Frame' parameter. Format: ISO 8601. Example: 2021-08-05T05:18:42Z")], max_rows_to_return: Annotated[Optional[str], Field(default=None, description="Specify max number of rows the action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def devo_simple_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], table_name: Annotated[str, Field(..., description="Specify what table should be queried.")], fields_to_return: Annotated[str | None, Field(default=None, description="Specify what fields to return. If nothing is provided, action will return all fields.")], where_filter: Annotated[str | None, Field(default=None, description="Specify the WHERE filter for the query  that needs to be executed.")], time_frame: Annotated[List[Any] | None, Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], start_time: Annotated[str | None, Field(default=None, description="Specify a time frame for the results. If 'Custom' is selected, you also need to provide 'Start Time'.")], end_time: Annotated[str | None, Field(default=None, description="Specify the start time for the query. This parameter is mandatory, if 'Custom' is selected for the 'Time Frame' parameter. Format: ISO 8601. Example: 2021-08-05T05:18:42Z")], max_rows_to_return: Annotated[str | None, Field(default=None, description="Specify max number of rows the action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute a simple query based on the provided parameters. Note that action is not working on Siemplify entities. If its planned to query table other than siem.logtrust.alert.info, please create an additional token for that table following the documentation at https://docs.devo.com/confluence/ndt/latest/domain-administration/security-credentials/authentication-tokens and specify it on the integration configuration page.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

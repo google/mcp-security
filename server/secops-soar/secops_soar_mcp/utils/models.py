@@ -36,12 +36,12 @@ class ApiManualActionDataModel(BaseModel):
     properties: Dict[str, str] = Field(default_factory=dict)
     actionProvider: str
     actionName: str
-    scope: Optional[str]
+    scope: str | None
     alertGroupIdentifiers: List[str] = Field(default_factory=list)
     isPredefinedScope: bool
 
 
 class EmailContent(BaseModel):
     Content: str
-    ContentTemplateName: Optional[str]
-    HtmlTemplateName: Optional[str]
+    ContentTemplateName: str | None
+    HtmlTemplateName: str | None

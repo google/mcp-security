@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the AlgoSec integration.
 
     @mcp.tool()
-    async def algo_sec_list_templates(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_logic: Annotated[Optional[List[Any]], Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[Optional[str], Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among record types and if \"Contains\" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied.")], max_templates_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many templates to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def algo_sec_list_templates(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_logic: Annotated[List[Any] | None, Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[str | None, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among record types and if \"Contains\" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied.")], max_templates_to_return: Annotated[str | None, Field(default=None, description="Specify how many templates to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available templates in AlgoSec.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -120,9 +120,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -205,9 +205,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -281,16 +281,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def algo_sec_allow_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], template: Annotated[str, Field(..., description="Specify the template for the change request.")], source: Annotated[str, Field(..., description="Specify a comma-separated list of sources for the allow rule. It can be an IP address, IP Set or special keyword like (all).")], service: Annotated[str, Field(..., description="Specify a comma-separated list of services that needs to be allowed. Values can have a look of {TCP/UDP}/{port} (tcp/80) or special reserved keyword (all).")], subject: Annotated[Optional[str], Field(default=None, description="Specify the subject for the change request. If nothing is provided action will put \"Siemplify Allow IP request\" in the subject.")], owner: Annotated[Optional[str], Field(default=None, description="Specify who should be the owner of the change request. If nothing is provided, the user that created the ticket will be the owner.")], due_date: Annotated[Optional[str], Field(default=None, description="Specify the due date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], expiration_date: Annotated[Optional[str], Field(default=None, description="Specify the expiration date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object containing information about all of the fields that need to be added to the change request. Note: this parameter has a priority over other fields")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def algo_sec_allow_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], template: Annotated[str, Field(..., description="Specify the template for the change request.")], source: Annotated[str, Field(..., description="Specify a comma-separated list of sources for the allow rule. It can be an IP address, IP Set or special keyword like (all).")], service: Annotated[str, Field(..., description="Specify a comma-separated list of services that needs to be allowed. Values can have a look of {TCP/UDP}/{port} (tcp/80) or special reserved keyword (all).")], subject: Annotated[str | None, Field(default=None, description="Specify the subject for the change request. If nothing is provided action will put \"Siemplify Allow IP request\" in the subject.")], owner: Annotated[str | None, Field(default=None, description="Specify who should be the owner of the change request. If nothing is provided, the user that created the ticket will be the owner.")], due_date: Annotated[str | None, Field(default=None, description="Specify the due date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], expiration_date: Annotated[str | None, Field(default=None, description="Specify the expiration date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object containing information about all of the fields that need to be added to the change request. Note: this parameter has a priority over other fields")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Allow IPs in AlgoSec. Supported entities: IP address. Note: IP address entities are treated as destinations in the change request. This action creates a traffic change request to allow traffic to IP entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -377,16 +377,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def algo_sec_block_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], template: Annotated[str, Field(..., description="Specify the template for the change request.")], source: Annotated[str, Field(..., description="Specify a comma-separated list of sources for the block rule. It can be an IP address, IP Set or special keyword like (all).")], service: Annotated[str, Field(..., description="Specify a comma-separated list of services that needs to be blocked. Values can have a look of {TCP/UDP}/{port} (tcp/80) or special reserved keyword (all).")], subject: Annotated[Optional[str], Field(default=None, description="Specify the subject for the change request. If nothing is provided action will put \u201cSiemplify Block IP request\u201d in the subject.")], owner: Annotated[Optional[str], Field(default=None, description="Specify who should be the owner of the change request. If nothing is provided, the user that created the ticket will be the owner.")], due_date: Annotated[Optional[str], Field(default=None, description="Specify the due date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], expiration_date: Annotated[Optional[str], Field(default=None, description="Specify the expiration date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], custom_fields: Annotated[Optional[str], Field(default=None, description="Specify a JSON object containing information about all of the fields that need to be added to the change request. Note: this parameter has a priority over other fields")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def algo_sec_block_ip(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], template: Annotated[str, Field(..., description="Specify the template for the change request.")], source: Annotated[str, Field(..., description="Specify a comma-separated list of sources for the block rule. It can be an IP address, IP Set or special keyword like (all).")], service: Annotated[str, Field(..., description="Specify a comma-separated list of services that needs to be blocked. Values can have a look of {TCP/UDP}/{port} (tcp/80) or special reserved keyword (all).")], subject: Annotated[str | None, Field(default=None, description="Specify the subject for the change request. If nothing is provided action will put \u201cSiemplify Block IP request\u201d in the subject.")], owner: Annotated[str | None, Field(default=None, description="Specify who should be the owner of the change request. If nothing is provided, the user that created the ticket will be the owner.")], due_date: Annotated[str | None, Field(default=None, description="Specify the due date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], expiration_date: Annotated[str | None, Field(default=None, description="Specify the expiration date for the change request. Format: ISO 8601. Example: 2021-08-13T08:16:10Z.")], custom_fields: Annotated[str | None, Field(default=None, description="Specify a JSON object containing information about all of the fields that need to be added to the change request. Note: this parameter has a priority over other fields")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Block IPs in AlgoSec. Supported entities: IP address. Note: IP address entities are treated as destinations in the change request. This action creates a traffic change request to block traffic to IP entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

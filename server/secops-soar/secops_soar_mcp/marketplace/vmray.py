@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the VMRay integration.
 
     @mcp.tool()
-    async def vm_ray_scan_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threat_indicator_score_threshold: Annotated[str, Field(..., description="Specify the lowest score that will be used to return threat indicators. Maximum: 5.")], ioc_type_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC types that need to be returned. Possible values: domains, emails, files, ips, mutexes, processes, registry, urls.")], ioc_verdict_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC verdicts that will be used during the ingestion of IOCs. Possible values: Malicious, Suspicious, Clean, None.")], max_io_cs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many IOCs to return per entity per IOC type. Default: 10.")], max_threat_indicators_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many threat indicators to return per entity. Default: 10.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vm_ray_scan_hash(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threat_indicator_score_threshold: Annotated[str, Field(..., description="Specify the lowest score that will be used to return threat indicators. Maximum: 5.")], ioc_type_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC types that need to be returned. Possible values: domains, emails, files, ips, mutexes, processes, registry, urls.")], ioc_verdict_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC verdicts that will be used during the ingestion of IOCs. Possible values: Malicious, Suspicious, Clean, None.")], max_io_cs_to_return: Annotated[str | None, Field(default=None, description="Specify how many IOCs to return per entity per IOC type. Default: 10.")], max_threat_indicators_to_return: Annotated[str | None, Field(default=None, description="Specify how many threat indicators to return per entity. Default: 10.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get details about a specific hash.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,16 +118,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vm_ray_upload_file_and_get_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], sample_file_path: Annotated[str, Field(..., description="Specify a comma-separated list of absolute file paths for submission.")], tag_names: Annotated[Optional[str], Field(default=None, description="Specify the tags that you want to add to the submission.")], comment: Annotated[Optional[str], Field(default=None, description="Specify the comment that you want to add to the submission.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vm_ray_upload_file_and_get_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], sample_file_path: Annotated[str, Field(..., description="Specify a comma-separated list of absolute file paths for submission.")], tag_names: Annotated[str | None, Field(default=None, description="Specify the tags that you want to add to the submission.")], comment: Annotated[str | None, Field(default=None, description="Specify the comment that you want to add to the submission.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit files for analysis in VMRay. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -213,9 +213,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -298,9 +298,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -374,16 +374,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vm_ray_scan_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threat_indicator_score_threshold: Annotated[str, Field(..., description="Specify the lowest score that will be used to return threat indicators. Maximum: 5.")], ioc_type_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC types that need to be returned. Possible values: ips, urls, domains.")], ioc_verdict_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC verdicts that will be used during the ingestion of IOCs. Possible values: Malicious, Suspicious, Clean, None.")], max_io_cs_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many IOCs to return per entity per IOC type. Default: 10.")], max_threat_indicators_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many threat indicators to return per entity. Default: 10.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], tag_names: Annotated[Optional[str], Field(default=None, description="Specify the tags that you want to add to the submission.")], comment: Annotated[Optional[str], Field(default=None, description="Specify the comment that you want to add to the submission.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vm_ray_scan_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], threat_indicator_score_threshold: Annotated[str, Field(..., description="Specify the lowest score that will be used to return threat indicators. Maximum: 5.")], ioc_type_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC types that need to be returned. Possible values: ips, urls, domains.")], ioc_verdict_filter: Annotated[str, Field(..., description="Specify a comma-separated list of IOC verdicts that will be used during the ingestion of IOCs. Possible values: Malicious, Suspicious, Clean, None.")], max_io_cs_to_return: Annotated[str | None, Field(default=None, description="Specify how many IOCs to return per entity per IOC type. Default: 10.")], max_threat_indicators_to_return: Annotated[str | None, Field(default=None, description="Specify how many threat indicators to return per entity. Default: 10.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], tag_names: Annotated[str | None, Field(default=None, description="Specify the tags that you want to add to the submission.")], comment: Annotated[str | None, Field(default=None, description="Specify the comment that you want to add to the submission.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a URL and receive related information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

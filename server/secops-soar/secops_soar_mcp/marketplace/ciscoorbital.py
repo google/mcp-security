@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the CiscoOrbital integration.
 
     @mcp.tool()
-    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[Optional[str], Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[Optional[str], Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[Optional[bool], Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[str | None, Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[str | None, Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[bool | None, Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute queries on endpoints based on IP and Hostname entities in Cisco Orbital. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed. Maximum timeout is 24 hours.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -123,9 +123,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

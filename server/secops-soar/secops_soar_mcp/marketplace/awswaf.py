@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the AWSWAF integration.
 
     @mcp.tool()
-    async def awswaf_create_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the Regex Pattern set. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[Optional[str], Field(default=None, description="Specify the description for the Regex Pattern set.")], tags: Annotated[Optional[str], Field(default=None, description="Specify additional tags that should be added to the Regex Pattern set. Format: key_1:value_1,key_2:value_1.")], domain_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. Example: http://test.com/folder will be converted to a pattern ^(http)(s|)(://)(test.com).*")], ip_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will construct a proper regex pattern out of IP address instead of using raw value. Example: 10.0.0.1 will be converted into ^(http)(s|)(://)(10.0.0.1).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_create_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the Regex Pattern set. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[str | None, Field(default=None, description="Specify the description for the Regex Pattern set.")], tags: Annotated[str | None, Field(default=None, description="Specify additional tags that should be added to the Regex Pattern set. Format: key_1:value_1,key_2:value_1.")], domain_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. Example: http://test.com/folder will be converted to a pattern ^(http)(s|)(://)(test.com).*")], ip_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will construct a proper regex pattern out of IP address instead of using raw value. Example: 10.0.0.1 will be converted into ^(http)(s|)(://)(10.0.0.1).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a Regex Pattern Set in AWS WAF based on entities. Note: Regex Pattern Set can only contain 10 patterns per set and there can only be 10 Regex Pattern Sets at max.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -123,9 +123,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -201,16 +201,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_create_web_acl(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the Web ACL. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], rule_source_type: Annotated[List[Any], Field(..., description="Specify what rule type should be used.")], rule_source_name: Annotated[str, Field(..., description="Specify the name of the source, which should be used for Web ACL. If \u201cRule Source Type\u201d is \u201cIP Set\u201d, action will search for IP Sets with that name. If \u201cRule Source Type\u201d is \u201cRule Group\u201d, action will search for Rule Groups with that name.")], enable_sampled_requests: Annotated[bool, Field(..., description="If enabled, AWS WAF will store a sampling of the web requests that match the rules.")], enable_cloud_watch_metrics: Annotated[bool, Field(..., description="If enabled, the associated resource sends metrics to CloudWatch.")], cloud_watch_metric_name: Annotated[str, Field(..., description="Specify the name of the CloudWatch Metric. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], default_action: Annotated[List[Any], Field(..., description="Specify what should be the default action for requests that don't match any rules.")], rule_priority: Annotated[str, Field(..., description="Specify what should be the priority of the rule. Priorities in Web ACL should be unique.")], ip_set_action: Annotated[Optional[List[Any]], Field(default=None, description="Specify what should be the action for rules that are based on the IP set.")], description: Annotated[Optional[str], Field(default=None, description="Specify the description for the Web ACL.")], tags: Annotated[Optional[str], Field(default=None, description="Specify additional tags that should be added to the Web ACL. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_create_web_acl(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the Web ACL. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], rule_source_type: Annotated[List[Any], Field(..., description="Specify what rule type should be used.")], rule_source_name: Annotated[str, Field(..., description="Specify the name of the source, which should be used for Web ACL. If \u201cRule Source Type\u201d is \u201cIP Set\u201d, action will search for IP Sets with that name. If \u201cRule Source Type\u201d is \u201cRule Group\u201d, action will search for Rule Groups with that name.")], enable_sampled_requests: Annotated[bool, Field(..., description="If enabled, AWS WAF will store a sampling of the web requests that match the rules.")], enable_cloud_watch_metrics: Annotated[bool, Field(..., description="If enabled, the associated resource sends metrics to CloudWatch.")], cloud_watch_metric_name: Annotated[str, Field(..., description="Specify the name of the CloudWatch Metric. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], default_action: Annotated[List[Any], Field(..., description="Specify what should be the default action for requests that don't match any rules.")], rule_priority: Annotated[str, Field(..., description="Specify what should be the priority of the rule. Priorities in Web ACL should be unique.")], ip_set_action: Annotated[List[Any] | None, Field(default=None, description="Specify what should be the action for rules that are based on the IP set.")], description: Annotated[str | None, Field(default=None, description="Specify the description for the Web ACL.")], tags: Annotated[str | None, Field(default=None, description="Specify additional tags that should be added to the Web ACL. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a Web ACL in AWS WAF. Note: You can have only 100 Web ACLs per region.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -305,9 +305,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -383,16 +383,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_create_ip_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the IP set. Note: action will create an IP set in the following format: Siemplify_{Name}_{IP Type}. The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[Optional[str], Field(default=None, description="Specify the description for the IP set.")], tags: Annotated[Optional[str], Field(default=None, description="Specify additional tags that should be added to the IP set. Format: key_1:value_1,key_2:value_1")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_create_ip_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the IP set. Note: action will create an IP set in the following format: Siemplify_{Name}_{IP Type}. The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[str | None, Field(default=None, description="Specify the description for the IP set.")], tags: Annotated[str | None, Field(default=None, description="Specify additional tags that should be added to the IP set. Format: key_1:value_1,key_2:value_1")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an IP Set in AWS WAF, based on entities. Note: IP Set is created in the following format Siemplify_{Name}_{IP Type}.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -471,16 +471,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_create_rule_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the rule group. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], capacity: Annotated[str, Field(..., description="Specify the capacity of the rule group. Note: you can\u2019t change the capacity after the group is created. Maximum is 1500.")], enable_sampled_requests: Annotated[bool, Field(..., description="If enabled, AWS WAF will store a sampling of the web requests that match the rules.")], enable_cloud_watch_metrics: Annotated[bool, Field(..., description="If enabled, the associated resource sends metrics to CloudWatch.")], cloud_watch_metric_name: Annotated[str, Field(..., description="Specify the name of the CloudWatch Metric. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[Optional[str], Field(default=None, description="Specify the description for the Rule Group.")], tags: Annotated[Optional[str], Field(default=None, description="Specify additional tags that should be added to the Rule Group. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_create_rule_group(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name of the rule group. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], capacity: Annotated[str, Field(..., description="Specify the capacity of the rule group. Note: you can\u2019t change the capacity after the group is created. Maximum is 1500.")], enable_sampled_requests: Annotated[bool, Field(..., description="If enabled, AWS WAF will store a sampling of the web requests that match the rules.")], enable_cloud_watch_metrics: Annotated[bool, Field(..., description="If enabled, the associated resource sends metrics to CloudWatch.")], cloud_watch_metric_name: Annotated[str, Field(..., description="Specify the name of the CloudWatch Metric. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).")], description: Annotated[str | None, Field(default=None, description="Specify the description for the Rule Group.")], tags: Annotated[str | None, Field(default=None, description="Specify additional tags that should be added to the Rule Group. Format: key_1:value_1,key_2:value_1.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a rule group in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -570,9 +570,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -653,9 +653,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -731,16 +731,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_list_ip_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_ip_sets_to_return: Annotated[Optional[str], Field(default=None, description="Specify hou many IP sets to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_list_ip_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_ip_sets_to_return: Annotated[str | None, Field(default=None, description="Specify hou many IP sets to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available IP Sets in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -816,16 +816,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_list_regex_pattern_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_regex_pattern_sets_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many Regex Patttern Sets to return. Default is 5. Maximum is 10")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_list_regex_pattern_sets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_regex_pattern_sets_to_return: Annotated[str | None, Field(default=None, description="Specify how many Regex Patttern Sets to return. Default is 5. Maximum is 10")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available Regex Pattern Sets in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -908,9 +908,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -986,16 +986,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_list_web_ac_ls(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_web_ac_ls_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many Web ACLs to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_list_web_ac_ls(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_web_ac_ls_to_return: Annotated[str | None, Field(default=None, description="Specify how many Web ACLs to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available web ACLs in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1071,16 +1071,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_list_rule_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_rule_groups_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many Rule Groups to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_list_rule_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_rule_groups_to_return: Annotated[str | None, Field(default=None, description="Specify how many Rule Groups to return. Default is 50. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available rule groups in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1163,9 +1163,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1247,9 +1247,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1331,9 +1331,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1409,16 +1409,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_remove_entity_from_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], regex_pattern_set_names: Annotated[str, Field(..., description="Specify the comma-separated list of Regex Pattern set names. Example: name_1,name_2")], domain_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve domain part out of urls and search for a regex pattern based on them in the Regex Pattern Set. Example: http://test.com/folder will be searched as pattern ^(http|https)(:\\/\\/)(\\Qtest.com\\E).*")], ip_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will search for a regex pattern out of IP address instead of raw value. Example: 10.0.0.1 will be searched as ^(http|https)(:\\/\\/)(\\Q10.0.0.1\\E).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_remove_entity_from_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], regex_pattern_set_names: Annotated[str, Field(..., description="Specify the comma-separated list of Regex Pattern set names. Example: name_1,name_2")], domain_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will retrieve domain part out of urls and search for a regex pattern based on them in the Regex Pattern Set. Example: http://test.com/folder will be searched as pattern ^(http|https)(:\\/\\/)(\\Qtest.com\\E).*")], ip_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will search for a regex pattern out of IP address instead of raw value. Example: 10.0.0.1 will be searched as ^(http|https)(:\\/\\/)(\\Q10.0.0.1\\E).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove string patterns based on entities from the Regex Pattern Set in AWS WAF.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1497,16 +1497,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_add_rule_to_web_acl(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], web_acl_names: Annotated[str, Field(..., description="Specify the comma-separated list of Web ACL names. Example: name_1,name_2")], rule_source_type: Annotated[List[Any], Field(..., description="Specify what rule type should be used.")], rule_source_name: Annotated[str, Field(..., description="Specify the name of the source, which should be used for Web ACL. If \u201cRule Source Type\u201d is \u201cIP Set\u201d, action will search for IP Sets with that name. If \u201cRule Source Type\u201d is \u201cRule Group\u201d, action will search for Rule Groups with that name.")], rule_priority: Annotated[str, Field(..., description="Specify what should be the priority of the rule. Priorities in Web ACL should be unique.")], ip_set_action: Annotated[Optional[List[Any]], Field(default=None, description="Specify what should be the action for rules that are based on the IP set.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_add_rule_to_web_acl(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], web_acl_names: Annotated[str, Field(..., description="Specify the comma-separated list of Web ACL names. Example: name_1,name_2")], rule_source_type: Annotated[List[Any], Field(..., description="Specify what rule type should be used.")], rule_source_name: Annotated[str, Field(..., description="Specify the name of the source, which should be used for Web ACL. If \u201cRule Source Type\u201d is \u201cIP Set\u201d, action will search for IP Sets with that name. If \u201cRule Source Type\u201d is \u201cRule Group\u201d, action will search for Rule Groups with that name.")], rule_priority: Annotated[str, Field(..., description="Specify what should be the priority of the rule. Priorities in Web ACL should be unique.")], ip_set_action: Annotated[List[Any] | None, Field(default=None, description="Specify what should be the action for rules that are based on the IP set.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a rule based on IP Sets or Rule Groups to Web ACL in AWS WAF. Note: at maximum Web ACL can contain 1500 rules.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1586,16 +1586,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awswaf_add_entity_to_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], regex_pattern_set_names: Annotated[str, Field(..., description="Specify the comma-separated list of Regex Pattern set names. Example: name_1,name_2")], domain_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. Example: http://test.com/folder will be converted to a pattern ^(http|https)(:\\/\\/)(\\Qtest.com\\E).*")], ip_pattern: Annotated[Optional[bool], Field(default=None, description="If enabled, action will construct a proper regex pattern out of IP address instead of using raw value. Example: 10.0.0.1 will be converted into ^(http|https)(:\\/\\/)(\\Q10.0.0.1\\E).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awswaf_add_entity_to_regex_pattern_set(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], regex_pattern_set_names: Annotated[str, Field(..., description="Specify the comma-separated list of Regex Pattern set names. Example: name_1,name_2")], domain_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. If enabled, action will retrieve domain part out of urls and create a regex pattern based on them. Example: http://test.com/folder will be converted to a pattern ^(http|https)(:\\/\\/)(\\Qtest.com\\E).*")], ip_pattern: Annotated[bool | None, Field(default=None, description="If enabled, action will construct a proper regex pattern out of IP address instead of using raw value. Example: 10.0.0.1 will be converted into ^(http|https)(:\\/\\/)(\\Q10.0.0.1\\E).*")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add string patterns based on entities to the Regex Pattern Set in AWS WAF. Note: Regex Pattern Set can only contain 10 patterns per set
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the GoogleCloudCompute integration.
 
     @mcp.tool()
-    async def google_cloud_compute_remove_ip_from_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], type: Annotated[List[Any], Field(..., description="Type of the IP range that will be removed.")], ip_ranges: Annotated[str, Field(..., description="List of IP ranges that needs to be removed from the Firewall Rule.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[Optional[str], Field(default=None, description="Specify firewall rule name to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_remove_ip_from_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], type: Annotated[List[Any], Field(..., description="Type of the IP range that will be removed.")], ip_ranges: Annotated[str, Field(..., description="List of IP ranges that needs to be removed from the Firewall Rule.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[str | None, Field(default=None, description="Specify firewall rule name to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove IP from firewall rule in Google Cloud Compute instance. Note: Action is running as async, please adjust script timeout value in Google SecOps IDE for action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,16 +115,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_add_labels_to_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], instance_labels: Annotated[str, Field(..., description="Specify instance lables to add to instance. Lables should be provided in the following format - label_key_name:label_value, for example: vm_label_key:label1. Parameter accepts multiple values as a comma separated string.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to add labels to. Instance id can be found with the \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_add_labels_to_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], instance_labels: Annotated[str, Field(..., description="Specify instance lables to add to instance. Lables should be provided in the following format - label_key_name:label_value, for example: vm_label_key:label1. Parameter accepts multiple values as a comma separated string.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to add labels to. Instance id can be found with the \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add labels to the Google Cloud Compute Instance.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -207,16 +207,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_list_instances(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_name: Annotated[Optional[str], Field(default=None, description="Specify instance name to search for. Parameter accepts multiple values as a comma separated string.")], instance_status: Annotated[Optional[str], Field(default=None, description="Specify instance status to search for. Parameter accepts multiple values as a comma separated string.")], instance_labels: Annotated[Optional[str], Field(default=None, description="Specify instance labels to search for in the format label_key_name:label_value, for example vm_label_key:label1. Parameter accepts multiple values as a comma separated string.")], max_rows_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many instances action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_list_instances(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_name: Annotated[str | None, Field(default=None, description="Specify instance name to search for. Parameter accepts multiple values as a comma separated string.")], instance_status: Annotated[str | None, Field(default=None, description="Specify instance status to search for. Parameter accepts multiple values as a comma separated string.")], instance_labels: Annotated[str | None, Field(default=None, description="Specify instance labels to search for in the format label_key_name:label_value, for example vm_label_key:label1. Parameter accepts multiple values as a comma separated string.")], max_rows_to_return: Annotated[str | None, Field(default=None, description="Specify how many instances action should return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Google Cloud Compute instances based on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -302,16 +302,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_delete_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to delete. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_delete_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to delete. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Delete the specified Google Cloud Compute instance.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -393,16 +393,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_start_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to start. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_start_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to start. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Start a previously stopped Google Cloud Compute Instance. Note that it can take a few minutes for the instance to enter the running status.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -484,16 +484,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_execute_vm_patch_job(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], instance_filter_object: Annotated[str, Field(..., description="A JSON object to set an instance filter.")], name: Annotated[str, Field(..., description="The name for the patching job.")], patch_duration_timeout: Annotated[str, Field(..., description="The timeout value in minutes for a patching job.")], disruption_budget: Annotated[str, Field(..., description="The disruption budget for a patching job. You can use a specific number or a percentage like 10%.")], description: Annotated[Optional[str], Field(default=None, description="The description for the patching job.")], patching_config_object: Annotated[Optional[str], Field(default=None, description="A JSON object that specifies the steps for the patching job to execute. If you don\u2019t set a value, the action patches Compute Engine instances using the default value. To configure this parameter, use the following format: {\"key\": \"value\"}.")], rollout_strategy: Annotated[Optional[List[Any]], Field(default=None, description="The rollout strategy for a patching job.")], wait_for_completion: Annotated[Optional[bool], Field(default=None, description="If selected, the action waits for the patching job to complete.")], fail_if_completed_with_errors: Annotated[Optional[bool], Field(default=None, description="If selected and the patching job status is \u201cCompleted with errors\u201d or the action reaches a timeout, the action fails. If you didn\u2019t select the \u201cWait For Completion\u201d parameter, the action ignores this parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_execute_vm_patch_job(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], instance_filter_object: Annotated[str, Field(..., description="A JSON object to set an instance filter.")], name: Annotated[str, Field(..., description="The name for the patching job.")], patch_duration_timeout: Annotated[str, Field(..., description="The timeout value in minutes for a patching job.")], disruption_budget: Annotated[str, Field(..., description="The disruption budget for a patching job. You can use a specific number or a percentage like 10%.")], description: Annotated[str | None, Field(default=None, description="The description for the patching job.")], patching_config_object: Annotated[str | None, Field(default=None, description="A JSON object that specifies the steps for the patching job to execute. If you don\u2019t set a value, the action patches Compute Engine instances using the default value. To configure this parameter, use the following format: {\"key\": \"value\"}.")], rollout_strategy: Annotated[List[Any] | None, Field(default=None, description="The rollout strategy for a patching job.")], wait_for_completion: Annotated[bool | None, Field(default=None, description="If selected, the action waits for the patching job to complete.")], fail_if_completed_with_errors: Annotated[bool | None, Field(default=None, description="If selected and the patching job status is \u201cCompleted with errors\u201d or the action reaches a timeout, the action fails. If you didn\u2019t select the \u201cWait For Completion\u201d parameter, the action ignores this parameter.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute a VM patch job on Compute Engine instances. This action is asynchronous. Adjust the script timeout value in the Google SecOps IDE for the action as needed. This action requires you to enable the OS Config API.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -581,16 +581,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_add_network_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], network_tags: Annotated[str, Field(..., description="A comma-separated list of network tags to add to the Compute Engine instance. This parameter only accepts tags that contain lowercase letters, numbers, and hyphens.")], resource_name: Annotated[Optional[str], Field(default=None, description="The full resource name for the Compute Engine instance, such as /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has a priority over the \u201cProject ID\u201d, \u201cInstance Zone\u201d, and \u201cInstance ID\u201d parameters.")], project_id: Annotated[Optional[str], Field(default=None, description="The project name of the Compute Engine instance. If you don\u2019t set a value,, the action retrieves the project name from the integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="The zone name of the Compute Engine instance. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], instance_id: Annotated[Optional[str], Field(default=None, description="The Compute Engine instance ID. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_add_network_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], network_tags: Annotated[str, Field(..., description="A comma-separated list of network tags to add to the Compute Engine instance. This parameter only accepts tags that contain lowercase letters, numbers, and hyphens.")], resource_name: Annotated[str | None, Field(default=None, description="The full resource name for the Compute Engine instance, such as /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has a priority over the \u201cProject ID\u201d, \u201cInstance Zone\u201d, and \u201cInstance ID\u201d parameters.")], project_id: Annotated[str | None, Field(default=None, description="The project name of the Compute Engine instance. If you don\u2019t set a value,, the action retrieves the project name from the integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="The zone name of the Compute Engine instance. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], instance_id: Annotated[str | None, Field(default=None, description="The Compute Engine instance ID. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add network tags to the Compute Engine instance. This action is asynchronous. Adjust the script timeout value in the Google SecOps IDE for the action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -673,16 +673,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_get_instance_iam_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to get policy for. Intsance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_get_instance_iam_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to get policy for. Intsance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Gets the access control policy for the resource. Note that policy may be empty if no policy is assigned to the resource.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -771,9 +771,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -847,16 +847,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_remove_external_ip_addresses(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: projects/{project_id}/zones/{zone_id}/instances/{instance_id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to modify. Instance id can be found in \"List Instances\" action.")], network_interfaces: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of network interfaces to modify. If this parameter is left empty or  \u201c*\u201d is provided then all of the network interfaces will be updated.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_remove_external_ip_addresses(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: projects/{project_id}/zones/{zone_id}/instances/{instance_id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to modify. Instance id can be found in \"List Instances\" action.")], network_interfaces: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of network interfaces to modify. If this parameter is left empty or  \u201c*\u201d is provided then all of the network interfaces will be updated.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove external IP addresses on a Google Cloud Compute instance. Note: Action is running as async, please adjust script timeout value in Google SecOps IDE for action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -940,16 +940,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_remove_network_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], network_tags: Annotated[str, Field(..., description="A comma-separated list of network tags to remove from the Compute Engine instance. This parameter only accepts tags that contain lowercase letters, numbers, and hyphens.")], resource_name: Annotated[Optional[str], Field(default=None, description="The full resource name for the Compute Engine instance, such as /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has a priority over the \u201cProject ID\u201d, \u201cInstance Zone\u201d, and \u201cInstance ID\u201d parameters.")], project_id: Annotated[Optional[str], Field(default=None, description="The project name of your Compute Engine instance. If you don\u2019t set a value, the action retrieves the project name from the integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="The zone name of the Compute Engine instance. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], instance_id: Annotated[Optional[str], Field(default=None, description="The Compute Engine instance ID. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_remove_network_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], network_tags: Annotated[str, Field(..., description="A comma-separated list of network tags to remove from the Compute Engine instance. This parameter only accepts tags that contain lowercase letters, numbers, and hyphens.")], resource_name: Annotated[str | None, Field(default=None, description="The full resource name for the Compute Engine instance, such as /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has a priority over the \u201cProject ID\u201d, \u201cInstance Zone\u201d, and \u201cInstance ID\u201d parameters.")], project_id: Annotated[str | None, Field(default=None, description="The project name of your Compute Engine instance. If you don\u2019t set a value, the action retrieves the project name from the integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="The zone name of the Compute Engine instance. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], instance_id: Annotated[str | None, Field(default=None, description="The Compute Engine instance ID. This parameter is required if you configure the Compute Engine instance using the \u201cInstance Zone\u201d and \u201cInstance ID\u201d parameters.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove network tags from the Compute Engine instance. This action is asynchronous. Adjust the sript timeout value in the Google SecOps IDE for the action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1032,16 +1032,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_set_instance_iam_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy: Annotated[str, Field(..., description="Specify JSON policy document to set for instance.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to set policy for. Intsance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_set_instance_iam_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy: Annotated[str, Field(..., description="Specify JSON policy document to set for instance.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to set policy for. Intsance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Sets the access control policy on the specified resource. Note that policy provided in action replaces any existing policy.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1124,16 +1124,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich Siemplify IP entities with instance information from Google Cloud Compute.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1211,16 +1211,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_update_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[Optional[str], Field(default=None, description="Specify firewall rule name to update.")], source_ip_ranges: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of source IP ranges. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], source_tags: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of source tags. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], source_service_accounts: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of source service accounts. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], tcp_ports: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of TCP ports. If specified, action will use it to update determine allow / deny lists. Parameter supports 'all' and 'none' values.")], udp_ports: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of UDP ports. If specified, action will use it to update determine allow / deny lists. Parameter supports 'all' and 'none' values.")], other_protocols: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of other protocols. Parameter supports 'none' value. If 'all' specified, the action will allow all protocols including tcp and udp.")], destination_ip_ranges: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of destination IP ranges. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_update_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[str | None, Field(default=None, description="Specify firewall rule name to update.")], source_ip_ranges: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of source IP ranges. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], source_tags: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of source tags. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], source_service_accounts: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of source service accounts. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], tcp_ports: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of TCP ports. If specified, action will use it to update determine allow / deny lists. Parameter supports 'all' and 'none' values.")], udp_ports: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of UDP ports. If specified, action will use it to update determine allow / deny lists. Parameter supports 'all' and 'none' values.")], other_protocols: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of other protocols. Parameter supports 'none' value. If 'all' specified, the action will allow all protocols including tcp and udp.")], destination_ip_ranges: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of destination IP ranges. Parameter supports 'none' value. If \"none\" value is provided, then the action will delete existing values for the firewall rule. If nothing is provided for the parameter, action will not update the existing value.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a firewall rule with given parameters in Google Cloud Compute. Note: Action is running as async, please adjust script timeout value in Google SecOps IDE for action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1314,16 +1314,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_add_ip_to_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], type: Annotated[List[Any], Field(..., description="Type of the IP range that will be added.")], ip_ranges: Annotated[str, Field(..., description="List of IP ranges that needs to be added to the Firewall Rule.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[Optional[str], Field(default=None, description="Specify firewall rule name to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_add_ip_to_firewall_rule(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], type: Annotated[List[Any], Field(..., description="Type of the IP range that will be added.")], ip_ranges: Annotated[str, Field(..., description="List of IP ranges that needs to be added to the Firewall Rule.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of \"Project ID\", and \"Firewall Rule\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration.")], firewall_rule: Annotated[str | None, Field(default=None, description="Specify firewall rule name to update.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IP range to firewall rule in Google Cloud Compute instance. Note: Action is running as async, please adjust script timeout value in Google SecOps IDE for action, as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1405,16 +1405,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_compute_stop_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[Optional[str], Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[Optional[str], Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[Optional[str], Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[Optional[str], Field(default=None, description="Specify instance id to stop. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_compute_stop_instance(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], resource_name: Annotated[str | None, Field(default=None, description="Specify the full resource name for the compute instance. Format: /projects/{project_id}/zones/{zone id}/instances/{instance id}. This parameter has higher priority over the combination of \"Project ID\", \"Instance Zone\" and \"Instance ID\".")], project_id: Annotated[str | None, Field(default=None, description="Specify the name of the project of your compute instance. If nothing is provided, the project will be extracted from integration configuration.")], instance_zone: Annotated[str | None, Field(default=None, description="Specify instance zone name to search for instances in.")], instance_id: Annotated[str | None, Field(default=None, description="Specify instance id to stop. Instance id can be found in \"List Instances\" action.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time. Stopped instances do not incur VM usage charges while they are stopped. However, resources that the VM is using, such as persistent disks and static IP addresses, will continue to be charged until they are deleted.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

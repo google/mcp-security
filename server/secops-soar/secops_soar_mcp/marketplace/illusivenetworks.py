@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,9 +115,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -199,9 +199,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -275,16 +275,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def illusive_networks_list_deceptive_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], deceptive_type: Annotated[List[Any], Field(..., description="Specify what kind of deceptive items should be returned.")], deceptive_state: Annotated[List[Any], Field(..., description="Specify what kind of deceptive items should be returned based on state.")], max_items_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many items to return. Default: 50. If nothing is specified, action will return all items.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def illusive_networks_list_deceptive_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], deceptive_type: Annotated[List[Any], Field(..., description="Specify what kind of deceptive items should be returned.")], deceptive_state: Annotated[List[Any], Field(..., description="Specify what kind of deceptive items should be returned based on state.")], max_items_to_return: Annotated[str | None, Field(default=None, description="Specify how many items to return. Default: 50. If nothing is specified, action will return all items.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available deceptive items in Illusive Networks.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -369,9 +369,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -445,16 +445,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def illusive_networks_add_deceptive_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], username: Annotated[str, Field(..., description="Specify the username for the new deceptive user.")], password: Annotated[str, Field(..., description="Specify the password for the new deceptive user.")], dns_domain: Annotated[Optional[str], Field(default=None, description="Specify the domain name for the new deceptive user.")], policy_names: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of policies that need to be applied to the new deceptive user. If nothing is provided action will use by default all policies.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def illusive_networks_add_deceptive_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], username: Annotated[str, Field(..., description="Specify the username for the new deceptive user.")], password: Annotated[str, Field(..., description="Specify the password for the new deceptive user.")], dns_domain: Annotated[str | None, Field(default=None, description="Specify the domain name for the new deceptive user.")], policy_names: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of policies that need to be applied to the new deceptive user. If nothing is provided action will use by default all policies.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add deceptive users in Illusive Networks.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -534,16 +534,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def illusive_networks_run_forensic_scan(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], include_system_information: Annotated[bool, Field(..., description="If enabled, action will return system information.")], include_prefetch_files_information: Annotated[bool, Field(..., description="If enabled, action will return information about prefetch files.")], include_add_remove_programs_information: Annotated[bool, Field(..., description="If enabled, action will return information about add-remove programs.")], include_startup_processes_information: Annotated[bool, Field(..., description="If enabled, action will return information about startup processes.")], include_user_assist_programs_information: Annotated[bool, Field(..., description="If enabled, action will return information about user-assist programs.")], include_powershell_history_information: Annotated[bool, Field(..., description="If enabled, action will return information about powershell history.")], include_running_processes_information: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return information about running processes.")], max_items_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many items to return. If nothing is provided, action will return everything.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def illusive_networks_run_forensic_scan(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], include_system_information: Annotated[bool, Field(..., description="If enabled, action will return system information.")], include_prefetch_files_information: Annotated[bool, Field(..., description="If enabled, action will return information about prefetch files.")], include_add_remove_programs_information: Annotated[bool, Field(..., description="If enabled, action will return information about add-remove programs.")], include_startup_processes_information: Annotated[bool, Field(..., description="If enabled, action will return information about startup processes.")], include_user_assist_programs_information: Annotated[bool, Field(..., description="If enabled, action will return information about user-assist programs.")], include_powershell_history_information: Annotated[bool, Field(..., description="If enabled, action will return information about powershell history.")], include_running_processes_information: Annotated[bool | None, Field(default=None, description="If enabled, action will return information about running processes.")], max_items_to_return: Annotated[str | None, Field(default=None, description="Specify how many items to return. If nothing is provided, action will return everything.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Run forensic scan on the endpoint in the Illusive Networks. Works with IP and Hostname entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -627,16 +627,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def illusive_networks_add_deceptive_server(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], server_name: Annotated[str, Field(..., description="Specify what kind of deceptive items should be returned.")], service_types: Annotated[str, Field(..., description="Specify a comma-separated list of service types for new deceptive server.")], policy_names: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of policies that need to be applied to the new deceptive server. If nothing is provided action will use by default all policies.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def illusive_networks_add_deceptive_server(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], server_name: Annotated[str, Field(..., description="Specify what kind of deceptive items should be returned.")], service_types: Annotated[str, Field(..., description="Specify a comma-separated list of service types for new deceptive server.")], policy_names: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of policies that need to be applied to the new deceptive server. If nothing is provided action will use by default all policies.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add deceptive servers in Illusive Networks.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

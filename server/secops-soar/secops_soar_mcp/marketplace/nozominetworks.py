@@ -31,9 +31,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -108,16 +108,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def nozomi_networks_run_a_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify a query to execute on Nozomi Networks device, for example: alerts | head 10")], record_limit: Annotated[Optional[str], Field(default=None, description="Can be used to specify how many records can be returned by the action. If default value of 10 is set, parameter adds \u201c| head 10\u201d to the final query to limit the number of returned records. If nothing is provided for the parameter - all query results are returned. Negative values are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def nozomi_networks_run_a_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify a query to execute on Nozomi Networks device, for example: alerts | head 10")], record_limit: Annotated[str | None, Field(default=None, description="Can be used to specify how many records can be returned by the action. If default value of 10 is set, parameter adds \u201c| head 10\u201d to the final query to limit the number of returned records. If nothing is provided for the parameter - all query results are returned. Negative values are ignored.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Run a query on Nozomi Networks device. Note: Action is not working with Siemplify Entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -194,16 +194,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def nozomi_networks_list_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_limit: Annotated[str, Field(..., description="Can be used to specify how many records can be returned by the action.")], ip_address: Annotated[Optional[str], Field(default=None, description="List vulnerabilities for the provided ip address. Parameter accepts multiple values as a comma separated string.")], cve_score: Annotated[Optional[str], Field(default=None, description="Minimum CVE score vulnerability should have to be listed, score can be a number from 0 to 10.")], vulnerability_name_contains: Annotated[Optional[str], Field(default=None, description="Specify a string that vulnerability name should contain to be listed.")], cve_id: Annotated[Optional[str], Field(default=None, description="If you know specific CVE to look for, provide the related id in this field, for example, CVE-2020-1207. Parameter accepts multiple values as a comma separated string.")], include_vulnerabilities_that_marked_as_resolved: Annotated[Optional[bool], Field(default=None, description="Specify whether action should also return vulnerabilities that are marked as resolved.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def nozomi_networks_list_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], record_limit: Annotated[str, Field(..., description="Can be used to specify how many records can be returned by the action.")], ip_address: Annotated[str | None, Field(default=None, description="List vulnerabilities for the provided ip address. Parameter accepts multiple values as a comma separated string.")], cve_score: Annotated[str | None, Field(default=None, description="Minimum CVE score vulnerability should have to be listed, score can be a number from 0 to 10.")], vulnerability_name_contains: Annotated[str | None, Field(default=None, description="Specify a string that vulnerability name should contain to be listed.")], cve_id: Annotated[str | None, Field(default=None, description="If you know specific CVE to look for, provide the related id in this field, for example, CVE-2020-1207. Parameter accepts multiple values as a comma separated string.")], include_vulnerabilities_that_marked_as_resolved: Annotated[bool | None, Field(default=None, description="Specify whether action should also return vulnerabilities that are marked as resolved.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List vulnerabilities discovered by Nozomi device based on the provided action input parameters.  Note: Action is not working with Siemplify entities, only with action input parameters.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -295,9 +295,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -371,16 +371,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def nozomi_networks_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_fields_to_add_to_enrichment: Annotated[Optional[str], Field(default=None, description="Comma separated list of fields that should be additionally taken from Nodes query to add to fields that are used for enrichment by default.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def nozomi_networks_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], additional_fields_to_add_to_enrichment: Annotated[str | None, Field(default=None, description="Comma separated list of fields that should be additionally taken from Nodes query to add to fields that are used for enrichment by default.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich Siemplify Host or IP entities based on the information from the Nozomi Networks device.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

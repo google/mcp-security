@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the StellarCyberStarlight integration.
 
     @mcp.tool()
-    async def stellar_cyber_starlight_simple_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], index: Annotated[str, Field(..., description="Specify in which index do you want to search. You can find a list of known indexes in the documentation.")], query: Annotated[str, Field(..., description="Specify query filter for the search.")], max_results_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many results to return in response.")], sort_field: Annotated[Optional[str], Field(default=None, description="Specify the field, which should be used for sorting.")], sort_order: Annotated[Optional[List[Any]], Field(default=None, description="Specify the sort order for the result.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def stellar_cyber_starlight_simple_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], index: Annotated[str, Field(..., description="Specify in which index do you want to search. You can find a list of known indexes in the documentation.")], query: Annotated[str, Field(..., description="Specify query filter for the search.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results to return in response.")], sort_field: Annotated[str | None, Field(default=None, description="Specify the field, which should be used for sorting.")], sort_order: Annotated[List[Any] | None, Field(default=None, description="Specify the sort order for the result.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Perform simple search in Stellar Cyber Starlight.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -122,9 +122,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -198,16 +198,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def stellar_cyber_starlight_update_security_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], index: Annotated[str, Field(..., description="Specify the index of the security event.")], id: Annotated[str, Field(..., description="Specify the ID of the security event.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the security event.")], comment: Annotated[Optional[str], Field(default=None, description="Specify a comment for the security event.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def stellar_cyber_starlight_update_security_event(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], index: Annotated[str, Field(..., description="Specify the index of the security event.")], id: Annotated[str, Field(..., description="Specify the ID of the security event.")], status: Annotated[List[Any], Field(..., description="Specify the new status for the security event.")], comment: Annotated[str | None, Field(default=None, description="Specify a comment for the security event.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update security event in Stellar Cyber Starlight.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -293,9 +293,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

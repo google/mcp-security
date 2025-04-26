@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the GoogleCloudArmor integration.
 
     @mcp.tool()
-    async def google_cloud_armor_create_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_json: Annotated[Union[str, dict], Field(..., description="The JSON definition of the policy to create. For more information about policies, see REST Resource: securityPolicies (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies).")], region: Annotated[Optional[str], Field(default=None, description="The region to create a policy in. If no value is provided, the global-level security policy is created.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_armor_create_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_json: Annotated[Union[str, dict], Field(..., description="The JSON definition of the policy to create. For more information about policies, see REST Resource: securityPolicies (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies).")], region: Annotated[str | None, Field(default=None, description="The region to create a policy in. If no value is provided, the global-level security policy is created.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a security policy in the Google Cloud Armor service. This action doesn't run on Google SecOps SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -110,16 +110,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_armor_update_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Security policy name to update.")], policy_json: Annotated[Union[str, dict], Field(..., description="JSON definition of the policy to update. For more information about the policy updates, see Method: securityPolicies.patch (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies/patch). You cannot update rules with this action. To add a rule to a policy, use the Add a Rule to a Security Policy action.")], region: Annotated[Optional[str], Field(default=None, description="Region for the updated policy. If no value is provided, the global-level security policy is created.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_armor_update_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Security policy name to update.")], policy_json: Annotated[Union[str, dict], Field(..., description="JSON definition of the policy to update. For more information about the policy updates, see Method: securityPolicies.patch (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies/patch). You cannot update rules with this action. To add a rule to a policy, use the Add a Rule to a Security Policy action.")], region: Annotated[str | None, Field(default=None, description="Region for the updated policy. If no value is provided, the global-level security policy is created.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update the existing security policy in the Google Cloud Armor service. The action cannot update rules in a policy. To add a rule to the related policy, use the Add a Rule to a Security Policy action. This action doesn't run on Google SecOps SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -204,9 +204,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -280,16 +280,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def google_cloud_armor_add_a_rule_to_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Security policy name to add a new rule to.")], rule_json: Annotated[Union[str, dict], Field(..., description="JSON definition of the rule to add. For more information about adding a rule to a policy, see Method: securityPolicies.addRule (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies/addRule).")], region: Annotated[Optional[str], Field(default=None, description="Region for the policy to add the rule in. If no value is provided, the rule is added to the global-level security policy.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def google_cloud_armor_add_a_rule_to_a_security_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Security policy name to add a new rule to.")], rule_json: Annotated[Union[str, dict], Field(..., description="JSON definition of the rule to add. For more information about adding a rule to a policy, see Method: securityPolicies.addRule (https://cloud.google.com/compute/docs/reference/rest/v1/securityPolicies/addRule).")], region: Annotated[str | None, Field(default=None, description="Region for the policy to add the rule in. If no value is provided, the rule is added to the global-level security policy.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a new rule to the security policy in the Google Cloud Armor service. This action doesn't run on Google SecOps SOAR entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

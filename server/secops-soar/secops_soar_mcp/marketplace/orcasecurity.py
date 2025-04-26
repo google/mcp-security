@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the OrcaSecurity integration.
 
     @mcp.tool()
-    async def orca_security_get_vulnerability_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], cve_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of CVEs that need to be enriched.")], fields_to_return: Annotated[Optional[str], Field(default=None, description="Specify a comma-separated list of fields that need to be returned.  Note: this parameter checks the JSON object, as it was flattened. Example: \"object\": {\"id\": 123} -> object_id is the key.")], output: Annotated[Optional[List[Any]], Field(default=None, description="Specify the type of the output for the action. If \"JSON\" is selected then action will return a regular JSON Result. If \"CSV\" is selected action will create a file in action execution folder and JSON result will contain a path to that file.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight for every enriched vulnerability.")], max_assets_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many assets related to the CVE to return. Default: 50. Maximum: 10000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def orca_security_get_vulnerability_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], cve_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of CVEs that need to be enriched.")], fields_to_return: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of fields that need to be returned.  Note: this parameter checks the JSON object, as it was flattened. Example: \"object\": {\"id\": 123} -> object_id is the key.")], output: Annotated[List[Any] | None, Field(default=None, description="Specify the type of the output for the action. If \"JSON\" is selected then action will return a regular JSON Result. If \"CSV\" is selected action will create a file in action execution folder and JSON result will contain a path to that file.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight for every enriched vulnerability.")], max_assets_to_return: Annotated[str | None, Field(default=None, description="Specify how many assets related to the CVE to return. Default: 50. Maximum: 10000.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about vulnerabilities from Orca Security.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -116,16 +116,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def orca_security_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert needs to be updated.")], verify_alert: Annotated[Optional[bool], Field(default=None, description="If enabled, action will initiate the verification process for the alert.")], snooze_state: Annotated[Optional[List[Any]], Field(default=None, description="Specify the snooze state for the alert.")], snooze_days: Annotated[Optional[str], Field(default=None, description="Specify how many days alert needs to be snoozed. This parameter is mandatory if \"Snooze State\" is set to \"Snooze\". If nothing is provided, action will snooze the alert for 1 day.")], status: Annotated[Optional[List[Any]], Field(default=None, description="Specify what status to set for the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def orca_security_update_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify the ID of the alert needs to be updated.")], verify_alert: Annotated[bool | None, Field(default=None, description="If enabled, action will initiate the verification process for the alert.")], snooze_state: Annotated[List[Any] | None, Field(default=None, description="Specify the snooze state for the alert.")], snooze_days: Annotated[str | None, Field(default=None, description="Specify how many days alert needs to be snoozed. This parameter is mandatory if \"Snooze State\" is set to \"Snooze\". If nothing is provided, action will snooze the alert for 1 day.")], status: Annotated[List[Any] | None, Field(default=None, description="Specify what status to set for the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update alert in Orca Security. Note: action only initiates the verification process of the alert.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -208,16 +208,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def orca_security_get_compliance_info(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about compliance.")], framework_names: Annotated[Optional[str], Field(default=None, description="Specify the names of the frameworks for which you want to retrieve compliance details. If nothing is provided, action will return information about all selected frameworks.")], max_frameworks_to_return: Annotated[Optional[str], Field(default=None, description="Specify how many frameworks to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def orca_security_get_compliance_info(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_insight: Annotated[bool, Field(..., description="If enabled, action will create an insight containing information about compliance.")], framework_names: Annotated[str | None, Field(default=None, description="Specify the names of the frameworks for which you want to retrieve compliance details. If nothing is provided, action will return information about all selected frameworks.")], max_frameworks_to_return: Annotated[str | None, Field(default=None, description="Specify how many frameworks to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get information about compliance based on selected frameworks in Orca Security.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -303,9 +303,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -387,9 +387,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -470,9 +470,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -548,16 +548,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def orca_security_get_asset_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of asset ids for which you want to return details.")], lowest_severity_for_vulnerabilities: Annotated[List[Any], Field(..., description="Lowest severity that needs to be used to fetch vulnerabilities.")], return_vulnerabilities_information: Annotated[Optional[bool], Field(default=None, description="If enabled, action will return vulnerabilities that are related to the asset.")], max_vulnerabilities_to_fetch: Annotated[Optional[str], Field(default=None, description="Specify how many vulnerabilities to return per asset. Default: 50. Maximum: 100.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight for every enriched asset.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def orca_security_get_asset_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of asset ids for which you want to return details.")], lowest_severity_for_vulnerabilities: Annotated[List[Any], Field(..., description="Lowest severity that needs to be used to fetch vulnerabilities.")], return_vulnerabilities_information: Annotated[bool | None, Field(default=None, description="If enabled, action will return vulnerabilities that are related to the asset.")], max_vulnerabilities_to_fetch: Annotated[str | None, Field(default=None, description="Specify how many vulnerabilities to return per asset. Default: 50. Maximum: 100.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight for every enriched asset.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about assets in Orca Security.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

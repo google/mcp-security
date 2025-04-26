@@ -24,16 +24,16 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the UrlScanIo integration.
 
     @mcp.tool()
-    async def url_scan_io_search_for_scans(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_scans: Annotated[Optional[str], Field(default=None, description="Number of scans to return per entity. Default: 100, Max: 10000 (depending on subscription)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def url_scan_io_search_for_scans(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_scans: Annotated[str | None, Field(default=None, description="Number of scans to return per entity. Default: 100, Max: 10000 (depending on subscription)")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """ Search for urlscan.io existing scans by attributes such as domains, IPs, Autonomous System (AS) numbers, hashes, etc.  The action will find public scans performed by anyone as well as unlisted and private scans performed by you or your teams.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -109,16 +109,16 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def url_scan_io_url_check(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], visibility: Annotated[Optional[List[Any]], Field(default=None, description="Scans on urlscan.io have one of three visibility levels, make sure to use the appropriate level for your submission.")], threshold: Annotated[Optional[str], Field(default=None, description="Mark entity as suspicious if the score of verdicts is equal or above the given threshold. Default is 0, in this case, we consider every scanned url as suspicious.")], create_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], add_screenshot_to_insight: Annotated[Optional[bool], Field(default=None, description="If enabled, action will add a screenshot of the website to the insight, if it\u2019s available.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def url_scan_io_url_check(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], visibility: Annotated[List[Any] | None, Field(default=None, description="Scans on urlscan.io have one of three visibility levels, make sure to use the appropriate level for your submission.")], threshold: Annotated[str | None, Field(default=None, description="Mark entity as suspicious if the score of verdicts is equal or above the given threshold. Default is 0, in this case, we consider every scanned url as suspicious.")], create_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will create an insight containing information about entities.")], only_suspicious_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will only create insight for suspicious entities. Note: \"Create Insight\" parameter needs to be enabled.")], add_screenshot_to_insight: Annotated[bool | None, Field(default=None, description="If enabled, action will add a screenshot of the website to the insight, if it\u2019s available.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a URL to be scanned and get the scan details
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -209,9 +209,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -292,9 +292,9 @@ def register_tools(mcp: FastMCP):
             dict: A dictionary containing the result of the action execution.
         """
         # --- Determine scope and target entities for API call ---
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: List[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
