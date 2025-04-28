@@ -30,7 +30,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -38,10 +37,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -49,30 +47,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["List Type"] = list_type
             if category is not None:
@@ -86,17 +79,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Add To Global List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Add To Global List", # Assuming same as actionName
+                    "ScriptName": "Cylance_Add To Global List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -104,7 +96,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Add To Global List for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -118,7 +109,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -126,10 +116,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -137,30 +126,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Threshold"] = threshold
     
@@ -170,17 +154,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Get Threat",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Get Threat", # Assuming same as actionName
+                    "ScriptName": "Cylance_Get Threat",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -188,7 +171,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Get Threat for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -202,7 +184,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -210,10 +191,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -221,30 +201,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -253,17 +228,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Get Threats",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Get Threats", # Assuming same as actionName
+                    "ScriptName": "Cylance_Get Threats",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -271,7 +245,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Get Threats for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -285,7 +258,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -293,10 +265,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -304,30 +275,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -336,17 +302,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Ping",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Ping", # Assuming same as actionName
+                    "ScriptName": "Cylance_Ping",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -354,7 +319,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Ping for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -368,7 +332,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -376,10 +339,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -387,30 +349,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -419,17 +376,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Enrich Entities",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Enrich Entities", # Assuming same as actionName
+                    "ScriptName": "Cylance_Enrich Entities",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -437,7 +393,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Enrich Entities for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -451,7 +406,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -459,10 +413,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -470,30 +423,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["List Type"] = list_type
     
@@ -503,17 +451,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Get Global List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Get Global List", # Assuming same as actionName
+                    "ScriptName": "Cylance_Get Global List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -521,7 +468,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Get Global List for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -535,7 +481,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -543,10 +488,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -554,30 +498,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if zones_to_add is not None:
                 script_params["Zones to Add"] = zones_to_add
@@ -590,17 +529,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Change Zone",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Change Zone", # Assuming same as actionName
+                    "ScriptName": "Cylance_Change Zone",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -608,7 +546,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Change Zone for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -622,7 +559,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -630,10 +566,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -641,30 +576,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["List Type"] = list_type
     
@@ -674,17 +604,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Delete From Global List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Delete From Global List", # Assuming same as actionName
+                    "ScriptName": "Cylance_Delete From Global List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -692,7 +621,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Delete From Global List for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -706,7 +634,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -714,10 +641,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -725,30 +651,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Policy Name"] = policy_name
     
@@ -758,17 +679,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Change Policy",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Change Policy", # Assuming same as actionName
+                    "ScriptName": "Cylance_Change Policy",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -776,7 +696,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Change Policy for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -790,7 +709,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -798,10 +716,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -809,30 +726,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -841,17 +753,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Get Threat Devices",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Get Threat Devices", # Assuming same as actionName
+                    "ScriptName": "Cylance_Get Threat Devices",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -859,7 +770,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Get Threat Devices for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -873,7 +783,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -881,10 +790,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -892,30 +800,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Cylance")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Cylance: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if threat_sha256_hash is not None:
                 script_params["Threat SHA256 Hash"] = threat_sha256_hash
@@ -926,17 +829,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Cylance_Get Threat Download Link",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Cylance_Get Threat Download Link", # Assuming same as actionName
+                    "ScriptName": "Cylance_Get Threat Download Link",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -944,7 +846,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Cylance_Get Threat Download Link for Cylance: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:

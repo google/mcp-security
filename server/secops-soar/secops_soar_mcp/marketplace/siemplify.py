@@ -30,7 +30,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -38,10 +37,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -49,30 +47,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Rule Generator"] = rule_generator
             script_params["Port"] = port
@@ -90,17 +83,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Get Similar Cases",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Get Similar Cases", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Get Similar Cases",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -108,7 +100,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Get Similar Cases for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -122,7 +113,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -130,10 +120,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -141,30 +130,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -173,17 +157,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Mark As Important",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Mark As Important", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Mark As Important",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -191,7 +174,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Mark As Important for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -205,7 +187,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -213,10 +194,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -224,30 +204,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Entity Field"] = entity_field
             script_params["Field Value"] = field_value
@@ -258,17 +233,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Create Or Update Entity Properties",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Create Or Update Entity Properties", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Create Or Update Entity Properties",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -276,7 +250,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Create Or Update Entity Properties for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -290,7 +263,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -298,10 +270,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -309,30 +280,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Priority"] = priority
     
@@ -342,17 +308,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Change Priority",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Change Priority", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Change Priority",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -360,7 +325,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Change Priority for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -374,7 +338,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -382,10 +345,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -393,30 +355,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -425,17 +382,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Create Gemini Case Summary",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Create Gemini Case Summary", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Create Gemini Case Summary",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -443,7 +399,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Create Gemini Case Summary for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -457,7 +412,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -465,10 +419,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -476,30 +429,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Risk Score"] = risk_score
     
@@ -509,17 +457,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Set Risk Score",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Set Risk Score", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Set Risk Score",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -527,7 +474,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Set Risk Score for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -541,7 +487,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -549,10 +494,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -560,30 +504,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Custom Fields Data"] = custom_fields_data
             if append_values is not None:
@@ -595,17 +534,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Set Custom Fields",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Set Custom Fields", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Set Custom Fields",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -613,7 +551,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Set Custom Fields for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -627,7 +564,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -635,10 +571,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -646,30 +581,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["SLA Period"] = sla_period
             script_params["SLA Time Unit"] = sla_time_unit
@@ -682,17 +612,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Set Case SLA",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Set Case SLA", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Set Case SLA",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -700,7 +629,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Set Case SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -714,7 +642,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -722,10 +649,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -733,30 +659,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Category"] = category
     
@@ -766,17 +687,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Is In Custom List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Is In Custom List", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Is In Custom List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -784,7 +704,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Is In Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -798,7 +717,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -806,10 +724,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -817,30 +734,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Endpoint URL"] = endpoint_url
             script_params["HTTP Method"] = http_method
@@ -854,17 +766,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_TestSiemplifyProxy",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_TestSiemplifyProxy", # Assuming same as actionName
+                    "ScriptName": "Siemplify_TestSiemplifyProxy",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -872,7 +783,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_TestSiemplifyProxy for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -886,7 +796,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -894,10 +803,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -905,30 +813,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Tag"] = tag
     
@@ -938,17 +841,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Case Tag",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Case Tag", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Case Tag",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -956,7 +858,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Case Tag for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -970,7 +871,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -978,10 +878,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -989,30 +888,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Reason"] = reason
             script_params["Root Cause"] = root_cause
@@ -1028,17 +922,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Close Alert",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Close Alert", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Close Alert",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1046,7 +939,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Close Alert for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1060,7 +952,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1068,10 +959,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1079,30 +969,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Category"] = category
     
@@ -1112,17 +997,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Add to Custom List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Add to Custom List", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Add to Custom List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1130,7 +1014,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Add to Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1144,7 +1027,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1152,10 +1034,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1163,30 +1044,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Comment"] = comment
     
@@ -1196,17 +1072,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Case Comment",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Case Comment", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Case Comment",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1214,7 +1089,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Case Comment for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1228,7 +1102,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1236,10 +1109,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1247,30 +1119,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Permitted Start Time"] = permitted_start_time
             script_params["Permitted End Time"] = permitted_end_time
@@ -1296,17 +1163,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Permitted Alert Time",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Permitted Alert Time", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Permitted Alert Time",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1314,7 +1180,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Permitted Alert Time for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1328,7 +1193,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1336,10 +1200,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1347,30 +1210,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Title"] = title
             script_params["URL"] = url
@@ -1381,17 +1239,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Open Web Url",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Open Web Url", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Open Web Url",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1399,7 +1256,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Open Web Url for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1413,7 +1269,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1421,10 +1276,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1432,30 +1286,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Stage"] = stage
     
@@ -1465,17 +1314,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Change Case Stage",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Change Case Stage", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Change Case Stage",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1483,7 +1331,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Change Case Stage for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1497,7 +1344,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1505,10 +1351,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1516,30 +1361,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Title"] = title
             script_params["Message"] = message
@@ -1552,17 +1392,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Add General Insight",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Add General Insight", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Add General Insight",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1570,7 +1409,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Add General Insight for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1584,7 +1422,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1592,10 +1429,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1603,30 +1439,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1635,17 +1466,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Resume Alert SLA",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Resume Alert SLA", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Resume Alert SLA",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1653,7 +1483,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Resume Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1667,7 +1496,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1675,10 +1503,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1686,30 +1513,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Instruction"] = instruction
     
@@ -1719,17 +1541,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Instruction",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Instruction", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Instruction",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1737,7 +1558,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Instruction for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1751,7 +1571,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1759,10 +1578,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1770,30 +1588,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1802,17 +1615,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Ping",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Ping", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Ping",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1820,7 +1632,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Ping for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1834,7 +1645,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1842,10 +1652,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1853,30 +1662,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if fields_to_return is not None:
                 script_params["Fields to Return"] = fields_to_return
@@ -1889,17 +1693,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Get Case Details",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Get Case Details", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Get Case Details",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1907,7 +1710,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Get Case Details for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1921,7 +1723,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1929,10 +1730,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1940,30 +1740,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Context Scope"] = context_scope
             script_params["Key Name"] = key_name
@@ -1975,17 +1770,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Set Scope Context Value",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Set Scope Context Value", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Set Scope Context Value",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1993,7 +1787,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Set Scope Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2007,7 +1800,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2015,10 +1807,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2026,30 +1817,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Rule Generator"] = rule_generator
             script_params["Port"] = port
@@ -2064,17 +1850,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Add Tags To Similar Cases",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Add Tags To Similar Cases", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Add Tags To Similar Cases",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2082,7 +1867,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Add Tags To Similar Cases for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2096,7 +1880,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2104,10 +1887,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2115,30 +1897,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Message"] = message
     
@@ -2148,17 +1925,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Add Entity Insight",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Add Entity Insight", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Add Entity Insight",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2166,7 +1942,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Add Entity Insight for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2180,7 +1955,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2188,10 +1962,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2199,30 +1972,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Playbook Name"] = playbook_name
             if allow_duplicates is not None:
@@ -2234,17 +2002,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Attach Playbook to Alert",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Attach Playbook to Alert", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Attach Playbook to Alert",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2252,7 +2019,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Attach Playbook to Alert for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2266,7 +2032,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2274,10 +2039,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2285,30 +2049,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Reason"] = reason
             script_params["Root Cause"] = root_cause
@@ -2320,17 +2079,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Close Case",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Close Case", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Close Case",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2338,7 +2096,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Close Case for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2352,7 +2109,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2360,10 +2116,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2371,30 +2126,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Assigned User"] = assigned_user
     
@@ -2404,17 +2154,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Assign Case",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Assign Case", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Assign Case",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2422,7 +2171,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Assign Case for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2436,7 +2184,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2444,10 +2191,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2455,30 +2201,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Custom Fields Data"] = custom_fields_data
     
@@ -2488,17 +2229,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Wait For Custom Fields",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Wait For Custom Fields", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Wait For Custom Fields",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2506,7 +2246,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Wait For Custom Fields for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2520,7 +2259,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2528,10 +2266,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2539,30 +2276,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Entities Identifies"] = entities_identifies
             if delimiter is not None:
@@ -2577,17 +2309,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Create Entity",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Create Entity", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Create Entity",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2595,7 +2326,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Create Entity for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2609,7 +2339,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2617,10 +2346,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2628,30 +2356,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Description"] = description
     
@@ -2661,17 +2384,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Update Case Description",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Update Case Description", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Update Case Description",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2679,7 +2401,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Update Case Description for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2693,7 +2414,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2701,10 +2421,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2712,30 +2431,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if soc_role is not None:
                 script_params["Soc Role"] = soc_role
@@ -2746,17 +2460,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Raise Incident",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Raise Incident", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Raise Incident",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2764,7 +2477,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Raise Incident for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2778,7 +2490,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2786,10 +2497,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2797,30 +2507,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Publisher Name"] = publisher_name
             script_params["Remote Integration Name"] = remote_integration_name
@@ -2838,17 +2543,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Run Remote",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Run Remote", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Run Remote",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2856,7 +2560,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Run Remote for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2870,7 +2573,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2878,10 +2580,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2889,30 +2590,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if message is not None:
                 script_params["Message"] = message
@@ -2923,17 +2619,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Pause Alert SLA",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Pause Alert SLA", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Pause Alert SLA",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2941,7 +2636,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Pause Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2955,7 +2649,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2963,10 +2656,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2974,30 +2666,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Category"] = category
     
@@ -3007,17 +2694,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Remove from Custom List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Remove from Custom List", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Remove from Custom List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3025,7 +2711,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Remove from Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -3039,7 +2724,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -3047,10 +2731,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -3058,30 +2741,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Alert Priority"] = alert_priority
     
@@ -3091,17 +2769,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Change Alert Priority",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Change Alert Priority", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Change Alert Priority",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3109,7 +2786,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Change Alert Priority for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -3123,7 +2799,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -3131,10 +2806,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -3142,30 +2816,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["SLA Period"] = sla_period
             script_params["SLA Time Unit"] = sla_time_unit
@@ -3178,17 +2847,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Set Alert SLA",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Set Alert SLA", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Set Alert SLA",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3196,7 +2864,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Set Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -3210,7 +2877,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -3218,10 +2884,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -3229,30 +2894,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Connector Identifier"] = connector_identifier
             script_params["Key Name"] = key_name
@@ -3265,17 +2925,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Get Connector Context Value",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Get Connector Context Value", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Get Connector Context Value",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3283,7 +2942,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Get Connector Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -3297,7 +2955,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -3305,10 +2962,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -3316,30 +2972,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Context Scope"] = context_scope
             script_params["Key Name"] = key_name
@@ -3352,17 +3003,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Get Scope Context Value",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Get Scope Context Value", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Get Scope Context Value",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3370,7 +3020,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Get Scope Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -3384,7 +3033,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -3392,10 +3040,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -3403,30 +3050,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Siemplify")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Tag"] = tag
     
@@ -3436,17 +3078,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Siemplify_Remove Tag",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Siemplify_Remove Tag", # Assuming same as actionName
+                    "ScriptName": "Siemplify_Remove Tag",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -3454,7 +3095,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Siemplify_Remove Tag for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:

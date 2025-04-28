@@ -30,7 +30,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -38,10 +37,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -49,30 +47,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -147,17 +140,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Collect Autoruns",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Collect Autoruns", # Assuming same as actionName
+                    "ScriptName": "Endgame_Collect Autoruns",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -165,7 +157,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Collect Autoruns for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -179,7 +170,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -187,10 +177,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -198,30 +187,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if create_insight is not None:
                 script_params["Create Insight"] = create_insight
@@ -232,17 +216,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Isolate Host",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Isolate Host", # Assuming same as actionName
+                    "ScriptName": "Endgame_Isolate Host",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -250,7 +233,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Isolate Host for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -264,7 +246,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -272,10 +253,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -283,30 +263,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if endpoints_core_os is not None:
                 script_params["Endpoints Core OS"] = endpoints_core_os
@@ -321,17 +296,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Hunt User",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Hunt User", # Assuming same as actionName
+                    "ScriptName": "Endgame_Hunt User",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -339,7 +313,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Hunt User for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -353,7 +326,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -361,10 +333,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -372,30 +343,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["IP Subnet"] = ip_subnet
             if description is not None:
@@ -409,17 +375,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Add IP Subnet to Host Isolation Config",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Add IP Subnet to Host Isolation Config", # Assuming same as actionName
+                    "ScriptName": "Endgame_Add IP Subnet to Host Isolation Config",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -427,7 +392,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Add IP Subnet to Host Isolation Config for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -441,7 +405,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -449,10 +412,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -460,30 +422,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Investigation ID"] = investigation_id
     
@@ -493,17 +450,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Get Investigation Details",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Get Investigation Details", # Assuming same as actionName
+                    "ScriptName": "Endgame_Get Investigation Details",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -511,7 +467,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Get Investigation Details for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -525,7 +480,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -533,10 +487,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -544,30 +497,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["IP Subnet"] = ip_subnet
             if create_insight is not None:
@@ -579,17 +527,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Remove IP Subnet from Host Isolation Config",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Remove IP Subnet from Host Isolation Config", # Assuming same as actionName
+                    "ScriptName": "Endgame_Remove IP Subnet from Host Isolation Config",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -597,7 +544,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Remove IP Subnet from Host Isolation Config for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -611,7 +557,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -619,10 +564,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -630,30 +574,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -672,17 +611,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_System Survey",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_System Survey", # Assuming same as actionName
+                    "ScriptName": "Endgame_System Survey",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -690,7 +628,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_System Survey for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -704,7 +641,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -712,10 +648,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -723,30 +658,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if endpoints_core_os is not None:
                 script_params["Endpoints Core OS"] = endpoints_core_os
@@ -765,17 +695,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Hunt Process",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Hunt Process", # Assuming same as actionName
+                    "ScriptName": "Endgame_Hunt Process",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -783,7 +712,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Hunt Process for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -797,7 +725,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -805,10 +732,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -816,30 +742,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -850,17 +771,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Firewall Survey (Windows only)",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Firewall Survey (Windows only)", # Assuming same as actionName
+                    "ScriptName": "Endgame_Firewall Survey (Windows only)",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -868,7 +788,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Firewall Survey (Windows only) for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -882,7 +801,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -890,10 +808,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -901,30 +818,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if create_insight is not None:
                 script_params["Create Insight"] = create_insight
@@ -935,17 +847,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Unisolate Host",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Unisolate Host", # Assuming same as actionName
+                    "ScriptName": "Endgame_Unisolate Host",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -953,7 +864,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Unisolate Host for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -967,7 +877,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -975,10 +884,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -986,30 +894,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if os is not None:
                 script_params["OS"] = os
@@ -1024,17 +927,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_List Investigations",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_List Investigations", # Assuming same as actionName
+                    "ScriptName": "Endgame_List Investigations",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1042,7 +944,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_List Investigations for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1056,7 +957,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1064,10 +964,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1075,30 +974,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1107,17 +1001,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Ping",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Ping", # Assuming same as actionName
+                    "ScriptName": "Endgame_Ping",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1125,7 +1018,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Ping for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1139,7 +1031,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1147,10 +1038,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1158,30 +1048,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1190,17 +1075,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Get Host Isolation Config",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Get Host Isolation Config", # Assuming same as actionName
+                    "ScriptName": "Endgame_Get Host Isolation Config",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1208,7 +1092,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Get Host Isolation Config for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1222,7 +1105,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1230,10 +1112,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1241,30 +1122,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1273,17 +1149,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Get Endpoints",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Get Endpoints", # Assuming same as actionName
+                    "ScriptName": "Endgame_Get Endpoints",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1291,7 +1166,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Get Endpoints for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1305,7 +1179,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1313,10 +1186,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1324,30 +1196,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -1366,17 +1233,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Process Survey",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Process Survey", # Assuming same as actionName
+                    "ScriptName": "Endgame_Process Survey",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1384,7 +1250,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Process Survey for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1398,7 +1263,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1406,10 +1270,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1417,30 +1280,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -1451,17 +1309,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Drivers Survey (Windows only)",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Drivers Survey (Windows only)", # Assuming same as actionName
+                    "ScriptName": "Endgame_Drivers Survey (Windows only)",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1469,7 +1326,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Drivers Survey (Windows only) for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1483,7 +1339,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1491,10 +1346,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1502,30 +1356,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Process Name"] = process_name
             if pid is not None:
@@ -1537,17 +1386,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Kill Process",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Kill Process", # Assuming same as actionName
+                    "ScriptName": "Endgame_Kill Process",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1555,7 +1403,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Kill Process for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1569,7 +1416,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1577,10 +1423,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1588,30 +1433,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -1622,17 +1462,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_User Sessions Survey",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_User Sessions Survey", # Assuming same as actionName
+                    "ScriptName": "Endgame_User Sessions Survey",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1640,7 +1479,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_User Sessions Survey for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1654,7 +1492,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1662,10 +1499,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1673,30 +1509,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -1715,17 +1546,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Network Survey",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Network Survey", # Assuming same as actionName
+                    "ScriptName": "Endgame_Network Survey",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1733,7 +1563,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Network Survey for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1747,7 +1576,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1755,10 +1583,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1766,30 +1593,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if endpoints_core_os is not None:
                 script_params["Endpoints Core OS"] = endpoints_core_os
@@ -1812,17 +1634,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Hunt IP",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Hunt IP", # Assuming same as actionName
+                    "ScriptName": "Endgame_Hunt IP",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1830,7 +1651,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Hunt IP for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1844,7 +1664,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1852,10 +1671,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1863,30 +1681,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if hive is not None:
                 script_params["Hive"] = hive
@@ -1905,17 +1718,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Hunt Registry",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Hunt Registry", # Assuming same as actionName
+                    "ScriptName": "Endgame_Hunt Registry",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1923,7 +1735,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Hunt Registry for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1937,7 +1748,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1945,10 +1755,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1956,30 +1765,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -1988,17 +1792,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Enrich Entities",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Enrich Entities", # Assuming same as actionName
+                    "ScriptName": "Endgame_Enrich Entities",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2006,7 +1809,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Enrich Entities for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2020,7 +1822,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2028,10 +1829,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2039,30 +1839,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if endpoints_core_os is not None:
                 script_params["Endpoints Core OS"] = endpoints_core_os
@@ -2083,17 +1878,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Hunt File",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Hunt File", # Assuming same as actionName
+                    "ScriptName": "Endgame_Hunt File",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2101,7 +1895,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Hunt File for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2115,7 +1908,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2123,10 +1915,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2134,30 +1925,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Full File Path"] = full_file_path
             script_params["Full Download Folder Path"] = full_download_folder_path
@@ -2170,17 +1956,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Download File",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Download File", # Assuming same as actionName
+                    "ScriptName": "Endgame_Download File",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2188,7 +1973,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Download File for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2202,7 +1986,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2210,10 +1993,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2221,30 +2003,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["File Path"] = file_path
     
@@ -2254,17 +2031,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Delete File",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Delete File", # Assuming same as actionName
+                    "ScriptName": "Endgame_Delete File",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2272,7 +2048,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Delete File for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2286,7 +2061,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2294,10 +2068,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2305,30 +2078,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -2339,17 +2107,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Removable Media Survey (Windows only)",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Removable Media Survey (Windows only)", # Assuming same as actionName
+                    "ScriptName": "Endgame_Removable Media Survey (Windows only)",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2357,7 +2124,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Removable Media Survey (Windows only) for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -2371,7 +2137,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -2379,10 +2144,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -2390,30 +2154,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Endgame")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Endgame: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_items_to_return is not None:
                 script_params["Max Items to Return"] = max_items_to_return
@@ -2424,17 +2183,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Endgame_Software Survey (Windows only)",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Endgame_Software Survey (Windows only)", # Assuming same as actionName
+                    "ScriptName": "Endgame_Software Survey (Windows only)",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -2442,7 +2200,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Endgame_Software Survey (Windows only) for Endgame: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:

@@ -30,7 +30,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -38,10 +37,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -49,30 +47,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if channel is not None:
                 script_params["Channel"] = channel
@@ -88,17 +81,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Wait For Reply",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Wait For Reply", # Assuming same as actionName
+                    "ScriptName": "Slack_Wait For Reply",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -106,7 +98,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Wait For Reply for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -120,7 +111,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -128,10 +118,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -139,30 +128,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Channel Name"] = channel_name
             if user_i_ds is not None:
@@ -178,17 +162,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Create Channel",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Create Channel", # Assuming same as actionName
+                    "ScriptName": "Slack_Create Channel",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -196,7 +179,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Create Channel for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -210,7 +192,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -218,10 +199,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -229,30 +209,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_channels_to_return is not None:
                 script_params["Max Channels to Return"] = max_channels_to_return
@@ -271,17 +246,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_List Channels",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_List Channels", # Assuming same as actionName
+                    "ScriptName": "Slack_List Channels",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -289,7 +263,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_List Channels for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -303,7 +276,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -311,10 +283,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -322,30 +293,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Channel or User ID"] = channel_or_user_id
             if time_frame is not None:
@@ -363,17 +329,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Get Channel Or User Conversation History",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Get Channel Or User Conversation History", # Assuming same as actionName
+                    "ScriptName": "Slack_Get Channel Or User Conversation History",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -381,7 +346,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Get Channel Or User Conversation History for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -395,7 +359,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -403,10 +366,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -414,30 +376,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["User Id"] = user_id
     
@@ -447,17 +404,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Get User Details By Id",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Get User Details By Id", # Assuming same as actionName
+                    "ScriptName": "Slack_Get User Details By Id",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -465,7 +421,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Get User Details By Id for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -479,7 +434,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -487,10 +441,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -498,30 +451,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Webhook Token UUID"] = webhook_token_uuid
     
@@ -531,17 +479,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Wait For Reply With Webhook",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Wait For Reply With Webhook", # Assuming same as actionName
+                    "ScriptName": "Slack_Wait For Reply With Webhook",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -549,7 +496,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Wait For Reply With Webhook for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -563,7 +509,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -571,10 +516,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -582,30 +526,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -614,17 +553,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Ping",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Ping", # Assuming same as actionName
+                    "ScriptName": "Slack_Ping",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -632,7 +570,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Ping for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -646,7 +583,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -654,10 +590,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -665,30 +600,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Search By"] = search_by
             script_params["User Value"] = user_value
@@ -699,17 +629,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Get User Details",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Get User Details", # Assuming same as actionName
+                    "ScriptName": "Slack_Get User Details",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -717,7 +646,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Get User Details for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -731,7 +659,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -739,10 +666,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -750,30 +676,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Channel"] = channel
             script_params["Question"] = question
@@ -784,17 +705,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Ask Question",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Ask Question", # Assuming same as actionName
+                    "ScriptName": "Slack_Ask Question",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -802,7 +722,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Ask Question for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -816,7 +735,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -824,10 +742,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -835,30 +752,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Recipient"] = recipient
             script_params["Recipient Type"] = recipient_type
@@ -871,17 +783,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Send Advanced Message",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Send Advanced Message", # Assuming same as actionName
+                    "ScriptName": "Slack_Send Advanced Message",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -889,7 +800,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Send Advanced Message for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -903,7 +813,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -911,10 +820,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -922,30 +830,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if channel_name is not None:
                 script_params["Channel Name"] = channel_name
@@ -959,17 +862,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Rename Channel",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Rename Channel", # Assuming same as actionName
+                    "ScriptName": "Slack_Rename Channel",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -977,7 +879,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Rename Channel for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -991,7 +892,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -999,10 +899,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1010,30 +909,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["File Name"] = file_name
             script_params["File Path"] = file_path
@@ -1045,17 +939,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Upload File",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Upload File", # Assuming same as actionName
+                    "ScriptName": "Slack_Upload File",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1063,7 +956,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Upload File for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1077,7 +969,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1085,10 +976,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1096,30 +986,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Recipient"] = recipient
             script_params["Recipient Type"] = recipient_type
@@ -1132,17 +1017,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Send Interactive Message",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Send Interactive Message", # Assuming same as actionName
+                    "ScriptName": "Slack_Send Interactive Message",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1150,7 +1034,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Send Interactive Message for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1164,7 +1047,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1172,10 +1054,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1183,30 +1064,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Question"] = question
             script_params["Answers Buttons"] = answers_buttons
@@ -1219,17 +1095,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Build Block",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Build Block", # Assuming same as actionName
+                    "ScriptName": "Slack_Build Block",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1237,7 +1112,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Build Block for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1251,7 +1125,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1259,10 +1132,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1270,30 +1142,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Channel"] = channel
             script_params["Message"] = message
@@ -1304,17 +1171,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_Send Message",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_Send Message", # Assuming same as actionName
+                    "ScriptName": "Slack_Send Message",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1322,7 +1188,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_Send Message for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1336,7 +1201,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1344,10 +1208,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1355,30 +1218,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="Slack")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for Slack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if max_records_to_return is not None:
                 script_params["Max Records to Return"] = max_records_to_return
@@ -1395,17 +1253,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="Slack_List Users",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "Slack_List Users", # Assuming same as actionName
+                    "ScriptName": "Slack_List Users",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1413,7 +1270,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action Slack_List Users for Slack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:

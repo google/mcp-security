@@ -30,7 +30,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -38,10 +37,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -49,30 +47,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Data Group Name"] = data_group_name
     
@@ -82,17 +75,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Add IP To Data Group",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Add IP To Data Group", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Add IP To Data Group",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -100,7 +92,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Add IP To Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -114,7 +105,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -122,10 +112,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -133,30 +122,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Type"] = type
             script_params["Name"] = name
@@ -167,17 +151,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Create Data Group",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Create Data Group", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Create Data Group",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -185,7 +168,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Create Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -199,7 +181,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -207,10 +188,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -218,30 +198,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Address List Name"] = address_list_name
     
@@ -251,17 +226,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Add IP To Address List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Add IP To Address List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Add IP To Address List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -269,7 +243,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Add IP To Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -283,7 +256,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -291,10 +263,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -302,30 +273,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Port List Name"] = port_list_name
             script_params["Ports"] = ports
@@ -336,17 +302,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Add Port To Port List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Add Port To Port List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Add Port To Port List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -354,7 +319,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Add Port To Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -368,7 +332,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -376,10 +339,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -387,30 +349,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Port List Name"] = port_list_name
             script_params["Ports"] = ports
@@ -421,17 +378,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Remove Port From Port List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Remove Port From Port List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Remove Port From Port List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -439,7 +395,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Remove Port From Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -453,7 +408,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -461,10 +415,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -472,30 +425,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
             script_params["Rule"] = rule
@@ -506,17 +454,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Create iRule",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Create iRule", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Create iRule",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -524,7 +471,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Create iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -538,7 +484,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -546,10 +491,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -557,30 +501,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if filter_logic is not None:
                 script_params["Filter Logic"] = filter_logic
@@ -595,17 +534,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_List Address Lists",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_List Address Lists", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_List Address Lists",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -613,7 +551,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_List Address Lists for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -627,7 +564,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -635,10 +571,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -646,30 +581,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
             script_params["Rule"] = rule
@@ -680,17 +610,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Update iRule",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Update iRule", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Update iRule",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -698,7 +627,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Update iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -712,7 +640,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -720,10 +647,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -731,30 +657,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Address List Name"] = address_list_name
     
@@ -764,17 +685,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Remove IP From Address List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Remove IP From Address List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Remove IP From Address List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -782,7 +702,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Remove IP From Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -796,7 +715,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -804,10 +722,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -815,30 +732,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
     
@@ -848,17 +760,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Delete iRule",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Delete iRule", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Delete iRule",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -866,7 +777,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Delete iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -880,7 +790,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -888,10 +797,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -899,30 +807,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
     
             # Prepare data model for the API request
@@ -931,17 +834,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Ping",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Ping", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Ping",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -949,7 +851,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Ping for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -963,7 +864,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -971,10 +871,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -982,30 +881,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
     
@@ -1015,17 +909,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Delete Data Group",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Delete Data Group", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Delete Data Group",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1033,7 +926,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Delete Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1047,7 +939,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1055,10 +946,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1066,30 +956,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
     
@@ -1099,17 +984,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Create Address List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Create Address List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Create Address List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1117,7 +1001,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Create Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1131,7 +1014,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1139,10 +1021,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1150,30 +1031,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if filter_logic is not None:
                 script_params["Filter Logic"] = filter_logic
@@ -1188,17 +1064,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_List Port Lists",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_List Port Lists", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_List Port Lists",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1206,7 +1081,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_List Port Lists for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1220,7 +1094,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1228,10 +1101,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1239,30 +1111,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
             script_params["Ports"] = ports
@@ -1273,17 +1140,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Create Port List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Create Port List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Create Port List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1291,7 +1157,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Create Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1305,7 +1170,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1313,10 +1177,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1324,30 +1187,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
     
@@ -1357,17 +1215,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Delete Port List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Delete Port List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Delete Port List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1375,7 +1232,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Delete Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1389,7 +1245,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1397,10 +1252,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1408,30 +1262,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Name"] = name
     
@@ -1441,17 +1290,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Delete Address List",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Delete Address List", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Delete Address List",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1459,7 +1307,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Delete Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1473,7 +1320,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1481,10 +1327,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1492,30 +1337,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if filter_logic is not None:
                 script_params["Filter Logic"] = filter_logic
@@ -1530,17 +1370,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_List iRules",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_List iRules", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_List iRules",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1548,7 +1387,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_List iRules for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1562,7 +1400,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1570,10 +1407,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1581,30 +1417,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             if filter_logic is not None:
                 script_params["Filter Logic"] = filter_logic
@@ -1619,17 +1450,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_List Data Groups",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_List Data Groups", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_List Data Groups",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1637,7 +1467,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_List Data Groups for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
@@ -1651,7 +1480,6 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        # --- Determine scope and target entities for API call ---
         final_target_entities: Optional[List[TargetEntity]] = None
         final_scope: Optional[str] = None
         is_predefined_scope: Optional[bool] = None
@@ -1659,10 +1487,9 @@ def register_tools(mcp: FastMCP):
         if target_entities:
             # Specific target entities provided, ignore scope parameter
             final_target_entities = target_entities
-            final_scope = None # Scope is ignored when specific entities are given
+            final_scope = None
             is_predefined_scope = False
         else:
-            # No specific target entities, use scope parameter
             # Check if the provided scope is valid
             if scope not in bindings.valid_scopes:
                 allowed_values_str = ", ".join(sorted(list(bindings.valid_scopes)))
@@ -1670,30 +1497,25 @@ def register_tools(mcp: FastMCP):
                     "Status": "Failed",
                     "Message": f"Invalid scope '{scope}'. Allowed values are: {allowed_values_str}",
                 }
-            # Scope is valid or validation is not configured
             final_target_entities = [] # Pass empty list for entities when using scope
             final_scope = scope
             is_predefined_scope = True
-        # --- End scope/entity logic ---
     
-        # Fetch integration instance identifier (assuming this pattern)
+        # Fetch integration instance identifier
         try:
             instance_response = await bindings.http_client.get(
                 Endpoints.LIST_INTEGRATION_INSTANCES.format(INTEGRATION_NAME="F5BIGIPiControlAPI")
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            # Log error appropriately in real code
             print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
             instance_identifier = instances[0].get("identifier")
             if not instance_identifier:
-                # Log error or handle missing identifier
                 return {"Status": "Failed", "Message": "Instance found but identifier is missing."}
     
-            # Construct parameters dictionary for the API call
             script_params = {}
             script_params["Data Group Name"] = data_group_name
     
@@ -1703,17 +1525,16 @@ def register_tools(mcp: FastMCP):
                 caseId=case_id,
                 targetEntities=final_target_entities,
                 scope=final_scope,
-                isPredefinedScope=is_predefined_scope, # Pass the is_predefined_scope parameter
-                actionProvider="Scripts", # Assuming constant based on example
+                isPredefinedScope=is_predefined_scope,
+                actionProvider="Scripts",
                 actionName="F5BIGIPiControlAPI_Remove IP From Data Group",
                 properties={
                     "IntegrationInstance": instance_identifier,
-                    "ScriptName": "F5BIGIPiControlAPI_Remove IP From Data Group", # Assuming same as actionName
+                    "ScriptName": "F5BIGIPiControlAPI_Remove IP From Data Group",
                     "ScriptParametersEntityFields": json.dumps(script_params)
                 }
             )
     
-            # Execute the action via HTTP POST
             try:
                 execution_response = await bindings.http_client.post(
                     Endpoints.EXECUTE_MANUAL_ACTION,
@@ -1721,7 +1542,6 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                # Log error appropriately
                 print(f"Error executing action F5BIGIPiControlAPI_Remove IP From Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
