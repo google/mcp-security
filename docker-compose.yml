@@ -1,0 +1,24 @@
+services:
+  gti:
+    build: server/gti
+    volumes:
+      - ./cline_mcp_settings.json:/app/config.json
+  scc:
+    build: server/scc
+    volumes:
+      - ./cline_mcp_settings.json:/app/config.json
+      - ./service-account-key.json:/app/service-account-key.json
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account-key.json
+  secops:
+    build: server/secops
+    volumes:
+      - ./cline_mcp_settings.json:/app/config.json
+  secops-soar:
+    build: server/secops-soar
+    volumes:
+      - ./cline_mcp_settings.json:/app/config.json
+    # Optional: Add these if Step 1 doesn’t resolve the issue
+    # environment:
+    #   - SOAR_URL=https://my-soar-instance.siemplify-soar.com:443
+    #   - SOAR_APP_KEY=actual-soar-app-key

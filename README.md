@@ -43,6 +43,12 @@ The configuration for Claude Desktop and Cline is the same (provided below for [
 
 Please refer to the [README file](./run-with-google-adk/README.md) for both - locally running the prebuilt agent and [Cloud Run](https://cloud.google.com/run) deployment.
 
+## Running with Docker
+1. Install Docker and Docker Compose.
+2. Clone the repository: `git clone https://github.com/google/mcp-security.git`.
+3. Add a `docker-compose.yml` file (see example in the repo).
+4. Update `cline_mcp_settings.json` with your credentials.
+5. Run: `sudo docker compose up --build`.
 
 ### Using uv (Recommended)
 
