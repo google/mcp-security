@@ -2,6 +2,9 @@
 
 This guide provides instructions on how to run the prebuilt ADK (Agent Development Kit) agent both locally and in Cloud Run (if necessary for demos).
 
+> 🪧 **NOTE:**  
+> With ADK 1.0.0 introducing some breaking changes, Please only use gemini-2.5 models (gemini-2.5-flash-preview-04-17 or gemini-2.5-pro-preview-05-06) when using this agent, till we sort these issues out. Also till that time we recommend setting `GOOGLE_GENAI_USE_VERTEXAI` to `False`, locally and when deploying.
+
 ## 1. Running Agent locally (Setup time - about 5 minutes)
 
 ### Prerequisites
@@ -52,6 +55,7 @@ The default `.env` file is shown below.
 2. Make sure that variables in the `MANDATORY` section have proper values (make sure you get and update the `GOOGLE_API_KEY` using these [instructions](https://ai.google.dev/gemini-api/docs/api-key)) 
 3. You can experiment with the prompt `DEFAULT_PROMPT`. Use single quotes for the prompt. If you plan to later deploy to a Cloud Run Service - avoid commas (or if you use them they will be converted to semicommas during deployment).
 4. You can experiment with the Gemini Model (we recommend using one of the gemini-2.5 models). Based on the value of `GOOGLE_GENAI_USE_VERTEXAI` you can either use [Gemini API models](https://ai.google.dev/gemini-api/docs/models#model-variations) or [Vertex API models](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
+
 
 ```bash
 # Please do not use quotes / double quotes for values except for DEFAULT_PROMPT (use single quotes there)
@@ -152,7 +156,7 @@ Access the Agent 🤖 interface by going to `http://localhost:8000`
 > When exiting, shut down the browser tab first and then use `ctrl+c` to exit on the console. 
 
 
-#### Running agent without the web interface
+<!-- #### Running agent without the web interface
 
 You can also run the agent without the web interface (This version is more efficient than the web interface). A basic console based agent is provided. You can use the following command to run it. 
 
@@ -210,7 +214,7 @@ Goodbye! Let me know if you need help with any security investigations in the fu
 Closing MCP server connection...
 Cleanup complete.
 
-```
+``` -->
 
 
 
@@ -237,8 +241,8 @@ In addition to Gemini/ Vertex API costs, running agent will incur cloud costs. P
 > It is not recommended to run the a Cloud Run service with unauthenticated invocations enabled (we do that initially for verification). Please follow steps to enable [IAM authentication](https://cloud.google.com/run/docs/authenticating/developers) on your service. You could also deploy it behind the [Identity Aware Proxy (IAP)](https://cloud.google.com/iap/docs/enabling-cloud-run) - but that is out of scope for this documentation.
 
 ### Deployment Steps
-> 🪧 **NOTE:**  
-> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying
+<!-- > 🪧 **NOTE:**  
+> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying -->
 
 ```bash
 # Please run these commands from the mcp-security directory
