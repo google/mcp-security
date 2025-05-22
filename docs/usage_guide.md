@@ -76,6 +76,11 @@ Once configured, you can interact with the MCP servers by asking Claude to perfo
 
 Here's a complete reference configuration for all available MCP servers. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
 
+**NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
+
+Additionally, for the secops-soar MCP server, you will need use the CA list bundled with the certifi package. This can be done via the following command. Change the Python minor version to match whatever version you are currently running. (ex. `Python\ 3.11`):
+`/Applications/Python\ 3.12/Install\ Certificates.command`
+
 ```json
 {
   "mcpServers": {
