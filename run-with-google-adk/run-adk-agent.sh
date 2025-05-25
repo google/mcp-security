@@ -15,8 +15,8 @@
 #!/bin/bash
 
 # Define the file paths
-SAMPLE_ENV_FILE="./google-mcp-security-agent/sample.env"
-ENV_FILE="./google-mcp-security-agent/.env"
+SAMPLE_ENV_FILE="./google_mcp_security_agent/sample.env"
+ENV_FILE="./google_mcp_security_agent/.env"
 
 # Function to mask environment variable values
 mask_env_value() {

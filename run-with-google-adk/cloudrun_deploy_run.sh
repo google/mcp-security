@@ -16,7 +16,7 @@
 
 #!/bin/bash
 
-ENV_FILE="./run-with-google-adk/google-mcp-security-agent/.env"
+ENV_FILE="./run-with-google-adk/google_mcp_security_agent/.env"
 
 # Function to create .env file
 create_env_file() {
