@@ -23,6 +23,7 @@ setup(
     install_requires=[
         "mcp",
         "google-cloud-cloudsecuritycompliance",
+        "google-cloud-org-policy",
     ],
     entry_points={
         "console_scripts": [

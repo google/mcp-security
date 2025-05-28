@@ -15,6 +15,7 @@ import logging
 import os
 from typing import Any, Dict, List
 
+from google.cloud import orgpolicy_v2
 from google.api_core import exceptions as google_exceptions
 from google.cloud.cloudsecuritycompliance_v1alpha.services.config import ConfigClient
 from google.protobuf import json_format 
@@ -45,6 +46,17 @@ try:
 except Exception as e:
     logger.error(f"Failed to initialize Cloud Security Compliance Config Client: {e}", exc_info=True)
     config_client = None
+
+# --- Org Policy Client Initialization ---
+# The client automatically uses Application Default Credentials (ADC).
+# Ensure ADC are configured in the environment where the server runs
+# (e.g., by running `gcloud auth application-default login`).
+try:
+    orgpolicy_client = orgpolicy_v2.OrgPolicyClient()
+    logger.info("Successfully initialized Org Policy Client.")
+except Exception as e:
+    logger.error(f"Failed to initialize Org Policy Client: {e}", exc_info=True)
+    orgpolicy_client = None # Indicate client is not available
 
 # --- Helper Function for Proto to Dict Conversion ---
 
@@ -126,6 +138,100 @@ async def list_frameworks(
     except Exception as e:
         logger.error(f"An unexpected error occurred listing frameworks: {e}", exc_info=True)
         return {"error": "An unexpected error occurred", "details": str(e)}
+
+# --- List Constraints tool ---
+@mcp.tool()
+async def list_constraints(
+    parent: str
+) -> Dict[str, str]:
+    """Name: list all available constraints
+    Description: Returns details of all available Org Policy constraints for a given resource:[organization/project/folder].
+    Parameters:
+    parent (required): The Google Cloud resource that parents the constraint. Must be in one of the following forms:
+     * `projects/{project_number}`
+     * `projects/{project_id}`
+     * `folders/{folder_id}`
+     * `organizations/{organization_id}`
+    """
+    if not orgpolicy_client:
+        return {"error": "Org Polciy Client not initialized."}
+
+    logger.info(f"getting all constraints for parent: {parent}")
+
+    try:
+
+        constraints_iter = orgpolicy_client.list_constraints(request={"parent": parent})
+        constraints_map = {}
+
+        for constraint in constraints_iter:
+            # Each constraint has .name, .display_name, .description, etc.
+            constraints_map[constraint.name] = {
+                "display_name": constraint.display_name,
+                "description": constraint.description
+            }
+
+        return constraints_map
+
+    except Exception as e:
+        logger.error(f"Error listing constraints for {parent}: {e}", exc_info=True)
+        return {"error": str(e)}
+    
+
+# --- List Active Policies tool ---
+@mcp.tool()
+async def list_active_policies(
+    parent: str
+) -> Dict[str, Any]:
+    """Name: list active/enforced policy details
+    Description: Returns details of all active/enforced Org Policy policies for a given resource:[organization/project/folder].
+    Parameters:
+    parent (required): The Google Cloud resource that parents the policies. Must be in one of the following forms:
+     * `projects/{project_number}`
+     * `projects/{project_id}`
+     * `folders/{folder_id}`
+     * `organizations/{organization_id}`
+    """
+    if not orgpolicy_client:
+        return {"error": "Org Polciy Client not initialized."}
+
+    logger.info(f"getting all active policies for parent: {parent}")
+
+    try:
+        # Step 1: Fetch all policies and filter for enforced ones
+        policies = orgpolicy_client.list_policies(request={"parent": parent})
+        active_policies_constraint_id_set = set()
+
+        for policy in policies:
+            rules = getattr(policy.spec, "rules", []) if policy.spec else []
+            is_enforced = any(getattr(rule, "enforce", False) for rule in rules)
+            if is_enforced:
+                policy_name = policy.name
+                # Extract constraint_id from policy_name
+                # Example: "projects/{project_number}/policies/{constraint_id}"
+                if "/policies/" in policy_name:
+                    constraint_id = policy_name.split("/policies/")[-1]
+                    active_policies_constraint_id_set.add(constraint_id)
+                else:
+                    continue
+
+        # Step 2: Fetch all constraints for the parent
+        constraints = orgpolicy_client.list_constraints(request={"parent": parent})
+        constraint_desc_map = {}
+        for constraint in constraints:
+            # constraint.name is like "projects/123/constraints/serviceuser.services"
+            # We want to map by just the constraint_name part
+            constraint_id = constraint.name.split("/constraints/")[-1]
+            if constraint_id in active_policies_constraint_id_set:
+                constraint_desc_map[constraint_id] = {
+                    "description": constraint.description,
+                    "display_name": constraint.display_name}
+
+        return constraint_desc_map
+
+    except Exception as e:
+        logger.error(f"Error listing active policies for {parent}: {e}", exc_info=True)
+        return {"error": str(e)}
+
 
 # --- Main execution ---
 

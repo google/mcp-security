@@ -12,6 +12,17 @@ This is an MCP (Model Context Protocol) server for interacting with Google Cloud
         - `parent` (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
         - `page_size` (optional): The maximum number of frameworks to return. Defaults to 50.
 
+- **`list_constraints(parent)`**
+    - **Description**: Returns details of all available Org Policy constraints for a given resource: (organization, folder, or project). 
+    - **Parameters**:
+        - `parent` (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
+
+- **`list_active_policies(parent)`**
+    - **Description**: Returns details of all active/enforced Org Policy policies for a given resource: (organization, folder, or project). 
+    - **Parameters**:
+        - `parent` (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
+      
+
 ## Configuration
 
 ### MCP Server Configuration
@@ -68,4 +79,22 @@ await list_frameworks("organizations/123456789")
 
 # List frameworks for a project with custom page size
 await list_frameworks("projects/my-project-id", page_size=25)
+``` 
+
+### List Constraints
+```python
+# List constraints for an organization
+await list_constraints("organizations/123456789")
+
+# List constraints for a project
+await list_constraints("projects/my-project-id")
+``` 
+
+### List Active Org Policies
+```python
+# List constraints for an organization
+await list_active_policies("organizations/123456789")
+
+# List constraints for a project
+await list_active_policies("projects/my-project-id")
 ``` 
