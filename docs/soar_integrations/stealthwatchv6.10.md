@@ -38,6 +38,6 @@ Get flows by IP address for a given time frame
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `timeframe` (str, required): Time frame in hours(e.g: 3).
-*   `limit` (str, required): The limit of the recieved flow.
+*   `limit` (str, required): The limit of the received flow.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
