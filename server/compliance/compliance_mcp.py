@@ -143,9 +143,85 @@ async def list_frameworks(
         logger.error(f"An unexpected error occurred listing frameworks: {e}", exc_info=True)
         return {"error": "An unexpected error occurred", "details": str(e)}
 
+
+# --- Describe Framework tool ---
+@mcp.tool()
+async def describe_framework(
+    parent: str,
+    framework_name: str,
+) -> Dict[str, Any]:
+    """Name: describe_framework
+
+    Description: Returns the list of control descriptions under the given framework for a parent resource.
+    Parameters:
+    parent (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
+    framework_name (required): The full resource name of the framework to describe.
+    """
+    if not config_client:
+        return {"error": "Cloud Security Compliance Config Client not initialized."}
+
+    logger.info(f"Describing framework '{framework_name}' for parent: {parent}")
+
+    try:
+        # Step 1: List all frameworks for the parent
+        request_args = {
+            "parent": f"{parent}/locations/global",
+            "page_size": 100,
+        }
+        all_frameworks = config_client.list_frameworks(request=request_args)
+        selected_framework = None
+
+        # Step 2: Filter out the framework matching the given name
+        
+        for framework in all_frameworks.frameworks:
+            if framework.name == framework_name:
+                selected_framework = framework
+                break
+
+        logger.info(f"Selected framework: {selected_framework}")
+
+        if not selected_framework:
+            logger.error(f"Framework '{framework_name}' not found under parent '{parent}'.")
+            return {"error": "Framework not found", "details": f"Framework '{framework_name}' not found under parent '{parent}'."}
+
+        # Step 3: Get control names from the selected framework
+        control_names = [control.name for control in getattr(selected_framework, "cloud_control_details", [])]
+        if not control_names:
+            return {"controls": []}
+
+        # Step 4: Call ListCloudControls API to get control descriptions
+        controls_request = {
+            "parent": f"{parent}/locations/global",
+        }
+        controls_response = config_client.list_cloud_controls(request=controls_request)
+
+        # Step 5: Return a list of cloud control descriptions
+        control_descriptions = []
+        for control in controls_response.cloud_controls:
+            if control.name in control_names:
+              control_descriptions.append(control.description)
+
+        return {
+            "controls": control_descriptions
+        }
+
+    except google_exceptions.NotFound as e:
+        logger.error(f"Parent resource or framework not found: {parent}: {e}")
+        return {"error": "Not Found", "details": f"Could not find parent resource or framework. {str(e)}"}
+    except google_exceptions.PermissionDenied as e:
+        logger.error(f"Permission denied for describing framework on {parent}: {e}")
+        return {"error": "Permission Denied", "details": str(e)}
+    except google_exceptions.InvalidArgument as e:
+        logger.error(f"Invalid argument for describing framework on {parent}: {e}")
+        return {"error": "Invalid Argument", "details": str(e)}
+    except Exception as e:
+        logger.error(f"An unexpected error occurred describing framework: {e}", exc_info=True)
+        return {"error": "An unexpected error occurred", "details": str(e)}
+
 # --- List Constraints tool ---
 @mcp.tool()
 async def list_constraints(
+    framework_name: str,
     parent: str
 ) -> Dict[str, str]:
     """Name: list all available constraints
