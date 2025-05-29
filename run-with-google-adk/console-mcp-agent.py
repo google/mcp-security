@@ -86,6 +86,8 @@ async def get_all_tools():
   secops_tools = []
   gti_tools = []
   secops_soar_tools = []
+  scc_tools = []
+  compliance_tools = []
   exit_stack = AsyncExitStack()
 
   uv_dir_prefix="../server"
@@ -153,9 +155,22 @@ async def get_all_tools():
                 ),async_exit_stack=exit_stack
     )  
 
+  if os.environ.get("LOAD_COMPLIANCE_MCP") == "Y":
+    compliance_tools, exit_stack = await MCPToolset.from_server(
+            connection_params=StdioServerParameters(
+                command='uv',
+                args=[ "--directory",
+                        uv_dir_prefix + "/compliance/",
+                        "run",
+                        "compliance_mcp.py"
+                    ],
+                ),async_exit_stack=exit_stack
+    )  
+
 
   logging.info("MCP Toolsets created successfully.")
-  return secops_tools+gti_tools+secops_soar_tools+scc_tools, exit_stack
+  all_tools = secops_tools + gti_tools + secops_soar_tools + scc_tools + compliance_tools
+  return all_tools, exit_stack
 
 async def get_agent_async():
   """Gets tools from MCP Server."""
