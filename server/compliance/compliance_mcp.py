@@ -72,6 +72,7 @@ def proto_message_to_dict(message: Any) -> Dict[str, Any]:
 
 # --- Cloud Security Compliance Tools ---
 
+# --- List Frameworks tool ---
 @mcp.tool()
 async def list_frameworks(
     parent: str,
@@ -91,10 +92,13 @@ async def list_frameworks(
     logger.info(f"Listing frameworks for parent: {parent}")
 
     try:
+        # Append "/locations/global" to parent as required by the API
         request_args = {
-            "parent": parent,
+            "parent": f"{parent}/locations/global",
             "page_size": page_size,
         }
+        logger.info(f"Request args for list_frameworks: {request_args}")
+        
 
         response_pager = config_client.list_frameworks(request=request_args)
 

@@ -34,6 +34,8 @@ async def get_all_tools():
   gti_tools = []
   secops_soar_tools = []
   scc_tools = []  # Initialize scc_tools
+  compliance_tools = []  # Initialize compliance_tools
+
   exit_stack = AsyncExitStack()
   uv_dir_prefix="../server"
   env_file_path = "../../../run-with-google-adk/google-mcp-security-agent/.env"
@@ -98,11 +100,23 @@ async def get_all_tools():
                         "scc_mcp.py"
                     ],
                 ),async_exit_stack=exit_stack
-    )  
+    )
+
+  if os.environ.get("LOAD_COMPLIANCE_MCP") == "Y":
+    compliance_tools, exit_stack = await MCPToolset.from_server(
+            connection_params=StdioServerParameters(
+                command='uv',
+                args=[ "--directory",
+                        uv_dir_prefix + "/compliance/",
+                        "run",
+                        "compliance_mcp.py"
+                    ],
+                ),async_exit_stack=exit_stack
+    )    
 
 
   logging.info("MCP Toolsets created successfully.")
-  return secops_tools+gti_tools+secops_soar_tools+scc_tools, exit_stack
+  return secops_tools+gti_tools+secops_soar_tools+scc_tools+compliance_tools, exit_stack
 
 def make_tools_gemini_compatible(tools):
   """
