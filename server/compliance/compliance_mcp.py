@@ -83,7 +83,7 @@ async def list_frameworks(
     Description: Lists available compliance frameworks for a given parent resource (organization, folder, or project).
                  Returns information about available compliance frameworks and their details.
     Parameters:
-    parent (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
+    parent (required): The parent resource name. Currently only supports 'organization' type resource (e.g., 'organizations/123456').
     page_size (optional): The maximum number of frameworks to return. Defaults to 50.
     """
     if not config_client:
@@ -154,7 +154,7 @@ async def describe_framework(
 
     Description: Returns the list of control descriptions under the given framework for a parent resource.
     Parameters:
-    parent (required): The parent resource name (e.g., 'organizations/123456', 'folders/123456', or 'projects/my-project').
+    parent (required): The parent resource name. Currently only supports 'organization' type resource (e.g., 'organizations/123456').
     framework_name (required): The full resource name of the framework to describe.
     """
     if not config_client:
@@ -221,7 +221,6 @@ async def describe_framework(
 # --- List Constraints tool ---
 @mcp.tool()
 async def list_constraints(
-    framework_name: str,
     parent: str
 ) -> Dict[str, str]:
     """Name: list all available constraints
