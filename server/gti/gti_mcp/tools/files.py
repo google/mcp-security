@@ -92,14 +92,15 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
     hash (required): The MD5, SHA-1, or SHA-256 hash of the file to analyze.
   Example: '8ab2cf...', 'e4d909c290d0...', etc.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "files",
-      "file",
-      hash,
-      relationships=FILE_KEY_RELATIONSHIPS,
-      params={"exclude_attributes": "last_analysis_results"}
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "files",
+        "file",
+        hash,
+        relationships=FILE_KEY_RELATIONSHIPS,
+        params={"exclude_attributes": "last_analysis_results"}
+    )
   return utils.sanitize_response(res)
 
 
@@ -175,13 +176,14 @@ async def get_entities_related_to_a_file(
             f"Available relationships are: {','.join(FILE_RELATIONSHIPS)}"
         }
 
-    res = await utils.fetch_object_relationships(
-        vt_client(ctx), 
-        "files",
-        hash, 
-        relationships=[relationship_name],
-        descriptors_only=descriptors_only,
-        limit=limit)
+    async with vt_client(ctx) as client:
+      res = await utils.fetch_object_relationships(
+          client, 
+          "files",
+          hash, 
+          relationships=[relationship_name],
+          descriptors_only=descriptors_only,
+          limit=limit)
     return utils.sanitize_response(res.get(relationship_name, []))
 
 
@@ -200,22 +202,23 @@ async def get_file_behavior_report(
   Returns:
     The file behaviour report.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "file_behaviours",
-      "file_behaviour",
-      file_behaviour_id,
-      relationships=[
-          "contacted_domains",
-          "contacted_ips",
-          "contacted_urls",
-          "dropped_files",
-          "embedded_domains",
-          "embedded_ips",
-          "embedded_urls",
-          "associations",
-      ],
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "file_behaviours",
+        "file_behaviour",
+        file_behaviour_id,
+        relationships=[
+            "contacted_domains",
+            "contacted_ips",
+            "contacted_urls",
+            "dropped_files",
+            "embedded_domains",
+            "embedded_ips",
+            "embedded_urls",
+            "associations",
+        ],
+    )
   return utils.sanitize_response(res)
 
 
@@ -228,9 +231,9 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
   Returns:
     The file behavior summary.
   """
-
-  res = await vt_client(ctx).get_async(f"/files/{hash}/behaviour_summary")
-  res = await res.json_async()
+  async with vt_client(ctx) as client:
+    res = await client.get_async(f"/files/{hash}/behaviour_summary")
+    res = await res.json_async()
   return utils.sanitize_response(res["data"])
 
 
@@ -245,10 +248,11 @@ async def analyse_file(file_path: str, ctx: Context):
   Returns:
     The analysis report.
   """
-  with open(file_path, "rb") as f:
-    analysis = await vt_client(ctx).scan_file_async(file=f)
-    logging.info(f"File {file_path} uploaded.")
+  async with vt_client(ctx) as client:
+    with open(file_path, "rb") as f:    
+      analysis = await client.scan_file_async(file=f)
+      logging.info(f"File {file_path} uploaded.")
 
-  res = await vt_client(ctx).wait_for_analysis_completion(analysis)
-  logging.info(f"Analysis has completed with ID %s", res.id)
-  return utils.sanitize_response(res.to_dict())
+    res = await client.wait_for_analysis_completion(analysis)
+    logging.info(f"Analysis has completed with ID %s", res.id)
+    return utils.sanitize_response(res.to_dict())

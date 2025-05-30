@@ -71,13 +71,14 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
   Returns:
     A collection object. Put attention to the collection type to correctly understand what it represents.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "collections",
-      "collection",
-      id,
-      relationships=COLLECTION_KEY_RELATIONSHIPS,
-      params={"exclude_attributes": COLLECTION_EXCLUDED_ATTRS})
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "collections",
+        "collection",
+        id,
+        relationships=COLLECTION_KEY_RELATIONSHIPS,
+        params={"exclude_attributes": COLLECTION_EXCLUDED_ATTRS})
   return res
 
 
@@ -119,14 +120,14 @@ async def get_entities_related_to_a_collection(
           "error": f"Relationship {relationship_name} does not exist. "
           f"Available relationships are: {','.join(COLLECTION_RELATIONSHIPS)}"
       }
-
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx), 
-      "collections", 
-      id, 
-      [relationship_name],
-      descriptors_only=descriptors_only,
-      limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client, 
+        "collections", 
+        id, 
+        [relationship_name],
+        descriptors_only=descriptors_only,
+        limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))
 
 
@@ -152,17 +153,18 @@ async def _search_threats_by_collection_type(
       raise ValueError(
           f"wrong collection_type. Available collection_type are: {','.join(COLLECTION_TYPES)} ")
 
-  res = await utils.consume_vt_iterator(
-      vt_client(ctx),
-      "/collections",
-      params={
-          "filter": f"collection_type:{collection_type} {query}",
-          "order": order_by,
-          "relationships": COLLECTION_KEY_RELATIONSHIPS,
-          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
-      },
-      limit=limit,
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client,
+        "/collections",
+        params={
+            "filter": f"collection_type:{collection_type} {query}",
+            "order": order_by,
+            "relationships": COLLECTION_KEY_RELATIONSHIPS,
+            "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+        },
+        limit=limit,
+    )
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
@@ -213,17 +215,19 @@ async def search_threats(
     filter += f"collection_type:{collection_type} "
   if query:
     filter += query
-  res = await utils.consume_vt_iterator(
-      vt_client(ctx),
-      "/collections",
-      params={
-          "filter": filter,
-          "order": order_by,
-          "relationships": COLLECTION_KEY_RELATIONSHIPS,
-          "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
-      },
-      limit=limit,
-  )
+  
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client,
+        "/collections",
+        params={
+            "filter": filter,
+            "order": order_by,
+            "relationships": COLLECTION_KEY_RELATIONSHIPS,
+            "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+        },
+        limit=limit,
+    )
   res = utils.sanitize_response([o.to_dict() for o in res])
   return res
 
@@ -383,8 +387,9 @@ async def get_collection_timeline_events(id: str, ctx: Context):
   Return:
     List of events related to the given collection.
   """
-  data = await vt_client(ctx).get_async(f"/collections/{id}/timeline/events")
-  data = await data.json_async()
+  async with vt_client(ctx) as client:
+    data = await client.get_async(f"/collections/{id}/timeline/events")
+    data = await data.json_async()
   return utils.sanitize_response(data["data"])
 
 
@@ -397,7 +402,8 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
   Return:
     A dictionary including the tactics and techniques associated to the given threat.
   """
-  data = await vt_client(ctx).get_async(f"/collections/{id}/mitre_tree")
-  data = await data.json_async()
+  async with vt_client(ctx) as client:
+    data = await client.get_async(f"/collections/{id}/mitre_tree")
+    data = await data.json_async()
   return utils.sanitize_response(data["data"])
 

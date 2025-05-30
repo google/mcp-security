@@ -44,10 +44,8 @@ async def fixture_mock_vt_client(
       host=f"http://{make_httpserver_ipv4.host}:{make_httpserver_ipv4.port}",
       timeout=500,
   )
-  m = mock.AsyncMock()
-  m.return_value = client
-  session_mocker.patch("gti_mcp.server.new_vt_client", side_effect=m)
-  return m
+  session_mocker.patch("gti_mcp.server.vt_client_factory", return_value=client)
+  return client
 
 
 @pytest.fixture(name="vt_get_object_mock")
