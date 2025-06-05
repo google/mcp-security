@@ -261,3 +261,48 @@ async def list_rule_errors(
     except Exception as e:
         logger.error(f'Unexpected error listing rule errors for {rule_id}: {str(e)}', exc_info=True)
         return {'error': f'Unexpected error: {str(e)}', 'errors': []}
+    
+@server.tool()
+async def validate_security_rules(
+    project_id: str = None,
+    customer_id: str = None,
+    region: str = None,
+    rule_text= str,
+
+) -> Dict[str, Any]:
+    """Validate security detection rules in YARA-L2 format.
+
+    Sends a YL2 rule to the Google SecOps API for validation
+
+    **Workflow Integration:**
+    - Useful for testing rules before they are deployed, or while they are being developed.
+    - Can help identify errors in YARA-L syntax or structure.
+    - Provides feedback furing rule development cycle.
+
+    **Use Cases:**
+    - Review the syntax and structure of a specific YARA-L detection.
+    - Determine if a rule is written correctly.
+    - Provide feedback on how to fix syntax and structure errors in a rule.
+
+    Args:
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+
+    Returns:
+        Dict[str, Any]: Response from the Chronicle API.  Returns "true" if the rule is valid, any other response is an error.
+
+    Next Steps (using MCP-enabled tools):
+        - Analyze any error messages.
+        - Make changes to the rule to resolve any errors.
+        - Use insights for rule optimization, false positive analysis, or developing related detections.
+        - validate rule again to ensure errors are gone
+    """
+    try:
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        validate_response = chronicle.validate_rule(rule_text)
+        return validate_response
+    except Exception as e:
+        logger.error(f'Error validating security rules: {str(e)}', exc_info=True)
+        return {'error': str(e), 'rules': []}
+
