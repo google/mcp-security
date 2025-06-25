@@ -2,6 +2,8 @@
 
 This server provides tools for interacting with a Security Orchestration, Automation, and Response (SOAR) platform, specifically Google SecOps SOAR (formerly Siemplify). It includes core case management functionalities and dynamically loads integration-specific tools.
 
+**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline
+
 ## Configuration
 
 ### Prerequisites
@@ -12,13 +14,12 @@ This server provides tools for interacting with a Security Orchestration, Automa
 
 ### MCP Server Configuration
 
-Add the following configuration to your MCP client's settings file:
+Add the following configuration to your MCP settings file:
 
 ```json
 "secops-soar": {
       "command": "uv",
       "args": [
-
         "--directory",
         "/path/to/the/repo/server/secops-soar",
         "run",
@@ -30,9 +31,6 @@ Add the following configuration to your MCP client's settings file:
         "SOAR_URL": "https://your-soar-instance.example.com",
         "SOAR_APP_KEY": "your-soar-api-key"
       },
-      "disabled": false,
-      "autoApprove": []
-          },
       "disabled": false,
       "autoApprove": []
     }

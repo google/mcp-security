@@ -2,6 +2,8 @@
 
 This server provides tools for interacting with the Google Threat Intelligence (VirusTotal) API.
 
+**Supported Clients:** Gemini CLI, Claude Desktop|Code
+
 ## Configuration
 
 To use this server, you need a VirusTotal API key:
@@ -12,7 +14,7 @@ To use this server, you need a VirusTotal API key:
 
 ### MCP Server Configuration
 
-Add the following configuration to your MCP client's settings file:
+Add the following configuration to your MCP settings file:
 
 ```json
 "gti": {
@@ -30,6 +32,7 @@ Add the following configuration to your MCP client's settings file:
       "autoApprove": []
     }
 ```
+
 
 #### `--env-file`
 
