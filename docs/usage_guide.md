@@ -1,6 +1,6 @@
 # Using the Google Security MCP Servers
 
-This guide will help you get started with using the MCP servers to access Google's security products and services from Claude Desktop or other MCP-compatible clients.
+This guide will help you get started with using the MCP servers to access Google's security products and services from Gemini CLI, Claude Desktop|Code, Cline, or other MCP-compatible clients.
 
 ## Prerequisites
 

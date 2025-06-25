@@ -2,7 +2,7 @@
 
 This server provides tools for interacting with Chronicle Security Operations using the `secops-py` library.
 
-**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline
+**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline, etc.
 
 > This MCP server is built on top of the official [Google SecOps SDK for Python](https://github.com/google/secops-wrapper), which provides a comprehensive wrapper for Google Security Operations APIs.
 
@@ -17,7 +17,7 @@ This server provides tools for interacting with Chronicle Security Operations us
 ### MCP Server Configuration
 
 
-Add the following configuration to your MCP settings file:
+Add the following configuration to your MCP client's settings file:
 
 ```json
 "secops": {

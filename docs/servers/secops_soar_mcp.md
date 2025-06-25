@@ -2,7 +2,7 @@
 
 This server provides tools for interacting with a Security Orchestration, Automation, and Response (SOAR) platform, specifically Google SecOps SOAR (formerly Siemplify). It includes core case management functionalities and dynamically loads integration-specific tools.
 
-**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline
+**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline, etc.
 
 ## Configuration
 
@@ -14,7 +14,7 @@ This server provides tools for interacting with a Security Orchestration, Automa
 
 ### MCP Server Configuration
 
-Add the following configuration to your MCP settings file:
+Add the following configuration to your MCP client's settings file:
 
 ```json
 "secops-soar": {
