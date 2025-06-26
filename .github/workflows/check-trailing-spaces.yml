@@ -1,0 +1,99 @@
+name: Check Trailing Spaces
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-trailing-spaces:
+    runs-on: ubuntu-latest
+    name: Check for trailing spaces
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for git diff
+
+      - name: Check for trailing spaces in changed lines
+        run: |
+          echo "Checking for trailing spaces in changed lines..."
+
+          # Get the base branch (usually main or master)
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          echo "Base branch: $BASE_BRANCH"
+
+          # Get the list of changed files with specific extensions
+          echo "Getting changed files..."
+          CHANGED_FILES=$(git diff -U0 --name-only origin/$BASE_BRANCH...HEAD | grep -E '\.(py|md|json|yaml|yml|txt|sh|js|ts|jsx|tsx|css|html|xml)$' || true)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "✅ No relevant files changed in this PR"
+            exit 0
+          fi
+
+          echo "Changed files to check:"
+          echo "$CHANGED_FILES"
+          echo ""
+
+          # Initialize variables
+          files_with_trailing_spaces=""
+          has_trailing_spaces=false
+
+          # Check each changed file
+          for file in $CHANGED_FILES; do
+            if [ ! -f "$file" ]; then
+              echo "Skipping deleted file: $file"
+              continue
+            fi
+
+            echo "Checking changed lines in: $file"
+
+            # Get the diff for added/modified lines only (lines starting with +)
+            # and check if any of them have trailing spaces
+            LINES_WITH_TRAILING_SPACES=$(git diff -U0 origin/$BASE_BRANCH...HEAD "$file" | \
+              grep '^+' | \
+              grep -v '^+++' | \
+              grep '[[:space:]]$' || true)
+
+            if [ -n "$LINES_WITH_TRAILING_SPACES" ]; then
+              echo "❌ Trailing spaces found in changed lines of: $file"
+              files_with_trailing_spaces="${files_with_trailing_spaces}$file\n"
+              has_trailing_spaces=true
+
+              # Show the problematic lines
+              echo "  Changed lines with trailing spaces:"
+              echo "$LINES_WITH_TRAILING_SPACES" | head -5
+              echo ""
+
+              # Show specific line numbers in the file
+              echo "  Line numbers in $file:"
+              git diff -U0 origin/$BASE_BRANCH...HEAD "$file" | \
+                grep -n '^+.*[[:space:]]$' | \
+                grep -v '^[0-9]*:+++ ' | \
+                head -5
+              echo ""
+            else
+              echo "✅ No trailing spaces in changed lines of: $file"
+            fi
+          done
+
+          # Check if any trailing spaces were found
+          if [ "$has_trailing_spaces" = true ]; then
+            echo "::error::Trailing spaces detected in changed lines of the following files:"
+            echo -e "$files_with_trailing_spaces"
+            echo ""
+            echo "Please remove trailing spaces from the lines you modified."
+            echo "You can use the following command to remove trailing spaces:"
+            echo "  sed -i 's/[[:space:]]*$//' <filename>"
+            echo ""
+            echo "Or to remove trailing spaces from specific files:"
+            for file in $CHANGED_FILES; do
+              if [ -f "$file" ]; then
+                echo "  sed -i 's/[[:space:]]*$//' $file"
+              fi
+            done
+            exit 1
+          else
+            echo "✅ No trailing spaces found in changed lines!"
+          fi
