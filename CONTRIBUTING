@@ -36,11 +36,13 @@ information on using pull requests.
 
 All pull requests must pass automated code quality checks, including:
 
-- **Trailing spaces check**: Our CI pipeline will automatically check for trailing spaces in code files. If trailing spaces are detected, the check will fail and provide guidance on how to fix them. To remove trailing spaces from your files before submitting:
+- **Trailing spaces check**: Our CI pipeline will automatically check for trailing spaces in **changed lines only** (using `git diff -U0`). If trailing spaces are detected in lines you modified, the check will fail and provide guidance on how to fix them. To remove trailing spaces from your changes before submitting:
   ```bash
   # Remove trailing spaces from a specific file
   sed -i 's/[[:space:]]*$//' filename
   
-  # Remove trailing spaces from all relevant files
-  find . -type f \( -name '*.py' -o -name '*.md' -o -name '*.json' -o -name '*.yaml' -o -name '*.yml' \) -exec sed -i 's/[[:space:]]*$//' {} +
+  # To see which lines have trailing spaces in your changes:
+  git diff -U0 | grep '^+' | grep -v '^+++' | grep '[[:space:]]$'
   ```
+  
+  **Note**: Our CI only checks the lines you've modified, not the entire file. This keeps your pull request focused on your changes and avoids introducing unrelated formatting changes.
