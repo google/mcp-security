@@ -85,7 +85,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_collection(
     id: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
