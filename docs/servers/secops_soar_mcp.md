@@ -20,9 +20,9 @@ Add the following configuration to your MCP client's settings file:
       "args": [
 
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
-        "secops_soar_mcp.py",
+        "server.py",
         "--integrations",
         "CSV,OKTA"
       ],
@@ -49,11 +49,11 @@ Your revised config would then be:
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
         "--env-file",
         "/path/to/the/repo/.env",
-        "secops_soar_mcp.py",
+        "server.py",
         "--integrations",
         "CSV,OKTA"
       ],
