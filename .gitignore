@@ -201,3 +201,7 @@ app_data.db
 # Don't commit the evaluation data
 *.evalset.json
 .adk/
+
+
+run-with-google-adk/libs/markdown
+run-with-google-adk/libs/markdown-3.8.2.dist-info

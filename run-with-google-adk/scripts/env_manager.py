@@ -8,6 +8,7 @@ including validation, template generation, and configuration display.
 
 import os
 import sys
+import uuid
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -36,10 +37,10 @@ class EnvManager:
                 "CHRONICLE_REGION",
             ],
             "gti": ["VT_APIKEY"],
-            "soar": ["SOAR_URL", "SOAR_APP_KEY"],
+            "secops_soar": ["SOAR_URL", "SOAR_APP_KEY"],
             "scc": [],  # No additional vars needed
         },
-        "agent_engine": ["AGENT_ENGINE_RESOURCE_NAME", "GCS_STAGING_BUCKET"],
+        "agent_engine": [],
         "agentspace": [
             "AGENTSPACE_PROJECT_ID",
             "AGENTSPACE_PROJECT_NUMBER",
@@ -49,6 +50,7 @@ class EnvManager:
         "oauth": ["OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET", "OAUTH_AUTH_ID"],
         "vertex_ai": ["GOOGLE_CLOUD_PROJECT", "GOOGLE_CLOUD_LOCATION"],
         "gemini_api": ["GOOGLE_API_KEY"],
+        "cloudrun": [],  # Cloud Run deployment doesn't require MCP configs
     }
 
     # Sensitive variables that should be masked
@@ -69,7 +71,16 @@ class EnvManager:
             env_file: Path to the environment file.
         """
         self.env_file = env_file
+        print(f"DEBUG: Loading env file from: {self.env_file.resolve()}")
         self.env_vars = self._load_env()
+
+    def _is_uuid(self, value: str) -> bool:
+        """Check if a string is a valid UUID."""
+        try:
+            uuid.UUID(value)
+            return True
+        except ValueError:
+            return False
 
     def _load_env(self) -> Dict[str, str]:
         """Load environment variables from file and system environment."""
@@ -109,11 +120,16 @@ class EnvManager:
         # MCP server requirements
         for server, variables in required["mcp_servers"].items():
             if self.env_vars.get(f"LOAD_{server.upper()}_MCP") == "true":
-                missing_vars.extend(
-                    v
-                    for v in variables
-                    if not self.env_vars.get(v) or self.env_vars.get(v) == "NOT_SET"
-                )
+                for var in variables:
+                    value = self.env_vars.get(var)
+                    if not value or value == "NOT_SET":
+                        missing_vars.append(var)
+                    elif var == "CHRONICLE_CUSTOMER_ID" and not self._is_uuid(value):
+                        missing_vars.append(f"{var} (must be a valid UUID4)")
+                    elif var == "SOAR_URL" and not value.startswith("https://"):
+                        missing_vars.append(f"{var} (must start with https://)")
+                    elif var == "SOAR_APP_KEY" and not self._is_uuid(value):
+                        missing_vars.append(f"{var} (must be a valid UUID)")
 
         # Deployment-specific requirements
         if deployment_type in required:
@@ -170,7 +186,6 @@ class EnvManager:
             ],
             "Agent Engine": [
                 "AGENT_ENGINE_RESOURCE_NAME",
-                "AE_STAGING_BUCKET",
                 "GCS_STAGING_BUCKET",
                 "AGENT_DISPLAY_NAME",
                 "AGENT_DESCRIPTION",
