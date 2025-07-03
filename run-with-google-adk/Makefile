@@ -256,7 +256,7 @@ endif
 	@echo "Check the new directory for your agent files."
 
 # ADK deployment targets
-adk-deploy: env-validate-agent-engine
+adk-deploy:
 	@# Use agents/google_mcp_security_agent directory if AGENT_DIR not specified
 	$(eval AGENT_DIR := $(or $(AGENT_DIR),agents/google_mcp_security_agent))
 	@echo "Deploying agent from directory: $(AGENT_DIR)"
@@ -264,31 +264,41 @@ adk-deploy: env-validate-agent-engine
 		echo "Error: Directory $(AGENT_DIR) does not exist"; \
 		exit 1; \
 	fi
+	@# Install markdown
+	@echo "Installing markdown..."
+	@pip install markdown
+	@# Copy libs to agent directory for deployment
+	@echo "Copying libs to $(AGENT_DIR)..."
+	@cp -R libs "$(AGENT_DIR)/"
 	@# Use environment variables with proper fallbacks
 	$(eval PROJECT := $(or $(PROJECT),$(GOOGLE_CLOUD_PROJECT)))
 	$(eval REGION := $(or $(REGION),$(GOOGLE_CLOUD_LOCATION),us-central1))
 	$(eval DISPLAY_NAME := $(or $(DISPLAY_NAME),$(AGENT_DISPLAY_NAME),"Google Security Agent"))
 	$(eval STAGING_BUCKET := $(or $(STAGING_BUCKET),$(GCS_STAGING_BUCKET)))
 	@# Generate staging bucket if not provided
-	@if [ -z "$(STAGING_BUCKET)" ]; then \
-		$(eval STAGING_BUCKET := gs://agent-deploy-$(PROJECT)-$(shell date +%Y%m%d-%H%M%S)); \
-		echo "Generated staging bucket: $(STAGING_BUCKET)"; \
-	fi
-	@echo "Deployment configuration:"
-	@echo "  PROJECT: $(PROJECT)"
-	@echo "  REGION: $(REGION)"
-	@echo "  DISPLAY_NAME: $(DISPLAY_NAME)"
-	@echo "  STAGING_BUCKET: $(STAGING_BUCKET)"
-	@echo "  AGENT_DIR: $(AGENT_DIR)"
-	@echo ""
-	@echo "Deploying agent to Agent Engine..."
+	@BUCKET_TO_USE='$(STAGING_BUCKET)'; \
+	if [ -z "$$BUCKET_TO_USE" ]; then \
+		BUCKET_TO_USE="gs://agent-deploy-$(PROJECT)-$(shell date +%Y%m%d-%H%M%S)"; \
+		echo "Generated staging bucket: $$BUCKET_TO_USE"; \
+	fi; \
+	echo "Deployment configuration:"; \
+	echo "  PROJECT: $(PROJECT)"; \
+	echo "  REGION: $(REGION)"; \
+	echo "  DISPLAY_NAME: $(DISPLAY_NAME)"; \
+	echo "  STAGING_BUCKET: $$BUCKET_TO_USE"; \
+	echo "  AGENT_DIR: $(AGENT_DIR)"; \
+	echo ""; \
+	echo "Deploying agent to Agent Engine..."; \
 	adk deploy agent_engine \
 		--project $(PROJECT) \
 		--region $(REGION) \
-		--staging_bucket '$(STAGING_BUCKET)' \
+		--staging_bucket "$$BUCKET_TO_USE" \
 		--display_name '$(DISPLAY_NAME)' \
 		$(if $(TRACE),--trace_to_cloud) \
-		$(AGENT_DIR)
+		$(AGENT_DIR);
+	@# Clean up copied libs
+	@echo "Cleaning up copied libs from $(AGENT_DIR)..."
+	@rm -rf "$(AGENT_DIR)/libs"
 	@echo ""
 	@echo "✓ Agent deployed successfully!"
 	@echo ""

@@ -40,7 +40,7 @@ class EnvManager:
             "secops_soar": ["SOAR_URL", "SOAR_APP_KEY"],
             "scc": [],  # No additional vars needed
         },
-        "agent_engine": ["AGENT_ENGINE_RESOURCE_NAME", "GCS_STAGING_BUCKET"],
+        "agent_engine": [],
         "agentspace": [
             "AGENTSPACE_PROJECT_ID",
             "AGENTSPACE_PROJECT_NUMBER",
@@ -184,7 +184,6 @@ class EnvManager:
             ],
             "Agent Engine": [
                 "AGENT_ENGINE_RESOURCE_NAME",
-                "AE_STAGING_BUCKET",
                 "GCS_STAGING_BUCKET",
                 "AGENT_DISPLAY_NAME",
                 "AGENT_DESCRIPTION",

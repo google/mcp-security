@@ -128,10 +128,10 @@ def create_agent() -> LlmAgent:
 
 def main() -> None:
     """Main execution function."""
-    global root_agent
-    root_agent = create_agent()
     logging.info("Agent created successfully.")
 
 
 if __name__ == "__main__":
     main()
+
+root_agent = create_agent()
