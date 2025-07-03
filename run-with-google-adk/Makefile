@@ -24,13 +24,14 @@ MANAGE_AGENTS := $(PYTHON) scripts/manage_agents.py
 ENV_FILE_PATH := agents/google_mcp_security_agent/.env
 ENV_MANAGER := $(PYTHON) scripts/env_manager.py
 
-.PHONY: help env-check env-update config-show oauth-client oauth-uri oauth-link oauth-verify oauth-setup docs agents-list agents-delete multi-agent-setup multi-agent-run multi-agent-web cookiecutter-setup cookiecutter-run cookiecutter-new-agent adk-deploy adk-redeploy agentspace-register agentspace-update agentspace-verify agentspace-delete agentspace-url cloudrun-deploy cloudrun-run cloudrun-test cloudrun-logs cloudrun-url cloudrun-delete gcloud-proxy test-agent
+.PHONY: help env-setup env-check env-update config-show oauth-client oauth-uri oauth-link oauth-verify oauth-setup docs agents-list agents-delete multi-agent-setup multi-agent-run multi-agent-web cookiecutter-setup cookiecutter-run cookiecutter-new-agent adk-deploy adk-redeploy agentspace-register agentspace-update agentspace-verify agentspace-delete agentspace-url cloudrun-deploy cloudrun-run cloudrun-test cloudrun-logs cloudrun-url cloudrun-delete gcloud-proxy test-agent
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@echo "Available targets:"
 	@echo ""
 	@echo "Environment Management:"
+	@echo "  env-setup       - Create .env from .env.sample"
 	@echo "  env-check       - Validate required environment variables"
 	@echo "  config-show     - Display current configuration (masks secrets)"
 	@echo "  env-update      - Update environment variable"
@@ -93,6 +94,17 @@ help:
 	@echo "  make agentspace-url"
 
 # Environment Management targets
+env-setup:
+	@echo "Creating .env file from example..."
+	@if [ -f "agents/google_mcp_security_agent/.env.example" ]; then \
+		cp agents/google_mcp_security_agent/.env.example agents/google_mcp_security_agent/.env; \
+		echo "✓ .env file created successfully."; \
+		echo "Please review and update the values in agents/google_mcp_security_agent/.env"; \
+	else \
+		echo "Error: agents/google_mcp_security_agent/.env.example not found."; \
+		exit 1; \
+	fi
+
 env-check:
 	@echo "Checking environment configuration..."
 	@$(ENV_MANAGER) check --env-file $(ENV_FILE_PATH) --deployment $(or $(DEPLOYMENT),base)
