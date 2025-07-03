@@ -1,11 +1,7 @@
 # Makefile for ADK Runbooks project
 #
 
-# Environment file
-ifneq (,$(wildcard ./agents/google_mcp_security_agent/.env))
-    include ./agents/google_mcp_security_agent/.env
-    export
-endif
+# Environment file is now loaded by the env_manager.py script
 
 # Python executable (use activated venv if available)
 PYTHON := python3
@@ -271,8 +267,8 @@ adk-deploy:
 	@echo "Copying libs to $(AGENT_DIR)..."
 	@cp -R libs "$(AGENT_DIR)/"
 	@# Use environment variables with proper fallbacks
-	$(eval PROJECT := $(or $(PROJECT),$(GOOGLE_CLOUD_PROJECT)))
-	$(eval REGION := $(or $(REGION),$(GOOGLE_CLOUD_LOCATION),us-central1))
+	$(eval PROJECT := $(or $(PROJECT),$(shell grep "^GOOGLE_CLOUD_PROJECT=" $(ENV_FILE_PATH) | cut -d= -f2)))
+	$(eval REGION := $(or $(REGION),$(shell grep "^GOOGLE_CLOUD_LOCATION=" $(ENV_FILE_PATH) | cut -d= -f2),us-central1))
 	$(eval DISPLAY_NAME := $(or $(DISPLAY_NAME),$(AGENT_DISPLAY_NAME),"Google Security Agent"))
 	$(eval STAGING_BUCKET := $(or $(STAGING_BUCKET),$(GCS_STAGING_BUCKET)))
 	@# Generate staging bucket if not provided
@@ -333,22 +329,13 @@ agentspace-url:
 # Cloud Run deployment targets
 cloudrun-deploy: env-check
 	@echo "Deploying agent to Cloud Run..."
-	@# Validate required environment variables
-	@if [ -z "$(GOOGLE_CLOUD_PROJECT)" ]; then \
-		echo "Error: GOOGLE_CLOUD_PROJECT not set in .env"; \
-		exit 1; \
-	fi
-	@if [ -z "$(GOOGLE_CLOUD_LOCATION)" ]; then \
-		echo "Error: GOOGLE_CLOUD_LOCATION not set in .env"; \
-		exit 1; \
-	fi
 	@echo "Deployment configuration:"
-	@echo "  PROJECT: $(GOOGLE_CLOUD_PROJECT)"
-	@echo "  REGION: $(GOOGLE_CLOUD_LOCATION)"
+	@echo "  PROJECT: $$(grep GOOGLE_CLOUD_PROJECT $(ENV_FILE_PATH) | cut -d= -f2)"
+	@echo "  REGION: $$(grep GOOGLE_CLOUD_LOCATION $(ENV_FILE_PATH) | cut -d= -f2)"
 	@echo "  SERVICE: mcp-security-agent-service"
 	@echo ""
-	@# Run the deployment script from parent directory
-	@cd .. && bash ./run-with-google-adk/scripts/cloudrun_deploy_run.sh deploy
+	@# Run the deployment script
+	@bash ./scripts/cloudrun_deploy_run.sh deploy
 	@echo ""
 	@echo "✓ Cloud Run deployment complete!"
 	@echo ""
@@ -381,8 +368,8 @@ cloudrun-test:
 
 cloudrun-logs:
 	@echo "Viewing Cloud Run logs..."
-	$(eval PROJECT := $(or $(PROJECT),$(GOOGLE_CLOUD_PROJECT)))
-	$(eval REGION := $(or $(REGION),$(GOOGLE_CLOUD_LOCATION),us-central1))
+	$(eval PROJECT := $(or $(PROJECT),$(shell grep "^GOOGLE_CLOUD_PROJECT=" $(ENV_FILE_PATH) | cut -d= -f2)))
+	$(eval REGION := $(or $(REGION),$(shell grep "^GOOGLE_CLOUD_LOCATION=" $(ENV_FILE_PATH) | cut -d= -f2),us-central1))
 	$(eval SERVICE := mcp-security-agent-service)
 	gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=$(SERVICE)" \
 		--project $(PROJECT) \

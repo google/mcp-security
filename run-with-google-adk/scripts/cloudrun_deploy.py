@@ -13,13 +13,17 @@
 # limitations under the License.
 
 import os
+import sys
+
+# Add the run-with-google-adk directory to Python path for libs imports
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "run-with-google-adk"))
 
 import uvicorn
 from fastapi import FastAPI
 from google.adk.cli.fast_api import get_fast_api_app
 
 # Get the directory where main.py is located
-AGENT_DIR = os.path.dirname(os.path.abspath(__file__))+"/run-with-google-adk"
+AGENT_DIR = os.path.dirname(os.path.abspath(__file__))+"/run-with-google-adk/agents"
 # Example session DB URL (e.g., SQLite)
 SESSION_SERVICE_URI = None
 if os.environ.get("SESSION_SERVICE","in_memory") == "db":

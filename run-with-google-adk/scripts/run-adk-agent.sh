@@ -95,16 +95,23 @@ case "$COMMAND" in
     adk_web)
         # If .env exists, display its contents with masked values and run the command
         show_env_masked
+        
+        # Copy libs to agent directory if not present (needed for imports)
+        if [ ! -d "agents/google_mcp_security_agent/libs" ]; then
+            echo "Copying libs to agent directory for local testing..."
+            cp -r libs agents/google_mcp_security_agent/
+        fi
+        
         # Handle adk_web command based on argument count
         if [ "$#" -eq 1 ]; then
             echo "Running ADK Web for local agent..."
-            adk web
+            adk web agents
         elif [ "$#" -eq 2 ]; then
             echo "Running ADK Web with session service URI: $2"
-            adk web --session_service_uri "$2"
+            adk web agents --session_service_uri "$2"
         elif [ "$#" -eq 3 ]; then
             echo "Running ADK Web with session service URI: $2 and artifact service URI: $3"
-            adk web --session_service_uri "$2" --artifact_service_uri "$3"
+            adk web agents --session_service_uri "$2" --artifact_service_uri "$3"
         else
             echo "Error: Incorrect number of arguments for 'adk_web'."
             usage

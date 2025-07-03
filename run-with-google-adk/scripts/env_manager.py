@@ -50,6 +50,7 @@ class EnvManager:
         "oauth": ["OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET", "OAUTH_AUTH_ID"],
         "vertex_ai": ["GOOGLE_CLOUD_PROJECT", "GOOGLE_CLOUD_LOCATION"],
         "gemini_api": ["GOOGLE_API_KEY"],
+        "cloudrun": [],  # Cloud Run deployment doesn't require MCP configs
     }
 
     # Sensitive variables that should be masked
@@ -70,6 +71,7 @@ class EnvManager:
             env_file: Path to the environment file.
         """
         self.env_file = env_file
+        print(f"DEBUG: Loading env file from: {self.env_file.resolve()}")
         self.env_vars = self._load_env()
 
     def _is_uuid(self, value: str) -> bool:

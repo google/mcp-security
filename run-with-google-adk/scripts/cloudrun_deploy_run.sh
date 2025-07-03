@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# this script runs from the top level directory (mcp-security when deploying and /app when running in container)
+# this script runs from the run-with-google-adk directory (mcp-security when deploying and /app when running in container)
 
 #!/bin/bash
 
-ENV_FILE="./run-with-google-adk/google_mcp_security_agent/.env"
+ENV_FILE="./agents/google_mcp_security_agent/.env"
 
 # Function to create .env file
 create_env_file() {
   local env_file="$1"
   shift # Remove the first argument ($env_file)
-  
+
   # Check if the .env file already exists
   if [ -f "$env_file" ]; then
     echo "Warning: $env_file already exists. Overwriting."
@@ -77,7 +77,7 @@ if [ "$1" = "deploy" ]; then
       fi
       if [ "$key" = "GOOGLE_CLOUD_PROJECT" ]; then
         GOOGLE_CLOUD_PROJECT="$value"
-      fi      
+      fi
 
       if [[ $env_vars == "" ]]; then
         env_vars="$key=$value"
@@ -86,8 +86,8 @@ if [ "$1" = "deploy" ]; then
       fi
       env_vars="$env_vars,$key=$value"
       #echo "$line"
-  done < "$ENV_FILE"  
-  
+  done < "$ENV_FILE"
+
   #echo $env_vars
 
 
@@ -113,7 +113,7 @@ else:
     print(prepared_text)
 EOF
 
-  default_prompt=$(python $PYTHON_SCRIPT_PATH)  
+  default_prompt=$(python $PYTHON_SCRIPT_PATH)
   env_vars="$env_vars,DEFAULT_PROMPT=$default_prompt,GCS_SA_JSON=object-viewer-sa1.json"
 
   # Check if any environment variables were found
@@ -130,50 +130,53 @@ EOF
 
   # Copying files in the top level directory as required by cloud run deployment
   echo "Temporarily copying files in the top level directory for image creation."
-  if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
-      cp ./run-with-google-adk/object-viewer-sa.json object-viewer-sa1.json 
+  if [[ -e "./object-viewer-sa.json" ]]; then
+      cp ./object-viewer-sa.json ../object-viewer-sa1.json
   fi
-  cp ./run-with-google-adk/scripts/cloudrun_deploy_run.sh .
-  cp ./run-with-google-adk/scripts/cloudrun_deploy.py .
-  cp ./run-with-google-adk/Dockerfile .
-  cp ./run-with-google-adk/.dockerignore .
+  cp ./scripts/cloudrun_deploy_run.sh ..
+  cp ./scripts/cloudrun_deploy.py ..
+  cp ./Dockerfile ..
+  if [[ -e "./.dockerignore" ]]; then
+      cp ./.dockerignore ..
+  fi
+  # Copy server directory for MCP tools
+  echo "Copying server directory for MCP tools..."
+  # Server directory is already in parent directory, no need to copy
 
-  
- 
   # Deploy the service with the dynamically constructed environment variables
   gcloud run deploy mcp-security-agent-service \
-    --source . \
+    --source .. \
     --region "$GOOGLE_CLOUD_LOCATION" \
     --project "$GOOGLE_CLOUD_PROJECT" \
     --allow-unauthenticated \
     --set-env-vars="$env_vars" \
     --memory 2Gi
-  
+
   deploy_status=$? #get the status
 
   # Check the status of the deployment
   if [ "$deploy_status" -eq 0 ]; then
-    # Deleting temporarily files in the top level directory 
-    echo "Deleting temporarily copied files in the top level directory for image creation."
-    rm ./cloudrun_deploy_run.sh
-    rm ./cloudrun_deploy.py
-    rm ./Dockerfile
-    rm ./.dockerignore
-    if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
-        rm object-viewer-sa1.json
+    # Deleting temporarily files in the top level directory
+    echo "Deleting temporarily copied files in the top level directory."
+    rm -f ../cloudrun_deploy_run.sh
+    rm -f ../cloudrun_deploy.py
+    rm -f ../Dockerfile
+    rm -f ../.dockerignore
+    if [[ -e "../object-viewer-sa1.json" ]]; then
+        rm -f ../object-viewer-sa1.json
     fi
-
     echo "Successfully deployed the service."
   else
-    rm ./cloudrun_deploy_run.sh
-    rm ./cloudrun_deploy.py
-    rm ./Dockerfile
-    rm ./.dockerignore
-    if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
-        rm object-viewer-sa1.json
+    # Clean up even on failure
+    rm -f ../cloudrun_deploy_run.sh
+    rm -f ../cloudrun_deploy.py
+    rm -f ../Dockerfile
+    rm -f ../.dockerignore
+    if [[ -e "../object-viewer-sa1.json" ]]; then
+        rm -f ../object-viewer-sa1.json
     fi
     echo "Failed to deploy the service."
-    #exit 1
+    exit 1
   fi
 
 elif [ "$1" = "run" ]; then
