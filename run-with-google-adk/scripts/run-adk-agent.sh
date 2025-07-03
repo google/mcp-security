@@ -15,8 +15,8 @@
 #!/bin/bash
 
 # Define the file paths
-SAMPLE_ENV_FILE="./google_mcp_security_agent/sample.env.properties"
-ENV_FILE="./google_mcp_security_agent/.env"
+ENV_FILE="./agents/google_mcp_security_agent/.env"
+ENV_TEMPLATE_FILE="./agents/google_mcp_security_agent/.env.example"
 
 # Function to mask environment variable values
 mask_env_value() {
@@ -111,14 +111,14 @@ case "$COMMAND" in
         fi
         ;;
     custom_ui)
-        show_env_masked    
+        show_env_masked
         # Ensure that 'custom_ui' and 'custom_ui_ae' are only called with 1 argument.
         if [ "$#" -ne 1 ]; then
             echo "Error: 'custom_ui' expects no additional arguments."
             usage
         fi
         echo "Running Custom UI for local agent ..."
-        uvicorn main:app --reload
+        uvicorn ui.main:app --reload
         ;;
     custom_ui_ae)
         show_env_masked
@@ -128,28 +128,28 @@ case "$COMMAND" in
             usage
         fi
         echo "Running Custom UI for Agent Engine Backend ..."
-        uvicorn main_ae:app --reload
+        uvicorn ui.main_ae:app --reload
         ;;
     env_files)
-        # Check for the existence of the files
-        if [ ! -f "$SAMPLE_ENV_FILE" ] && [ ! -f "$ENV_FILE" ]; then
-          echo "Error: Missing both $SAMPLE_ENV_FILE and $ENV_FILE files."
-          exit 1
-        elif [ -f "$SAMPLE_ENV_FILE" ] && [ ! -f "$ENV_FILE" ]; then
-          echo "Copying $SAMPLE_ENV_FILE to $ENV_FILE..."
-          cp "$SAMPLE_ENV_FILE" "$ENV_FILE"
-          echo "Please update the environment variables in $ENV_FILE"
-          exit 0
+        # Check for the existence of the .env file
+        if [ ! -f "$ENV_FILE" ]; then
+          if [ -f "$ENV_TEMPLATE_FILE" ]; then
+            echo "Copying $ENV_TEMPLATE_FILE to $ENV_FILE..."
+            cp "$ENV_TEMPLATE_FILE" "$ENV_FILE"
+            echo "Please update the environment variables in $ENV_FILE"
+            exit 0
+          else
+            echo "Error: Missing both $ENV_TEMPLATE_FILE and $ENV_FILE files."
+            exit 1
+          fi
         else
           echo "Environment file ok, please check the usage below"
           usage
-        fi    
+        fi
         ;;
     *)
         # Default case for unknown commands when an argument *was* provided.
         echo "Error: Unknown command '$COMMAND'."
-        usage  
+        usage
         ;;
 esac
-
-

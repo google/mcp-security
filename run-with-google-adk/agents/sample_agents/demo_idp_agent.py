@@ -17,9 +17,8 @@ from  google.adk.tools.mcp_tool.mcp_toolset  import StdioServerParameters, Stdio
 import os
 import logging
 
-from utils_extensions_cbs_tools.extensions import MCPToolSetWithSchemaAccess
-from utils_extensions_cbs_tools.callbacks import bmc_trim_llm_request
-
+from libs.adk_utils.extensions import MCPToolSetWithSchemaAccess
+from libs.adk_utils.callbacks import bmc_trim_llm_request
 from typing import TextIO
 import sys
 
@@ -34,23 +33,23 @@ if os.environ.get("MINIMAL_LOGGING","N") == "Y":
 
 is_any_variable_unset = any(
     os.getenv(var, "NOT_SET") == "NOT_SET"
-    for var in ["XDR_CLIENT_ID","XDR_CLIENT_SECRET",]
+    for var in ["IDP_CLIENT_ID","IDP_CLIENT_SECRET",]
 )
 if is_any_variable_unset:
   print(f"Please set all required environment variables, check .env file")
   exit(1)
 
 def get_all_tools():
-  """Get Tools from XDR MCP"""
-  logging.info("Attempting to connect to MCP servers for XDR...")
-  xdr_tools = None # Initialize scc_tools
-  
+  """Get Tools from IDP MCP"""
+  logging.info("Attempting to connect to MCP servers for IDP...")
+  idp_tools = None # Initialize scc_tools
+
   uv_dir_prefix="../server"
   if os.environ.get("REMOTE_RUN","N") == "Y":
     uv_dir_prefix="./server"
 
   if os.environ.get("AE_RUN","N") == "Y":
-    uv_dir_prefix="./server"    
+    uv_dir_prefix="./server"
 
   # required temporarily for https://github.com/google/adk-python/issues/1024
   errlog_ae : TextIO = sys.stderr
@@ -59,34 +58,34 @@ def get_all_tools():
 
   timeout = float(os.environ.get("STDIO_PARAM_TIMEOUT","60.0"))
 
-  if os.environ.get("LOAD_XDR_MCP") == "Y":
+  if os.environ.get("LOAD_IDP_MCP") == "Y":
 
-    xdr_tools = MCPToolSetWithSchemaAccess(
+    idp_tools = MCPToolSetWithSchemaAccess(
                   connection_params=StdioConnectionParams(
                     server_params=StdioServerParameters(
                       command='python',
-                      args=[ f"{uv_dir_prefix}/demo_xdr/xdr_mcp_server.py",
+                      args=[ f"{uv_dir_prefix}/demo_idp/idp_mcp_server.py",
                               "--client-id",
-                              os.environ.get("XDR_CLIENT_ID"),
+                              os.environ.get("IDP_CLIENT_ID"),
                               "--client-secret",
-                              os.environ.get("XDR_CLIENT_SECRET")
+                              os.environ.get("IDP_CLIENT_SECRET")
                             ]
                     ),
                   timeout=timeout),
-                tool_set_name="demo_xdr_tools",
+                tool_set_name="demo_idp_tools",
                 errlog=errlog_ae
                 )
 
-  logging.info("MCP Toolsets for XDR created successfully.")
-  return [xdr_tools]
+  logging.info("MCP Toolsets for IDP created successfully.")
+  return [idp_tools]
 
 tools:any = [item for item in get_all_tools() if item is not None]
 
-demo_xdr_agent = LlmAgent(
-    model=os.environ.get("GOOGLE_MODEL"), 
-    name="demo_xdr_agent",
-    instruction="You help users to gather information about their hosts from their XDR backend to investigate. Do take calculated guesses based on your own knowledge base to help the user as much as you can, even if you may not know much about the XDR product itself. At the end of a query when there is some data do let them know your opinion and the steps you carried to achieve the output.",
+demo_idp_agent = LlmAgent(
+    model=os.environ.get("GOOGLE_MODEL"),
+    name="demo_idp_agent",
+    instruction="You help users to gather information about their users/identities from their IDP backend to investigate. Do take calculated guesses based on your own knowledge base to help the user as much as you can, even if you may not know much about the IDP product itself. At the end of a query when there is some data do let them know your opinion and the steps you carried to achieve the output.",
     tools=tools,
     before_model_callback=bmc_trim_llm_request,
-    description="You are the demo_xdr_agent. Anything not related to XDR please delegate to google_mcp_security_agent"
+    description="You are the demo_idp_agent. Anything not related to IDP please delegate to google_mcp_security_agent"
 )

@@ -133,8 +133,8 @@ EOF
   if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
       cp ./run-with-google-adk/object-viewer-sa.json object-viewer-sa1.json 
   fi
-  cp ./run-with-google-adk/cloudrun_deploy_run.sh .
-  cp ./run-with-google-adk/cloudrun_deploy.py .
+  cp ./run-with-google-adk/scripts/cloudrun_deploy_run.sh .
+  cp ./run-with-google-adk/scripts/cloudrun_deploy.py .
   cp ./run-with-google-adk/Dockerfile .
   cp ./run-with-google-adk/.dockerignore .
 

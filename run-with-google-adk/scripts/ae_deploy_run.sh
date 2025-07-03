@@ -21,7 +21,7 @@ list_of_vars=`cat $ENV_FILE  | grep = | grep -v ^# | cut -d "=" -f1 | tr "\n" ",
 update="n"
 update_resource_name="not_available"
 
-if [[ $# -eq 1 ]] then
+if [[ $# -eq 1 ]]; then
   update="y"
   update_resource_name=$1
 fi
@@ -37,7 +37,7 @@ deploy_status=$? #get the status
 
 # Check the status of the deployment
 if [ "$deploy_status" -eq 0 ]; then
-  # Deleting temporarily files in the top level directory 
+  # Deleting temporarily files in the top level directory
   echo "Deleting temporarily copied server directory."
   rm -Rf ./server
   echo "Successfully deployed the agent."

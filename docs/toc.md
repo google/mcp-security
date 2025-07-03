@@ -2,6 +2,12 @@
 
 *   [Development Guide](development_guide.md)
 *   [Usage Guide](usage_guide.md)
+*   [Running with Google ADK](run_with_google_adk/index.md)
+    *   [Cloud Run Quickstart](run_with_google_adk/cloud_run_quickstart.md)
+    *   [AgentSpace Quickstart](run_with_google_adk/agentspace_quickstart.md)
+    *   [Local Setup](run_with_google_adk/local_setup.md)
+    *   [Makefile Reference](run_with_google_adk/makefile_reference.md)
+    *   [Advanced Topics](run_with_google_adk/advanced_topics.md)
 *   [Servers](servers/index.md)
     *   [Google Threat Intelligence](servers/gti_mcp.md)
     *   [Security Command Center](servers/scc_mcp.md)
