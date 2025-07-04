@@ -15,8 +15,8 @@
 #!/bin/bash
 
 # Define the file paths
-SAMPLE_ENV_FILE="./google_mcp_security_agent/sample.env.properties"
-ENV_FILE="./google_mcp_security_agent/.env"
+ENV_FILE="./agents/google_mcp_security_agent/.env"
+ENV_TEMPLATE_FILE="./agents/google_mcp_security_agent/.env.example"
 
 # Function to mask environment variable values
 mask_env_value() {
@@ -95,30 +95,37 @@ case "$COMMAND" in
     adk_web)
         # If .env exists, display its contents with masked values and run the command
         show_env_masked
+        
+        # Copy libs to agent directory if not present (needed for imports)
+        if [ ! -d "agents/google_mcp_security_agent/libs" ]; then
+            echo "Copying libs to agent directory for local testing..."
+            cp -r libs agents/google_mcp_security_agent/
+        fi
+        
         # Handle adk_web command based on argument count
         if [ "$#" -eq 1 ]; then
             echo "Running ADK Web for local agent..."
-            adk web
+            adk web agents
         elif [ "$#" -eq 2 ]; then
             echo "Running ADK Web with session service URI: $2"
-            adk web --session_service_uri "$2"
+            adk web agents --session_service_uri "$2"
         elif [ "$#" -eq 3 ]; then
             echo "Running ADK Web with session service URI: $2 and artifact service URI: $3"
-            adk web --session_service_uri "$2" --artifact_service_uri "$3"
+            adk web agents --session_service_uri "$2" --artifact_service_uri "$3"
         else
             echo "Error: Incorrect number of arguments for 'adk_web'."
             usage
         fi
         ;;
     custom_ui)
-        show_env_masked    
+        show_env_masked
         # Ensure that 'custom_ui' and 'custom_ui_ae' are only called with 1 argument.
         if [ "$#" -ne 1 ]; then
             echo "Error: 'custom_ui' expects no additional arguments."
             usage
         fi
         echo "Running Custom UI for local agent ..."
-        uvicorn main:app --reload
+        uvicorn ui.main:app --reload
         ;;
     custom_ui_ae)
         show_env_masked
@@ -128,28 +135,28 @@ case "$COMMAND" in
             usage
         fi
         echo "Running Custom UI for Agent Engine Backend ..."
-        uvicorn main_ae:app --reload
+        uvicorn ui.main_ae:app --reload
         ;;
     env_files)
-        # Check for the existence of the files
-        if [ ! -f "$SAMPLE_ENV_FILE" ] && [ ! -f "$ENV_FILE" ]; then
-          echo "Error: Missing both $SAMPLE_ENV_FILE and $ENV_FILE files."
-          exit 1
-        elif [ -f "$SAMPLE_ENV_FILE" ] && [ ! -f "$ENV_FILE" ]; then
-          echo "Copying $SAMPLE_ENV_FILE to $ENV_FILE..."
-          cp "$SAMPLE_ENV_FILE" "$ENV_FILE"
-          echo "Please update the environment variables in $ENV_FILE"
-          exit 0
+        # Check for the existence of the .env file
+        if [ ! -f "$ENV_FILE" ]; then
+          if [ -f "$ENV_TEMPLATE_FILE" ]; then
+            echo "Copying $ENV_TEMPLATE_FILE to $ENV_FILE..."
+            cp "$ENV_TEMPLATE_FILE" "$ENV_FILE"
+            echo "Please update the environment variables in $ENV_FILE"
+            exit 0
+          else
+            echo "Error: Missing both $ENV_TEMPLATE_FILE and $ENV_FILE files."
+            exit 1
+          fi
         else
           echo "Environment file ok, please check the usage below"
           usage
-        fi    
+        fi
         ;;
     *)
         # Default case for unknown commands when an argument *was* provided.
         echo "Error: Unknown command '$COMMAND'."
-        usage  
+        usage
         ;;
 esac
-
-
