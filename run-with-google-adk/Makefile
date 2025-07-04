@@ -263,9 +263,20 @@ adk-deploy:
 	@# Install markdown
 	@echo "Installing markdown..."
 	@pip install markdown
-	@# Copy libs to agent directory for deployment
+	@# Copy libs and server to agent directory for deployment
 	@echo "Copying libs to $(AGENT_DIR)..."
 	@cp -R libs "$(AGENT_DIR)/"
+	@echo "Copying server directory to $(AGENT_DIR)..."
+	@if [ -d "../server" ]; then \
+		cp -R ../server "$(AGENT_DIR)/"; \
+		echo "Server directory copied from ../server"; \
+	else \
+		echo "ERROR: ../server directory not found!"; \
+		echo "Expected server at: $$(pwd)/../server"; \
+		echo "Available directories:"; \
+		ls -la ../; \
+		exit 1; \
+	fi
 	@# Use environment variables with proper fallbacks
 	$(eval PROJECT := $(or $(PROJECT),$(shell grep "^GOOGLE_CLOUD_PROJECT=" $(ENV_FILE_PATH) | cut -d= -f2)))
 	$(eval REGION := $(or $(REGION),$(shell grep "^GOOGLE_CLOUD_LOCATION=" $(ENV_FILE_PATH) | cut -d= -f2),us-central1))
@@ -292,9 +303,11 @@ adk-deploy:
 		--display_name '$(DISPLAY_NAME)' \
 		$(if $(TRACE),--trace_to_cloud) \
 		$(AGENT_DIR);
-	@# Clean up copied libs
+	@# Clean up copied libs and server
 	@echo "Cleaning up copied libs from $(AGENT_DIR)..."
 	@rm -rf "$(AGENT_DIR)/libs"
+	@echo "Cleaning up copied server from $(AGENT_DIR)..."
+	@rm -rf "$(AGENT_DIR)/server"
 	@echo ""
 	@echo "✓ Agent deployed successfully!"
 	@echo ""

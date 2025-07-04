@@ -17,7 +17,25 @@ import os
 import sys
 
 
-dotenv.load_dotenv("./agents/google_mcp_security_agent/.env")
+# Load .env file with error checking
+env_file_path = "./agents/google_mcp_security_agent/.env"
+print(f"Attempting to load .env file from: {env_file_path}")
+
+if not os.path.exists(env_file_path):
+    print("=" * 80)
+    print("CRITICAL ERROR: .env file not found!")
+    print(f"Expected location: {env_file_path}")
+    print("This will cause ALL MCP servers to be DISABLED!")
+    print("Available .env files:")
+    for root, dirs, files in os.walk("."):
+        for file in files:
+            if file.endswith('.env') or '.env' in file:
+                print(f"   Found: {os.path.join(root, file)}")
+    print("=" * 80)
+    sys.exit(1)
+
+dotenv.load_dotenv(env_file_path)
+print(f"✅ Successfully loaded .env file from: {env_file_path}")
 
 import vertexai
 import sys
@@ -39,6 +57,18 @@ vertexai.init(
 env_vars = sys.argv[1]
 env_vars_list=env_vars.split(",")
 
+print(f"Raw environment variables string from command line: '{env_vars}'")
+print(f"Parsed environment variables list: {env_vars_list}")
+
+if not env_vars or env_vars.strip() == "" or env_vars_list == ['']:
+    print("=" * 80)
+    print("CRITICAL ERROR: No environment variables provided!")
+    print("This means ALL MCP servers will be DISABLED!")
+    print("The .env file processing failed in the calling script.")
+    print("Check that the .env file exists and contains valid KEY=VALUE pairs.")
+    print("=" * 80)
+    sys.exit(1)
+
 update=sys.argv[2]
 update_resource_name=sys.argv[3]
 
@@ -46,7 +76,30 @@ env_vars_to_send = {}
 
 for key in env_vars_list:
     if key not in ["GOOGLE_CLOUD_PROJECT","GOOGLE_CLOUD_LOCATION"]: # These are not allowed as env variables on the AE, filtering them.
-        env_vars_to_send[key] = os.environ.get(key)
+        value = os.environ.get(key)
+        env_vars_to_send[key] = value
+        if value is None:
+            print(f"⚠️  WARNING: Environment variable '{key}' is None/missing!")
+        else:
+            # Only show first few chars of sensitive values
+            display_value = value[:10] + "..." if len(value) > 10 else value
+            print(f"✅ Environment variable '{key}': {display_value}")
+
+# Check specifically for MCP loader variables
+mcp_vars = [k for k in env_vars_to_send.keys() if k.startswith('LOAD_') and k.endswith('_MCP')]
+enabled_mcp = [k for k in mcp_vars if env_vars_to_send.get(k, '').lower() == 'true']
+
+print(f"📊 MCP Status Summary:")
+print(f"   Total MCP loader variables found: {len(mcp_vars)}")
+print(f"   Enabled MCP servers: {len(enabled_mcp)}")
+print(f"   Enabled servers: {enabled_mcp}")
+
+if len(enabled_mcp) == 0:
+    print("=" * 80)
+    print("CRITICAL WARNING: NO MCP SERVERS ARE ENABLED!")
+    print("The deployed agent will have no security tools available!")
+    print("This is likely not what you want!")
+    print("=" * 80)
 
 # override
 env_vars_to_send['GOOGLE_GENAI_USE_VERTEXAI'] = 'True'

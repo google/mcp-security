@@ -39,15 +39,36 @@ else:
 
 # Use the session to chat with the agent
 print(f">>> 💬 Sending message: {message}")
+print(">>> 🤖 Agent response:")
+response_received = False
 for event in deployed_agent.stream_query(
         user_id="test_user",
         session_id=session['id'],
         message=message,
     ):
+    print(f">>> Raw event: {event}")  # Debug: show raw event structure
     if 'content' in event and 'parts' in event['content'] and event['content']['parts']:
         content = event['content']['parts'][0]
         if content:
             print(f"<<< 🤖 {content}")
+            response_received = True
+    elif 'content' in event and event['content']:
+        # Handle different response structure
+        content = event['content']
+        if isinstance(content, dict) and 'parts' in content:
+            for part in content['parts']:
+                if part and isinstance(part, dict) and 'text' in part:
+                    print(f"<<< 🤖 {part['text']}")
+                    response_received = True
+                elif part:
+                    print(f"<<< 🤖 {part}")
+                    response_received = True
+        else:
+            print(f"<<< 🤖 {content}")
+            response_received = True
+
+if not response_received:
+    print(">>> ❌ No response received from agent")
 
 # Get session and see updated state
 session = deployed_agent.get_session(user_id="test_user", session_id=session['id'])
