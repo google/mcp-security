@@ -110,7 +110,6 @@ else:
 
 def _create_mcp_toolset(
     server_name: str,
-    tool_set_name: str,
     env_file_path: Path,
     timeout: float,
     errlog: Optional[TextIO],
@@ -244,17 +243,16 @@ def get_all_tools() -> List[MCPToolset]:
 
     toolsets = [
         _create_mcp_toolset(
-            "scc", "scc", env_file_path, timeout, errlog_ae
+            "scc", env_file_path, timeout, errlog_ae
         ),
         _create_mcp_toolset(
-            "secops/secops_mcp", "secops_mcp", env_file_path, timeout, errlog_ae
+            "secops/secops_mcp", env_file_path, timeout, errlog_ae
         ),
         _create_mcp_toolset(
-            "gti/gti_mcp", "gti_mcp", env_file_path, timeout, errlog_ae
+            "gti/gti_mcp", env_file_path, timeout, errlog_ae
         ),
         _create_mcp_toolset(
             "secops-soar/secops_soar_mcp",
-            "secops_soar_mcp",
             env_file_path,
             timeout,
             errlog_ae,

@@ -52,8 +52,10 @@ if [[ $# -eq 1 ]]; then
   update_resource_name=$1
 fi
 
-echo "Copying ../server directory to current directory"
+echo "Copying ../server directory to current directory (excluding .venv)"
 cp -r ../server .
+echo "Removing .venv directories from copied server"
+find ./server -name ".venv" -type d -exec rm -rf {} + 2>/dev/null || true
 
 echo "Copying libs directory to agent directory for ADK staging"
 cp -r ../libs ./agents/google_mcp_security_agent/

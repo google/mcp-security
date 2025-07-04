@@ -270,6 +270,8 @@ adk-deploy:
 	@if [ -d "../server" ]; then \
 		cp -R ../server "$(AGENT_DIR)/"; \
 		echo "Server directory copied from ../server"; \
+		echo "Removing .venv directories from copied server"; \
+		find "$(AGENT_DIR)/server" -name ".venv" -type d -exec rm -rf {} + 2>/dev/null || true; \
 	else \
 		echo "ERROR: ../server directory not found!"; \
 		echo "Expected server at: $$(pwd)/../server"; \
