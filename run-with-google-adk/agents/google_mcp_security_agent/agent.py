@@ -18,19 +18,44 @@ import sys
 from pathlib import Path
 from typing import List, Optional, TextIO
 
-# Add current directory to Python path for local libs
+# Load environment variables from .env file if available
+try:
+    import dotenv
+    HAS_DOTENV = True
+except ImportError:
+    HAS_DOTENV = False
+
+# Add appropriate directory to Python path for libs in different environments
 current_dir = Path(__file__).parent
-if (current_dir / "libs").exists():
-    sys.path.insert(0, str(current_dir))
+possible_libs_paths = [
+    current_dir / "libs",  # ADK deployment - libs copied to agent dir
+    current_dir.parent / "libs",  # Local development - libs in parent dir
+    current_dir.parent.parent / "libs",  # Alternative structure
+    Path("/app/libs"),  # Cloud Run
+]
+
+libs_path_added = False
+for libs_path in possible_libs_paths:
+    if libs_path.exists():
+        # Add the parent directory of libs to Python path
+        sys.path.insert(0, str(libs_path.parent))
+        logging.info(f"Added {libs_path.parent} to Python path for libs access")
+        libs_path_added = True
+        break
+
+if not libs_path_added:
+    logging.warning("No libs directory found in any expected location")
+    logging.warning(f"Current directory: {current_dir}")
+    logging.warning(f"Searched paths: {[str(p) for p in possible_libs_paths]}")
 
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import (
+    MCPToolset,
     StdioConnectionParams,
     StdioServerParameters,
 )
 
 from libs.adk_utils.callbacks import bac_setup_state_variable, bmc_trim_llm_request
-from libs.adk_utils.extensions import MCPToolSetWithSchemaAccess
 from libs.adk_utils.tools import get_file_link, list_files, store_file
 
 # Configure logging
@@ -39,15 +64,48 @@ if os.environ.get("MINIMAL_LOGGING", "false").lower() == "true":
     logging.getLogger().setLevel(logging.ERROR)
 
 # Define base directory and server directory
-# In Cloud Run, the structure is different - server is at /app/server
-if os.path.exists("/app/server"):
+# Check for different deployment environments in order of priority
+
+# Check if we're in ADK deployment environment (temp directory)
+current_file_dir = Path(__file__).parent  # agents/google_mcp_security_agent
+agent_server_dir = current_file_dir / "server"  # Look for server in same dir as agent
+
+if agent_server_dir.exists():
+    # ADK deployment - server was copied to agent directory
+    BASE_DIR = current_file_dir
+    SERVER_DIR = agent_server_dir
+elif os.path.exists("/app/server"):
     # Running in Cloud Run container
     BASE_DIR = Path("/app")
     SERVER_DIR = BASE_DIR / "server"
+elif os.path.exists("./server"):
+    # Running locally - server is in current directory
+    BASE_DIR = Path(".")
+    SERVER_DIR = Path("./server")
 else:
-    # Running locally
+    # Running locally - server is in parent directory
     BASE_DIR = Path(__file__).resolve().parents[2]  # Root of run-with-google-adk
     SERVER_DIR = BASE_DIR.parent / "server"  # Server is in parent directory
+
+logging.info(f"🔧 Environment detection:")
+logging.info(f"   Current working directory: {Path.cwd()}")
+logging.info(f"   BASE_DIR: {BASE_DIR.absolute()}")
+logging.info(f"   SERVER_DIR: {SERVER_DIR.absolute()}")
+logging.info(f"   SERVER_DIR exists: {SERVER_DIR.exists()}")
+if SERVER_DIR.exists():
+    logging.info(f"   SERVER_DIR contents: {list(SERVER_DIR.iterdir())}")
+else:
+    logging.error(f"🚨 SERVER_DIR does not exist! Looking for 'server' directory in current location...")
+    current_contents = list(Path.cwd().iterdir())
+    logging.error(f"🚨 Current directory contents: {current_contents}")
+    # Try to find any directory that might contain server code
+    for item in current_contents:
+        if item.is_dir() and ("server" in item.name.lower() or any(s in item.name for s in ["scc", "secops", "gti", "soar"])):
+            logging.error(f"🚨 Found potential server directory: {item}")
+            try:
+                logging.error(f"🚨   Contents: {list(item.iterdir())}")
+            except Exception:
+                pass
 
 
 def _create_mcp_toolset(
@@ -57,7 +115,7 @@ def _create_mcp_toolset(
     timeout: float,
     errlog: Optional[TextIO],
     extra_args: Optional[List[str]] = None,
-) -> Optional[MCPToolSetWithSchemaAccess]:
+) -> Optional[MCPToolset]:
     """Helper function to create and configure an MCPToolSet."""
     # Map server names to environment variable names
     env_var_mapping = {
@@ -95,17 +153,16 @@ def _create_mcp_toolset(
     if extra_args:
         args.extend(extra_args)
 
-    return MCPToolSetWithSchemaAccess(
+    return MCPToolset(
         connection_params=StdioConnectionParams(
             server_params=StdioServerParameters(command="uv", args=args),
             timeout=timeout,
         ),
-        tool_set_name=tool_set_name,
         errlog=errlog,
     )
 
 
-def get_all_tools() -> List[MCPToolSetWithSchemaAccess]:
+def get_all_tools() -> List[MCPToolset]:
     """Get Tools from All MCP servers."""
     logging.info("Attempting to connect to MCP servers...")
     timeout = float(os.environ.get("STDIO_PARAM_TIMEOUT", "60.0"))
@@ -115,18 +172,70 @@ def get_all_tools() -> List[MCPToolSetWithSchemaAccess]:
         BASE_DIR / "agents" / "google_mcp_security_agent" / ".env",
         Path("/tmp/.env"),  # Cloud Run creates env file here
         Path(".env"),
+        # For ADK deployments - staging directory
+        Path("agents/google_mcp_security_agent/.env"),
+        # Additional fallback paths
+        Path("./google_mcp_security_agent/.env"),
     ]
     
     env_file_path = None
-    for path in possible_env_paths:
+    logging.info("=" * 80)
+    logging.info("🔍 SEARCHING FOR .ENV FILE...")
+    for i, path in enumerate(possible_env_paths):
+        logging.info(f"   {i+1}. Checking: {path.absolute()}")
         if path.exists():
             env_file_path = path
-            logging.info(f"Using env file at: {env_file_path}")
+            logging.info(f"✅ Found .env file at: {env_file_path.absolute()}")
             break
+        else:
+            logging.info(f"❌ Not found: {path.absolute()}")
     
     if not env_file_path:
+        logging.error("=" * 80)
+        logging.error("🚨 CRITICAL ERROR: No .env file found!")
+        logging.error("🚨 This will cause ALL MCP servers to be DISABLED!")
+        logging.error("🚨 Searched in:")
+        for path in possible_env_paths:
+            logging.error(f"🚨   - {path.absolute()}")
+        logging.error("🚨 Current working directory: " + str(Path.cwd()))
+        logging.error("🚨 Directory contents:")
+        try:
+            for item in Path.cwd().iterdir():
+                logging.error(f"🚨   {item}")
+        except Exception as e:
+            logging.error(f"🚨   Error listing directory: {e}")
+        logging.error("=" * 80)
         logging.warning("No .env file found, using environment variables only")
         env_file_path = Path("/tmp/.env")  # Use a dummy path
+    else:
+        # Load environment variables from the found .env file
+        if HAS_DOTENV:
+            try:
+                logging.info(f"🔧 Loading environment variables from: {env_file_path}")
+                dotenv.load_dotenv(env_file_path, override=False)
+                logging.info("✅ Environment variables loaded successfully")
+                
+                # Log MCP server statuses
+                mcp_vars = ["LOAD_SCC_MCP", "LOAD_SECOPS_MCP", "LOAD_GTI_MCP", "LOAD_SECOPS_SOAR_MCP"]
+                enabled_count = 0
+                for var in mcp_vars:
+                    value = os.environ.get(var, "false")
+                    status = "✅ ENABLED" if value.lower() == "true" else "❌ DISABLED"
+                    logging.info(f"   {var}: {value} ({status})")
+                    if value.lower() == "true":
+                        enabled_count += 1
+                
+                if enabled_count == 0:
+                    logging.error("🚨 WARNING: NO MCP servers are enabled! Check your .env file.")
+                else:
+                    logging.info(f"📊 {enabled_count}/{len(mcp_vars)} MCP servers enabled")
+                
+            except Exception as e:
+                logging.error(f"🚨 Error loading .env file: {e}")
+                logging.error("🚨 Will use existing environment variables")
+        else:
+            logging.warning("🚨 python-dotenv not available, cannot load .env file")
+            logging.warning("🚨 Install with: pip install python-dotenv")
 
     # Required temporarily for https://github.com/google/adk-python/issues/1024
     errlog_ae: Optional[TextIO] = sys.stderr

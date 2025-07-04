@@ -19,7 +19,7 @@ from google.adk.tools.mcp_tool.mcp_session_manager import retry_on_closed_resour
 from typing import List
 from typing import Optional, Union, TextIO
 from google.adk.agents.readonly_context import ReadonlyContext
-from google.adk.tools.mcp_tool.mcp_tool import MCPTool, BaseTool
+from google.adk.tools.mcp_tool.mcp_tool import MCPTool, BaseAuthenticatedTool as BaseTool
 from google.adk.tools.mcp_tool.mcp_session_manager import  StdioServerParameters, StdioConnectionParams, SseConnectionParams,StreamableHTTPConnectionParams
 from mcp.types import ListToolsResult
 from .cache import tools_cache
@@ -65,7 +65,7 @@ class MCPToolSetWithSchemaAccess(MCPToolset):
   async def get_tools(
       self,
       readonly_context: Optional[ReadonlyContext] = None,
-  ) -> List[BaseTool]:
+  ) -> list[BaseTool]:
     """Return all tools in the toolset based on the provided context.
 
     Args:
@@ -75,17 +75,18 @@ class MCPToolSetWithSchemaAccess(MCPToolset):
     Returns:
         List[BaseTool]: A list of tools available under the specified context.
     """
-    # Get session from session manager
-    if not self._session:
-      self._session = await self._mcp_session_manager.create_session()
-
+    # Check cache first
     if self.tool_set_name in tools_cache.keys():
       logging.info(f"Tools found in cache for toolset {self.tool_set_name}, returning them")  
       return tools_cache[self.tool_set_name]
     else:
       logging.info(f"No tools found in cache for toolset {self.tool_set_name}, loading")
 
-    tools_response: ListToolsResult = await self._session.list_tools()
+    # Get session from session manager (no manual caching needed)
+    session = await self._mcp_session_manager.create_session()
+    
+    # Fetch available tools from the MCP server
+    tools_response: ListToolsResult = await session.list_tools()
 
     # Apply filtering based on context and tool_filter
     tools = []
@@ -98,5 +99,6 @@ class MCPToolSetWithSchemaAccess(MCPToolset):
       if self._is_tool_selected(mcp_tool, readonly_context):
         tools.append(mcp_tool)
 
+    # Cache the tools
     tools_cache[self.tool_set_name] = tools
     return tools
