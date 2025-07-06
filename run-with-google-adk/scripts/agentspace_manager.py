@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 import google.auth
+from google.auth.transport import requests as google_requests
 import requests
 import typer
 from typing_extensions import Annotated
@@ -45,7 +46,7 @@ class AgentSpaceManager:
     def _get_access_token(self) -> Optional[str]:
         """Get Google Cloud access token."""
         if not self.creds.valid:
-            self.creds.refresh(google.auth.transport.requests.Request())
+            self.creds.refresh(google_requests.Request())
         return self.creds.token
 
     def _validate_environment(self) -> Tuple[bool, list]:

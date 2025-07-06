@@ -70,7 +70,7 @@ class EnvManager:
         Args:
             env_file: Path to the environment file.
         """
-        self.env_file = env_file
+        self.env_file = Path(env_file)
         print(f"DEBUG: Loading env file from: {self.env_file.resolve()}")
         self.env_vars = self._load_env()
 
