@@ -68,43 +68,32 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
 
 
 @server.tool()
-async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
-  """Get a Hunting Ruleset object from Google Threat Intelligence.
+async def get_hunting_ruleset(query: str, ctx: Context, limit: int = 10, order_by: str = "creation_date-") -> typing.List[typing.Dict[str, typing.Any]]:
+  """Get hunting rulesets from Google Threat Intelligence.
 
-  A Hunting Ruleset object describes a user's hunting ruleset. It may contain multiple
-  Yara rules. 
-
-  The content of the Yara rules is in the `rules` attribute.
-
-  Some important object attributes:
-    - creation_date: creation date as UTC timestamp.
-    - modification_date (int): last modification date as UTC timestamp.
-    - name (str): ruleset name.
-    - rule_names (list[str]): contains the names of all rules in the ruleset.
-    - number_of_rules (int): number of rules in the ruleset.
-    - rules (str): rule file contents.
-    - tags (list[str]): ruleset's custom tags.
-    
   Args:
-    ruleset_id (required): Hunting ruleset identifier.
+    query: Optional. A filter string to search for rulesets (e.g., "name:my_ruleset").
+    limit: Optional. The maximum number of rulesets to retrieve. Defaults to 10.
+    order_by: Optional. The order in which to return the rulesets (e.g., "creation_date-"). Defaults to "creation_date-".
 
   Returns:
-    Hunting Ruleset object.
+    A list of Hunting Ruleset objects.
   """
-  async with vt_client(ctx) as client:
-    res = await utils.fetch_object(
-        client,
-        "intelligence/hunting_rulesets",
-        "hunting_ruleset",
-        ruleset_id,
-    )
-  return utils.sanitize_response(res)
 
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client,
+        "/intelligence/hunting_rulesets",
+        params={
+            "filter": query,
+            "order": order_by},
+        limit=limit)
+  return utils.sanitize_response([o.to_dict() for o in res])
 
 @server.tool()
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Retrieve entities related to the the given Hunting Ruleset.
 
     The following table shows a summary of available relationships for Hunting ruleset objects.
