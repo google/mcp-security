@@ -254,3 +254,18 @@ If you encounter issues with the MCP servers:
 3. **Check server logs**: Look for error messages in the server output
 4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
 5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
+
+## Common Issues
+
+If you're running into problems setting up or running the MCP servers, here are a few of the most common issues users encounter.
+
+### SOAR_URL Error: “Failed to fetch valid scopes from SOAR”
+
+This usually means your `SOAR_URL` is misconfigured or pointing to a Backstory URL instead of a SOAR URL.
+
+Refer to the [SOAR_URL troubleshooting guide in the FAQ](faq.md#soar_url-error-failed-to-fetch-valid-scopes-from-soar) for step-by-step instructions on how to find and set the correct base URL.
+
+---
+
+For more help and additional known issues, visit the [full FAQ](faq.md).
+
