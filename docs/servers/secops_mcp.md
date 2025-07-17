@@ -32,8 +32,6 @@ Add the following configuration to your MCP client's settings file:
       },
       "disabled": false,
       "autoApprove": []
-      "disabled": false,
-      "autoApprove": []
     }
 ```
 
@@ -300,6 +298,190 @@ The service account or user credentials need the following Chronicle roles:
       - Zero-day exploitation
       ```
 
+### Log Ingestion Tools
+
+- **`ingest_raw_log(log_type, log_message, project_id=None, customer_id=None, region=None, forwarder_id=None, labels=None, log_entry_time=None, collection_time=None)`**
+    - **Description:** Ingest raw logs directly into Chronicle SIEM. Allows ingestion of raw log data in various formats (JSON, XML, CEF, etc.) into Chronicle for parsing and normalization into UDM format. Supports both single log and batch ingestion.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier (e.g., "OKTA", "WINEVTLOG_XML", "AWS_CLOUDTRAIL")
+        - `log_message` (required): Log content as string or list of strings for batch ingestion
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `forwarder_id` (optional): Custom forwarder ID for log routing
+        - `labels` (optional): Custom labels to attach to ingested logs for categorization
+        - `log_entry_time` (optional): ISO 8601 timestamp when the log was originally generated
+        - `collection_time` (optional): ISO 8601 timestamp when the log was collected
+    - **Returns:** Success message with operation details, including any operation IDs for tracking
+    - **Use Cases:** Ingest OKTA authentication logs, feed custom application logs, batch ingest historical logs, import logs from external SIEM systems
+
+- **`ingest_udm_events(udm_events, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Ingest UDM events directly into Chronicle SIEM. Allows direct ingestion of events already formatted in Chronicle's Unified Data Model (UDM) format, bypassing the parsing stage.
+    - **Parameters:**
+        - `udm_events` (required): Single UDM event or list of UDM events (properly formatted UDM structures)
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Success message with details about ingested events, including generated event IDs
+    - **Use Cases:** Ingest network connection events from custom tools, feed process execution events from custom EDR, create synthetic events for testing, migrate historical security events
+
+- **`get_available_log_types(project_id=None, customer_id=None, region=None, search_term=None)`**
+    - **Description:** Get available log types supported by Chronicle for ingestion. Retrieves the list of log types that Chronicle can parse and ingest, optionally filtered by a search term.
+    - **Parameters:**
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `search_term` (optional): Filter log types by name or description containing this term
+    - **Returns:** Formatted list of available log types with their IDs and descriptions
+    - **Use Cases:** Find correct log type identifier for specific vendor, discover Chronicle's parsing capabilities, validate log type names before ingestion
+
+### Parser Management Tools
+
+- **`create_parser(log_type, parser_code, project_id=None, customer_id=None, region=None, validated_on_empty_logs=True)`**
+    - **Description:** Create a new parser for a specific log type in Chronicle. Creates a custom parser using Chronicle's parser configuration language to transform raw logs into Chronicle's Unified Data Model (UDM) format.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier for this parser (e.g., "CUSTOM_APP", "WINDOWS_AD")
+        - `parser_code` (required): Parser configuration code using Chronicle's parser DSL
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `validated_on_empty_logs` (optional): Whether to validate parser on empty log samples (default: True)
+    - **Returns:** Success message with the created parser ID and details
+    - **Use Cases:** Create parsers for custom application logs, parse proprietary security tool outputs, handle modified versions of standard log formats
+
+- **`get_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get details of a specific parser including its configuration and metadata.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier
+        - `parser_id` (required): Unique identifier of the parser to retrieve
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Parser details including configuration, metadata, and status
+    - **Use Cases:** Review parser configurations, debug parsing issues, verify parser settings
+
+- **`activate_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Activate a parser, making it the active parser for the specified log type.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier
+        - `parser_id` (required): Unique identifier of the parser to activate
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Success message confirming parser activation
+    - **Use Cases:** Deploy new parsers to production, switch between parser versions, enable custom log processing
+
+- **`deactivate_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Deactivate a parser, stopping it from processing incoming logs of the specified type.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier
+        - `parser_id` (required): Unique identifier of the parser to deactivate
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Success message confirming parser deactivation
+    - **Use Cases:** Disable problematic parsers, perform maintenance, rollback parser deployments
+
+- **`run_parser_against_sample_logs(log_type, parser_code, sample_logs, project_id=None, customer_id=None, region=None, parser_extension_code=None, statedump_allowed=False)`**
+    - **Description:** Test parser configuration against sample log entries to validate parsing logic before deployment.
+    - **Parameters:**
+        - `log_type` (required): Chronicle log type identifier
+        - `parser_code` (required): Parser configuration code to test
+        - `sample_logs` (required): List of sample log entries to test parsing against
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `parser_extension_code` (optional): Additional parser extension code
+        - `statedump_allowed` (optional): Whether to allow state dumps during testing (default: False)
+    - **Returns:** Parsing results showing how sample logs would be processed
+    - **Use Cases:** Validate parser logic before deployment, debug parsing issues, test parser modifications
+
+### Data Table Management Tools
+
+- **`create_data_table(name, description, header, project_id=None, customer_id=None, region=None, rows=None)`**
+    - **Description:** Create a structured data table that can be referenced in detection rules. Supports multiple column types (STRING, CIDR, INT64, BOOL).
+    - **Parameters:**
+        - `name` (required): Unique name for the data table
+        - `description` (required): Description of the data table's purpose
+        - `header` (required): List defining column names and types
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `rows` (optional): Initial data rows to populate the table
+    - **Returns:** Success message with data table creation details
+    - **Use Cases:** Create asset inventories with criticality ratings, maintain lists of approved software, store network zone definitions for detection rules
+
+- **`add_rows_to_data_table(table_name, rows, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Add new rows to an existing data table, expanding the dataset available for detection rules.
+    - **Parameters:**
+        - `table_name` (required): Name of the existing data table
+        - `rows` (required): List of data rows to add to the table
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Success message with details of added rows
+    - **Use Cases:** Update asset inventories, add new approved software entries, expand network zone definitions
+
+- **`list_data_table_rows(table_name, project_id=None, customer_id=None, region=None, max_rows=50)`**
+    - **Description:** List rows in a data table to review contents and verify data integrity.
+    - **Parameters:**
+        - `table_name` (required): Name of the data table to list
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `max_rows` (optional): Maximum number of rows to return (default: 50)
+    - **Returns:** Formatted list of data table rows
+    - **Use Cases:** Review data table contents, verify data accuracy, troubleshoot detection rule issues
+
+- **`delete_data_table_rows(table_name, row_ids, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete specific rows from a data table based on their row IDs.
+    - **Parameters:**
+        - `table_name` (required): Name of the data table
+        - `row_ids` (required): List of row IDs to delete
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+    - **Returns:** Success message with details of deleted rows
+    - **Use Cases:** Remove obsolete asset entries, clean up data table contents, remove false positive entries
+
+### Reference List Management Tools
+
+- **`create_reference_list(name, description, entries, project_id=None, customer_id=None, region=None, syntax_type="STRING")`**
+    - **Description:** Create a reference list containing values that can be referenced in detection rules. Supports STRING, CIDR, and REGEX syntax types.
+    - **Parameters:**
+        - `name` (required): Unique name for the reference list
+        - `description` (required): Description of the reference list's purpose
+        - `entries` (required): List of values to include in the reference list
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `syntax_type` (optional): Type of entries (STRING, CIDR, REGEX) (default: STRING)
+    - **Returns:** Success message with reference list creation details
+    - **Use Cases:** Create allowlists of IP addresses, maintain lists of known-good domains, store user groups for detection rules
+
+- **`get_reference_list(name, project_id=None, customer_id=None, region=None, include_entries=True)`**
+    - **Description:** Get details and contents of a reference list including metadata and entries.
+    - **Parameters:**
+        - `name` (required): Name of the reference list to retrieve
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `include_entries` (optional): Whether to include list entries in response (default: True)
+    - **Returns:** Reference list details including metadata and entries
+    - **Use Cases:** Review reference list contents, verify list accuracy, troubleshoot detection rule references
+
+- **`update_reference_list(name, project_id=None, customer_id=None, region=None, entries=None, description=None)`**
+    - **Description:** Update the contents or description of an existing reference list.
+    - **Parameters:**
+        - `name` (required): Name of the reference list to update
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config)
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config)
+        - `region` (optional): Chronicle region (defaults to environment config or 'us')
+        - `entries` (optional): New list entries to replace existing ones
+        - `description` (optional): New description for the reference list
+    - **Returns:** Success message with update details
+    - **Use Cases:** Update IP allowlists, modify domain lists, refresh user group memberships
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
@@ -397,6 +579,137 @@ Their TTPs include:
 - Advanced persistent access into compromised networks
 
 The group continues to evolve tactics and primarily targets financial institutions, cryptocurrency exchanges, and organizations in sectors of strategic interest to North Korea.
+```
+
+### Example 5: Log Ingestion and Parser Management Workflow
+
+```
+User: I need to ingest custom application logs from our fraud detection system into Chronicle.
+
+AI: I can help you set up log ingestion for your fraud detection system. Let me first check what log types are available:
+
+AI uses: get_available_log_types(search_term="fraud")
+
+AI: I don't see a specific fraud detection log type. Let's check all available log types to find the closest match or we can create a custom parser.
+
+AI uses: get_available_log_types()
+
+AI: Based on the available log types, we can either use a generic format like "JSON" or create a custom parser for your specific fraud logs. Can you provide a sample log entry?
+
+User: Here's a sample log: {"timestamp":"2023-09-15T10:30:00Z","user_id":"12345","action":"transaction","amount":1500.00,"risk_score":8.5,"blocked":true}
+
+AI: Perfect! This looks like JSON format. Let me ingest this log using the JSON log type:
+
+AI uses: ingest_raw_log(
+  log_type="JSON",
+  log_message='{"timestamp":"2023-09-15T10:30:00Z","user_id":"12345","action":"transaction","amount":1500.00,"risk_score":8.5,"blocked":true}',
+  labels={"source": "fraud_detection", "environment": "production"}
+)
+
+AI: Successfully ingested 1 log of type JSON. If you need more sophisticated parsing to extract specific fields into UDM format, I can help create a custom parser.
+
+User: Yes, let's create a parser to properly structure these fraud logs.
+
+AI uses: create_parser(
+  log_type="FRAUD_DETECTION",
+  parser_code='''
+  filter {
+    json {
+      source => "message"
+    }
+    mutate {
+      replace => {
+        "event1.idm.read_only_udm.metadata.event_type" => "GENERIC_EVENT"
+        "event1.idm.read_only_udm.metadata.product_name" => "Fraud Detection System"
+        "event1.idm.read_only_udm.metadata.vendor_name" => "Internal"
+        "event1.idm.read_only_udm.principal.user.userid" => "%{user_id}"
+        "event1.idm.read_only_udm.metadata.description" => "Fraud detection event for user %{user_id}"
+      }
+    }
+    if [risk_score] {
+      if [risk_score] >= 7 {
+        mutate {
+          replace => {
+            "event1.idm.read_only_udm.security_result.severity" => "HIGH"
+          }
+        }
+      }
+    }
+    mutate {
+      merge => {
+        "@output" => "event1"
+      }
+    }
+  }
+  '''
+)
+
+AI: Successfully created parser for FRAUD_DETECTION log type. Now let me activate it:
+
+AI uses: activate_parser(log_type="FRAUD_DETECTION", parser_id="[parser-id]")
+
+AI: Parser activated! Now you can ingest fraud detection logs using the FRAUD_DETECTION log type and they'll be properly parsed into UDM format.
+```
+
+### Example 6: Data Table and Reference List Management
+
+```
+User: I want to create a data table of our critical assets and a reference list of approved IP addresses for detection rules.
+
+AI: I'll help you create both. Let's start with the critical assets data table:
+
+AI uses: create_data_table(
+  name="critical_assets",
+  description="Critical assets inventory with risk ratings",
+  header=[
+    {"name": "hostname", "type": "STRING"},
+    {"name": "ip_address", "type": "STRING"},
+    {"name": "criticality", "type": "STRING"},
+    {"name": "owner", "type": "STRING"},
+    {"name": "risk_score", "type": "INT64"}
+  ],
+  rows=[
+    ["server-db01", "10.0.1.10", "HIGH", "Database Team", 9],
+    ["server-web01", "10.0.1.20", "MEDIUM", "Web Team", 6],
+    ["server-file01", "10.0.1.30", "HIGH", "IT Team", 8]
+  ]
+)
+
+AI: Successfully created the critical_assets data table with 3 initial entries. Now let's create the approved IP addresses reference list:
+
+AI uses: create_reference_list(
+  name="approved_ips",
+  description="Approved IP addresses for internal communication",
+  entries=[
+    "10.0.0.0/8",
+    "192.168.0.0/16",
+    "172.16.0.0/12",
+    "203.0.113.0/24"
+  ],
+  syntax_type="CIDR"
+)
+
+AI: Successfully created the approved_ips reference list with CIDR entries. These can now be used in YARA-L detection rules.
+
+User: Can you show me what's in the critical assets table?
+
+AI uses: list_data_table_rows(table_name="critical_assets")
+
+AI: Here are the current entries in the critical_assets table:
+1. server-db01 (10.0.1.10) - HIGH criticality, Risk Score: 9, Owner: Database Team
+2. server-web01 (10.0.1.20) - MEDIUM criticality, Risk Score: 6, Owner: Web Team  
+3. server-file01 (10.0.1.30) - HIGH criticality, Risk Score: 8, Owner: IT Team
+
+User: I need to add a new server to the critical assets.
+
+AI uses: add_rows_to_data_table(
+  table_name="critical_assets",
+  rows=[
+    ["server-backup01", "10.0.1.40", "HIGH", "Backup Team", 9]
+  ]
+)
+
+AI: Successfully added server-backup01 to the critical_assets table. You can now reference this data table in detection rules to identify events affecting critical assets and apply appropriate risk scoring.
 ```
 
 ## Additional Resources
