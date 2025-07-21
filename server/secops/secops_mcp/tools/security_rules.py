@@ -475,7 +475,7 @@ async def test_rule(
         logger.info(f'Rule test time range: {start_time} to {end_time}')
 
         # Test the rule
-        test_results = chronicle.run_rule_test(
+        test_results = chronicle.test_rule(
             rule_text=rule_text,
             start_time=start_time,
             end_time=end_time,
