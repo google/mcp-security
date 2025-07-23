@@ -1,13 +1,13 @@
 [project]
 name = "secops-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "Google SecOps MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.4.1",
-    "secops>=0.1.17",
+    "secops>=0.8.0",
     "google-auth>=2.38.0",
     "google-auth-httplib2>=0.2.0",
     "google-api-python-client>=2.164.0"
