@@ -35,8 +35,6 @@ Add the following configuration to your MCP client's settings file:
       "env": {},
       "disabled": false,
       "autoApprove": []
-      "disabled": false,
-      "autoApprove": []
     }
 ```
 
