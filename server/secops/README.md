@@ -129,9 +129,9 @@ These tools help you maintain reference data for enhanced detections:
 
 ### MCP Server Configuration
 
-Add the following configuration to your MCP client's settings file:
+This server supports multiple MCP clients including Gemini CLI, Claude Desktop|Code, and Cline.
 
-**NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
+**NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude or Gemini to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
 
 #### Using uv (Recommended)
 
@@ -162,6 +162,8 @@ Add the following configuration to your MCP client's settings file:
 #### Using pip
 
 You can also use pip instead of uv to install and run the MCP server:
+
+NOTE: this may not work with Gemini CLI, so we recommend using `uv`.
 
 ```json
 {
@@ -228,4 +230,4 @@ Apache 2.0
 The project is structured as follows:
 
 - `server.py`: Main MCP server implementation
-- `example.py`: Example usage of the MCP server 
+- `example.py`: Example usage of the MCP server

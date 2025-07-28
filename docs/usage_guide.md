@@ -1,6 +1,6 @@
 # Using the Google Security MCP Servers
 
-This guide will help you get started with using the MCP servers to access Google's security products and services from Claude Desktop or other MCP-compatible clients.
+This guide will help you get started with using the MCP servers to access Google's security products and services from Gemini CLI, Claude Desktop|Code, Cline, or other MCP-compatible clients.
 
 ## Prerequisites
 
@@ -20,7 +20,9 @@ Before you begin, make sure you have:
      - `CHRONICLE_REGION` is also needed if not=`us`.
 
 3. **An MCP client** such as:
+   - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
    - [Claude Desktop](https://claude.ai/download)
+   - [Claude Code](https://www.anthropic.com/claude-code)
    - [cline.bot](https://cline.bot/) [VS Code extension](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
    - [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) based agent (a prebuilt one is provided)
 
@@ -63,6 +65,14 @@ Detailed instructions are provided [here](https://github.com/google/mcp-security
 2. Update your `cline_mcp_settings.json` with the appropriate configuration. See [sample on GitHub](https://github.com/google/mcp-security/blob/main/cline_mcp_settings.json.example)
 3. Restart VS Code
 
+#### For Gemini CLI:
+
+1. Install Gemini CLI following the [official documentation](https://github.com/google-gemini/gemini-cli)
+2. Configure your MCP servers in the Gemini configuration file (typically `~/.gemini/settings.json` or as specified in your Gemini setup)
+3. Use the same configuration format as shown below for Claude Desktop/cline
+4. Ensure all required environment variables are set before starting Gemini CLI
+5. Gemini CLI will automatically connect to the configured MCP servers when started
+
 ### Step 3: Using the Tools
 
 Once configured, you can interact with the MCP servers by asking Claude to perform specific security tasks:
@@ -74,7 +84,7 @@ Once configured, you can interact with the MCP servers by asking Claude to perfo
 
 ## MCP Server Configuration Reference
 
-Here's a complete reference configuration for all available MCP servers. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
+Here's a complete reference configuration for all available MCP servers. This configuration format works with Gemini CLI, Claude Desktop|Code, and cline. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
 
 **NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
 
