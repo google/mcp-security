@@ -15,16 +15,41 @@ prompt = "Call the entity_lookup tool with: `entity_lookup(entity_value={{entity
 # SecOps get_ioc_matches
 [[subCommands]]
 name = "ioc-matches"
-description = "Call the SecOps MCP Server's get_ioc_matches MCP Tool"
-prompt = "Call the get_ioc_matches tool with: `get_ioc_matches(hours_back={{hours-back}}, max_matches={{max-matches}})`"
+description = "Get Indicators of Compromise (IoC) matches from Chronicle SIEM - retrieves malicious IPs, domains, and hashes observed in logs"
+prompt = """
+{% if help %}
+Usage: /secops ioc-matches [OPTIONS]
+
+Get Indicators of Compromise (IoC) matches from Chronicle SIEM.
+Retrieves IoCs (e.g., malicious IPs, domains, hashes) from configured threat
+intelligence feeds that have been observed matching events in Chronicle logs.
+
+Options:
+  --hours-back    Hours to look back for IoC matches (default: 24)
+  --max-matches   Maximum number of IoC matches to return (default: 20)
+  --help          Show this help message
+
+Examples:
+  /secops ioc-matches                          # Get IoC matches from last 24 hours
+  /secops ioc-matches --hours-back 72          # Get IoC matches from last 3 days  
+  /secops ioc-matches --max-matches 50         # Get up to 50 IoC matches
+  /secops ioc-matches --hours-back 48 --max-matches 100
+
+Use this to proactively identify potential threats based on IoC matches within SIEM data.
+{% else %}
+Call the get_ioc_matches tool with: `get_ioc_matches(hours_back={{hours-back}}, max_matches={{max-matches}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "hours-back"
   required = false
   default = "24"
+  description = "Number of hours to look back for IoC matches"
   [[subCommands.args]]
   name = "max-matches"
   required = false
   default = "20"
+  description = "Maximum number of IoC matches to return"
 
 # SecOps search_security_events
 [[subCommands]]
