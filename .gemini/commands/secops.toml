@@ -93,8 +93,47 @@ Call the get_ioc_matches tool with: `get_ioc_matches(hours_back={{hours-back}}, 
 # SecOps search_security_events
 [[subCommands]]
 name = "search-events"
-description = "Call the SecOps MCP Server's search_security_events MCP Tool"
-prompt = "Call the search_security_events tool with: `search_security_events(text={{query}}, hours_back={{hours-back}}, max_events={{max-events}})`"
+description = "Search for security events in Chronicle SIEM using natural language queries"
+prompt = """
+{% if help %}
+Usage: /secops search-events [OPTIONS]
+
+Search for security events in Chronicle SIEM using natural language.
+
+Allows searching Chronicle event logs using natural language queries, which are
+automatically translated into UDM queries for execution. Ideal for deep investigation
+after an initial alert, case, or entity has been prioritized.
+
+Options:
+  --query         Natural language description of events to find [REQUIRED]
+  --hours-back    Hours back from current time to search (default: 24)
+  --max-events    Maximum number of event records to return (default: 100)
+  --help          Show this help message
+
+Examples:
+  /secops search-events --query="Show network connections involving IP 10.0.0.5"
+  /secops search-events --query="Find login events for user 'admin' yesterday"
+  /secops search-events --query="List file modifications on host 'server1'"
+  /secops search-events --query="DNS lookups to malicious.example.com" --hours-back=72
+  /secops search-events --query="PowerShell execution events" --max-events=50
+
+Query Tips:
+- Use natural language to describe what you're looking for
+- Specify entity types: IPs, domains, users, hosts, files
+- Include time references: "yesterday", "last 6 hours", "today"
+- Be specific about event types: logins, network connections, file modifications
+- For email addresses, use only lowercase letters
+
+The response includes:
+- Translated UDM query used for the search
+- List of matching UDM event records
+- Total event count (may exceed max-events limit)
+
+Use this to retrieve detailed UDM event logs for specific indicators or activities.
+{% else %}
+Call the search_security_events tool with: `search_security_events(text={{query}}, hours_back={{hours-back}}, max_events={{max-events}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "query"
   required = true
@@ -103,34 +142,139 @@ prompt = "Call the search_security_events tool with: `search_security_events(tex
   name = "hours-back"
   required = false
   default = "24"
+  description = "Hours back from current time to search"
   [[subCommands.args]]
   name = "max-events"
   required = false
   default = "100"
+  description = "Maximum number of event records to return"
 
 # SecOps get_security_alerts
 [[subCommands]]
 name = "get-alerts"
-description = "Call the SecOps MCP Server's get_security_alerts MCP Tool"
-prompt = "Call the get_security_alerts tool with: `get_security_alerts(hours_back={{hours-back}}, max_alerts={{max-alerts}}, status_filter={{status-filter}})`"
+description = "Get security alerts directly from Chronicle SIEM for monitoring and triage"
+prompt = """
+{% if help %}
+Usage: /secops get-alerts [OPTIONS]
+
+Get security alerts directly from Chronicle SIEM.
+
+Retrieves a list of recent security alerts generated within Chronicle, based on
+detection rules or other alert sources configured in the SIEM. Use this for direct
+monitoring of SIEM alert activity and initial triage.
+
+Options:
+  --hours-back     Hours to look back for alerts (default: 24)
+  --max-alerts     Maximum number of alerts to return (default: 10)
+  --status-filter  Query string to filter alerts by status (default: exclude closed)
+  --help           Show this help message
+
+Examples:
+  /secops get-alerts                                    # Get recent non-closed alerts
+  /secops get-alerts --hours-back=72                    # Get alerts from last 3 days
+  /secops get-alerts --max-alerts=25                    # Get up to 25 alerts
+  /secops get-alerts --status-filter=""                 # Get all alerts (including closed)
+  /secops get-alerts --hours-back=48 --max-alerts=20   # Custom time and limit
+
+Status Filter Examples:
+  feedback_summary.status != "CLOSED"                   # Exclude closed alerts (default)
+  feedback_summary.status = "NEW"                       # Only new alerts
+  feedback_summary.severityDisplay = "HIGH"             # Only high severity alerts
+
+The response includes for each alert:
+- Rule name that generated the alert
+- Creation timestamp
+- Current status (NEW, REVIEWED, CLOSED)
+- Severity level
+- Associated case information (if available)
+
+Use Cases:
+- Monitor for recent high-priority security events
+- Get overview of current alert queue for triage
+- Check for alerts that might not have corresponding cases yet
+- Initial assessment before deeper investigation
+
+Next Steps:
+- Use /secops get-alert --alert-id=ID for specific alert details
+- Use /secops search-events to find related raw logs
+- Use /secops entity-lookup on indicators found in alerts
+{% else %}
+Call the get_security_alerts tool with: `get_security_alerts(hours_back={{hours-back}}, max_alerts={{max-alerts}}, status_filter={{status-filter}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "hours-back"
   required = false
   default = "24"
+  description = "Hours to look back for alerts"
   [[subCommands.args]]
   name = "max-alerts"
   required = false
   default = "10"
+  description = "Maximum number of alerts to return"
   [[subCommands.args]]
   name = "status-filter"
   required = false
   default = "feedback_summary.status != \"CLOSED\""
+  description = "Query string to filter alerts by status"
 
 # SecOps get_security_alert_by_id
 [[subCommands]]
 name = "get-alert"
-description = "Call the SecOps MCP Server's get_security_alert_by_id MCP Tool"
-prompt = "Call the get_security_alert_by_id tool with: `get_security_alert_by_id(alert_id={{alert-id}}, include_detections={{include-detections}})`"
+description = "Get detailed information for a specific security alert by ID from Chronicle SIEM"
+prompt = """
+{% if help %}
+Usage: /secops get-alert [OPTIONS]
+
+Get security alert by ID directly from Chronicle SIEM.
+
+Retrieves detailed information for a specific security alert using its unique ID.
+This provides comprehensive alert details including detection information, metadata,
+and associated events for deep investigation and analysis.
+
+Options:
+  --alert-id            Unique ID of the alert to retrieve [REQUIRED]
+  --include-detections  Include detection details in response (default: true)
+  --help                Show this help message
+
+Examples:
+  /secops get-alert --alert-id="de_12345678-1234-1234-1234-123456789012"
+  /secops get-alert --alert-id="de_abcdef12-3456-7890-abcd-ef1234567890" --include-detections=false
+  /secops get-alert --alert-id="de_87654321-4321-4321-4321-210987654321" --include-detections=true
+
+Alert ID Format:
+  Alert IDs typically follow the pattern: de_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  You can get alert IDs from:
+  - /secops get-alerts command output
+  - Chronicle SIEM alert console
+  - SOAR case management systems
+  - Other security tools integrated with Chronicle
+
+The response includes:
+- Complete alert metadata and properties
+- Detection rule information that triggered the alert
+- Alert status, severity, and priority
+- Timeline and creation information
+- Associated detection details (if include-detections=true)
+- Related entities and indicators
+- Case association information (if available)
+
+Use Cases:
+- Deep dive investigation of a specific alert
+- Gather context before updating alert status
+- Extract detailed information for incident response
+- Validate alert details before taking response actions
+- Review detection logic and rule performance
+
+Next Steps:
+- Use /secops update-alert to modify alert status or add comments
+- Use /secops search-events to find related raw event logs
+- Use /secops entity-lookup on entities found in the alert
+- Use /secops get-detections to see historical detections from the same rule
+{% else %}
+Call the get_security_alert_by_id tool with: `get_security_alert_by_id(alert_id={{alert-id}}, include_detections={{include-detections}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "alert-id"
   required = true
@@ -139,12 +283,80 @@ prompt = "Call the get_security_alert_by_id tool with: `get_security_alert_by_id
   name = "include-detections"
   required = false
   default = "true"
+  description = "Include detection details in the response"
 
 # SecOps do_update_security_alert
 [[subCommands]]
 name = "update-alert"
-description = "Call the SecOps MCP Server's do_update_security_alert MCP Tool"
-prompt = "Call the do_update_security_alert tool with: `do_update_security_alert(alert_id={{alert-id}}, reason={{reason}}, priority={{priority}}, status={{status}}, verdict={{verdict}}, severity={{severity}}, comment={{comment}}, root_cause={{root-cause}})`"
+description = "Update security alert attributes directly in Chronicle SIEM for investigation disposition"
+prompt = """
+{% if help %}
+Usage: /secops update-alert [OPTIONS]
+
+Update security alert attributes directly in Chronicle SIEM.
+
+Modifies specific fields of an existing security alert based on its ID. Use this after
+investigation, triage, or automated analysis to record findings or change alert state.
+At least one optional field should be provided to perform a meaningful update.
+
+Options:
+  --alert-id     Unique ID of the alert to update [REQUIRED]
+  --reason       Reason for closing alert
+  --priority     Alert priority level  
+  --status       Alert lifecycle status
+  --verdict      Investigation verdict (true/false positive)
+  --severity     Severity score (0-100)
+  --comment      Analyst comment (empty string clears existing)
+  --root-cause   Alert root cause (empty string clears existing)
+  --help         Show this help message
+
+Valid Values:
+
+Reason:
+  REASON_UNSPECIFIED, REASON_NOT_MALICIOUS, REASON_MALICIOUS, REASON_MAINTENANCE
+
+Priority:
+  PRIORITY_UNSPECIFIED, PRIORITY_INFO, PRIORITY_LOW, PRIORITY_MEDIUM, PRIORITY_HIGH, PRIORITY_CRITICAL
+
+Status:
+  STATUS_UNSPECIFIED, NEW, REVIEWED, CLOSED, OPEN
+
+Verdict:
+  VERDICT_UNSPECIFIED, TRUE_POSITIVE, FALSE_POSITIVE
+
+Examples:
+  # Mark alert as false positive
+  /secops update-alert --alert-id="de_12345" --verdict="FALSE_POSITIVE" --status="CLOSED" --comment="Benign admin activity"
+
+  # Escalate alert priority with analysis
+  /secops update-alert --alert-id="de_67890" --priority="PRIORITY_HIGH" --severity=85 --comment="Confirmed malicious activity"
+
+  # Close alert with root cause
+  /secops update-alert --alert-id="de_abcde" --status="CLOSED" --reason="REASON_NOT_MALICIOUS" --root-cause="Scheduled maintenance"
+
+  # Add investigation notes
+  /secops update-alert --alert-id="de_fghij" --comment="Investigating with IR team - potential data exfiltration"
+
+  # Clear existing comment
+  /secops update-alert --alert-id="de_klmno" --comment=""
+
+Use Cases:
+- Mark alerts as true/false positives after investigation
+- Escalate or de-escalate alert priority based on impact assessment  
+- Add investigation comments and findings
+- Set final disposition when closing alerts
+- Update severity based on additional evidence
+- Record root cause analysis results
+
+Next Steps:
+- Use /secops get-alert to verify changes were applied
+- Consider rule tuning if marking as false positive
+- Document significant findings in external case management
+- Communicate critical updates to relevant teams
+{% else %}
+Call the do_update_security_alert tool with: `do_update_security_alert(alert_id={{alert-id}}, reason={{reason}}, priority={{priority}}, status={{status}}, verdict={{verdict}}, severity={{severity}}, comment={{comment}}, root_cause={{root-cause}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "alert-id"
   required = true
@@ -152,24 +364,31 @@ prompt = "Call the do_update_security_alert tool with: `do_update_security_alert
   [[subCommands.args]]
   name = "reason"
   required = false
+  description = "Reason for closing alert"
   [[subCommands.args]]
   name = "priority"
   required = false
+  description = "Alert priority level"
   [[subCommands.args]]
   name = "status"
   required = false
+  description = "Alert lifecycle status"
   [[subCommands.args]]
   name = "verdict"
   required = false
+  description = "Investigation verdict"
   [[subCommands.args]]
   name = "severity"
   required = false
+  description = "Severity score (0-100)"
   [[subCommands.args]]
   name = "comment"
   required = false
+  description = "Analyst comment"
   [[subCommands.args]]
   name = "root-cause"
   required = false
+  description = "Alert root cause"
 
 # SecOps list_security_rules
 [[subCommands]]
