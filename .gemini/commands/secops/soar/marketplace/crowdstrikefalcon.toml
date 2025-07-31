@@ -1,0 +1,1252 @@
+description = "CrowdStrike Falcon SOAR marketplace integration slash commands for endpoint security operations"
+prompt = """
+You are implementing /slash-commands to call the available CrowdStrike Falcon MCP Tools defined in:
+server/secops-soar/secops_soar_mcp/marketplace/crowdstrikefalcon.py
+
+These commands enable endpoint detection and response (EDR) operations including:
+- Host management and information gathering
+- Detection and alert management  
+- Incident response actions (containment, isolation)
+- Script execution and command running on endpoints
+- IOC management and threat hunting
+- File analysis and malware scanning
+"""
+
+# CrowdStrike Falcon Host Management Commands
+
+[[subCommands]]
+name = "list-hosts"
+description = "List and filter hosts in CrowdStrike Falcon based on various criteria"
+prompt = """
+{% if help %}
+Usage: /crowdstrike list-hosts [OPTIONS]
+
+List and filter hosts in CrowdStrike Falcon based on various criteria.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --filter-logic           Logic to use when searching for hosts (optional)
+  --filter-value           Value to use for filtering hosts (optional)
+  --max-hosts-to-return    Maximum number of hosts to return (default: 50, max: 1000)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike list-hosts --case-id="523" --alert-group-identifiers="group1"
+  /crowdstrike list-hosts --case-id="724" --alert-group-identifiers="group1,group2" --max-hosts-to-return=100
+
+Use Cases:
+- Get inventory of endpoints managed by CrowdStrike Falcon
+- Filter hosts based on specific criteria for targeted response
+- Identify hosts for containment or investigation
+- Gather host information for incident scoping
+
+The response includes:
+- List of hosts with their identifiers and metadata
+- Host status and connectivity information
+- System information for each host
+{% else %}
+Call the crowd_strike_falcon_list_hosts tool with: `crowd_strike_falcon_list_hosts(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, customer_id={{customer-id}}, filter_logic={{filter-logic}}, filter_value={{filter-value}}, max_hosts_to_return={{max-hosts-to-return}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "filter-logic"
+  required = false
+  description = "Logic to use when searching for hosts"
+  [[subCommands.args]]
+  name = "filter-value"
+  required = false
+  description = "Value to use for filtering hosts"
+  [[subCommands.args]]
+  name = "max-hosts-to-return"
+  required = false
+  default = "50"
+  description = "Maximum number of hosts to return (max: 1000)"
+
+[[subCommands]]
+name = "get-host-info"
+description = "Get detailed information about specific hosts in CrowdStrike Falcon"
+prompt = """
+{% if help %}
+Usage: /crowdstrike get-host-info [OPTIONS]
+
+Get detailed information about specific hosts in CrowdStrike Falcon.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --create-insight         If enabled, create insights containing information about entities (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike get-host-info --case-id="523" --alert-group-identifiers="group1"
+  /crowdstrike get-host-info --case-id="724" --alert-group-identifiers="group1,group2" --create-insight=true
+
+Use Cases:
+- Get detailed system information for specific hosts
+- Gather host configuration and status details
+- Create insights for targeted host entities
+- Support incident analysis with comprehensive host data
+
+The response includes:
+- Detailed host information including OS, hardware, and configuration
+- Network interfaces and connectivity status
+- Installed software and security agent status
+- Host behavior and activity metrics
+{% else %}
+Call the crowd_strike_falcon_get_host_information tool with: `crowd_strike_falcon_get_host_information(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, customer_id={{customer-id}}, create_insight={{create-insight}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "create-insight"
+  required = false
+  description = "If enabled, create insights containing information about entities"
+
+[[subCommands]]
+name = "get-hosts-by-ioc"
+description = "Find hosts that have encountered specific Indicators of Compromise (IOCs)"
+prompt = """
+{% if help %}
+Usage: /crowdstrike get-hosts-by-ioc [OPTIONS]
+
+Find hosts that have encountered specific Indicators of Compromise (IOCs).
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike get-hosts-by-ioc --case-id="523" --alert-group-identifiers="group1"
+  /crowdstrike get-hosts-by-ioc --case-id="724" --alert-group-identifiers="group1,group2"
+
+Use Cases:
+- Identify hosts that have encountered specific IOCs
+- Scope incident impact across affected endpoints
+- Find hosts for targeted containment or investigation
+- Support threat hunting and lateral movement analysis
+
+The response includes:
+- List of hosts that have encountered the IOCs
+- IOC details and first/last seen timestamps
+- Host information for affected endpoints
+- Context for incident scoping and containment decisions
+{% else %}
+Call the crowd_strike_falcon_get_hosts_by_ioc tool with: `crowd_strike_falcon_get_hosts_by_ioc(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+
+# CrowdStrike Falcon Incident Response Commands
+
+[[subCommands]]
+name = "contain-endpoint"
+description = "Contain (isolate) endpoints to prevent lateral movement during incident response"
+prompt = """
+{% if help %}
+Usage: /crowdstrike contain-endpoint [OPTIONS]
+
+Contain (isolate) endpoints to prevent lateral movement during incident response.
+
+IMPORTANT: This action will isolate endpoints from the network, preventing normal business operations.
+Use with caution and ensure proper authorization before execution.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --fail-if-timeout        If enabled, action will fail if not all endpoints were contained (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike contain-endpoint --case-id="523" --alert-group-identifiers="group1"
+  /crowdstrike contain-endpoint --case-id="724" --alert-group-identifiers="group1,group2" --fail-if-timeout=true
+
+Use Cases:
+- Isolate compromised endpoints to prevent lateral movement
+- Contain endpoints during active incident response
+- Quarantine systems showing malicious activity
+- Implement emergency containment procedures
+
+CAUTION:
+- Containment will isolate endpoints from the network
+- Ensure proper incident response procedures are followed
+- Coordinate with business stakeholders before containment
+- Have remediation plan ready before executing containment
+
+The response includes:
+- Status of containment action for each endpoint
+- Success/failure details for containment attempts
+- Timing information for containment operations
+{% else %}
+Call the crowd_strike_falcon_contain_endpoint tool with: `crowd_strike_falcon_contain_endpoint(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, customer_id={{customer-id}}, fail_if_timeout={{fail-if-timeout}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "fail-if-timeout"
+  required = false
+  description = "If enabled, action will fail if not all endpoints were contained"
+
+[[subCommands]]
+name = "run-script"
+description = "Execute PowerShell scripts on endpoints for incident response and investigation"
+prompt = """
+{% if help %}
+Usage: /crowdstrike run-script [OPTIONS]
+
+Execute PowerShell scripts on endpoints for incident response and investigation.
+
+IMPORTANT: Script execution has significant security implications. Ensure proper authorization
+and validate script content before execution.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --script-name            Name of the script file to execute (optional if raw-script provided)
+  --raw-script             Raw PowerShell script payload to execute (optional if script-name provided)
+  --hostname               Comma-separated list of hostnames to execute on (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike run-script --case-id="523" --alert-group-identifiers="group1" --script-name="investigation.ps1"
+  /crowdstrike run-script --case-id="724" --alert-group-identifiers="group1,group2" --raw-script="Get-Process"
+
+Use Cases:
+- Execute investigation scripts to gather forensic data
+- Run remediation scripts to clean infected endpoints
+- Collect system information for incident analysis
+- Execute custom security tools on targeted endpoints
+
+SECURITY CONSIDERATIONS:
+- Validate all script content before execution
+- Follow principle of least privilege
+- Monitor script execution results carefully
+- Ensure proper incident response authorization
+- Log all script executions for audit purposes
+
+The response includes:
+- Script execution status for each targeted endpoint
+- Output/results from script execution
+- Error messages or execution failures
+- Timing and completion information
+{% else %}
+Call the crowd_strike_falcon_run_script tool with: `crowd_strike_falcon_run_script(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, customer_id={{customer-id}}, script_name={{script-name}}, raw_script={{raw-script}}, hostname={{hostname}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "script-name"
+  required = false
+  description = "Name of the script file to execute"
+  [[subCommands.args]]
+  name = "raw-script"
+  required = false
+  description = "Raw PowerShell script payload to execute"
+  [[subCommands.args]]
+  name = "hostname"
+  required = false
+  description = "Comma-separated list of hostnames to execute on"
+
+[[subCommands]]
+name = "execute-command"
+description = "Execute specific commands on endpoints for investigation and response"
+prompt = """
+{% if help %}
+Usage: /crowdstrike execute-command [OPTIONS]
+
+Execute specific commands on endpoints for investigation and response.
+
+IMPORTANT: Command execution has significant security implications. Ensure proper authorization
+and validate commands before execution.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --command                Command to execute on the hosts [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --admin-command          If enabled, execute commands with admin-level permissions (optional)
+  --hostname               Comma-separated list of hostnames to execute on (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike execute-command --case-id="523" --alert-group-identifiers="group1" --command="netstat -an"
+  /crowdstrike execute-command --case-id="724" --alert-group-identifiers="group1,group2" --command="Get-Process" --admin-command=true
+
+Common Investigation Commands:
+  - netstat -an                    # Show network connections
+  - tasklist                       # List running processes
+  - dir C:\\Temp                    # List directory contents
+  - Get-Process                    # PowerShell process list
+  - Get-EventLog Security -Newest 100  # Recent security events
+
+Use Cases:
+- Execute investigation commands to gather forensic data
+- Run diagnostic commands for system analysis
+- Execute response commands for threat mitigation
+- Collect specific information for incident analysis
+
+SECURITY CONSIDERATIONS:
+- Validate all commands before execution
+- Use admin-command flag only when necessary
+- Monitor command execution results carefully
+- Ensure proper incident response authorization
+- Log all command executions for audit purposes
+
+The response includes:
+- Command execution status for each targeted endpoint
+- Output/results from command execution
+- Error messages or execution failures
+- Timing and completion information
+{% else %}
+Call the crowd_strike_falcon_execute_command tool with: `crowd_strike_falcon_execute_command(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, command={{command}}, customer_id={{customer-id}}, admin_command={{admin-command}}, hostname={{hostname}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "command"
+  required = true
+  description = "Command to execute on the hosts"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "admin-command"
+  required = false
+  description = "If enabled, execute commands with admin-level permissions"
+  [[subCommands.args]]
+  name = "hostname"
+  required = false
+  description = "Comma-separated list of hostnames to execute on"
+
+# CrowdStrike Falcon Detection and Alert Management Commands
+
+[[subCommands]]
+name = "add-detection-comment"
+description = "Add comments to CrowdStrike Falcon detections for documentation and analysis"
+prompt = """
+{% if help %}
+Usage: /crowdstrike add-detection-comment [OPTIONS]
+
+Add comments to CrowdStrike Falcon detections for documentation and analysis.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --detection-id           ID of the detection to add a comment to [REQUIRED]
+  --comment                Comment content to add to the detection [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike add-detection-comment --case-id="523" --alert-group-identifiers="group1" --detection-id="det_123" --comment="Confirmed malicious activity"
+  /crowdstrike add-detection-comment --case-id="724" --alert-group-identifiers="group1,group2" --detection-id="det_456" --comment="False positive - authorized software"
+
+Use Cases:
+- Document analysis findings for specific detections
+- Add context for detection triage and investigation
+- Record analyst decisions and reasoning
+- Maintain audit trail for detection handling
+
+The response includes:
+- Confirmation of comment addition
+- Detection ID and comment details
+- Timestamp information for the comment
+{% else %}
+Call the crowd_strike_falcon_add_comment_to_detection tool with: `crowd_strike_falcon_add_comment_to_detection(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, detection_id={{detection-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "detection-id"
+  required = true
+  description = "ID of the detection to add a comment to"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "Comment content to add to the detection"
+
+[[subCommands]]
+name = "close-detection"
+description = "Close CrowdStrike Falcon detections after investigation and analysis"
+prompt = """
+{% if help %}
+Usage: /crowdstrike close-detection [OPTIONS]
+
+Close CrowdStrike Falcon detections after investigation and analysis.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --detection-id           ID of the detection to close [REQUIRED]
+  --hide-detection         If enabled, hide the detection in the UI (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike close-detection --case-id="523" --alert-group-identifiers="group1" --detection-id="det_123"
+  /crowdstrike close-detection --case-id="724" --alert-group-identifiers="group1,group2" --detection-id="det_456" --hide-detection=true
+
+Use Cases:
+- Close confirmed false positive detections
+- Mark resolved detections as complete
+- Clean up detection queue after investigation
+- Hide irrelevant detections from active view
+
+IMPORTANT:
+- Ensure proper investigation before closing detections
+- Add comments before closing to document reasoning
+- Consider impact on detection metrics and reporting
+- Follow organization's detection handling procedures
+
+The response includes:
+- Confirmation of detection closure
+- Detection ID and closure status
+- Timestamp information for the closure action
+{% else %}
+Call the crowd_strike_falcon_close_detection tool with: `crowd_strike_falcon_close_detection(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, detection_id={{detection-id}}, hide_detection={{hide-detection}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "detection-id"
+  required = true
+  description = "ID of the detection to close"
+  [[subCommands.args]]
+  name = "hide-detection"
+  required = false
+  description = "If enabled, hide the detection in the UI"
+
+[[subCommands]]
+name = "update-alert"
+description = "Update CrowdStrike Falcon alert status, verdict, and assignment"
+prompt = """
+{% if help %}
+Usage: /crowdstrike update-alert [OPTIONS]
+
+Update CrowdStrike Falcon alert status, verdict, and assignment.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --alert-id               ID of the alert to update [REQUIRED]
+  --status                 Status for the alert (optional)
+  --verdict                Verdict for the alert (optional)
+  --assign-to              Name/email of analyst to assign alert to (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike update-alert --case-id="523" --alert-group-identifiers="group1" --alert-id="alert_123" --status="Closed"
+  /crowdstrike update-alert --case-id="724" --alert-group-identifiers="group1,group2" --alert-id="alert_456" --verdict="True Positive" --assign-to="analyst@company.com"
+
+Valid Status Values:
+  - New, In Progress, Closed, Reopened
+
+Valid Verdict Values:
+  - True Positive, False Positive, Benign Positive, Unknown
+
+Use Cases:
+- Update alert status during investigation workflow
+- Set verdict after analysis completion
+- Assign alerts to specific analysts for investigation
+- Maintain accurate alert state in CrowdStrike console
+
+The response includes:
+- Confirmation of alert update
+- Updated alert details and status
+- Assignment information if applicable
+{% else %}
+Call the crowd_strike_falcon_update_alert tool with: `crowd_strike_falcon_update_alert(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, alert_id={{alert-id}}, status={{status}}, verdict={{verdict}}, assign_to={{assign-to}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "ID of the alert to update"
+  [[subCommands.args]]
+  name = "status"
+  required = false
+  description = "Status for the alert"
+  [[subCommands.args]]
+  name = "verdict"
+  required = false
+  description = "Verdict for the alert"
+  [[subCommands.args]]
+  name = "assign-to"
+  required = false
+  description = "Name/email of analyst to assign alert to"
+
+[[subCommands]]
+name = "add-alert-comment"
+description = "Add comments to CrowdStrike Falcon alerts for documentation and collaboration"
+prompt = """
+{% if help %}
+Usage: /crowdstrike add-alert-comment [OPTIONS]
+
+Add comments to CrowdStrike Falcon alerts for documentation and collaboration.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --alert-id               ID of the alert to add a comment to [REQUIRED]
+  --comment                Comment content to add to the alert [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike add-alert-comment --case-id="523" --alert-group-identifiers="group1" --alert-id="alert_123" --comment="Investigating potential compromise"
+  /crowdstrike add-alert-comment --case-id="724" --alert-group-identifiers="group1,group2" --alert-id="alert_456" --comment="Coordinating with IR team"
+
+Use Cases:
+- Document investigation progress and findings
+- Add analysis notes for team collaboration
+- Record decisions and next steps
+- Maintain audit trail for alert handling
+
+The response includes:
+- Confirmation of comment addition
+- Alert ID and comment details
+- Timestamp information for the comment
+{% else %}
+Call the crowd_strike_falcon_add_alert_comment tool with: `crowd_strike_falcon_add_alert_comment(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, alert_id={{alert-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "ID of the alert to add a comment to"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "Comment content to add to the alert"
+
+# CrowdStrike Falcon IOC and Threat Management Commands
+
+[[subCommands]]
+name = "upload-iocs"
+description = "Upload Indicators of Compromise (IOCs) to CrowdStrike Falcon for detection and blocking"
+prompt = """
+{% if help %}
+Usage: /crowdstrike upload-iocs [OPTIONS]
+
+Upload Indicators of Compromise (IOCs) to CrowdStrike Falcon for detection and blocking.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --platform               Comma-separated platforms for the IOC (Windows, Linux, Mac) [REQUIRED]
+  --severity               Severity level for the IOC [REQUIRED]
+  --comment                Comment with context related to IOC (optional)
+  --host-group-name        Name of the host group (optional)
+  --action                 Action for uploaded IOCs (Detect/Block) (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike upload-iocs --case-id="523" --alert-group-identifiers="group1" --platform="Windows,Linux" --severity="High" --comment="Malicious domain from threat intel"
+  /crowdstrike upload-iocs --case-id="724" --alert-group-identifiers="group1,group2" --platform="Windows" --severity="Critical" --action="Block"
+
+Platform Values:
+  - Windows, Linux, Mac (comma-separated)
+
+Severity Values:
+  - Low, Medium, High, Critical
+
+Action Values:
+  - Detect: Monitor and alert on IOC matches
+  - Block: Block IOC matches (only available for hashes)
+
+Use Cases:
+- Upload threat intelligence IOCs for detection
+- Add known malicious indicators to CrowdStrike
+- Implement proactive blocking of malicious hashes
+- Share IOCs across security team for consistent detection
+
+IMPORTANT:
+- Block action only works with file hashes
+- All other IOC types automatically use Detect policy
+- Ensure IOC accuracy before uploading
+- Consider impact on legitimate business operations
+
+The response includes:
+- Confirmation of IOC upload
+- IOC details and assigned actions
+- Platform coverage information
+{% else %}
+Call the crowd_strike_falcon_upload_io_cs tool with: `crowd_strike_falcon_upload_io_cs(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, platform={{platform}}, severity={{severity}}, comment={{comment}}, host_group_name={{host-group-name}}, action={{action}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "platform"
+  required = true
+  description = "Comma-separated platforms for the IOC (Windows, Linux, Mac)"
+  [[subCommands.args]]
+  name = "severity"
+  required = true
+  description = "Severity level for the IOC"
+  [[subCommands.args]]
+  name = "comment"
+  required = false
+  description = "Comment with context related to IOC"
+  [[subCommands.args]]
+  name = "host-group-name"
+  required = false
+  description = "Name of the host group"
+  [[subCommands.args]]
+  name = "action"
+  required = false
+  description = "Action for uploaded IOCs (Detect/Block)"
+
+[[subCommands]]
+name = "update-ioc-info"
+description = "Update information for existing custom IOCs in CrowdStrike Falcon"
+prompt = """
+{% if help %}
+Usage: /crowdstrike update-ioc-info [OPTIONS]
+
+Update information for existing custom IOCs in CrowdStrike Falcon.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --description            New description for custom IOCs (optional)
+  --source                 Source for custom IOCs (optional)
+  --expiration-days        Days until expiration (optional)
+  --detect-policy          If enabled, IOCs will send notifications when identified (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike update-ioc-info --case-id="523" --alert-group-identifiers="group1" --description="Updated threat intel source"
+  /crowdstrike update-ioc-info --case-id="724" --alert-group-identifiers="group1,group2" --expiration-days="30" --detect-policy=true
+
+Use Cases:
+- Update IOC metadata with new information
+- Change IOC expiration dates
+- Modify detection policies for existing IOCs
+- Update IOC sources and descriptions
+
+The response includes:
+- Confirmation of IOC information update
+- Updated IOC details and metadata
+- Policy changes if applicable
+{% else %}
+Call the crowd_strike_falcon_update_ioc_information tool with: `crowd_strike_falcon_update_ioc_information(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, description={{description}}, source={{source}}, expiration_days={{expiration-days}}, detect_policy={{detect-policy}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "description"
+  required = false
+  description = "New description for custom IOCs"
+  [[subCommands.args]]
+  name = "source"
+  required = false
+  description = "Source for custom IOCs"
+  [[subCommands.args]]
+  name = "expiration-days"
+  required = false
+  description = "Days until expiration"
+  [[subCommands.args]]
+  name = "detect-policy"
+  required = false
+  description = "If enabled, IOCs will send notifications when identified"
+
+# CrowdStrike Falcon File Analysis and Malware Scanning Commands
+
+[[subCommands]]
+name = "submit-url"
+description = "Submit URLs to CrowdStrike Falcon sandbox for analysis"
+prompt = """
+{% if help %}
+Usage: /crowdstrike submit-url [OPTIONS]
+
+Submit URLs to CrowdStrike Falcon sandbox for analysis.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --urls                   URLs to submit for analysis [REQUIRED]
+  --sandbox-environment    Sandbox environment for analysis (optional)
+  --network-environment    Network environment for analysis (optional)
+  --check-duplicate        Check if URL was already submitted previously (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike submit-url --case-id="523" --alert-group-identifiers="group1" --urls="https://suspicious-site.com"
+  /crowdstrike submit-url --case-id="724" --alert-group-identifiers="group1,group2" --urls="https://malware.example.com" --check-duplicate=true
+
+Use Cases:
+- Analyze suspicious URLs found during investigation
+- Submit potential malicious links for sandbox analysis
+- Get detailed analysis of URL behavior and content
+- Verify URL safety before allowing access
+
+SECURITY CONSIDERATIONS:
+- URLs will be accessed by sandbox environment
+- Avoid submitting internal or sensitive URLs
+- Consider network isolation for sandbox analysis
+- Review analysis results before making decisions
+
+The response includes:
+- Submission confirmation and analysis ID
+- Analysis results when available
+- URL behavior analysis and risk assessment
+- IOCs and artifacts discovered during analysis
+{% else %}
+Call the crowd_strike_falcon_submit_url tool with: `crowd_strike_falcon_submit_url(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, ur_ls={{urls}}, sandbox_environment={{sandbox-environment}}, network_environment={{network-environment}}, check_duplicate={{check-duplicate}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "urls"
+  required = true
+  description = "URLs to submit for analysis"
+  [[subCommands.args]]
+  name = "sandbox-environment"
+  required = false
+  description = "Sandbox environment for analysis"
+  [[subCommands.args]]
+  name = "network-environment"
+  required = false
+  description = "Network environment for analysis"
+  [[subCommands.args]]
+  name = "check-duplicate"
+  required = false
+  description = "Check if URL was already submitted previously"
+
+[[subCommands]]
+name = "download-file"
+description = "Download threat files from CrowdStrike Falcon for further analysis"
+prompt = """
+{% if help %}
+Usage: /crowdstrike download-file [OPTIONS]
+
+Download threat files from CrowdStrike Falcon for further analysis.
+
+IMPORTANT: Downloaded files may contain malware. Handle with extreme caution and use appropriate
+security measures including isolated environments and malware analysis tools.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --download-folder-path   Path to folder where threat file will be stored [REQUIRED]
+  --overwrite              If enabled, overwrite files with the same name [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike download-file --case-id="523" --alert-group-identifiers="group1" --download-folder-path="/tmp/malware" --overwrite=true
+  /crowdstrike download-file --case-id="724" --alert-group-identifiers="group1,group2" --download-folder-path="/home/analyst/samples" --overwrite=false
+
+Use Cases:
+- Download malware samples for detailed analysis
+- Obtain threat files for reverse engineering
+- Save evidence files for forensic investigation
+- Get samples for signature development
+
+SECURITY WARNINGS:
+- Files may contain active malware
+- Use isolated analysis environment only
+- Implement proper containment measures
+- Follow organization's malware handling procedures
+- Ensure antivirus exclusions are configured properly
+
+The response includes:
+- Download confirmation and file location
+- File details and metadata
+- SHA256 hash for file verification
+- Size and download completion status
+{% else %}
+Call the crowd_strike_falcon_download_file tool with: `crowd_strike_falcon_download_file(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, download_folder_path={{download-folder-path}}, overwrite={{overwrite}}, customer_id={{customer-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "download-folder-path"
+  required = true
+  description = "Path to folder where threat file will be stored"
+  [[subCommands.args]]
+  name = "overwrite"
+  required = true
+  description = "If enabled, overwrite files with the same name"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+
+[[subCommands]]
+name = "on-demand-scan"
+description = "Initiate on-demand malware scans on specific endpoints and file paths"
+prompt = """
+{% if help %}
+Usage: /crowdstrike on-demand-scan [OPTIONS]
+
+Initiate on-demand malware scans on specific endpoints and file paths.
+
+Options:
+  --case-id                        The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers        Comma-separated identifiers for the alert groups [REQUIRED]
+  --file-paths-to-scan             Comma-separated list of paths to scan [REQUIRED]
+  --customer-id                    ID of the customer for which to execute the action (optional)
+  --file-paths-to-exclude-from-scan Comma-separated list of paths to exclude from scan (optional)
+  --host-group-name                Comma-separated list of host group names for scanning (optional)
+  --scan-description               Description for the scan (optional)
+  --cpu-priority                   CPU priority for scanning (optional)
+  --quarantine-hosts               If enabled, quarantine hosts during scanning (optional)
+  --create-endpoint-notification   If enabled, create endpoint notification (optional)
+  --help                          Show this help message
+
+Examples:
+  /crowdstrike on-demand-scan --case-id="523" --alert-group-identifiers="group1" --file-paths-to-scan="C:\\Temp,C:\\Users"
+  /crowdstrike on-demand-scan --case-id="724" --alert-group-identifiers="group1,group2" --file-paths-to-scan="C:\\Windows\\System32" --quarantine-hosts=true
+
+Common Scan Paths:
+  - C:\\Temp, C:\\Windows\\Temp        # Temporary directories
+  - C:\\Users\\%USERNAME%\\Downloads   # User download folders
+  - C:\\Windows\\System32             # System directory
+  - /tmp, /var/tmp                  # Linux temp directories
+  - /home/*/Downloads               # Linux user downloads
+
+Use Cases:
+- Scan specific directories for malware after compromise
+- Perform targeted scans on suspicious file locations
+- Verify system cleanliness after remediation
+- Execute proactive scans on high-risk locations
+
+SCAN CONSIDERATIONS:
+- Scanning may impact system performance
+- Consider business hours and system usage
+- Quarantine option will isolate hosts during scan
+- CPU priority settings affect scan speed vs. performance impact
+
+The response includes:
+- Scan initiation confirmation and scan ID
+- Targeted endpoints and file paths
+- Scan progress and completion status
+- Results summary and detected threats
+{% else %}
+Call the crowd_strike_falcon_on_demand_scan tool with: `crowd_strike_falcon_on_demand_scan(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, file_paths_to_scan={{file-paths-to-scan}}, customer_id={{customer-id}}, file_paths_to_exclude_from_scan={{file-paths-to-exclude-from-scan}}, host_group_name={{host-group-name}}, scan_description={{scan-description}}, quarantine_hosts={{quarantine-hosts}}, create_endpoint_notification={{create-endpoint-notification}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "file-paths-to-scan"
+  required = true
+  description = "Comma-separated list of paths to scan"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "file-paths-to-exclude-from-scan"
+  required = false
+  description = "Comma-separated list of paths to exclude from scan"
+  [[subCommands.args]]
+  name = "host-group-name"
+  required = false
+  description = "Comma-separated list of host group names for scanning"
+  [[subCommands.args]]
+  name = "scan-description"
+  required = false
+  description = "Description for the scan"
+  [[subCommands.args]]
+  name = "quarantine-hosts"
+  required = false
+  description = "If enabled, quarantine hosts during scanning"
+  [[subCommands.args]]
+  name = "create-endpoint-notification"
+  required = false
+  description = "If enabled, create endpoint notification"
+
+# CrowdStrike Falcon Incident Management Commands
+
+[[subCommands]]
+name = "update-incident"
+description = "Update CrowdStrike Falcon incident status, assignment, and details"
+prompt = """
+{% if help %}
+Usage: /crowdstrike update-incident [OPTIONS]
+
+Update CrowdStrike Falcon incident status, assignment, and details.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --incident-id            ID of the incident to update [REQUIRED]
+  --customer-id            ID of the customer for which to execute the action (optional)
+  --status                 Status for the incident (optional)
+  --assign-to              Name/email of analyst to assign incident to (optional)
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike update-incident --case-id="523" --alert-group-identifiers="group1" --incident-id="inc_123" --status="In Progress"
+  /crowdstrike update-incident --case-id="724" --alert-group-identifiers="group1,group2" --incident-id="inc_456" --assign-to="John Doe"
+
+Valid Status Values:
+  - New, In Progress, Closed, Reopened
+
+Assignment Notes:
+  - Use "Unassign" to remove assignment from incident
+  - For names, use format: "First Last" (e.g., "John Doe")
+  - Email addresses are also accepted
+  - API accepts any value even if user doesn't exist
+
+Use Cases:
+- Update incident status during investigation workflow
+- Assign incidents to specific analysts
+- Track incident progress through resolution
+- Maintain accurate incident state in CrowdStrike console
+
+The response includes:
+- Confirmation of incident update
+- Updated incident details and status
+- Assignment information if applicable
+{% else %}
+Call the crowd_strike_falcon_update_incident tool with: `crowd_strike_falcon_update_incident(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, incident_id={{incident-id}}, customer_id={{customer-id}}, status={{status}}, assign_to={{assign-to}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "incident-id"
+  required = true
+  description = "ID of the incident to update"
+  [[subCommands.args]]
+  name = "customer-id"
+  required = false
+  description = "ID of the customer for which to execute the action"
+  [[subCommands.args]]
+  name = "status"
+  required = false
+  description = "Status for the incident"
+  [[subCommands.args]]
+  name = "assign-to"
+  required = false
+  description = "Name/email of analyst to assign incident to"
+
+[[subCommands]]
+name = "add-incident-comment"
+description = "Add comments to CrowdStrike Falcon incidents for documentation and collaboration"
+prompt = """
+{% if help %}
+Usage: /crowdstrike add-incident-comment [OPTIONS]
+
+Add comments to CrowdStrike Falcon incidents for documentation and collaboration.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --incident-id            ID of the incident to add a comment to [REQUIRED]
+  --comment                Comment content for the incident [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike add-incident-comment --case-id="523" --alert-group-identifiers="group1" --incident-id="inc_123" --comment="Escalating to IR team"
+  /crowdstrike add-incident-comment --case-id="724" --alert-group-identifiers="group1,group2" --incident-id="inc_456" --comment="Containment complete, beginning forensics"
+
+Use Cases:
+- Document incident investigation progress
+- Add analysis findings and recommendations
+- Record response actions taken
+- Facilitate team collaboration on incidents
+
+The response includes:
+- Confirmation of comment addition
+- Incident ID and comment details
+- Timestamp information for the comment
+{% else %}
+Call the crowd_strike_falcon_add_incident_comment tool with: `crowd_strike_falcon_add_incident_comment(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, incident_id={{incident-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "incident-id"
+  required = true
+  description = "ID of the incident to add a comment to"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "Comment content for the incident"
+
+# CrowdStrike Falcon Identity Protection Commands
+
+[[subCommands]]
+name = "add-identity-detection-comment"
+description = "Add comments to CrowdStrike Falcon Identity Protection detections"
+prompt = """
+{% if help %}
+Usage: /crowdstrike add-identity-detection-comment [OPTIONS]
+
+Add comments to CrowdStrike Falcon Identity Protection detections.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --detection-id           ID of the identity protection detection to update [REQUIRED]
+  --comment                Comment content for the detection [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike add-identity-detection-comment --case-id="523" --alert-group-identifiers="group1" --detection-id="idp_123" --comment="Investigating identity compromise"
+  /crowdstrike add-identity-detection-comment --case-id="724" --alert-group-identifiers="group1,group2" --detection-id="idp_456" --comment="Confirmed credential theft"
+
+Use Cases:
+- Document analysis of identity-based attacks
+- Add context for credential compromise investigations
+- Record findings from identity protection detections
+- Maintain audit trail for identity security incidents
+
+The response includes:
+- Confirmation of comment addition
+- Detection ID and comment details
+- Timestamp information for the comment
+{% else %}
+Call the crowd_strike_falcon_add_identity_protection_detection_comment tool with: `crowd_strike_falcon_add_identity_protection_detection_comment(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, detection_id={{detection-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "detection-id"
+  required = true
+  description = "ID of the identity protection detection to update"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "Comment content for the detection"
+
+# CrowdStrike Falcon System Commands
+
+[[subCommands]]
+name = "ping"
+description = "Test connectivity to CrowdStrike Falcon API and verify integration status"
+prompt = """
+{% if help %}
+Usage: /crowdstrike ping [OPTIONS]
+
+Test connectivity to CrowdStrike Falcon API and verify integration status.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike ping --case-id="523" --alert-group-identifiers="group1"
+  /crowdstrike ping --case-id="724" --alert-group-identifiers="group1,group2"
+
+Use Cases:
+- Verify CrowdStrike Falcon API connectivity
+- Test integration configuration and credentials
+- Troubleshoot connection issues
+- Validate SOAR to CrowdStrike integration
+
+The response includes:
+- Connectivity status and response time
+- API authentication verification
+- Integration health information
+- Error details if connection fails
+{% else %}
+Call the crowd_strike_falcon_ping tool with: `crowd_strike_falcon_ping(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+
+[[subCommands]]
+name = "get-event-offset"
+description = "Get event offset information for CrowdStrike Falcon event processing"
+prompt = """
+{% if help %}
+Usage: /crowdstrike get-event-offset [OPTIONS]
+
+Get event offset information for CrowdStrike Falcon event processing.
+
+Options:
+  --case-id                The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers Comma-separated identifiers for the alert groups [REQUIRED]
+  --max-events-to-process  Maximum number of events to process from offset [REQUIRED]
+  --help                   Show this help message
+
+Examples:
+  /crowdstrike get-event-offset --case-id="523" --alert-group-identifiers="group1" --max-events-to-process="1000"
+  /crowdstrike get-event-offset --case-id="724" --alert-group-identifiers="group1,group2" --max-events-to-process="500"
+
+Use Cases:
+- Retrieve event processing offset information
+- Manage event stream processing for integrations
+- Monitor event consumption and processing lag
+- Troubleshoot event processing issues
+
+The response includes:
+- Current event offset information
+- Event processing status and metrics
+- Available events for processing
+- Offset management details
+{% else %}
+Call the crowd_strike_falcon_get_event_offset tool with: `crowd_strike_falcon_get_event_offset(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, max_events_to_process={{max-events-to-process}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "max-events-to-process"
+  required = true
+  description = "Maximum number of events to process from offset"
