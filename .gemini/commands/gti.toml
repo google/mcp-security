@@ -1033,3 +1033,58 @@ Call the search_digital_threat_monitoring tool with: `search_digital_threat_moni
   name = "doc-type"
   required = false
   description = "Document type filter (forum_post, message, paste, etc.)"
+
+# GTI help
+[[subCommands]]
+name = "help"
+description = "Show available GTI subcommands and their descriptions"
+prompt = """
+{% if help %}
+Usage: /gti help
+
+Show available GTI subcommands organized by category.
+
+THREAT SEARCH COMMANDS:
+  search-threats    Search all threat types (actors, malware, campaigns, reports, vulnerabilities)
+  search-campaigns  Search threat campaigns and coordinated attacks
+  search-actors     Search threat actors and APT groups
+  search-malware    Search malware families and variants
+  search-vulns      Search vulnerabilities and CVEs
+
+IOC ANALYSIS COMMANDS:
+  file-report       Analyze files by hash (MD5/SHA-1/SHA-256)
+  domain-report     Analyze domain reputation and threat associations
+  ip-report         Analyze IP addresses (IPv4/IPv6) for threats
+  url-report        Analyze URL reputation and content safety
+  search-iocs       Search indicators of compromise (files, domains, IPs, URLs)
+
+COLLECTION MANAGEMENT:
+  get-collection       Get detailed information about threat collections
+  collection-timeline  Get timeline events for threat actors and campaigns
+  collection-mitre     Get MITRE ATT&CK technique mappings
+
+THREAT PROFILES:
+  list-profiles     List organization-specific threat profiles
+  get-profile       Get detailed threat profile configuration
+
+DARK WEB MONITORING:
+  search-darkweb    Search Digital Threat Monitoring for underground activity
+
+GETTING DETAILED HELP:
+  /gti COMMAND --help    Show detailed help for any specific command
+
+Examples:
+  /gti search-threats --help    # Detailed help for threat search
+  /gti file-report --help       # Detailed help for file analysis
+  /gti search-darkweb --help    # Detailed help for dark web monitoring
+
+Use Cases:
+- Research threat actors, malware families, and attack campaigns
+- Analyze suspicious files, domains, IPs, and URLs
+- Monitor dark web for mentions of your organization
+- Get threat intelligence tailored to your industry and region
+- Map threats to MITRE ATT&CK framework for defense planning
+{% else %}
+# Help command doesn't call any MCP tools - it just displays command information
+{% endif %}
+"""
