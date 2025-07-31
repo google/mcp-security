@@ -1,0 +1,13 @@
+description = "Implement slash command to call MCP Tools"
+prompt = """
+You are implementing /slash-commands to call the available MCP Tools
+"""
+
+# SecOps entity_lookup
+[[subCommands]]
+name = "entity-lookup"
+description = "Call the SecOps MCP Server's entity_lookup MCP Tool"
+prompt = "Call the entity_lookup tool with: `entity_lookup(entity_value={{entity-value}})`"
+  [[subCommands.args]]
+  name = "entity-value"
+  required = true
