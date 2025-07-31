@@ -11,3 +11,192 @@ prompt = "Call the entity_lookup tool with: `entity_lookup(entity_value={{entity
   [[subCommands.args]]
   name = "entity-value"
   required = true
+
+# SecOps get_ioc_matches
+[[subCommands]]
+name = "ioc-matches"
+description = "Call the SecOps MCP Server's get_ioc_matches MCP Tool"
+prompt = "Call the get_ioc_matches tool with: `get_ioc_matches(hours_back={{hours-back}}, max_matches={{max-matches}})`"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  [[subCommands.args]]
+  name = "max-matches"
+  required = false
+  default = "20"
+
+# SecOps search_security_events
+[[subCommands]]
+name = "search-events"
+description = "Call the SecOps MCP Server's search_security_events MCP Tool"
+prompt = "Call the search_security_events tool with: `search_security_events(text={{query}}, hours_back={{hours-back}}, max_events={{max-events}})`"
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Natural language query to search for events"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  [[subCommands.args]]
+  name = "max-events"
+  required = false
+  default = "100"
+
+# SecOps get_security_alerts
+[[subCommands]]
+name = "get-alerts"
+description = "Call the SecOps MCP Server's get_security_alerts MCP Tool"
+prompt = "Call the get_security_alerts tool with: `get_security_alerts(hours_back={{hours-back}}, max_alerts={{max-alerts}}, status_filter={{status-filter}})`"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  [[subCommands.args]]
+  name = "max-alerts"
+  required = false
+  default = "10"
+  [[subCommands.args]]
+  name = "status-filter"
+  required = false
+  default = "feedback_summary.status != \"CLOSED\""
+
+# SecOps get_security_alert_by_id
+[[subCommands]]
+name = "get-alert"
+description = "Call the SecOps MCP Server's get_security_alert_by_id MCP Tool"
+prompt = "Call the get_security_alert_by_id tool with: `get_security_alert_by_id(alert_id={{alert-id}}, include_detections={{include-detections}})`"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique ID of the alert to retrieve"
+  [[subCommands.args]]
+  name = "include-detections"
+  required = false
+  default = "true"
+
+# SecOps do_update_security_alert
+[[subCommands]]
+name = "update-alert"
+description = "Call the SecOps MCP Server's do_update_security_alert MCP Tool"
+prompt = "Call the do_update_security_alert tool with: `do_update_security_alert(alert_id={{alert-id}}, reason={{reason}}, priority={{priority}}, status={{status}}, verdict={{verdict}}, severity={{severity}}, comment={{comment}}, root_cause={{root-cause}})`"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique ID of the alert to update"
+  [[subCommands.args]]
+  name = "reason"
+  required = false
+  [[subCommands.args]]
+  name = "priority"
+  required = false
+  [[subCommands.args]]
+  name = "status"
+  required = false
+  [[subCommands.args]]
+  name = "verdict"
+  required = false
+  [[subCommands.args]]
+  name = "severity"
+  required = false
+  [[subCommands.args]]
+  name = "comment"
+  required = false
+  [[subCommands.args]]
+  name = "root-cause"
+  required = false
+
+# SecOps list_security_rules
+[[subCommands]]
+name = "list-rules"
+description = "Call the SecOps MCP Server's list_security_rules MCP Tool"
+prompt = "Call the list_security_rules tool with: `list_security_rules()`"
+
+# SecOps search_security_rules
+[[subCommands]]
+name = "search-rules"
+description = "Call the SecOps MCP Server's search_security_rules MCP Tool"
+prompt = "Call the search_security_rules tool with: `search_security_rules(query={{query}})`"
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Regex string to search for in rules"
+
+# SecOps get_rule_detections
+[[subCommands]]
+name = "get-detections"
+description = "Call the SecOps MCP Server's get_rule_detections MCP Tool"
+prompt = "Call the get_rule_detections tool with: `get_rule_detections(rule_id={{rule-id}}, alert_state={{alert-state}}, page_size={{page-size}}, page_token={{page-token}})`"
+  [[subCommands.args]]
+  name = "rule-id"
+  required = true
+  description = "Unique ID of the rule to get detections for"
+  [[subCommands.args]]
+  name = "alert-state"
+  required = false
+  description = "Filter by alert state (UNSPECIFIED, NOT_ALERTING, ALERTING)"
+  [[subCommands.args]]
+  name = "page-size"
+  required = false
+  [[subCommands.args]]
+  name = "page-token"
+  required = false
+
+# SecOps list_rule_errors
+[[subCommands]]
+name = "list-errors"
+description = "Call the SecOps MCP Server's list_rule_errors MCP Tool"
+prompt = "Call the list_rule_errors tool with: `list_rule_errors(rule_id={{rule-id}})`"
+  [[subCommands.args]]
+  name = "rule-id"
+  required = true
+  description = "Unique ID of the rule to list errors for"
+
+# SecOps create_rule
+[[subCommands]]
+name = "create-rule"
+description = "Call the SecOps MCP Server's create_rule MCP Tool"
+prompt = "Call the create_rule tool with: `create_rule(rule_text={{rule-text}})`"
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition"
+
+# SecOps test_rule
+[[subCommands]]
+name = "test-rule"
+description = "Call the SecOps MCP Server's test_rule MCP Tool"
+prompt = "Call the test_rule tool with: `test_rule(rule_text={{rule-text}}, hours_back={{hours-back}}, max_results={{max-results}})`"
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition to test"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "168"
+  [[subCommands.args]]
+  name = "max-results"
+  required = false
+  default = "100"
+
+# SecOps validate_rule
+[[subCommands]]
+name = "validate-rule"
+description = "Call the SecOps MCP Server's validate_rule MCP Tool"
+prompt = "Call the validate_rule tool with: `validate_rule(rule_text={{rule-text}})`"
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition to validate"
+
+# SecOps get_threat_intel
+[[subCommands]]
+name = "threat-intel"
+description = "Call the SecOps MCP Server's get_threat_intel MCP Tool"
+prompt = "Call the get_threat_intel tool with: `get_threat_intel(query={{query}})`"
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Security or threat intelligence question to ask Gemini"
