@@ -12,6 +12,64 @@ These commands enable endpoint detection and response (EDR) operations including
 - File analysis and malware scanning
 """
 
+# CrowdStrike Falcon Help Command
+
+[[subCommands]]
+name = "help"
+description = "Show help information for CrowdStrike Falcon SOAR marketplace integration commands"
+prompt = """
+CrowdStrike Falcon SOAR Marketplace Integration
+
+This integration provides comprehensive endpoint detection and response (EDR) capabilities through CrowdStrike Falcon.
+
+Available Commands:
+
+HOST MANAGEMENT:
+  /secops:soar:marketplace:crowdstrikefalcon list-hosts           - List and filter hosts
+  /secops:soar:marketplace:crowdstrikefalcon get-host-info        - Get detailed host information  
+  /secops:soar:marketplace:crowdstrikefalcon get-hosts-by-ioc     - Find hosts with specific IOCs
+
+INCIDENT RESPONSE:
+  /secops:soar:marketplace:crowdstrikefalcon contain-endpoint     - Isolate endpoints (CAUTION: Network isolation)
+  /secops:soar:marketplace:crowdstrikefalcon run-script          - Execute PowerShell scripts on endpoints
+  /secops:soar:marketplace:crowdstrikefalcon execute-command     - Run specific commands on endpoints
+
+DETECTION & ALERT MANAGEMENT:
+  /secops:soar:marketplace:crowdstrikefalcon add-detection-comment - Add comments to detections
+  /secops:soar:marketplace:crowdstrikefalcon close-detection      - Close detections after investigation
+  /secops:soar:marketplace:crowdstrikefalcon update-alert        - Update alert status and assignment
+  /secops:soar:marketplace:crowdstrikefalcon add-alert-comment   - Add comments to alerts
+
+IOC & THREAT MANAGEMENT:
+  /secops:soar:marketplace:crowdstrikefalcon upload-iocs         - Upload IOCs for detection/blocking
+  /secops:soar:marketplace:crowdstrikefalcon update-ioc-info     - Update IOC information
+
+FILE ANALYSIS & MALWARE SCANNING:
+  /secops:soar:marketplace:crowdstrikefalcon submit-url          - Submit URLs to sandbox
+  /secops:soar:marketplace:crowdstrikefalcon download-file      - Download threat files (CAUTION: Malware)
+  /secops:soar:marketplace:crowdstrikefalcon on-demand-scan     - Initiate endpoint scans
+
+INCIDENT MANAGEMENT:
+  /secops:soar:marketplace:crowdstrikefalcon update-incident     - Update incident status and assignment
+  /secops:soar:marketplace:crowdstrikefalcon add-incident-comment - Add comments to incidents
+
+IDENTITY PROTECTION:
+  /secops:soar:marketplace:crowdstrikefalcon add-identity-detection-comment - Add comments to identity detections
+
+SYSTEM COMMANDS:
+  /secops:soar:marketplace:crowdstrikefalcon ping               - Test API connectivity
+  /secops:soar:marketplace:crowdstrikefalcon get-event-offset  - Get event processing offset
+
+For detailed help on any command, add --help to the command:
+  Example: /secops:soar:marketplace:crowdstrikefalcon list-hosts --help
+
+SECURITY NOTES:
+- Commands like contain-endpoint will isolate systems from the network
+- Script execution and file downloads require proper security precautions  
+- Always verify IOCs before uploading to prevent false positives
+- Follow your organization's incident response procedures
+"""
+
 # CrowdStrike Falcon Host Management Commands
 
 [[subCommands]]
