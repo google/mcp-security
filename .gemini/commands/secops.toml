@@ -892,3 +892,626 @@ Call the get_threat_intel tool with: `get_threat_intel(query={{query}})`
   name = "query"
   required = true
   description = "Security or threat intelligence question to ask Gemini"
+
+# SOAR Case Management Commands
+
+# SOAR list_cases
+[[subCommands]]
+name = "list-cases"
+description = "List cases available in the Security Orchestration, Automation, and Response (SOAR) platform"
+prompt = """
+{% if help %}
+Usage: /secops list-cases [OPTIONS]
+
+List cases available in the Security Orchestration, Automation, and Response (SOAR) platform.
+
+In a SOAR context, a 'case' typically represents a security incident, investigation,
+or a container for related alerts and response actions. Listing cases provides an
+overview of ongoing or past security events being managed by the platform.
+
+Options:
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-cases                                    # List current cases
+  /secops list-cases --next-page-token="abc123xyz"      # Get next page of results
+
+Use Cases:
+- Get high-level overview of current incident queue within SOAR platform  
+- Find specific incidents to investigate further
+- First step in triage workflow to understand ongoing security events
+- Monitor case backlog and priorities
+
+The response includes:
+- List of case objects with summary details (ID, name, status, priority)
+- Case priorities (initial indicator - true importance requires deeper analysis)
+- Associated metadata and timestamps
+- Pagination tokens for additional results
+
+Important Triage Note:
+Case priority is only an initial indicator. True importance must be assessed by 
+examining the full context (alerts, entities, potential impact, threat intelligence)
+using tools like /secops get-case-details.
+
+Next Steps:
+- Use /secops get-case-details --case-id=ID for comprehensive case analysis
+- Use /secops list-alerts-by-case --case-id=ID to see associated alerts
+- Use /secops change-case-priority if initial assessment suggests different priority
+- Extract key indicators and use SIEM, TI, or other security tool integrations
+{% else %}
+Call the list_cases tool with: `list_cases(next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR post_case_comment
+[[subCommands]]
+name = "post-case-comment"
+description = "Post a comment to a specific case within the SOAR platform for documentation and collaboration"
+prompt = """
+{% if help %}
+Usage: /secops post-case-comment [OPTIONS]
+
+Post a comment to a specific case within the SOAR platform.
+
+Cases are used to track security incidents and investigations. Adding comments
+is essential for documenting findings, communication between analysts, recording
+actions taken, or providing updates on the investigation progress.
+
+Options:
+  --case-id  The unique identifier (ID) of the case [REQUIRED]
+  --comment  The textual content of the comment to be recorded [REQUIRED]
+  --help     Show this help message
+
+Examples:
+  /secops post-case-comment --case-id="523" --comment="Investigating potential impact"
+  /secops post-case-comment --case-id="724" --comment="Confirmed malicious activity - escalating"
+  /secops post-case-comment --case-id="891" --comment="False positive - benign admin activity"
+
+Use Cases:
+- Document findings from other MCP tool investigations (SIEM, TI, EDR, Cloud)
+- Record analyst actions and decisions during investigation
+- Provide updates on investigation progress for team collaboration
+- Maintain audit trail within the SOAR case
+- Justify changes in case priority or status
+
+The response includes:
+- Confirmation of successful comment posting
+- Any error messages if posting fails
+- Updated case comment history
+
+Workflow Integration:
+- Use throughout investigation to document findings from various security tools
+- Essential for collaboration and maintaining audit trail within SOAR case
+- Document conclusions derived from MCP-enabled tools (SIEM, TI, EDR, Cloud posture)
+
+Next Steps:
+- Continue investigation based on documented information
+- Use comments to justify case priority changes or status updates
+- Share key findings with other relevant systems (ticketing, reporting)
+{% else %}
+Call the post_case_comment tool with: `post_case_comment(case_id={{case-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "The textual content of the comment to be recorded"
+
+# SOAR list_alerts_by_case
+[[subCommands]]
+name = "list-alerts-by-case"
+description = "List the security alerts associated with a specific case ID in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops list-alerts-by-case [OPTIONS]
+
+List the security alerts associated with a specific case ID in the SOAR platform.
+
+Alerts are notifications generated by security tools (like SIEMs, EDRs) indicating
+potential security issues. In SOAR, alerts are often grouped into cases for
+investigation and response. Listing alerts helps understand the scope of incidents.
+
+Options:
+  --case-id          The unique identifier (ID) of the case [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-alerts-by-case --case-id="523"
+  /secops list-alerts-by-case --case-id="724" --next-page-token="def456ghi"
+
+Use Cases:
+- Understand specific triggers (alerts) and scope of incident in SOAR case
+- Identify alert patterns and relationships within a case
+- Get alert severity and metadata for investigation prioritization
+- Find alert IDs for deeper event analysis
+
+The response includes:
+- List of alert objects linked to the specified case
+- Alert details: name, source, severity, timestamp
+- Alert severity (initial guidance - actual risk depends on context and evidence)
+- Associated alert metadata and identifiers
+
+Workflow Integration:
+- Use after identifying a case of interest (via list-cases or get-case-details)
+- Helps understand specific triggers and scope of incident in SOAR platform
+- Provides foundation for deeper investigation into underlying events
+
+Next Steps:
+- Use /secops list-events-by-alert to get raw events underlying specific alerts
+- Use /secops list-alert-group-identifiers-by-case to understand alert groupings
+- Use /secops get-entities-by-alert-group-identifiers to find entities in alert groups
+- Extract indicators from alerts and use SIEM entity lookup or event search
+- Correlate alert details with findings from other security tools (EDR, Network, Cloud, TI)
+{% else %}
+Call the list_alerts_by_case tool with: `list_alerts_by_case(case_id={{case-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR list_alert_group_identifiers_by_case
+[[subCommands]]
+name = "list-alert-group-identifiers"
+description = "List alert group identifiers associated with a specific case ID in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops list-alert-group-identifiers [OPTIONS]
+
+List alert group identifiers associated with a specific case ID in the SOAR platform.
+
+In this SOAR implementation, alerts within a case can be grouped using identifiers,
+potentially for correlation, playbook execution stages, or analyst assignment.
+Retrieving these identifiers helps understand the internal structure of a case.
+
+Options:
+  --case-id          The unique identifier (ID) of the case [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-alert-group-identifiers --case-id="523"
+  /secops list-alert-group-identifiers --case-id="724" --next-page-token="ghi789jkl"
+
+Use Cases:
+- Understand how alerts are grouped within the case
+- Identify related sets of alerts for targeted actions
+- Support playbook logic that operates on alert groups
+- Prepare for entity retrieval from specific alert groups
+
+The response includes:
+- List of alert group identifier strings associated with the case
+- Group identifiers used for correlation and organization
+- Identifiers that can be used with other SOAR tools
+
+Workflow Integration:
+- Use after identifying a case and its associated alerts within SOAR platform
+- Helps understand alert groupings relevant for playbook logic
+- Prepares for targeted actions on specific alert groupings
+
+Next Steps:
+- Use /secops get-entities-by-alert-group-identifiers to find entities in these groups
+- Use identifiers as parameters for playbook actions or integrations
+- Target specific alert groupings for automated or manual interventions
+{% else %}
+Call the list_alert_group_identifiers_by_case tool with: `list_alert_group_identifiers_by_case(case_id={{case-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR list_events_by_alert
+[[subCommands]]
+name = "list-events-by-alert"
+description = "List the underlying security events associated with a specific alert within a given case"
+prompt = """
+{% if help %}
+Usage: /secops list-events-by-alert [OPTIONS]
+
+List the underlying security events associated with a specific alert within a given case.
+
+Security alerts (often derived from detection rules or IoC matches) are typically
+triggered by one or more underlying events ingested into the security platform
+(e.g., Chronicle). These events provide the raw data needed to validate alerts.
+
+Options:
+  --case-id          The unique identifier (ID) of the case containing the alert [REQUIRED]
+  --alert-id         The unique identifier (ID) of the specific alert [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-events-by-alert --case-id="523" --alert-id="751"
+  /secops list-events-by-alert --case-id="724" --alert-id="892" --next-page-token="xyz123abc"
+
+Use Cases:
+- Get ground truth event data (often from SIEM) to validate alerts
+- Understand exact actions that occurred to trigger the alert
+- Perform deep-dive investigations into specific alert triggers
+- Extract detailed forensic information from underlying events
+
+The response includes:
+- List of event objects (potentially in UDM format) related to the alert
+- Raw data needed to validate alert and understand specific activity
+- Event details for forensic analysis and investigation
+- Timestamps and metadata for timeline reconstruction
+
+Workflow Integration:
+- Use after identifying specific alert of interest within SOAR case
+- Provides ground truth event data from SIEM for alert validation
+- Essential for understanding exact actions that occurred
+
+Next Steps:
+- Analyze event data (UDM format) for specific details: command lines, network connections, file hashes, user activity
+- Extract new indicators from the events for further investigation
+- Use entity lookup or threat intelligence tools to enrich newly found indicators
+- Correlate event details with other related events using SIEM event search tools
+- Document findings in case management system using commenting tools
+{% else %}
+Call the list_events_by_alert tool with: `list_events_by_alert(case_id={{case-id}}, alert_id={{alert-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case containing the alert"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique identifier (ID) of the specific alert"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR change_case_priority
+[[subCommands]]
+name = "change-case-priority"
+description = "Change the priority level of a specific case in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops change-case-priority [OPTIONS]
+
+Change the priority level of a specific case in the SOAR platform.
+
+Case priority helps security teams triage incidents and focus on the most urgent
+threats based on currently available information. Priority can change as more
+context is gathered during investigation.
+
+Options:
+  --case-id        The unique identifier (ID) of the case to update [REQUIRED]
+  --case-priority  The new priority level to assign to the case [REQUIRED]
+  --help          Show this help message
+
+Valid Priority Values:
+  PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium, PriorityHigh, PriorityCritical
+
+Examples:
+  /secops change-case-priority --case-id="523" --case-priority="PriorityHigh"
+  /secops change-case-priority --case-id="724" --case-priority="PriorityLow"
+  /secops change-case-priority --case-id="891" --case-priority="PriorityCritical"
+
+Use Cases:
+- Escalate case priority based on new information from MCP tools (SIEM, TI, EDR)
+- De-escalate cases found to be false positives or low impact
+- Ensure analyst focus aligns with actual risk posed by incident
+- Adjust priority during investigation lifecycle based on findings
+
+The response includes:
+- Confirmation of successful priority update
+- Error messages if update fails
+- Updated case priority information
+
+Workflow Integration:
+- Use during triage or investigation when new information suggests incorrect priority
+- Helps ensure analyst focus aligns with actual risk from multiple data sources
+- Typically follows analysis using various MCP-enabled security tools
+
+Next Steps:
+- Use /secops post-case-comment to document reason for priority change
+- Adjust investigation efforts based on new priority level
+- Consider resource allocation changes based on updated priority
+{% else %}
+Call the change_case_priority tool with: `change_case_priority(case_id={{case-id}}, case_priority={{case-priority}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case to update"
+  [[subCommands.args]]
+  name = "case-priority"
+  required = true
+  description = "The new priority level (PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium, PriorityHigh, PriorityCritical)"
+
+# SOAR get_entities_by_alert_group_identifiers
+[[subCommands]]
+name = "get-entities-by-alert-groups"
+description = "Retrieve entities (IPs, hostnames, users) involved in specific alert groups within a case"
+prompt = """
+{% if help %}
+Usage: /secops get-entities-by-alert-groups [OPTIONS]
+
+Retrieve entities (e.g., IP addresses, hostnames, users) involved in specific alert groups within a case.
+
+Understanding which entities are associated with alerts is fundamental for incident
+investigation and response. This tool fetches entities linked to alert groups,
+crucial for identifying affected assets, attack vectors, or compromised accounts.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated list of alert group identifiers [REQUIRED]
+  --help                    Show this help message
+
+Examples:
+  /secops get-entities-by-alert-groups --case-id="523" --alert-group-identifiers="rule_name_hash_guid"
+  /secops get-entities-by-alert-groups --case-id="724" --alert-group-identifiers="group1,group2,group3"
+
+Use Cases:
+- Identify specific assets, users, or indicators involved in incident stages
+- Get target entities for manual response actions or playbook automation
+- Understand scope of impact from specific alert groupings
+- Prepare entity lists for targeted response actions
+
+The response includes:
+- List of entities (with identifiers, types, etc.) associated with alert groups
+- Entity details and metadata for investigation context
+- Information needed for targeted response actions
+
+Workflow Integration:
+- Use after identifying relevant alert group identifiers within SOAR case
+- Crucial for pinpointing specific assets/users/indicators in incident aspects
+- Provides foundation for targeted response and investigation actions
+
+Next Steps:
+- Analyze entity list to understand scope of impact
+- Use /secops get-entity-details to get more SOAR-specific context on individual entities
+- Use SIEM entity lookup tools to get broader historical context for these entities
+- Use SIEM event search tools to find detailed logs related to entities' activities
+- Use threat intelligence tools to enrich the identified entities
+- Use entity list as input for targeted response actions via SOAR playbooks or security tools
+{% else %}
+Call the get_entities_by_alert_group_identifiers tool with: `get_entities_by_alert_group_identifiers(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case containing the alert groups"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated list of identifiers for the alert groups"
+
+# SOAR get_entity_details
+[[subCommands]]
+name = "get-entity-details"
+description = "Fetch detailed information about a specific entity known to the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops get-entity-details [OPTIONS]
+
+Fetch detailed information about a specific entity known to the SOAR platform.
+
+Entities (like IPs, domains, users, assets) are central to security investigations.
+This tool retrieves comprehensive details about a specific entity based on its
+identifier, type, and environment, including enrichment data and risk scores.
+
+Options:
+  --entity-identifier   The unique identifier of the entity (e.g., "192.168.1.100") [REQUIRED]
+  --entity-type        The type of the entity (e.g., "IP Address") [REQUIRED]
+  --entity-environment The environment context for the entity (e.g., "Production") [REQUIRED]
+  --help              Show this help message
+
+Examples:
+  /secops get-entity-details --entity-identifier="192.168.1.100" --entity-type="IP Address" --entity-environment="Production"
+  /secops get-entity-details --entity-identifier="user@company.com" --entity-type="User" --entity-environment="Corporate"
+  /secops get-entity-details --entity-identifier="workstation-01" --entity-type="Hostname" --entity-environment="Development"
+
+Use Cases:
+- Get SOAR platform's specific view of entity with enrichments
+- Retrieve threat intelligence scores and asset inventory details
+- Understand related alerts or cases involving the entity
+- Get risk scores and observed activity for the entity
+
+The response includes:
+- Detailed attributes and related information for the specified entity
+- Enrichment data performed by SOAR playbooks or integrations
+- Risk scores and threat intelligence information
+- Related alerts, cases, and observed activity
+
+Workflow Integration:
+- Use after identifying specific entity of interest within SOAR platform
+- Provides SOAR platform's enriched view including playbook-generated context
+- Complements broader SIEM entity lookup tools with SOAR-specific enrichments
+
+Next Steps:
+- Analyze enrichment data provided by SOAR platform (threat intel scores, asset details)
+- Compare SOAR entity details with broader context from SIEM entity lookup tools
+- Use findings to inform risk assessment and response decisions within SOAR workflow
+- Document key details using case commenting tools
+- Correlate with information from other security tools (EDR, Network, Cloud, TI)
+{% else %}
+Call the get_entity_details tool with: `get_entity_details(entity_identifier={{entity-identifier}}, entity_type={{entity-type}}, entity_environment={{entity-environment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "entity-identifier"
+  required = true
+  description = "The unique identifier of the entity"
+  [[subCommands.args]]
+  name = "entity-type"
+  required = true
+  description = "The type of the entity"
+  [[subCommands.args]]
+  name = "entity-environment"
+  required = true
+  description = "The environment context for the entity"
+
+# SOAR search_entity
+[[subCommands]]
+name = "search-entity"
+description = "Search for entities within the SOAR platform based on various criteria"
+prompt = """
+{% if help %}
+Usage: /secops search-entity [OPTIONS]
+
+Search for entities within the SOAR platform based on various criteria.
+
+This tool provides a flexible way to find entities (assets, users, IOCs, etc.)
+matching specific attributes. Useful for exploring the entity database or finding
+potentially related entities during an investigation.
+
+Options:
+  --term              Search term (e.g., partial IP, hostname fragment) (optional)
+  --type              Comma-separated list of entity types to filter by (optional)
+  --is-suspicious     Filter for entities marked as suspicious (true/false) (optional)
+  --is-internal-asset Filter for entities identified as internal assets (true/false) (optional)
+  --is-enriched       Filter for entities that have undergone enrichment (true/false) (optional)
+  --network-name      Comma-separated list of networks to filter by (optional)
+  --environment-name  Comma-separated list of environments to filter by (optional)
+  --help             Show this help message
+
+Examples:
+  /secops search-entity --term="192.168"                    # Search for IPs starting with 192.168
+  /secops search-entity --type="IP Address,Hostname"        # Search for IPs and hostnames
+  /secops search-entity --is-suspicious=true                # Find all suspicious entities
+  /secops search-entity --is-internal-asset=false           # Find external entities
+  /secops search-entity --network-name="DMZ,Production"     # Search in specific networks
+  /secops search-entity --environment-name="Production"     # Search in production environment
+
+Use Cases:
+- Exploratory analysis within SOAR platform's entity database
+- Find potentially related entities based on partial information
+- Identify entities with specific characteristics (suspicious, internal, enriched)
+- Discover assets with shared characteristics in specific environments
+
+The response includes:
+- List of entity objects matching the search criteria
+- Entity attributes and metadata for investigation context
+- Filtering results based on specified criteria
+
+Workflow Integration:
+- Useful for exploratory analysis when you don't have specific identifier from alert/case
+- Can help identify potentially related entities based on shared characteristics
+- Supports discovery of suspicious hosts in specific environments as known by SOAR
+
+Next Steps:
+- Analyze the list of returned entities for patterns or relationships
+- Use /secops get-entity-details for more SOAR-specific information on entities found
+- Use SIEM entity lookup tools for broader historical context on interesting entities
+- Use threat intelligence tools to enrich findings from the search results
+{% else %}
+Call the search_entity tool with: `search_entity(term={{term}}, type={{type}}, is_suspicious={{is-suspicious}}, is_internal_asset={{is-internal-asset}}, is_enriched={{is-enriched}}, network_name={{network-name}}, environment_name={{environment-name}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "term"
+  required = false
+  description = "Search term to match against entity identifiers or names"
+  [[subCommands.args]]
+  name = "type"
+  required = false
+  description = "Comma-separated list of entity types to filter by"
+  [[subCommands.args]]
+  name = "is-suspicious"
+  required = false
+  description = "Filter for entities marked as suspicious (true/false)"
+  [[subCommands.args]]
+  name = "is-internal-asset"
+  required = false
+  description = "Filter for entities identified as internal assets (true/false)"
+  [[subCommands.args]]
+  name = "is-enriched"
+  required = false
+  description = "Filter for entities that have undergone enrichment processes (true/false)"
+  [[subCommands.args]]
+  name = "network-name"
+  required = false
+  description = "Comma-separated list of networks to filter entities by"
+  [[subCommands.args]]
+  name = "environment-name"
+  required = false
+  description = "Comma-separated list of environments to filter entities by"
+
+# SOAR get_case_full_details
+[[subCommands]]
+name = "get-case-details"
+description = "Retrieve comprehensive details for a specific case by aggregating core information, alerts, and comments"
+prompt = """
+{% if help %}
+Usage: /secops get-case-details [OPTIONS]
+
+Retrieve comprehensive details for a specific case by aggregating its core information, associated alerts, and comments.
+
+This tool provides a consolidated view of a security case by fetching its primary
+details (status, priority, description), all linked security alerts, and the full
+history of comments added by analysts or automation.
+
+Options:
+  --case-id  The unique identifier (ID) of the case for full details [REQUIRED]
+  --help    Show this help message
+
+Examples:
+  /secops get-case-details --case-id="523"
+  /secops get-case-details --case-id="724"
+
+Use Cases:
+- Primary tool for starting investigation of specific case identified within SOAR
+- Get comprehensive initial overview by gathering core SOAR case data in one call
+- Understand complete incident context, scope, investigation progress, and collaboration notes
+- Starting point for full investigation (requires deeper analysis using subsequent tools)
+
+The response includes:
+- case_details: Raw API response for basic case information
+- case_alerts: Raw API response containing list of alerts associated with the case
+- case_comments: Raw API response containing list of comments for the case
+
+Important Triage Note:
+Use the priority field as initial guide only. Analyze the combined details (alerts,
+comments, entities involved, potential impact, related threat intelligence) to
+determine the true importance and urgency of the case.
+
+Workflow Integration:
+- Primary tool for starting investigation of specific case identified within SOAR platform
+- Provides comprehensive initial overview - this is a starting point for full investigation
+- Requires deeper analysis using subsequent tools for complete understanding
+
+Next Steps (Essential for Full Investigation):
+- Analyze case_details for status, priority, and description
+- Examine case_alerts to understand triggers - use /secops list-events-by-alert for underlying event data
+- Review case_comments for analyst notes or previous actions
+- Identify key entities from alerts or comments
+- Use /secops get-entities-by-alert-groups to find entities associated with case/alert groups
+- Enrich findings using SIEM (entity-lookup, search-events), TI (threat-intel), EDR, Cloud tools
+- Document investigation progress using case commenting tools
+- Consider adjusting case priority using priority management tools based on findings
+{% else %}
+Call the get_case_full_details tool with: `get_case_full_details(case_id={{case-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case for full details"
