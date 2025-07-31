@@ -1,6 +1,32 @@
 description = "Google Chronicle SOAR marketplace integration slash commands for SIEM security operations"
 
 [[subCommands]]
+name = "help"
+description = "Show help for Chronicle SOAR marketplace integration commands"
+prompt = """
+{% if help %}
+Chronicle SOAR Marketplace Integration Commands
+
+Available Commands:
+- rule-details: Fetch detailed information about Chronicle detection rules
+- detection-details: Get specific detection analysis and details
+- udm-query: Execute custom UDM queries with flexible time filtering  
+- list-iocs: List enterprise IoCs discovered in specified time range
+- enrich-ip: Enrich IP addresses using Chronicle threat intelligence
+- ping: Test Chronicle integration connectivity
+
+Use /chronicle <command> --help for detailed command usage.
+
+Security Context:
+- All commands require active SOAR case context
+- Chronicle integration provides SIEM data analysis capabilities
+- Essential for threat hunting, incident response, and IOC validation
+{% else %}
+Display help information for Chronicle SOAR marketplace integration commands.
+{% endif %}
+"""
+
+[[subCommands]]
 name = "rule-details"
 description = "Fetch detailed information about a Chronicle SIEM detection rule"
 prompt = """
