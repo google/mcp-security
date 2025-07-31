@@ -1,0 +1,151 @@
+description = "Implement slash command to call Security Command Center MCP Tools"
+prompt = """
+You are implementing /slash-commands to call the available Security Command Center (SCC) MCP Tools
+"""
+
+# SCC top_vulnerability_findings
+[[subCommands]]
+name = "top-vuln-findings"
+description = "List the top ACTIVE, HIGH or CRITICAL severity vulnerability findings for a project, sorted by Attack Exposure Score"
+prompt = """
+{% if help %}
+Usage: /scc top-vuln-findings [OPTIONS]
+
+List the top ACTIVE, HIGH or CRITICAL severity vulnerability findings for a project.
+
+Lists the top vulnerability findings of class VULNERABILITY that are currently ACTIVE
+with HIGH or CRITICAL severity, sorted by Attack Exposure Score (descending). This
+tool aids in prioritization for remediation by focusing on the most exposed vulnerabilities.
+
+Options:
+  --project-id     Google Cloud project ID to search for findings [REQUIRED]
+  --max-findings   Maximum number of findings to return (default: 20)
+  --help           Show this help message
+
+Examples:
+  /scc top-vuln-findings --project-id="my-gcp-project"
+  /scc top-vuln-findings --project-id="security-project-123" --max-findings=10
+  /scc top-vuln-findings --project-id="prod-environment" --max-findings=50
+
+Project ID Format:
+  Use your Google Cloud project ID (not project name or number)
+  Examples: "my-company-prod", "security-monitoring-dev", "web-app-staging"
+
+The response includes for each finding:
+- Finding name and category
+- Affected resource name
+- Severity level (HIGH or CRITICAL)
+- Attack Exposure Score (used for prioritization)
+- Description of the vulnerability
+
+Use Cases:
+- Prioritize vulnerability remediation by attack exposure
+- Focus security efforts on most critical vulnerabilities
+- Get overview of high-impact security findings
+- Generate executive reports on security posture
+
+Next Steps:
+- Use /scc get-remediation to get specific remediation steps
+- Investigate specific resources with highest exposure scores
+- Plan remediation activities based on attack exposure ranking
+{% else %}
+Call the top_vulnerability_findings tool with: `top_vulnerability_findings(project_id={{project-id}}, max_findings={{max-findings}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "project-id"
+  required = true
+  description = "The Google Cloud project ID to search for vulnerability findings"
+  [[subCommands.args]]
+  name = "max-findings"
+  required = false
+  default = "20"
+  description = "Maximum number of findings to return"
+
+# SCC get_finding_remediation
+[[subCommands]]
+name = "get-remediation"
+description = "Get remediation steps for a specific Security Command Center finding with resource details"
+prompt = """
+{% if help %}
+Usage: /scc get-remediation [OPTIONS]
+
+Get remediation steps for a specific Security Command Center finding.
+
+Retrieves the remediation steps (nextSteps) for a specific finding within a project,
+along with details of the affected resource fetched from Cloud Asset Inventory (CAI).
+The finding can be identified either by its resource name and category (for ACTIVE 
+findings) or directly by its finding ID (regardless of state).
+
+Options:
+  --project-id     Google Cloud project ID containing the finding [REQUIRED]
+  --resource-name  Full resource name associated with the finding (optional)
+  --category       Category of the finding (optional, used with resource-name)
+  --finding-id     ID of the finding to search for directly (optional)
+  --help           Show this help message
+
+Finding Identification Methods:
+
+Method 1 - By Resource and Category (for ACTIVE findings):
+  /scc get-remediation --project-id="my-project" \
+    --resource-name="//container.googleapis.com/projects/my-project/locations/us-central1/clusters/my-cluster" \
+    --category="GKE_SECURITY_BULLETIN"
+
+Method 2 - By Finding ID (any state):
+  /scc get-remediation --project-id="my-project" \
+    --finding-id="12345678901234567890"
+
+Resource Name Examples:
+  Container clusters:
+    //container.googleapis.com/projects/PROJECT/locations/LOCATION/clusters/CLUSTER
+  
+  Compute instances:
+    //compute.googleapis.com/projects/PROJECT/zones/ZONE/instances/INSTANCE
+  
+  Storage buckets:
+    //storage.googleapis.com/projects/_/buckets/BUCKET
+
+Common Categories:
+  - GKE_SECURITY_BULLETIN
+  - COMPUTE_ENGINE_SECURITY_BULLETIN  
+  - CLOUD_SQL_SECURITY_BULLETIN
+  - OPEN_FIREWALL
+  - WEAK_SSL_POLICY
+
+The response includes:
+- Detailed remediation steps (nextSteps)
+- Finding description and metadata
+- Resource details from Cloud Asset Inventory
+- Full finding details for analysis
+
+Use Cases:
+- Get specific remediation guidance for high-priority findings
+- Understand resource context for vulnerability remediation
+- Plan remediation activities with detailed technical steps
+- Gather information for incident response
+
+Next Steps:
+- Follow the provided remediation steps
+- Coordinate with resource owners for remediation
+- Verify remediation by re-running security scans
+- Document remediation activities for compliance
+{% else %}
+Call the get_finding_remediation tool with: `get_finding_remediation(project_id={{project-id}}, resource_name={{resource-name}}, category={{category}}, finding_id={{finding-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "project-id"
+  required = true
+  description = "The Google Cloud project ID containing the finding"
+  [[subCommands.args]]
+  name = "resource-name"
+  required = false
+  description = "Full resource name associated with the finding"
+  [[subCommands.args]]
+  name = "category"
+  required = false
+  description = "Category of the finding (used with resource-name)"
+  [[subCommands.args]]
+  name = "finding-id"
+  required = false
+  description = "ID of the finding to search for directly"
