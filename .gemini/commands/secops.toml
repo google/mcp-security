@@ -6,11 +6,50 @@ You are implementing /slash-commands to call the available MCP Tools
 # SecOps entity_lookup
 [[subCommands]]
 name = "entity-lookup"
-description = "Call the SecOps MCP Server's entity_lookup MCP Tool"
-prompt = "Call the entity_lookup tool with: `entity_lookup(entity_value={{entity-value}})`"
+description = "Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment and historical context"
+prompt = """
+{% if help %}
+Usage: /secops entity-lookup [OPTIONS]
+
+Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment.
+
+Provides a comprehensive summary of an entity's activity based on historical log data
+within Chronicle over a specified time period. Chronicle automatically attempts to 
+detect the entity type from the value provided.
+
+Options:
+  --entity-value  Value to look up (IP, domain, hash, username) [REQUIRED]
+  --hours-back    Hours of historical data to consider (default: 24)
+  --help          Show this help message
+
+Examples:
+  /secops entity-lookup --entity-value="192.168.1.100"           # Lookup IP address
+  /secops entity-lookup --entity-value="evil.com"                # Lookup domain
+  /secops entity-lookup --entity-value="user@example.com"        # Lookup user
+  /secops entity-lookup --entity-value="WIN-HELIUM"              # Lookup hostname
+  /secops entity-lookup --entity-value="abc123hash" --hours-back=72  # 3-day lookup
+
+The summary includes:
+- Primary entity details (type, first/last seen)
+- Related entities observed interacting with the primary entity
+- Associated Chronicle alerts triggered involving the entity
+- Timeline summary (event/alert counts over the period)
+- Prevalence information (if available)
+
+Use this to quickly understand context and prevalence of indicators by examining SIEM log data.
+{% else %}
+Call the lookup_entity tool with: `lookup_entity(entity_value={{entity-value}}, hours_back={{hours-back}})`
+{% endif %}
+"""
   [[subCommands.args]]
   name = "entity-value"
   required = true
+  description = "Value to look up (IP address, domain name, file hash, username)"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  description = "Number of hours of historical data to consider for the summary"
 
 # SecOps get_ioc_matches
 [[subCommands]]
