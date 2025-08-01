@@ -74,7 +74,7 @@ Get remediation steps for a specific Security Command Center finding.
 
 Retrieves the remediation steps (nextSteps) for a specific finding within a project,
 along with details of the affected resource fetched from Cloud Asset Inventory (CAI).
-The finding can be identified either by its resource name and category (for ACTIVE 
+The finding can be identified either by its resource name and category (for ACTIVE
 findings) or directly by its finding ID (regardless of state).
 
 Options:
@@ -98,16 +98,16 @@ Method 2 - By Finding ID (any state):
 Resource Name Examples:
   Container clusters:
     //container.googleapis.com/projects/PROJECT/locations/LOCATION/clusters/CLUSTER
-  
+
   Compute instances:
     //compute.googleapis.com/projects/PROJECT/zones/ZONE/instances/INSTANCE
-  
+
   Storage buckets:
     //storage.googleapis.com/projects/_/buckets/BUCKET
 
 Common Categories:
   - GKE_SECURITY_BULLETIN
-  - COMPUTE_ENGINE_SECURITY_BULLETIN  
+  - COMPUTE_ENGINE_SECURITY_BULLETIN
   - CLOUD_SQL_SECURITY_BULLETIN
   - OPEN_FIREWALL
   - WEAK_SSL_POLICY

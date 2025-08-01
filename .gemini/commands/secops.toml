@@ -3,6 +3,7 @@ prompt = """
 You are implementing /slash-commands to call the available MCP Tools
 """
 
+
 # SecOps entity_lookup
 [[subCommands]]
 name = "entity-lookup"
@@ -14,7 +15,7 @@ Usage: /secops entity-lookup [OPTIONS]
 Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment.
 
 Provides a comprehensive summary of an entity's activity based on historical log data
-within Chronicle over a specified time period. Chronicle automatically attempts to 
+within Chronicle over a specified time period. Chronicle automatically attempts to
 detect the entity type from the value provided.
 
 Options:
@@ -70,7 +71,7 @@ Options:
 
 Examples:
   /secops ioc-matches                          # Get IoC matches from last 24 hours
-  /secops ioc-matches --hours-back 72          # Get IoC matches from last 3 days  
+  /secops ioc-matches --hours-back 72          # Get IoC matches from last 3 days
   /secops ioc-matches --max-matches 50         # Get up to 50 IoC matches
   /secops ioc-matches --hours-back 48 --max-matches 100
 
@@ -302,7 +303,7 @@ At least one optional field should be provided to perform a meaningful update.
 Options:
   --alert-id     Unique ID of the alert to update [REQUIRED]
   --reason       Reason for closing alert
-  --priority     Alert priority level  
+  --priority     Alert priority level
   --status       Alert lifecycle status
   --verdict      Investigation verdict (true/false positive)
   --severity     Severity score (0-100)
@@ -342,7 +343,7 @@ Examples:
 
 Use Cases:
 - Mark alerts as true/false positives after investigation
-- Escalate or de-escalate alert priority based on impact assessment  
+- Escalate or de-escalate alert priority based on impact assessment
 - Add investigation comments and findings
 - Set final disposition when closing alerts
 - Update severity based on additional evidence
@@ -637,10 +638,10 @@ Examples:
       severity = \"Medium\"
       yara_version = \"YL2.0\"
     events:
-      \$process.metadata.event_type = \"PROCESS_LAUNCH\"
-      \$process.principal.process.command_line = /powershell.*downloadfile/i
+      $process.metadata.event_type = "PROCESS_LAUNCH"
+      $process.principal.process.command_line = /powershell.*downloadfile/i
     condition:
-      \$process
+      $process
   }"
 
 YARA-L 2.0 Rule Structure:
@@ -653,10 +654,10 @@ YARA-L 2.0 Rule Structure:
       mitre_attack_tactic = "TA0001"
       mitre_attack_technique = "T1059.001"
     events:             # Event matching conditions using UDM fields
-      \$event.metadata.event_type = "PROCESS_LAUNCH"
-      \$event.principal.hostname != ""
+      $event.metadata.event_type = "PROCESS_LAUNCH"
+      $event.principal.hostname != ""
     condition:          # Logic combining events
-      \$event
+      $event
   }
 
 Rule Development Best Practices:
@@ -715,10 +716,10 @@ Examples:
       author = \"Security Team\"
       yara_version = \"YL2.0\"
     events:
-      \$e.metadata.event_type = \"NETWORK_CONNECTION\"
-      \$e.target.port = 443
+      $e.metadata.event_type = "NETWORK_CONNECTION"
+      $e.target.port = 443
     condition:
-      \$e
+      $e
   }"
 
   /secops test-rule --rule-text="..." --hours-back=24 --max-results=50
@@ -791,11 +792,11 @@ Examples:
       severity = \"Medium\"
       yara_version = \"YL2.0\"
     events:
-      \$e.metadata.event_type = \"NETWORK_CONNECTION\"
-      \$e.target.ip != \"\"
-      \$e.principal.hostname != \"\"
+      $e.metadata.event_type = "NETWORK_CONNECTION"
+      $e.target.ip != ""
+      $e.principal.hostname != ""
     condition:
-      \$e
+      $e
   }"
 
 Validation capabilities:
@@ -918,7 +919,7 @@ Examples:
   /secops list-cases --next-page-token="abc123xyz"      # Get next page of results
 
 Use Cases:
-- Get high-level overview of current incident queue within SOAR platform  
+- Get high-level overview of current incident queue within SOAR platform
 - Find specific incidents to investigate further
 - First step in triage workflow to understand ongoing security events
 - Monitor case backlog and priorities
@@ -930,7 +931,7 @@ The response includes:
 - Pagination tokens for additional results
 
 Important Triage Note:
-Case priority is only an initial indicator. True importance must be assessed by 
+Case priority is only an initial indicator. True importance must be assessed by
 examining the full context (alerts, entities, potential impact, threat intelligence)
 using tools like /secops get-case-details.
 

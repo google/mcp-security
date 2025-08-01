@@ -1,4 +1,5 @@
 description = "Google Chronicle SOAR marketplace integration slash commands for SIEM security operations"
+prompt = """You are taking commands and params and calling the available MCP Tools."""
 
 [[subCommands]]
 name = "help"
@@ -10,7 +11,7 @@ Chronicle SOAR Marketplace Integration Commands
 Available Commands:
 - rule-details: Fetch detailed information about Chronicle detection rules
 - detection-details: Get specific detection analysis and details
-- udm-query: Execute custom UDM queries with flexible time filtering  
+- udm-query: Execute custom UDM queries with flexible time filtering
 - list-iocs: List enterprise IoCs discovered in specified time range
 - enrich-ip: Enrich IP addresses using Chronicle threat intelligence
 - ping: Test Chronicle integration connectivity
@@ -53,12 +54,12 @@ Call the google_chronicle_get_rule_details tool with: `google_chronicle_get_rule
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true
   description = "Identifiers for the alert groups"
-  
+
   [[subCommands.args]]
   name = "rule-id"
   required = true
@@ -92,17 +93,17 @@ Call the google_chronicle_get_detection_details tool with: `google_chronicle_get
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true
   description = "Identifiers for the alert groups"
-  
+
   [[subCommands.args]]
   name = "rule-id"
   required = true
   description = "The unique identifier of the Chronicle detection rule"
-  
+
   [[subCommands.args]]
   name = "detection-id"
   required = true
@@ -121,13 +122,13 @@ Arguments:
   query          (required) The UDM query to execute in Chronicle
   time_frame     (optional) Predefined time frame options
   start_time     (optional) Custom start time in ISO 8601 format
-  end_time       (optional) Custom end time in ISO 8601 format  
+  end_time       (optional) Custom end time in ISO 8601 format
   max_results    (optional) Maximum number of results to return (default: 50, max: 10000)
 
 Time Frame Options:
 - "Alert Time Till Now"
 - "30 Minutes Around Alert Time"
-- "1 Hour Around Alert Time" 
+- "1 Hour Around Alert Time"
 - "5 Minutes Around Alert Time"
 - "Custom" (requires start_time)
 
@@ -147,32 +148,32 @@ Call the google_chronicle_execute_udm_query tool with: `google_chronicle_execute
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true
   description = "Identifiers for the alert groups"
-  
+
   [[subCommands.args]]
   name = "query"
   required = true
   description = "The UDM query to execute in Chronicle"
-  
+
   [[subCommands.args]]
   name = "time-frame"
   required = false
   description = "Predefined time frame for the query"
-  
+
   [[subCommands.args]]
   name = "start-time"
   required = false
   description = "Custom start time in ISO 8601 format"
-  
+
   [[subCommands.args]]
   name = "end-time"
   required = false
   description = "Custom end time in ISO 8601 format"
-  
+
   [[subCommands.args]]
   name = "max-results"
   required = false
@@ -207,17 +208,17 @@ Call the google_chronicle_list_io_cs tool with: `google_chronicle_list_io_cs(cas
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true
   description = "Identifiers for the alert groups"
-  
+
   [[subCommands.args]]
   name = "start-time"
   required = false
   description = "Start time in RFC 3339 format"
-  
+
   [[subCommands.args]]
   name = "max-iocs"
   required = false
@@ -257,27 +258,27 @@ Call the google_chronicle_enrich_ip tool with: `google_chronicle_enrich_ip(case_
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true
   description = "Identifiers for the alert groups"
-  
+
   [[subCommands.args]]
   name = "severity-threshold"
   required = true
   description = "Lowest severity level to mark as suspicious"
-  
+
   [[subCommands.args]]
   name = "mark-suspicious-n-a"
   required = true
   description = "Mark as suspicious if severity information is not available"
-  
+
   [[subCommands.args]]
   name = "create-insight"
   required = false
   description = "Create insight containing enrichment information"
-  
+
   [[subCommands.args]]
   name = "only-suspicious-insight"
   required = false
@@ -309,7 +310,7 @@ Call the google_chronicle_ping tool with: `google_chronicle_ping(case_id={{case-
   name = "case-id"
   required = true
   description = "The unique identifier (ID) of the case"
-  
+
   [[subCommands.args]]
   name = "alert-group-identifiers"
   required = true

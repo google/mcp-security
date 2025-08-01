@@ -1,11 +1,9 @@
 description = "CrowdStrike Falcon SOAR marketplace integration slash commands for endpoint security operations"
-prompt = """
-You are implementing /slash-commands to call the available CrowdStrike Falcon MCP Tools defined in:
-server/secops-soar/secops_soar_mcp/marketplace/crowdstrikefalcon.py
+prompt = """You are taking commands and params and calling the available CrowdStrike Falcon MCP Tools.
 
 These commands enable endpoint detection and response (EDR) operations including:
 - Host management and information gathering
-- Detection and alert management  
+- Detection and alert management
 - Incident response actions (containment, isolation)
 - Script execution and command running on endpoints
 - IOC management and threat hunting
@@ -13,7 +11,6 @@ These commands enable endpoint detection and response (EDR) operations including
 """
 
 # CrowdStrike Falcon Help Command
-
 [[subCommands]]
 name = "help"
 description = "Show help information for CrowdStrike Falcon SOAR marketplace integration commands"
@@ -26,7 +23,7 @@ Available Commands:
 
 HOST MANAGEMENT:
   /secops:soar:marketplace:crowdstrikefalcon list-hosts           - List and filter hosts
-  /secops:soar:marketplace:crowdstrikefalcon get-host-info        - Get detailed host information  
+  /secops:soar:marketplace:crowdstrikefalcon get-host-info        - Get detailed host information
   /secops:soar:marketplace:crowdstrikefalcon get-hosts-by-ioc     - Find hosts with specific IOCs
 
 INCIDENT RESPONSE:
@@ -65,10 +62,11 @@ For detailed help on any command, add --help to the command:
 
 SECURITY NOTES:
 - Commands like contain-endpoint will isolate systems from the network
-- Script execution and file downloads require proper security precautions  
+- Script execution and file downloads require proper security precautions
 - Always verify IOCs before uploading to prevent false positives
 - Follow your organization's incident response procedures
 """
+
 
 # CrowdStrike Falcon Host Management Commands
 
