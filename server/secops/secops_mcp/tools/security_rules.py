@@ -468,11 +468,12 @@ async def test_rule(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Define time range for testing
-        from datetime import datetime, timedelta, timezone
-        end_time = datetime.now(timezone.utc)
+        current_time = datetime.now(timezone.utc)
+        # Buffer back to the start of the current hour
+        end_time = current_time.replace(minute=0, second=0, microsecond=0)  # Rounds down to the start of current hour
         start_time = end_time - timedelta(hours=hours_back)
 
-        logger.info(f'Rule test time range: {start_time} to {end_time}')
+        logger.info(f'Rule test time range: {start_time} to {end_time} (buffered to start of current hour)')
 
         # Test the rule
         test_results = chronicle.run_rule_test(
