@@ -1,0 +1,563 @@
+description = "Manage Gemini subagents using tmux sessions for parallel task execution"
+prompt = """
+You are managing Gemini subagents through tmux sessions. This allows running multiple Gemini instances
+in parallel for complex workflows, research tasks, and multi-agent coordination.
+"""
+
+# Spawn a new subagent in a tmux session
+[[subCommands]]
+name = "spawn"
+description = "Start a new Gemini subagent in a tmux session"
+prompt = """
+{% if help %}
+Usage: /subagent spawn [OPTIONS]
+
+Start a new Gemini subagent in a tmux session.
+
+Options:
+  --name      Name for the tmux session (required)
+  --prompt    Initial prompt for the subagent (required)
+  --model     Model to use (optional, defaults to current model)
+  --detached  Run in detached mode (optional, default: true)
+  --help      Show this help message
+
+Examples:
+  /subagent spawn --name=researcher --prompt="Research security vulnerabilities"
+  /subagent spawn --name=coder --prompt="Write Python scripts" --model=opus
+  /subagent spawn --name=analyst --prompt="Analyze the following data..."
+  /subagent spawn --name=monitor --prompt="! watch -n 5 'ps aux | head'"
+
+The subagent will:
+- Run in its own tmux session
+- Persist even if the main Gemini instance exits
+- Be accessible for sending commands and retrieving output
+- Continue running until explicitly killed
+
+Use Cases:
+- Parallel research on different topics
+- Running long-running analysis tasks
+- Coordinating multiple specialized agents
+- Background monitoring and alerting
+{% else %}
+Execute the following commands to spawn a new subagent:
+```bash
+# Create new tmux session with bash shell
+! tmux new-session -d -s "{{name}}" bash
+```
+```bash
+# Launch gemini in that session
+! tmux send-keys -t "{{name}}" "gemini{% if model %} --model {{model}}{% endif %}" C-m
+```
+```bash
+# Wait for gemini to fully initialize (banner, tips, etc.)
+! sleep 5
+```
+```bash
+# Send initial prompt (check if it's a command or regular text)
+{% if prompt.startswith('!') %}
+! tmux send-keys -t "{{name}}" "{{prompt}}" C-m
+{% else %}
+! tmux send-keys -t "{{name}}" -l "{{prompt}}"
+! tmux send-keys -t "{{name}}" C-m C-m
+{% endif %}
+```
+```bash
+# Confirm the session was created
+! tmux list-sessions | grep "{{name}}" && echo "Subagent '{{name}}' spawned successfully"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name for the tmux session"
+  [[subCommands.args]]
+  name = "prompt"
+  required = true
+  description = "Initial prompt for the subagent"
+  [[subCommands.args]]
+  name = "model"
+  required = false
+  description = "Model to use (optional)"
+  [[subCommands.args]]
+  name = "detached"
+  required = false
+  default = "true"
+  description = "Run in detached mode"
+
+# Send a message to an existing subagent
+[[subCommands]]
+name = "send"
+description = "Send a message or command to an existing subagent"
+prompt = """
+{% if help %}
+Usage: /subagent send [OPTIONS]
+
+Send a message or command to an existing Gemini subagent.
+
+Options:
+  --name     Name of the target tmux session (required)
+  --message  Message to send to the subagent (required)
+  --enter    Send Enter key after message (optional, default: true)
+  --help     Show this help message
+
+Examples:
+  /subagent send --name=researcher --message="Focus on CVE-2024 entries"
+  /subagent send --name=coder --message="Add error handling to the script"
+  /subagent send --name=analyst --message="! ls -la /tmp"
+  /subagent send --name=monitor --message="/help"
+
+Use Cases:
+- Guide subagent research direction
+- Request specific analysis or output
+- Send follow-up questions
+- Control subagent behavior
+{% else %}
+Execute the following commands to send a message to the subagent:
+```bash
+# First check if the session exists
+! tmux has-session -t "{{name}}" 2>/dev/null && echo "Session '{{name}}' found" || echo "Session '{{name}}' not found"
+```
+```bash
+# Send the message (check if it's a command or regular text)
+{% if message.startswith('!') %}
+! tmux send-keys -t "{{name}}" "{{message}}" C-m
+{% else %}
+! tmux send-keys -t "{{name}}" -l "{{message}}"
+! tmux send-keys -t "{{name}}" C-m C-m
+{% endif %}
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name of the target tmux session"
+  [[subCommands.args]]
+  name = "message"
+  required = true
+  description = "Message to send to the subagent"
+  [[subCommands.args]]
+  name = "enter"
+  required = false
+  default = "true"
+  description = "Send Enter key after message"
+
+# Get output from a subagent
+[[subCommands]]
+name = "get-output"
+description = "Retrieve output from a subagent's tmux session"
+prompt = """
+{% if help %}
+Usage: /subagent get-output [OPTIONS]
+
+Retrieve output from a subagent's tmux session.
+
+Options:
+  --name   Name of the target tmux session (required)
+  --lines  Number of lines to retrieve (optional, default: 50)
+  --all    Get all available output (optional, overrides --lines)
+  --help   Show this help message
+
+Examples:
+  /subagent get-output --name=researcher
+  /subagent get-output --name=coder --lines=100
+  /subagent get-output --name=analyst --all=true
+
+Use Cases:
+- Check subagent progress and results
+- Retrieve analysis output
+- Monitor subagent status
+- Collect generated content
+{% else %}
+Execute the following command to get output from the subagent:
+```bash
+! tmux capture-pane -t "{{name}}" -p{% if all == "true" %} -S -{% else %} -S -{{lines}}{% endif %}
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name of the target tmux session"
+  [[subCommands.args]]
+  name = "lines"
+  required = false
+  default = "50"
+  description = "Number of lines to retrieve"
+  [[subCommands.args]]
+  name = "all"
+  required = false
+  default = "false"
+  description = "Get all available output"
+
+# List all active subagents
+[[subCommands]]
+name = "list"
+description = "List all active Gemini subagents"
+prompt = """
+{% if help %}
+Usage: /subagent list [OPTIONS]
+
+List all active Gemini subagents (tmux sessions).
+
+Options:
+  --format  Output format (simple/detailed, default: simple)
+  --help    Show this help message
+
+Examples:
+  /subagent list
+  /subagent list --format=detailed
+
+The output shows:
+- Session name
+- Creation time
+- Window count
+- Attached status
+- Current activity
+
+Use Cases:
+- Monitor active subagents
+- Check subagent status
+- Manage multiple agents
+- Clean up old sessions
+{% else %}
+Execute the following command to list all tmux sessions:
+```bash
+! tmux list-sessions{% if format == "detailed" %} -F "Session: #{session_name} | Created: #{session_created_string} | Windows: #{session_windows} | Attached: #{session_attached}"{% endif %} 2>/dev/null || echo "No active subagents"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "format"
+  required = false
+  default = "simple"
+  description = "Output format (simple or detailed)"
+
+# Kill a subagent
+[[subCommands]]
+name = "kill"
+description = "Terminate a Gemini subagent session"
+prompt = """
+{% if help %}
+Usage: /subagent kill [OPTIONS]
+
+Terminate a Gemini subagent session.
+
+Options:
+  --name   Name of the tmux session to kill (required)
+  --force  Force kill without confirmation (optional, default: false)
+  --help   Show this help message
+
+Examples:
+  /subagent kill --name=researcher
+  /subagent kill --name=coder --force=true
+
+Warning:
+- This will immediately terminate the subagent
+- Any unsaved work will be lost
+- The session cannot be recovered
+
+Use Cases:
+- Clean up completed tasks
+- Stop runaway agents
+- Free up system resources
+- Reset stuck sessions
+{% else %}
+Execute the following command to kill the subagent:
+{% if force != "true" %}
+First, check if the session exists:
+```bash
+! tmux has-session -t "{{name}}" 2>/dev/null && echo "Session '{{name}}' exists and will be killed" || echo "Session '{{name}}' not found"
+```
+Then kill it:
+{% endif %}
+```bash
+! tmux kill-session -t "{{name}}" 2>/dev/null && echo "Subagent '{{name}}' terminated" || echo "Failed to kill session '{{name}}'"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name of the tmux session to kill"
+  [[subCommands.args]]
+  name = "force"
+  required = false
+  default = "false"
+  description = "Force kill without confirmation"
+
+# Attach to a subagent session
+[[subCommands]]
+name = "attach"
+description = "Attach to a subagent session for interactive viewing"
+prompt = """
+{% if help %}
+Usage: /subagent attach [OPTIONS]
+
+Attach to a subagent session for interactive viewing.
+
+Options:
+  --name      Name of the tmux session to attach (required)
+  --readonly  Attach in read-only mode (optional, default: false)
+  --help      Show this help message
+
+Examples:
+  /subagent attach --name=researcher
+  /subagent attach --name=coder --readonly=true
+
+Note:
+- Use Ctrl+B then D to detach from the session
+- The subagent continues running after detaching
+- Be careful not to interfere with agent operations
+
+Use Cases:
+- Monitor agent progress in real-time
+- Debug agent behavior
+- Manually intervene if needed
+- Observe agent interactions
+{% else %}
+Provide instructions for attaching to the session:
+```
+To attach to the '{{name}}' session, run this command in your terminal:
+tmux attach-session -t "{{name}}"{% if readonly == "true" %} -r{% endif %}
+
+To detach later, press: Ctrl+B, then D
+```
+Check if session exists:
+```bash
+! tmux has-session -t "{{name}}" 2>/dev/null && echo "Session '{{name}}' is ready to attach" || echo "Session '{{name}}' not found"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name of the tmux session to attach"
+  [[subCommands.args]]
+  name = "readonly"
+  required = false
+  default = "false"
+  description = "Attach in read-only mode"
+
+# Spawn in split pane (advanced)
+[[subCommands]]
+name = "spawn-split"
+description = "Start a new subagent in a split pane of current window"
+prompt = """
+{% if help %}
+Usage: /subagent spawn-split [OPTIONS]
+
+Start a new Gemini subagent in a split pane instead of a new session.
+
+Options:
+  --name      Identifier for the pane (required)
+  --prompt    Initial prompt for the subagent (required)
+  --vertical  Split vertically instead of horizontally (optional)
+  --size      Percentage size of new pane (optional, default: 50)
+  --help      Show this help message
+
+Examples:
+  /subagent spawn-split --name=helper --prompt="Assist with coding"
+  /subagent spawn-split --name=monitor --prompt="Watch for errors" --vertical=true
+  /subagent spawn-split --name=tester --prompt="Run tests" --size=30
+
+Use Cases:
+- Quick helper agents in same window
+- Side-by-side comparison
+- Monitoring while working
+- Collaborative agents
+{% else %}
+Execute the following command to spawn subagent in split pane:
+```bash
+! tmux split-window {% if vertical == "true" %}-h{% else %}-v{% endif %}{% if size %} -p {{size}}{% endif %} "gemini -p '{{prompt}}'"
+```
+Then tag the pane:
+```bash
+! tmux select-pane -T "{{name}}"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Identifier for the pane"
+  [[subCommands.args]]
+  name = "prompt"
+  required = true
+  description = "Initial prompt for the subagent"
+  [[subCommands.args]]
+  name = "vertical"
+  required = false
+  default = "false"
+  description = "Split vertically instead of horizontally"
+  [[subCommands.args]]
+  name = "size"
+  required = false
+  default = "50"
+  description = "Percentage size of new pane"
+
+# Broadcast to multiple subagents
+[[subCommands]]
+name = "broadcast"
+description = "Send the same message to multiple subagents"
+prompt = """
+{% if help %}
+Usage: /subagent broadcast [OPTIONS]
+
+Send the same message to multiple subagents simultaneously.
+
+Options:
+  --names    Comma-separated list of session names (required)
+  --message  Message to broadcast (required)
+  --help     Show this help message
+
+Examples:
+  /subagent broadcast --names="researcher,analyst" --message="Focus on security issues"
+  /subagent broadcast --names="agent1,agent2,agent3" --message="/status"
+
+Use Cases:
+- Coordinate multiple agents
+- Synchronize agent activities
+- Send global commands
+- Update all agents at once
+{% else %}
+Broadcasting message to multiple subagents:
+{% set name_list = names.split(',') %}
+{% for session_name in name_list %}
+Send to {{session_name}}:
+```bash
+{% if message.startswith('!') %}
+! tmux send-keys -t "{{session_name|trim}}" "{{message}}" C-m 2>/dev/null && echo "Sent command to {{session_name|trim}}" || echo "Failed to send to {{session_name|trim}}"
+{% else %}
+! tmux send-keys -t "{{session_name|trim}}" -l "{{message}}" 2>/dev/null && tmux send-keys -t "{{session_name|trim}}" C-m C-m 2>/dev/null && echo "Sent to {{session_name|trim}}" || echo "Failed to send to {{session_name|trim}}"
+{% endif %}
+```
+{% endfor %}
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "names"
+  required = true
+  description = "Comma-separated list of session names"
+  [[subCommands.args]]
+  name = "message"
+  required = true
+  description = "Message to broadcast"
+
+# Check status of a subagent
+[[subCommands]]
+name = "status"
+description = "Check the status and recent activity of a subagent"
+prompt = """
+{% if help %}
+Usage: /subagent status [OPTIONS]
+
+Check the status and recent activity of a subagent.
+
+Options:
+  --name   Name of the tmux session to check (required)
+  --help   Show this help message
+
+Examples:
+  /subagent status --name=researcher
+  /subagent status --name=coder
+
+The output shows:
+- Session existence and basic info
+- Current pane content
+- Process running in the session
+- Recent output (last few lines)
+
+Use Cases:
+- Debug unresponsive agents
+- Check if agent is running properly
+- See current state without full output
+- Verify message delivery
+{% else %}
+Execute the following commands to check subagent status:
+```bash
+# Check if session exists
+! tmux has-session -t "{{name}}" 2>/dev/null && echo "✓ Session '{{name}}' exists" || echo "✗ Session '{{name}}' not found"
+```
+```bash
+# Show session info
+! tmux list-sessions -F "#{session_name}: #{session_windows} windows, created #{session_created_string}" | grep "{{name}}"
+```
+```bash
+# Show current process in the session
+! tmux list-panes -t "{{name}}" -F "Pane: #{pane_current_command} (PID: #{pane_pid})" 2>/dev/null
+```
+```bash
+# Show last few lines of output
+! tmux capture-pane -t "{{name}}" -p -S -10 2>/dev/null || echo "Cannot capture pane content"
+```
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "name"
+  required = true
+  description = "Name of the tmux session to check"
+
+# Help command
+[[subCommands]]
+name = "help"
+description = "Show available subagent commands and their descriptions"
+prompt = """
+GEMINI SUBAGENT MANAGEMENT SYSTEM
+
+Available Commands:
+
+BASIC OPERATIONS:
+  spawn         Start a new Gemini subagent in a tmux session
+  send          Send a message to an existing subagent
+  get-output    Retrieve output from a subagent
+  list          List all active subagents
+  kill          Terminate a subagent session
+  attach        Attach to view subagent interactively
+
+ADVANCED OPERATIONS:
+  spawn-split   Start subagent in a split pane
+  broadcast     Send message to multiple subagents
+
+MESSAGE TYPES:
+- Regular prompts: Text without special prefix (uses double Enter)
+  Example: "Tell me about security"
+- Shell commands: Start with ! (single Enter, executed immediately)
+  Example: "! ls -la"
+- Slash commands: Gemini commands like /help, /model, etc.
+  Example: "/model opus"
+
+WORKFLOW EXAMPLES:
+
+1. Basic Research Agent:
+   /subagent spawn --name=research --prompt="Research AI safety"
+   /subagent send --name=research --message="Focus on alignment problems"
+   /subagent get-output --name=research
+   /subagent kill --name=research
+
+2. Parallel Analysis:
+   /subagent spawn --name=security --prompt="Analyze security logs"
+   /subagent spawn --name=performance --prompt="Analyze performance metrics"
+   /subagent broadcast --names="security,performance" --message="Generate summary report"
+
+3. Interactive Monitoring:
+   /subagent spawn --name=monitor --prompt="Monitor system status"
+   /subagent attach --name=monitor
+   (Press Ctrl+B, D to detach)
+
+TMUX KEY BINDINGS:
+  Ctrl+B, D     Detach from session
+  Ctrl+B, [     Enter scroll mode
+  Ctrl+B, ]     Paste buffer
+  Ctrl+B, ?     Show all key bindings
+
+For detailed help on any command:
+  /subagent COMMAND --help
+
+TIPS:
+- Subagents persist even if main Gemini exits
+- Use descriptive names for easy management
+- Check /subagent list regularly to manage sessions
+- Kill unused sessions to free resources
+"""
