@@ -24,3 +24,4 @@ from .parser_management import *
 from .data_table_management import *
 from .reference_list_management import *
 from .udm_search import *
+from .search import *
