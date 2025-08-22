@@ -27,8 +27,10 @@ async def list_security_rules(
     project_id: str = None,
     customer_id: str = None,
     region: str = None,
+    page_size: int = 100,
+    page_token: str | None = None,
 ) -> Dict[str, Any]:
-    """List security detection rules configured in Chronicle SIEM.
+    """List security detection rules configured in Chronicle SIEM, with support for pagination.
 
     Retrieves the definitions of detection rules currently active or configured
     within the Chronicle SIEM instance.
@@ -50,6 +52,8 @@ async def list_security_rules(
         project_id (str): Google Cloud project ID (required).
         customer_id (str): Chronicle customer ID (required).
         region (str): Chronicle region (e.g., "us", "europe") (required).
+        page_size (int): Maximum number of rules to return. Defaults to 100. Max is 1000.
+        page_token (str | None): Page token for pagination.
 
     Returns:
         Dict[str, Any]: Raw response from the Chronicle API, typically containing a list
@@ -63,10 +67,12 @@ async def list_security_rules(
         - Document relevant rule information in associated cases using a case management tool.
     """
     try:
-        
+        if page_size > 1000:
+            logger.warning("page_size cannot exceed 1000. Setting to 1000.")
+            page_size = 1000
         
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        rules_response = chronicle.list_rules()
+        rules_response = chronicle.list_rules(page_size=page_size, page_token=page_token)
         return rules_response
     except Exception as e:
         logger.error(f'Error listing security rules: {str(e)}', exc_info=True)

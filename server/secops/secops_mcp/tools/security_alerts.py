@@ -177,11 +177,9 @@ async def get_security_alert_by_id(
     Args:
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours to look back for alerts. Defaults to 24.
-        max_alerts (int): Maximum number of alerts to return. Defaults to 10.
-        status_filter (str): Query string to filter alerts by status (e.g., 'feedback_summary.status != "CLOSED"').
-                             Defaults to excluding closed alerts.
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        alert_id (Optional[str]): The unique identifier of the alert to retrieve.
+        include_detections (bool): Whether to include detection details in the response. Defaults to True.
 
     Returns:
         str: A formatted string summarizing the retrieved security alerts, including rule name,
