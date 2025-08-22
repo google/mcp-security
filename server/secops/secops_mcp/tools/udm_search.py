@@ -17,7 +17,6 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from secops.chronicle.udm_search import find_udm_field_values as chronicle_find_udm_field_values
 from secops_mcp.server import get_chronicle_client, server
 
 
@@ -246,8 +245,8 @@ async def find_udm_field_values(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Call the aliased library function
-        results = chronicle_find_udm_field_values(
-            chronicle, query=query, page_size=page_size
+        results = chronicle.find_udm_field_values(
+            query=query, page_size=page_size
         )
 
         # Log success
