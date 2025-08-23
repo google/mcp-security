@@ -196,6 +196,21 @@ async def security_examples(
       print(f"  Source IP: {', '.join(principal_ip)}")
       print(f"  Target IP: {', '.join(target_ip)}")
 
+  # Example 7b: Direct UDM security event search
+  print('\nExample 7b: Direct UDM security event search')
+  direct_udm = 'metadata.event_type = "USER_LOGIN"'
+  direct_events = await search_security_events_udm(
+      udm_query=direct_udm,
+      project_id=project_id,
+      customer_id=customer_id,
+      region=region,
+      hours_back=24,
+      max_events=5,
+  )
+  print(f"UDM used: {direct_events.get('udm_query')}")
+  total_direct = direct_events.get('events', {}).get('total_events', 0)
+  print(f'Found {total_direct} events for direct UDM search')
+
   # Example 7: Interactive natural language query
   print('\nExample 7: Interactive natural language query')
   try:
@@ -287,6 +302,7 @@ async def main() -> None:
 # Import the functions after defining the example functions to avoid circular imports
 from secops_mcp import (
     search_security_events,
+    search_security_events_udm,
     get_security_alerts,
     lookup_entity,
     list_security_rules,

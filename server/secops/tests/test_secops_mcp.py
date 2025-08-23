@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 import pytest
 from mcp.server.fastmcp import FastMCP
 
-from secops_mcp.tools.security_events import search_security_events
+from secops_mcp.tools.security_events import search_security_events, search_security_events_udm
 from secops_mcp.tools.security_alerts import get_security_alerts, get_security_alert_by_id, do_update_security_alert
 from secops_mcp.tools.entity_lookup import lookup_entity
 from secops_mcp.tools.security_rules import list_security_rules, get_rule_detections, list_rule_errors, search_security_rules
@@ -64,6 +64,57 @@ class TestChronicleSecOpsMCP:
         
         # Note: We don't assert events were found as that depends on data in the system
         # Instead we verify the API call worked and returned the expected structure
+
+    @pytest.mark.asyncio
+    async def test_search_security_events_udm_basic(self, chronicle_config: Dict[str, str]) -> None:
+        """Test basic search for security events using a direct UDM query.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Use a generic UDM filter that should be valid across environments
+        input_udm = 'metadata.event_type = "NETWORK_CONNECTION"'
+        result = await search_security_events_udm(
+            udm_query=input_udm,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            hours_back=24,
+            max_events=10,
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "udm_query" in result
+        assert "events" in result
+
+        # Verify the UDM query echo
+        assert result["udm_query"] == input_udm
+
+        # Verify events structure
+        events = result["events"]
+        assert isinstance(events, dict)
+        assert "total_events" in events
+
+    @pytest.mark.asyncio
+    async def test_search_security_events_udm_empty_query(self, chronicle_config: Dict[str, str]) -> None:
+        """Test handling of an empty UDM query string."""
+        result = await search_security_events_udm(
+            udm_query="  ",
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            hours_back=24,
+            max_events=5,
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        assert isinstance(result, dict)
+        assert result.get("udm_query") is None
+        assert "events" in result
+        events = result["events"]
+        assert isinstance(events, dict)
+        assert events.get("error")
+        assert events.get("total_events") == 0
 
     @pytest.mark.asyncio
     async def test_search_security_events_with_time_range(self, chronicle_config: Dict[str, str]) -> None:

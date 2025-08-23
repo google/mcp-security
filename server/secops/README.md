@@ -11,6 +11,9 @@ Chronicle Security Operations suite.
 - **`search_security_events(text, project_id=None, customer_id=None, hours_back=24, max_events=100, region=None)`**
     - Searches for security events in Chronicle using natural language. Translates the natural language query (`text`) into a UDM query and executes it.
 
+- **`search_security_events_udm(udm_query, project_id=None, customer_id=None, hours_back=24, max_events=100, region=None)`**
+    - Executes a direct Chronicle UDM query without natural language translation and returns results in the same structure as the NL tool.
+
 - **`get_security_alerts(project_id=None, customer_id=None, hours_back=24, max_alerts=10, status_filter='feedback_summary.status != "CLOSED"', region=None)`**
     - Retrieves security alerts from Chronicle, filtered by time range and status.
 

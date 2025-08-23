@@ -152,6 +152,23 @@ The service account or user credentials need the following Chronicle roles:
       }
       ```
 
+- **`search_security_events_udm(udm_query, project_id=None, customer_id=None, hours_back=24, max_events=100, region=None)`**
+    - **Description:** Executes a direct Chronicle UDM query (no NL translation). Returns the same structure as the NL search for easy client reuse.
+    - **Parameters:**
+        - `udm_query` (required): UDM query string to execute.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `hours_back` (optional): How many hours to look back (default: 24).
+        - `max_events` (optional): Maximum number of events to return (default: 100).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing the `udm_query` and the `events` results with `events`, `total_events`, and optional `error`.
+    - **Direct UDM Examples:**
+      - `metadata.event_type = "NETWORK_CONNECTION"`
+      - `principal.ip = "10.0.0.5" OR target.ip = "10.0.0.5"`
+      - `target.url = "http://malicious.example.com"`
+      - `lower(principal.user.userid) = "john.doe@example.com"`
+    - **When to use:** Prefer this tool when you already know the exact UDM you want to run, or when NL translation might be ambiguous. Use the NL tool to brainstorm or iterate, then switch to UDM for precise control.
+
 - **`get_security_alerts(project_id=None, customer_id=None, hours_back=24, max_alerts=10, status_filter='feedback_summary.status != "CLOSED"', region=None)`**
     - **Description:** Retrieves security alerts from Chronicle, filtered by time range and status.
     - **Parameters:**

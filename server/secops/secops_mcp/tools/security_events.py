@@ -159,3 +159,88 @@ async def search_security_events(
             'udm_query': None,
             'events': {'error': str(e), 'events': [], 'total_events': 0},
         }
+
+
+@server.tool()
+async def search_security_events_udm(
+    udm_query: str,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    hours_back: int = 24,
+    max_events: int = 100,
+    region: str | None = None,
+) -> Dict[str, Any]:
+    """Search for security events in Chronicle SIEM using a direct UDM query.
+
+    Executes the provided Chronicle UDM query without natural language translation,
+    returning results in the same structure as the natural language search tool.
+
+    Args:
+        udm_query: A valid Chronicle UDM query string.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        hours_back: How many hours back from now to search. Defaults to 24.
+        max_events: Maximum number of event records to return. Defaults to 100.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing:
+            - 'udm_query': The UDM query used for the search.
+            - 'events': A dictionary with:
+                - 'events': The list of UDM event records found.
+                - 'total_events': The total number of events matching the query.
+                - 'error': An error message if the search failed.
+
+    Notes:
+        - This tool is ideal when you already know the precise UDM you want to run
+          and want to avoid any potential ambiguity from NL translation.
+        - Use `hours_back` to bound the search time window; for custom ranges, prefer
+          encoding time constraints in the UDM query itself if supported by your backend.
+    """
+    # Basic validation to provide a friendly error early
+    if not udm_query or not udm_query.strip():
+        msg = 'udm_query must be a non-empty string'
+        logger.error(msg)
+        return {
+            'udm_query': None,
+            'events': {'error': msg, 'events': [], 'total_events': 0},
+        }
+
+    try:
+        logger.info('Searching security events with direct UDM query')
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        end_time = datetime.now(timezone.utc)
+        start_time = end_time - timedelta(hours=hours_back)
+
+        logger.info(f'Search time range: {start_time} to {end_time}')
+        logger.info(f'UDM Query: {udm_query}')
+
+        events = chronicle.search_udm(
+            query=udm_query,
+            start_time=start_time,
+            end_time=end_time,
+            max_events=max_events,
+        )
+
+        # Normalize events to a consistent structure
+        if isinstance(events, dict) and 'events' in events:
+            total_events = events.get('total_events', 0)
+            event_list = events.get('events', [])
+        else:
+            event_list = events if isinstance(events, list) else []
+            total_events = len(event_list)
+            events = {'events': event_list, 'total_events': total_events}
+
+        logger.info(
+            f'Search results: {total_events} total events, {len(event_list)} returned'
+        )
+
+        return {'udm_query': udm_query, 'events': events}
+
+    except Exception as e:
+        logger.error(f'Error searching security events (UDM): {str(e)}', exc_info=True)
+        return {
+            'udm_query': udm_query,
+            'events': {'error': str(e), 'events': [], 'total_events': 0},
+        }
