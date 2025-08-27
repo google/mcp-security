@@ -46,7 +46,7 @@ def find_python_files(directory):
     python_files = []
     for root, dirs, files in os.walk(directory):
         for file in files:
-            if file.endswith('.py'):
+            if file.endswith('.py') and file != 'setup.py':
                 python_files.append(os.path.join(root, file))
     return python_files
 
