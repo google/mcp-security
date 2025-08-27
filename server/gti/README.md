@@ -58,7 +58,11 @@ Threat Intelligence suite.
 
 ### MCP Server Configuration
 
-Add the following configuration to your MCP client's settings file:
+This server supports multiple MCP clients including Gemini CLI, Claude Desktop|Code, and Cline.
+
+#### Configuration
+
+Add the following configuration to your MCP settings file:
 
 **NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
 
@@ -92,7 +96,7 @@ Set up the `VT_APIKEY` environment variable in your system:
 ```bash
 export VT_APIKEY="your-vt-api-key"
 ```
-   
+
 **For Windows PowerShell:**
 ```powershell
 $Env:VT_APIKEY = "your-vt-api-key"

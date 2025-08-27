@@ -1,6 +1,6 @@
 # Google MCP Security Documentation
 
-Welcome to the documentation for the Google MCP Security project. This project provides Model Context Protocol (MCP) servers that enable MCP-compatible AI assistants like Claude to access Google's security products and services.
+Welcome to the documentation for the Google MCP Security project. This project provides Model Context Protocol (MCP) servers that enable MCP-compatible AI assistants like Gemini CLI and Claude Desktop|Code to access Google's security products and services.
 
 ## Project Overview
 
