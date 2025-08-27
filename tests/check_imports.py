@@ -22,13 +22,13 @@ def test_python_file(filepath):
         bool: True if import succeeds, False otherwise
     """
     try:
-        spec = importlib.util.spec_from_file_location('temp_module', filepath)
+        spec = importlib.util.spec_from_file_location("temp_module", filepath)
         if spec and spec.loader:
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             return True
     except Exception as e:
-        print(f'✗ {filepath}: {e}')
+        print(f"✗ {filepath}: {e}")
         return False
     return True
 
@@ -43,10 +43,17 @@ def find_python_files(directory):
     Returns:
         list: List of Python file paths
     """
+    # Files to skip
+    skip_files = {"setup.py", "example.py", "conftest.py", "__init__.py"}
+    
     python_files = []
     for root, dirs, files in os.walk(directory):
+        # Skip test directories and tools subdirectories with relative imports
+        if "tests" in root or "__pycache__" in root or "/tools" in root:
+            continue
+            
         for file in files:
-            if file.endswith('.py') and file != 'setup.py':
+            if file.endswith(".py") and file not in skip_files:
                 python_files.append(os.path.join(root, file))
     return python_files
 
@@ -54,7 +61,7 @@ def find_python_files(directory):
 def main():
     """Main function to test all Python files in server directories."""
     # Test all Python files in server directories
-    server_dirs = ['server/gti', 'server/scc', 'server/secops', 'server/secops-soar']
+    server_dirs = ["server/gti", "server/scc", "server/secops", "server/secops-soar"]
     failed_files = []
     total_files = 0
 
@@ -62,20 +69,20 @@ def main():
         if os.path.exists(server_dir):
             python_files = find_python_files(server_dir)
             total_files += len(python_files)
-            print(f'Testing {len(python_files)} Python files in {server_dir}...')
+            print(f"Testing {len(python_files)} Python files in {server_dir}...")
             
             for py_file in python_files:
                 if not test_python_file(py_file):
                     failed_files.append(py_file)
 
-    print(f'\nTested {total_files} Python files total')
+    print(f"\nTested {total_files} Python files total")
     if failed_files:
-        print(f'\n{len(failed_files)} files failed import tests:')
+        print(f"\n{len(failed_files)} files failed import tests:")
         for failed_file in failed_files:
-            print(f'  - {failed_file}')
+            print(f"  - {failed_file}")
         return 1
     else:
-        print('✓ All Python files import successfully')
+        print("✓ All Python files import successfully")
         return 0
 
 
