@@ -21,6 +21,38 @@ def test_python_file(filepath):
     Returns:
         bool: True if import succeeds, False otherwise
     """
+    import importlib
+    
+    # Special handling for tools directories - import as modules not files
+    if "/tools/" in filepath and filepath.endswith(".py"):
+        try:
+            # Convert file path to module path
+            # e.g., server/gti/gti_mcp/tools/files.py -> gti_mcp.tools.files
+            parts = filepath.replace(".py", "").split("/")
+            
+            # Find the package name (gti_mcp, secops_mcp, etc)
+            module_parts = []
+            found_package = False
+            for part in parts:
+                if part in ["gti_mcp", "secops_mcp", "secops_soar_mcp", "scc_mcp"]:
+                    found_package = True
+                if found_package:
+                    module_parts.append(part)
+            
+            if module_parts:
+                # Add parent to sys.path temporarily
+                server_dir = filepath.split("/" + module_parts[0])[0]
+                if server_dir not in sys.path:
+                    sys.path.insert(0, server_dir)
+                
+                module_name = ".".join(module_parts)
+                importlib.import_module(module_name)
+                return True
+        except Exception as e:
+            print(f"✗ {filepath}: {e}")
+            return False
+    
+    # Default behavior for non-tools files
     try:
         spec = importlib.util.spec_from_file_location("temp_module", filepath)
         if spec and spec.loader:
@@ -48,8 +80,8 @@ def find_python_files(directory):
     
     python_files = []
     for root, dirs, files in os.walk(directory):
-        # Skip test directories and tools subdirectories with relative imports
-        if "tests" in root or "__pycache__" in root or "/tools" in root:
+        # Skip test directories
+        if "tests" in root or "__pycache__" in root:
             continue
             
         for file in files:
