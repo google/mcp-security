@@ -84,7 +84,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 
 @server.tool()
 async def get_entities_related_to_a_collection(
-    id: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
+    id: str, relationship_name: str, ctx: Context, limit: int = 10
 ) -> typing.List[typing.Dict[str, typing.Any]]:
   """Retrieve entities related to the the given collection ID.
 
@@ -110,7 +110,6 @@ async def get_entities_related_to_a_collection(
     Args:
       id (required): Collection identifier.
       relationship_name (required): Relationship name.
-      descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
       limit: Limit the number of collections to retrieve. 10 by default.
     Returns:
       List of objects related to the collection.
@@ -120,13 +119,17 @@ async def get_entities_related_to_a_collection(
           "error": f"Relationship {relationship_name} does not exist. "
           f"Available relationships are: {','.join(COLLECTION_RELATIONSHIPS)}"
       }
+  if relationship_name == "attack_techniques":
+    descriptors = False
+  else:
+    descriptors = True
   async with vt_client(ctx) as client:
     res = await utils.fetch_object_relationships(
         client, 
         "collections", 
         id, 
         [relationship_name],
-        descriptors_only=descriptors_only,
+        descriptors_only=descriptors,
         limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))
 
