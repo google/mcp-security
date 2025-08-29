@@ -4,6 +4,15 @@ version = "0.1.0"
 description = "Security Command Center MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [
+    { name = "Google SecOps Team", email = "chronicle@google.com" }
+]
+keywords = ["google", "security", "chronicle", "scc", "mcp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+]
 dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.4.1",
@@ -16,8 +25,17 @@ dependencies = [
     "uvicorn[standard]",
 ]
 
+[project.urls]
+Homepage = "https://github.com/google/mcp-security"
+Documentation = "https://github.com/google/mcp-security/tree/main/server/scc#readme"
+Repository = "https://github.com/google/mcp-security/tree/main/server/scc"
+Issues = "https://github.com/google/mcp-security/issues"
+
 [project.scripts]
 scc_mcp = "scc_mcp:main"
+
+[project.entry-points.mcp]
+scc-mcp = "scc_mcp:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

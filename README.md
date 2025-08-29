@@ -32,6 +32,133 @@ The server uses Google's authentication. Make sure you have either:
 2. Set a GOOGLE_APPLICATION_CREDENTIALS environment variable
 3. Used `gcloud auth application-default login`
 
+## Standalone Usage
+
+Each MCP server can be installed and used as a standalone package.
+
+### Installation
+
+You can install the packages using `uv tool install` (recommended):
+
+```bash
+# Install packages
+uv tool install secops-mcp
+uv tool install gti-mcp
+uv tool install scc-mcp
+uv tool install secops-soar-mcp
+```
+
+Alternatively, you can use pip:
+
+```bash
+pip install secops-mcp
+pip install gti-mcp
+pip install scc-mcp
+pip install secops-soar-mcp
+```
+
+### Running Standalone
+
+After installation, you can run the servers directly using uvx:
+
+```bash
+# Run SecOps MCP server
+uvx secops_mcp
+
+# Run GTI MCP server
+uvx gti_mcp
+
+# Run SCC MCP server
+uvx scc_mcp
+
+# Run SecOps SOAR MCP server (with optional integrations)
+uvx secops_soar_mcp --integrations CSV,OKTA
+```
+
+With environment variables:
+
+```bash
+CHRONICLE_PROJECT_ID="your-project-id" \
+CHRONICLE_CUSTOMER_ID="01234567-abcd-4321-1234-0123456789ab" \
+CHRONICLE_REGION="us" \
+uvx secops_mcp
+```
+
+### Using with MCP Clients (Recommended)
+
+You can configure MCP clients to use the installed packages with uvx. Here's an example configuration:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "uvx",
+      "args": [
+        "secops_mcp"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "gti": {
+      "command": "uvx",
+      "args": [
+        "gti-mcp"
+      ],
+      "env": {
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "scc-mcp": {
+      "command": "uvx",
+      "args": [
+        "scc-mcp"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "secops-soar": {
+      "command": "uvx",
+      "args": [
+        "secops_soar_mcp",
+        "--integrations",
+        "CSV,OKTA"
+      ],
+      "env": {
+        "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+        "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+You can also use environment files with uvx:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "uvx",
+      "args": [
+        "--env-file",
+        "/path/to/.env",
+        "secops_mcp"
+      ],
+      "disabled": false
+    }
+  }
+}
+
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients

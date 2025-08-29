@@ -1,19 +1,40 @@
 [project]
-name = "SoarAS"
+name = "secops-soar-mcp"
 version = "0.1.0"
 description = "Google SecOps SOAR MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [
+    { name = "Google SecOps Team", email = "chronicle@google.com" }
+]
+keywords = ["google", "security", "chronicle", "secops", "soar", "gti", "mcp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+]
 dependencies = [
     "aiohttp>=3.11.15",
     "mcp[cli]>=1.4.1"
 ]
+
+[project.urls]
+Homepage = "https://github.com/google/mcp-security"
+Documentation = "https://github.com/google/mcp-security/tree/main/server/secops-soar#readme"
+Repository = "https://github.com/google/mcp-security/tree/main/server/secops-soar"
+Issues = "https://github.com/google/mcp-security/issues"
 
 [project.optional-dependencies]
 test = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0"
 ]
+
+[project.scripts]
+secops_soar_mcp = "secops_soar_mcp.server:main"
+
+[project.entry-points.mcp]
+secops-soar = "secops_soar_mcp.server:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
