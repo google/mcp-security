@@ -1,6 +1,6 @@
 # Google Security Operations and Threat Intelligence MCP Server
 
-This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop or the cline.bot VS Code extension) to access Google's security products and services:
+This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop, Gemini CLI, or the cline.bot VS Code extension) to access Google's security products and services:
 
 1. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
 2. **Google Security Operations SOAR** - For security orchestration, automation, and response
@@ -161,10 +161,10 @@ You can also use environment files with uvx:
 
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
-1. Cline, Claude Desktop, and other MCP supported clients
+1. Cline, Claude Desktop, Gemini CLI, and other MCP supported clients
 2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-prebuilt-google-adk-agent-as-client))
 
-The configuration for Claude Desktop and Cline is the same (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
+The configuration for Claude Desktop, Gemini CLI, and Cline is similar (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
 
 ### Using the prebuilt Google ADK agent as client
 
@@ -172,6 +172,8 @@ Please refer to the [README file](./run-with-google-adk/README.md) for both - lo
 
 
 ### Using uv (Recommended)
+
+#### Claude Desktop / Cline Configuration / Gemini CLI
 
 ```json
 {
@@ -263,6 +265,8 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
 2. Install the package in development mode
 3. Run the server binary
 
+#### Claude Desktop / Cline Configuration
+
 ```json
 {
   "mcpServers": {
@@ -330,6 +334,7 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
 }
 ```
 
+
 ### When to use uv vs pip
 
 - **uv**: Recommended for most users because it offers faster package installation, better dependency resolution, and isolated environments. It also supports loading environment variables from a file.
@@ -381,6 +386,16 @@ To use the MCP servers with Claude Desktop:
 1. Install cline.bot extension in VSCode
 2. Update your `cline_mcp_settings.json` with the configuration (replace paths with your actual paths)
 3. Save the file and restart VS Code
+
+### Installing in Gemini CLI
+
+To use the MCP servers with Gemini CLI:
+
+1. Install Gemini CLI following [the official documentation](https://github.com/google-gemini/gemini-cli)
+2. Configure your MCP servers in the Gemini configuration file (typically `~/.gemini/settings.json` or as specified in your Gemini setup)
+3. Use the configuration examples provided above for uv
+4. Ensure all required environment variables are set or included in the configuration
+5. Start Gemini CLI - it will automatically connect to the configured MCP servers
 
 ## License
 

@@ -34,7 +34,11 @@ Available integrations include:
 - Microsoft Defender ATP
 - And many more
 
-## Installing in Claude Desktop
+## Installation and Configuration
+
+This server supports multiple MCP clients including Gemini CLI, Claude Desktop|Code, and Cline.
+
+### Installing in Claude Desktop
 
 To use this MCP server with Claude Desktop:
 
@@ -46,11 +50,66 @@ To use this MCP server with Claude Desktop:
 
 4.  Update your `claude_desktop_config.json` with the following configuration
     (replace paths with your actual paths):
-    
+
     **NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
 
     Additionally, for the secops-soar MCP server, you will need use the CA list bundled with the certifi package. This can be done via the following command. Change the Python minor version to match whatever version you are currently running. (ex. `Python\ 3.11`):
     `/Applications/Python\ 3.12/Install\ Certificates.command`
+
+```json
+{
+  "mcpServers": {
+    "secops-soar": {
+      "command": "uv",
+      "args": [
+        "--env-file=/path/to/your/env",
+        "--directory",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
+        "run",
+        "server.py"
+      ],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+To have the MCP server provide tools for specific marketplace integrations, use the `integrations` flag followed by a comma-separated string of the desired integration names. For example, for the `ServiceNow`, `CSV`, and `Siemplify` integrations:
+```json
+{
+  "mcpServers": {
+    "secops-soar": {
+      "command": "uv",
+      "args": [
+        "--env-file=/path/to/your/env",
+        "--directory",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
+        "run",
+        "server.py",
+        "--integrations",
+        "ServiceNow,CSV,Siemplify"
+      ],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+
+**NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Gemini to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
+
+Additionally, for the secops-soar MCP server, you will need use the CA list bundled with the certifi package. This can be done via the following command. Change the Python minor version to match whatever version you are currently running. (ex. `Python\ 3.11`):
+`/Applications/Python\ 3.12/Install\ Certificates.command`
 
 ```json
 {
