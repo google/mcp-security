@@ -66,7 +66,8 @@ To use this MCP server with Claude Desktop:
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}",
+        "SOAR_PROXY": "${SOAR_PROXY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -92,7 +93,8 @@ To have the MCP server provide tools for specific marketplace integrations, use 
       ],
       "env": {
         "SOAR_URL": "${SOAR_URL}",
-        "SOAR_APP_KEY": "${SOAR_APP_KEY}"
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}",
+        "SOAR_PROXY": "${SOAR_PROXY}"
       },
       "disabled": false,
       "autoApprove": []
@@ -109,6 +111,7 @@ Set up these environment variables in your system:
 ```bash
 export SOAR_URL="your-soar-url"
 export SOAR_APP_KEY="your-soar-app-key"
+export SOAR_PROXY="http://proxy:8080"
 export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```
 
@@ -116,6 +119,7 @@ export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```powershell
 $Env:SOAR_URL = "your-soar-url"
 $Env:SOAR_APP_KEY = "your-soar-app-key"
+$Env:SOAR_PROXY = "http://proxy:8080"
 $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
