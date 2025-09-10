@@ -43,8 +43,8 @@ DEFAULT_REGION = os.environ.get('CHRONICLE_REGION', 'us')
 
 
 def get_chronicle_client(
-    project_id: Optional[str] = None, 
-    customer_id: Optional[str] = None, 
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
     region: Optional[str] = None
 ) -> Any:
     """Initialize and return a Chronicle client.
@@ -68,8 +68,12 @@ def get_chronicle_client(
             'as parameters or through environment variables '
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
+    service_account_path = os.getenv("SECOPS_SA_PATH")
+    if service_account_path:
+        client = SecOpsClient(service_account_path=service_account_path)
+    else:
+        client = SecOpsClient()
 
-    client = SecOpsClient()
     chronicle = client.chronicle(
         customer_id=customer_id, project_id=project_id, region=region
     )
@@ -91,4 +95,4 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main() 
+    main()
