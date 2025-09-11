@@ -63,8 +63,8 @@ async def list_security_rules(
         - Document relevant rule information in associated cases using a case management tool.
     """
     try:
-        
-        
+
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
         rules_response = chronicle.list_rules()
         return rules_response
@@ -75,15 +75,15 @@ async def list_security_rules(
 @server.tool()
 async def search_security_rules(
     query: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Search security detection rules configured in Chronicle SIEM.
 
     Retrieves the definitions of detection rules currently active or configured
     within the Chronicle SIEM instance based on a regex pattern.
-    
+
     **Workflow Integration:**
     - Useful for understanding the detection capabilities currently deployed in the SIEM.
     - Can help identify the specific rule that generated a SIEM alert (obtained via SIEM alert tools
@@ -189,15 +189,15 @@ async def get_rule_detections(
         if not hasattr(chronicle, 'base_url') or not hasattr(chronicle, 'instance_id') or not hasattr(chronicle, 'session'):
             logger.error("Chronicle client from get_chronicle_client is missing expected attributes (base_url, instance_id, session).")
             return {'error': 'Chronicle client misconfigured for direct session access.', 'detections': []}
-                
+
         valid_alert_states = ["UNSPECIFIED", "NOT_ALERTING", "ALERTING"]
         if alert_state:
             if alert_state not in valid_alert_states:
                 logger.error(f"Invalid alert_state: {alert_state}. Must be one of {valid_alert_states}")
                 raise ValueError(f"alert_state must be one of {valid_alert_states}, got {alert_state}")
-        
+
         detections_response = chronicle.list_detections(rule_id, alert_state, page_size, page_token)
-        
+
         return detections_response
     except ValueError as ve: # Catch specific ValueError from alert_state validation
         logger.error(f'Validation error getting rule detections for rule {rule_id}: {str(ve)}', exc_info=True)
@@ -256,12 +256,12 @@ async def list_rule_errors(
             logger.error("Chronicle client from get_chronicle_client is missing expected attributes (base_url, instance_id, session).")
             return {'error': 'Chronicle client misconfigured for direct session access.', 'errors': []}
 
-        
+
         logger.info(f"Requesting errors for rule_id: {rule_id}")
         response = chronicle.list_errors(rule_id)
-        
+
         return response
-        
+
     except Exception as e:
         logger.error(f'Unexpected error listing rule errors for {rule_id}: {str(e)}', exc_info=True)
         return {'error': f'Unexpected error: {str(e)}', 'errors': []}
@@ -331,7 +331,7 @@ async def create_rule(
                 $process
         }
         '''
-        
+
         create_rule(
             rule_text=rule_text,
             project_id="my-project",
@@ -349,8 +349,8 @@ async def create_rule(
     try:
         logger.info('Creating new detection rule')
 
-        
-        
+
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Create the rule
@@ -358,10 +358,10 @@ async def create_rule(
 
         # Extract rule ID from the response
         rule_id = rule.get("name", "").split("/")[-1]
-        
+
         result = f'Successfully created detection rule.\n'
         result += f'Rule ID: {rule_id}\n'
-        
+
         # Extract rule name from the text if possible
         lines = rule_text.strip().split('\n')
         for line in lines:
@@ -369,9 +369,9 @@ async def create_rule(
                 rule_name = line.strip().replace('rule ', '').replace(' {', '').strip()
                 result += f'Rule Name: {rule_name}\n'
                 break
-        
+
         result += 'Rule created successfully. Use test_rule to validate before enabling.'
-        
+
         return result
 
     except Exception as e:
@@ -443,7 +443,7 @@ async def test_rule(
                 $e
         }
         '''
-        
+
         test_rule(
             rule_text=rule_text,
             project_id="my-project",
@@ -463,8 +463,8 @@ async def test_rule(
     try:
         logger.info(f'Testing detection rule against {hours_back} hours of historical data')
 
-        
-        
+
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Define time range for testing
@@ -490,18 +490,18 @@ async def test_rule(
 
         for result in test_results:
             result_type = result.get("type")
-            
+
             if result_type == "progress":
                 # Progress update
                 percent_done = result.get("percentDone", 0)
                 progress_updates.append(f"Progress: {percent_done}%")
-            
+
             elif result_type == "detection":
                 # Detection result
                 detection_count += 1
                 detection = result.get("detection", {})
                 detections.append(detection)
-                
+
             elif result_type == "error":
                 # Error information
                 error_msg = result.get('message', 'Unknown error')
@@ -524,18 +524,18 @@ async def test_rule(
             response += f'  - Rule successfully detected {detection_count} event(s)\n'
             if detection_count >= max_results:
                 response += f'  - Results limited to {max_results} detections (may have more)\n'
-            
+
             # Show sample detection details
             if detections:
                 response += f'\nSample Detection Details:\n'
                 sample_detection = detections[0]
-                
+
                 if "rule_id" in sample_detection:
                     response += f'  Rule ID: {sample_detection["rule_id"]}\n'
-                
+
                 if "detection_time" in sample_detection:
                     response += f'  Detection Time: {sample_detection["detection_time"]}\n'
-                
+
                 # Show event details if available
                 result_events = sample_detection.get("resultEvents", {})
                 if result_events:
@@ -547,7 +547,7 @@ async def test_rule(
                             event_type = metadata.get("eventType", "Unknown")
                             response += f'  Event Type: {event_type}\n'
                             break
-            
+
             response += f'\nRecommendation: Review detections to ensure they align with your detection objectives.'
         else:
             response += f'No detections found in the test period.\n'
@@ -624,7 +624,7 @@ async def validate_rule(
                 $e
         }
         '''
-        
+
         validate_rule(
             rule_text=rule_text,
             project_id="my-project",
@@ -642,8 +642,8 @@ async def validate_rule(
     try:
         logger.info('Validating detection rule syntax')
 
-        
-        
+
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Validate the rule
@@ -651,31 +651,31 @@ async def validate_rule(
 
         # Format response based on validation result
         response = f'Rule Validation Results:\n\n'
-        
+
         if hasattr(validation_result, 'success') and validation_result.success:
             response += '✅ Rule validation PASSED\n'
             response += 'The rule syntax is correct and ready for testing or deployment.\n'
-            
+
             # Include suggested fields if available
             if hasattr(validation_result, 'suggested_fields') and validation_result.suggested_fields:
                 response += f'\nSuggested Fields: {", ".join(validation_result.suggested_fields)}'
-                
+
         elif hasattr(validation_result, 'success') and not validation_result.success:
             response += '❌ Rule validation FAILED\n'
             response += f'Error: {validation_result.message}\n'
-            
+
             # Include position information if available
             if hasattr(validation_result, 'position') and validation_result.position:
                 position = validation_result.position
                 if 'startLine' in position and 'startColumn' in position:
                     response += f'Location: Line {position["startLine"]}, Column {position["startColumn"]}\n'
-                    
+
             response += '\nPlease review and correct the syntax errors before proceeding.'
-            
+
         else:
             # Handle different response format
             response += f'Validation result: {validation_result}\n'
-            
+
             # Try to determine if validation passed based on common response patterns
             if isinstance(validation_result, dict):
                 is_valid = validation_result.get('isValid', False)
@@ -683,12 +683,12 @@ async def validate_rule(
                     response += '✅ Rule appears to be valid based on API response.\n'
                 else:
                     response += '❌ Rule validation may have failed based on API response.\n'
-                    
+
                 # Include query type if available
                 query_type = validation_result.get('queryType', '')
                 if query_type:
                     response += f'Query Type: {query_type}\n'
-                    
+
                 # Include suggested fields if available
                 suggested_fields = validation_result.get('suggestedFields', [])
                 if suggested_fields:
