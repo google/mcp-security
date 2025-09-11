@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from google.adk.agents.llm_agent import LlmAgent
-from  google.adk.tools.mcp_tool.mcp_toolset  import StdioServerParameters, StdioConnectionParams
+from google.adk.tools.mcp_tool.mcp_toolset  import StdioServerParameters
 import os
 import logging
 
@@ -62,8 +62,7 @@ def get_all_tools():
   
   if os.environ.get("LOAD_SCC_MCP") == "Y":
     scc_tools = MCPToolSetWithSchemaAccess(
-                  connection_params=StdioConnectionParams(
-                    server_params=StdioServerParameters(
+                  connection_params=StdioServerParameters(
                                   command='uv',
                                   args=[ "--directory",
                                           uv_dir_prefix + "/scc",
@@ -71,15 +70,13 @@ def get_all_tools():
                                           "scc_mcp.py"
                                         ]
                     ),
-                  timeout=timeout),
                 tool_set_name="scc",
                 errlog=errlog_ae 
                 )
 
   if os.environ.get("LOAD_SECOPS_MCP") == "Y":
     secops_tools = MCPToolSetWithSchemaAccess(
-                  connection_params=StdioConnectionParams(
-                    server_params=StdioServerParameters(
+                  connection_params=StdioServerParameters(
                                   command='uv',
                                   args=[ "--directory",
                                           uv_dir_prefix + "/secops/secops_mcp",
@@ -89,15 +86,13 @@ def get_all_tools():
                                           "server.py"
                                         ]
                     ),
-                  timeout=timeout),
                 tool_set_name="secops_mcp",
                 errlog=errlog_ae
                 )
 
   if os.environ.get("LOAD_GTI_MCP") == "Y":
     gti_tools = MCPToolSetWithSchemaAccess(
-                  connection_params=StdioConnectionParams(
-                    server_params=StdioServerParameters(
+                  connection_params=StdioServerParameters(
                                   command='uv',
                                   args=[ "--directory",
                                           uv_dir_prefix + "/gti/gti_mcp",
@@ -107,7 +102,6 @@ def get_all_tools():
                                           "server.py"
                                         ]
                     ),
-                  timeout=timeout),
                 tool_set_name="gti_mcp",
                 errlog=errlog_ae
                 )    
@@ -115,8 +109,7 @@ def get_all_tools():
 
   if os.environ.get("LOAD_SECOPS_SOAR_MCP") == "Y":
     secops_soar_tools = MCPToolSetWithSchemaAccess(
-                  connection_params=StdioConnectionParams(
-                    server_params=StdioServerParameters(
+                  connection_params=StdioServerParameters(
                                   command='uv',
                                   args=[ "--directory",
                                           uv_dir_prefix + "/secops-soar/secops_soar_mcp",
@@ -128,7 +121,6 @@ def get_all_tools():
                                           os.environ.get("SECOPS_INTEGRATIONS","CSV,OKTA")
                                         ]
                     ),
-                  timeout=timeout),
                 tool_set_name="secops_soar_mcp",
                 errlog=errlog_ae
                 )    
