@@ -2,6 +2,8 @@
 
 This server provides tools for interacting with Google Cloud Security Command Center (SCC) and Cloud Asset Inventory (CAI).
 
+**Supported Clients:** Gemini CLI, Claude Desktop|Code, Cline, etc.
+
 ## Configuration
 
 This server requires Google Cloud authentication to access SCC and CAI APIs:
@@ -33,8 +35,6 @@ Add the following configuration to your MCP client's settings file:
         "scc_mcp.py"
       ],
       "env": {},
-      "disabled": false,
-      "autoApprove": []
       "disabled": false,
       "autoApprove": []
     }
