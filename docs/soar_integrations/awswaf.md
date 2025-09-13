@@ -63,14 +63,14 @@ Create a Web ACL in AWS WAF. Note: You can have only 100 Web ACLs per region.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `name` (string, required): Specify the name of the Web ACL. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).
-*   `rule_source_type` (List[Any], required): Specify what rule type should be used (IP Set or Rule Group).
+*   `rule_source_type` (List[str], required): Specify what rule type should be used (IP Set or Rule Group).
 *   `rule_source_name` (string, required): Specify the name of the source (IP Set or Rule Group name).
 *   `enable_sampled_requests` (bool, required): If enabled, AWS WAF will store a sampling of the web requests that match the rules.
 *   `enable_cloud_watch_metrics` (bool, required): If enabled, the associated resource sends metrics to CloudWatch.
 *   `cloud_watch_metric_name` (string, required): Specify the name of the CloudWatch Metric. Note: The name must have 1-128 characters. Valid characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore).
-*   `default_action` (List[Any], required): Specify the default action for requests that don't match any rules (e.g., Allow, Block).
+*   `default_action` (List[str], required): Specify the default action for requests that don't match any rules (e.g., Allow, Block).
 *   `rule_priority` (string, required): Specify the priority of the rule (unique within the Web ACL).
-*   `ip_set_action` (List[Any], optional): Specify the action for rules based on the IP set (e.g., Allow, Block). Required if `rule_source_type` is "IP Set".
+*   `ip_set_action` (List[str], optional): Specify the action for rules based on the IP set (e.g., Allow, Block). Required if `rule_source_type` is "IP Set".
 *   `description` (string, optional): Specify the description for the Web ACL.
 *   `tags` (string, optional): Specify additional tags. Format: key_1:value_1,key_2:value_1.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -326,10 +326,10 @@ Add a rule based on IP Sets or Rule Groups to Web ACL in AWS WAF. Note: at maxim
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `web_acl_names` (string, required): Specify the comma-separated list of Web ACL names. Example: name_1,name_2
-*   `rule_source_type` (List[Any], required): Specify what rule type should be used (IP Set or Rule Group).
+*   `rule_source_type` (List[str], required): Specify what rule type should be used (IP Set or Rule Group).
 *   `rule_source_name` (string, required): Specify the name of the source (IP Set or Rule Group name).
 *   `rule_priority` (string, required): Specify the priority of the rule (unique within the Web ACL).
-*   `ip_set_action` (List[Any], optional): Specify the action for rules based on the IP set (e.g., Allow, Block). Required if `rule_source_type` is "IP Set".
+*   `ip_set_action` (List[str], optional): Specify the action for rules based on the IP set (e.g., Allow, Block). Required if `rule_source_type` is "IP Set".
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

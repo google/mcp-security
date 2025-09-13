@@ -17,7 +17,7 @@ The following actions are available through the RSA NetWitness Platform integrat
     *   `case_id` (str, required): The ID of the case.
     *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     *   `incident_id` (str, required): Specify ID of the incident that needs to be updated.
-    *   `status` (Optional[List[Any]], optional, default: None): Specify new status for the incident.
+    *   `status` (Optional[List[str]], optional, default: None): Specify new status for the incident.
     *   `assignee` (Optional[str], optional, default: None): Specify new assignee for the incident.
     *   `target_entities` (List[TargetEntity], optional, default: []): Optional list of specific target entities (Identifier, EntityType) to run the action on.
     *   `scope` (str, optional, default: "All entities"): Defines the scope for the action.

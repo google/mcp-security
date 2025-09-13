@@ -24,7 +24,7 @@ Ensure the Trend Micro Cloud App Security integration is configured in the SOAR 
 - **Args:**
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    - `mitigation_action` (List[Any], required): Specify the mitigation action(s) to apply (refer to Trend Micro documentation for valid actions).
+    - `mitigation_action` (List[str], required): Specify the mitigation action(s) to apply (refer to Trend Micro documentation for valid actions).
     - `email_addresses` (str, required): Specify a comma-separated list of email addresses to mitigate.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.
@@ -47,8 +47,8 @@ Ensure the Trend Micro Cloud App Security integration is configured in the SOAR 
 - **Args:**
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    - `mitigation_action` (List[Any], required): Specify the mitigation action ("delete" or "quarantine").
-    - `service` (List[Any], required): Specify the email service ("gmail" or "exchange").
+    - `mitigation_action` (List[str], required): Specify the mitigation action ("delete" or "quarantine").
+    - `service` (List[str], required): Specify the email service ("gmail" or "exchange").
     - `message_i_ds` (str, required): Specify a comma-separated list of message IDs to mitigate.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.

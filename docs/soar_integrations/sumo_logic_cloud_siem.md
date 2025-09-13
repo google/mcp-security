@@ -34,8 +34,8 @@ Ensure the Sumo Logic Cloud SIEM integration is configured in the SOAR platform 
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `insight_id` (str, required): Specify the ID of the insight to update.
-    - `status` (List[Any], required): Specify the new status for the insight (refer to Sumo Logic documentation for valid statuses).
-    - `assignee_type` (List[Any], required): Specify the assignee type ("user" or "team").
+    - `status` (List[str], required): Specify the new status for the insight (refer to Sumo Logic documentation for valid statuses).
+    - `assignee_type` (List[str], required): Specify the assignee type ("user" or "team").
     - `assignee` (str, optional): Specify the assignee identifier (username or team ID). Defaults to None.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.
@@ -68,7 +68,7 @@ Ensure the Sumo Logic Cloud SIEM integration is configured in the SOAR platform 
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `lowest_severity_to_return` (str, optional): Specify the lowest severity number (max 10) to include in results. Defaults to None (no severity filter).
-    - `time_frame` (List[Any], optional): Specify a time frame (e.g., ["Last 24 Hours"], ["Custom"], ["5 Minutes Around Alert Time"]). If "Custom", `start_time` is required. Defaults to None.
+    - `time_frame` (List[str], optional): Specify a time frame (e.g., ["Last 24 Hours"], ["Custom"], ["5 Minutes Around Alert Time"]). If "Custom", `start_time` is required. Defaults to None.
     - `start_time` (str, optional): Specify the start time (ISO 8601 format). Mandatory if `time_frame` is "Custom". Defaults to None.
     - `end_time` (str, optional): Specify the end time (ISO 8601 format). If `time_frame` is "Custom" and not provided, uses current time. Defaults to None.
     - `max_signals_to_return` (str, optional): Specify max signals per entity (Default: 50). Defaults to None.

@@ -35,7 +35,7 @@ Respond to an alert in Palo Alto Prisma Cloud by changing its status (Dismiss, S
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): ID of the alert to respond to.
-*   `response_type` (List[Any], optional): Alert status to set (Dismiss, Snooze, Reopen, Remediate).
+*   `response_type` (List[str], optional): Alert status to set (Dismiss, Snooze, Reopen, Remediate).
 *   `snooze_time` (string, optional): Snooze time in hours (required if `response_type` is Snooze).
 *   `dismiss_note` (string, optional): Note for a dismissal.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

@@ -42,7 +42,7 @@ List available device groups in Symantec Endpoint Security Complete.
 **Parameters:**
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `filter_logic` (Optional[List[Any]], optional, default=None): Specify what filter logic should be applied.
+*   `filter_logic` (Optional[List[str]], optional, default=None): Specify what filter logic should be applied.
 *   `filter_value` (Optional[str], optional, default=None): Specify what value should be used in the filter.
 *   `max_groups_to_return` (Optional[str], optional, default=None): Specify how many groups to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.

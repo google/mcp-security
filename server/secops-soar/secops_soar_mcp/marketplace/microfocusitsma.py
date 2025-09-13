@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the MicroFocusITSMA integration.
 
     @mcp.tool()
-    async def micro_focus_itsma_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], display_label: Annotated[str, Field(default=None, description="The updated display label of the incident")], description: Annotated[str, Field(default=None, description="The updated description of the incident")], impact_scope: Annotated[str, Field(default=None, description="The updated impact score of the incident")], urgency: Annotated[str, Field(default=None, description="The updated urgency of the incident")], service_id: Annotated[str, Field(default=None, description="The updated Id of the category of the incident")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def micro_focus_itsma_update_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], display_label: Annotated[str, Field(default=None, description="The updated display label of the incident")], description: Annotated[str, Field(default=None, description="The updated description of the incident")], impact_scope: Annotated[str, Field(default=None, description="The updated impact score of the incident")], urgency: Annotated[str, Field(default=None, description="The updated urgency of the incident")], service_id: Annotated[str, Field(default=None, description="The updated Id of the category of the incident")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update an existing incident
 
         Returns:
@@ -109,7 +110,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def micro_focus_itsma_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def micro_focus_itsma_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test Connectivity
 
         Returns:
@@ -183,7 +184,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def micro_focus_itsma_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], display_label: Annotated[str, Field(..., description="The display label of the incident")], description: Annotated[str, Field(..., description="The description of the incident")], impact_scope: Annotated[str, Field(..., description="The impact scope of the incident")], urgency: Annotated[str, Field(..., description="The urgency of the incident")], service_id: Annotated[str, Field(..., description="The id of the category of the incident")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def micro_focus_itsma_create_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], display_label: Annotated[str, Field(..., description="The display label of the incident")], description: Annotated[str, Field(..., description="The description of the incident")], impact_scope: Annotated[str, Field(..., description="The impact scope of the incident")], urgency: Annotated[str, Field(..., description="The urgency of the incident")], service_id: Annotated[str, Field(..., description="The id of the category of the incident")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new incident
 
         Returns:
@@ -262,7 +263,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def micro_focus_itsma_update_incident_external_status(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], status: Annotated[str, Field(..., description="The updated external status of the incident")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def micro_focus_itsma_update_incident_external_status(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident")], status: Annotated[str, Field(..., description="The updated external status of the incident")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update the external status for an incident
 
         Returns:

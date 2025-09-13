@@ -96,7 +96,7 @@ Search logs in Palo Alto Panorama based on the query and log type.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `log_type` (List[Any], required): Specify which log type should be returned (e.g., traffic, threat).
+*   `log_type` (List[str], required): Specify which log type should be returned (e.g., traffic, threat).
 *   `query` (string, optional): Specify the query filter (e.g., `(addr.src in 10.0.0.1)`).
 *   `max_hours_backwards` (string, optional): Specify the amount of hours from where to fetch logs.
 *   `max_logs_to_return` (string, optional): Specify how many logs to return. Maximum is 1000.

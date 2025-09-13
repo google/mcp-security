@@ -18,8 +18,8 @@ Create investigations for IP addresses and hostnames.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `case_type` (List[Any], required): Defines the type of alert.
-*   `priority` (List[Any], required): Assigns a priority to the investigation.
+*   `case_type` (List[str], required): Defines the type of alert.
+*   `priority` (List[str], required): Assigns a priority to the investigation.
 *   `hint` (string, optional): Automatically links related investigations and avoids creating many cases from multiple alerts related to the same incident. If the same hint is used, the evidences will be added to the already existing investigation.
 *   `name` (string, optional): Gives the investigation a meaningful name. If the name is missing, a default case name is assigned.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports IP and Host entities.

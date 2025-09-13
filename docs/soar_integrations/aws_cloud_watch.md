@@ -14,7 +14,7 @@ Search log events in AWS CloudWatch.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `log_group` (str, required): Specify the name of the log group, where you want to search for events.
 *   `log_streams` (Optional[str], optional, default=None): Specify a comma-separated list of log streams, where you want to search for events.
-*   `time_frame` (Optional[List[Any]], optional, default=None): Specify a time frame for the search.
+*   `time_frame` (Optional[List[str]], optional, default=None): Specify a time frame for the search.
     Possible values:
     1m - 1 minute ago
     1h - 1 hour ago
@@ -36,7 +36,7 @@ Set the retention policy for log groups in AWS CloudWatch.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `log_group` (str, required): Specify the name of the log group for which you want to set the retention policy.
-*   `retention_days` (List[Any], required): Specify for how many days the data should be retained in the log group.
+*   `retention_days` (List[str], required): Specify for how many days the data should be retained in the log group.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -74,8 +74,8 @@ List available log streams in AWS CloudWatch.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `log_groups` (str, required): Specify a comma-separated list of group names for which you want to retrieve log streams.
-*   `order_by` (Optional[List[Any]], optional, default=None): Specify how the log streams should be ordered.
-*   `sort_order` (Optional[List[Any]], optional, default=None): Specify how the log streams should be sorted.
+*   `order_by` (Optional[List[str]], optional, default=None): Specify how the log streams should be ordered.
+*   `sort_order` (Optional[List[str]], optional, default=None): Specify how the log streams should be sorted.
 *   `max_streams_to_return` (Optional[str], optional, default=None): Specify how many streams to return per log group. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

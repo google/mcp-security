@@ -181,7 +181,7 @@ This integration provides tools to interact with the Intezer platform for analyz
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `index_as` (List[Any], required): Index as trusted or malicious.
+*   `index_as` (List[str], required): Index as trusted or malicious.
 *   `sha256` (string, optional): Sha256 to index. Multiple values can be provided as a comma-separated string. Defaults to None.
 *   `family_name` (string, optional): Family name to index as. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Typically runs on Filehash entities. Defaults to empty list.

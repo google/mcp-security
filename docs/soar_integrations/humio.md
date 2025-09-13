@@ -59,13 +59,13 @@ This integration provides tools to interact with Humio for searching events usin
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `repository_name` (string, required): Specify the name of the repository that should be searched.
 *   `query_filter` (string, optional): Specify the query that should be executed during the search. Note: functions "head()" and "select()" shouldn't be provided. Defaults to None.
-*   `time_frame` (List[Any], optional): Specify a time frame for the results. If "Custom" is selected, you also need to provide "Start Time". Defaults to None.
+*   `time_frame` (List[str], optional): Specify a time frame for the results. If "Custom" is selected, you also need to provide "Start Time". Defaults to None.
 *   `start_time` (string, optional): Specify the start time for the results. This parameter is mandatory, if "Custom" is selected for the "Time Frame" parameter. Format: ISO 8601. Defaults to None.
 *   `end_time` (string, optional): Specify the end time for the results. Format: ISO 8601. If nothing is provided and "Custom" is selected for the "Time Frame" parameter then this parameter will use current time. Defaults to None.
 *   `fields_to_return` (string, optional): Specify what fields to return. If nothing is provided, action will return all fields. Defaults to None.
 *   `sort_field` (string, optional): Specify what parameter should be used for sorting. By default the query sorts data by timestamp in the ascending order. Defaults to None.
-*   `sort_field_type` (List[Any], optional): Specify the type of the field that will be used for sorting. This parameter is needed to ensure that the correct results are returned. Defaults to None.
-*   `sort_order` (List[Any], optional): Specify the order of sorting. Defaults to None.
+*   `sort_field_type` (List[str], optional): Specify the type of the field that will be used for sorting. This parameter is needed to ensure that the correct results are returned. Defaults to None.
+*   `sort_order` (List[str], optional): Specify the order of sorting. Defaults to None.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

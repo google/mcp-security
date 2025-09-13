@@ -37,6 +37,8 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
     | domain        | creation_date, last_modification_date, last_update_date, positives                | last_modification_date- |
     | ip            | ip, last_modification_date, positives                                             | last_modification_date- |
 
+  Note: The `entity` modifier can only be used ONCE per query.
+
   You can find all available modifers at:
     - Files: https://gtidocs.virustotal.com/docs/file-search-modifiers
     - URLs: https://gtidocs.virustotal.com/docs/url-search-modifiers
@@ -56,14 +58,15 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
   Returns:
     List of Indicators of Compromise (IoCs).
   """
-  res = await utils.consume_vt_iterator(
-      vt_client(ctx),
-      "/intelligence/search",
-      params={
-          "query": query,
-          "order": order_by},
-      limit=limit)
-  return utils.sanitize_response(res)
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client,
+        "/intelligence/search",
+        params={
+            "query": query,
+            "order": order_by},
+        limit=limit)
+  return utils.sanitize_response([o.to_dict() for o in res])
 
 
 @server.tool()
@@ -90,19 +93,20 @@ async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str,
   Returns:
     Hunting Ruleset object.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "intelligence/hunting_rulesets",
-      "hunting_ruleset",
-      ruleset_id,
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "intelligence/hunting_rulesets",
+        "hunting_ruleset",
+        ruleset_id,
+    )
   return utils.sanitize_response(res)
 
 
 @server.tool()
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> list[dict[str, typing.Any]]:
   """Retrieve entities related to the the given Hunting Ruleset.
 
     The following table shows a summary of available relationships for Hunting ruleset objects.
@@ -124,7 +128,12 @@ async def get_entities_related_to_a_hunting_ruleset(
           f"Available relationships are: {','.join(HUNTING_RULESET_RELATIONSHIPS)}"
       }
 
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx), "intelligence/hunting_rulesets", ruleset_id, [relationship_name], limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client,
+        "intelligence/hunting_rulesets",
+        ruleset_id,
+        [relationship_name],
+        limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))
 

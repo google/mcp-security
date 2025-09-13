@@ -24,35 +24,37 @@ from mcp.server.fastmcp import FastMCP, Context
 
 logging.basicConfig(level=logging.ERROR)
 
-@dataclass
-class AppContext:
-  client: vt.Client
+# If True, creates a completely fresh transport for each request
+# with no session tracking or state persistence between requests.
+stateless = False
+if os.getenv("STATELESS") == "1":
+  stateless = True
 
 
-async def new_vt_client():
-  return vt.Client(os.environ.get('VT_APIKEY'))
+def _vt_client_factory(unused_ctx) -> vt.Client:
+  api_key = os.getenv("VT_APIKEY")
+  if not api_key:
+    raise ValueError("VT_APIKEY environment variable is required")
+  return vt.Client(api_key)
+
+vt_client_factory = _vt_client_factory
 
 
 @asynccontextmanager
-async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
-  """Manage application lifecycle with type-safe context"""
-  # Initialize on startup
-  client = await new_vt_client()
+async def vt_client(ctx: Context) -> AsyncIterator[vt.Client]:
+  """Provides a vt.Client instance for the current request."""
+  client = vt_client_factory(ctx)
+
   try:
-    yield AppContext(client=client)
+    yield client
   finally:
-    # Cleanup on shutdown
     await client.close_async()
-
-
-def vt_client(ctx: Context) -> vt.Client:
-  return ctx.request_context.lifespan_context.client
 
 # Create a named server and specify dependencies for deployment and development
 server = FastMCP(
     "Google Threat Intelligence MCP server",
     dependencies=["vt-py"],
-    lifespan=app_lifespan)
+    stateless_http=stateless)
 
 # Load tools.
 from gti_mcp.tools import *

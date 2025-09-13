@@ -18,8 +18,8 @@ List security incidents from Microsoft Graph based on provided criteria.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter incidents.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter incidents.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -91,8 +91,8 @@ Get all alerts based on specified filters.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter alerts.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter alerts.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

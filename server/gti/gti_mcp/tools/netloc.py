@@ -97,20 +97,21 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
   Returns:
     Report with insights about the domain.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "domains",
-      "domain",
-      domain,
-      relationships=DOMAIN_KEY_RELATIONSHIPS,
-      params={"exclude_attributes": "last_analysis_results"})
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "domains",
+        "domain",
+        domain,
+        relationships=DOMAIN_KEY_RELATIONSHIPS,
+        params={"exclude_attributes": "last_analysis_results"})
   return utils.sanitize_response(res)
 
 
 @server.tool()
 async def get_entities_related_to_a_domain(
     domain: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> list[dict[str, typing.Any]]:
   """Retrieve entities related to the the given domain.
 
     The following table shows a summary of available relationships for domain objects.
@@ -163,12 +164,13 @@ async def get_entities_related_to_a_domain(
                 f"Available relationships are: {','.join(DOMAIN_RELATIONSHIPS)}"
     }
 
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx), 
-      "domains", domain, 
-      relationships=[relationship_name],
-      descriptors_only=descriptors_only,
-      limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client, 
+        "domains", domain, 
+        relationships=[relationship_name],
+        descriptors_only=descriptors_only,
+        limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))
 
 
@@ -181,19 +183,20 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
   Returns:
     Report with insights about the IP address.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "ip_addresses",
-      "ip", ip_address,
-      relationships=IP_KEY_RELATIONSHIPS,
-      params={"exclude_attributes": "last_analysis_results"})
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "ip_addresses",
+        "ip", ip_address,
+        relationships=IP_KEY_RELATIONSHIPS,
+        params={"exclude_attributes": "last_analysis_results"})
   return utils.sanitize_response(res)
 
 
 @server.tool()
 async def get_entities_related_to_an_ip_address(
     ip_address: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> list[dict[str, typing.Any]]:
   """Retrieve entities related to the the given IP Address.
 
     The following table shows a summary of available relationships for IP Address objects.
@@ -237,11 +240,12 @@ async def get_entities_related_to_an_ip_address(
                 f"Available relationships are: {','.join(IP_RELATIONSHIPS)}"
     }
 
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx), 
-      "ip_addresses",
-      ip_address,
-      relationships=[relationship_name],
-      descriptors_only=descriptors_only,
-      limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client, 
+        "ip_addresses",
+        ip_address,
+        relationships=[relationship_name],
+        descriptors_only=descriptors_only,
+        limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))

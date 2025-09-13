@@ -17,11 +17,11 @@ Ensure the Zoho Desk integration is configured in the SOAR platform. This typica
     - `description` (str, required): Specify the description of the ticket.
     - `department_name` (str, required): Specify the name of the department to create the ticket in.
     - `contact` (str, required): Specify the email of the contact for the ticket.
-    - `assignee_type` (List[Any], optional): Specify assignee type ("Agent" or "Team"). If selected, `assignee_name` is required. Defaults to None.
+    - `assignee_type` (List[str], optional): Specify assignee type ("Agent" or "Team"). If selected, `assignee_name` is required. Defaults to None.
     - `assignee_name` (str, optional): Name/email of the agent or team name to assign. Required if `assignee_type` is set. Defaults to None.
-    - `priority` (List[Any], optional): Specify ticket priority (e.g., ["High"], ["Medium"]). Defaults to None.
-    - `classification` (List[Any], optional): Specify ticket classification (e.g., ["Problem"], ["Feature"]). Defaults to None.
-    - `channel` (List[Any], optional): Specify ticket channel (e.g., ["Email"], ["Phone"]). Defaults to None.
+    - `priority` (List[str], optional): Specify ticket priority (e.g., ["High"], ["Medium"]). Defaults to None.
+    - `classification` (List[str], optional): Specify ticket classification (e.g., ["Problem"], ["Feature"]). Defaults to None.
+    - `channel` (List[str], optional): Specify ticket channel (e.g., ["Email"], ["Phone"]). Defaults to None.
     - `category` (str, optional): Specify the category for the ticket. Defaults to None.
     - `sub_category` (str, optional): Specify the subcategory for the ticket. Defaults to None.
     - `due_date` (str, optional): Specify the due date (ISO 8601 format, e.g., "2022-07-06T07:05:43Z"). Defaults to None.
@@ -51,8 +51,8 @@ Ensure the Zoho Desk integration is configured in the SOAR platform. This typica
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `ticket_id` (str, required): The ID of the ticket to add a comment to.
     - `text` (str, required): The content of the comment.
-    - `visibility` (List[Any], optional): Specify comment visibility (e.g., ["Public"], ["Private"]). Defaults to None.
-    - `type` (List[Any], optional): Specify comment type (e.g., ["Comment"], ["Note"]). Defaults to None.
+    - `visibility` (List[str], optional): Specify comment visibility (e.g., ["Public"], ["Private"]). Defaults to None.
+    - `type` (List[str], optional): Specify comment type (e.g., ["Comment"], ["Note"]). Defaults to None.
     - `wait_for_reply` (bool, optional): If enabled, the action waits for a reply (makes it async). Defaults to None.
     - `target_entities` (List[TargetEntity], optional): Specific target entities. Defaults to empty list.
     - `scope` (str, optional): Defines the scope ("All entities"). Defaults to "All entities".
@@ -99,14 +99,14 @@ Ensure the Zoho Desk integration is configured in the SOAR platform. This typica
     - `description` (str, optional): New description for the ticket. Defaults to None.
     - `department_name` (str, optional): New department name. Defaults to None.
     - `contact` (str, optional): New contact email. Defaults to None.
-    - `assignee_type` (List[Any], optional): New assignee type ("Agent" or "Team"). Requires `assignee_name`. Defaults to None.
+    - `assignee_type` (List[str], optional): New assignee type ("Agent" or "Team"). Requires `assignee_name`. Defaults to None.
     - `assignee_name` (str, optional): New assignee name/email or team name. Defaults to None.
     - `resolution` (str, optional): Resolution text for the ticket. Defaults to None.
-    - `priority` (List[Any], optional): New priority. Defaults to None.
-    - `status` (List[Any], optional): New status (e.g., ["Open"], ["Closed"]). Defaults to None.
-    - `mark_state` (List[Any], optional): New mark state (e.g., ["Spam"]). Defaults to None.
-    - `classification` (List[Any], optional): New classification. Defaults to None.
-    - `channel` (List[Any], optional): New channel. Defaults to None.
+    - `priority` (List[str], optional): New priority. Defaults to None.
+    - `status` (List[str], optional): New status (e.g., ["Open"], ["Closed"]). Defaults to None.
+    - `mark_state` (List[str], optional): New mark state (e.g., ["Spam"]). Defaults to None.
+    - `classification` (List[str], optional): New classification. Defaults to None.
+    - `channel` (List[str], optional): New channel. Defaults to None.
     - `category` (str, optional): New category. Defaults to None.
     - `sub_category` (str, optional): New subcategory. Defaults to None.
     - `due_date` (str, optional): New due date (ISO 8601 format). Not applicable if status is "On Hold". Defaults to None.

@@ -113,7 +113,7 @@ The following actions are available through the Qualys VM integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `status_filter` (string, optional): Comma-separated statuses (e.g., `New,Active,Re-Opened,Fixed`). Defaults to New, Active, Re-Opened.
-        *   `lowest_severity_to_fetch` (List[Any], optional): Minimum severity level to fetch (e.g., `["3"]`).
+        *   `lowest_severity_to_fetch` (List[str], optional): Minimum severity level to fetch (e.g., `["3"]`).
         *   `max_detections_to_return` (string, optional, default=50, max=200): Max detections per entity.
         *   `ingest_ignored_detections` (bool, optional): Include ignored detections.
         *   `ingest_disabled_detections` (bool, optional): Include disabled detections.

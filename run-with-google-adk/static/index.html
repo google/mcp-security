@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ADK Agent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            /* Light Mode Defaults */
+            --body-bg: #f8f9fa;
+            --navbar-bg: var(--bs-primary); /* Bootstrap primary color */
+            --navbar-text: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #dee2e6;
+            --input-border: #ced4da;
+            --input-text: #212529;
+            --input-placeholder-text: #6c757d;
+            --label-text: #212529;
+            --checkbox-text: #212529; /* Text color for checkbox label */
+        }
+
+        /* Dark Mode Overrides */
+        body.dark-mode {
+            --body-bg: #212529;
+            --navbar-bg: #343a40;
+            --navbar-text: #ffffff;
+            --card-bg: #343a40;
+            --card-border: #495057;
+            --input-border: #6c757d;
+            --input-text: #ffffff;
+            --input-placeholder-text: #adb5bd;
+            --label-text: #ffffff;
+            --checkbox-text: #ffffff; /* Text color for checkbox label in dark mode */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+        .navbar {
+            background-color: var(--navbar-bg) !important;
+            color: var(--navbar-text);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .navbar-brand {
+            color: var(--navbar-text) !important;
+        }
+        .login-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .form-label {
+            color: var(--label-text);
+            transition: color 0.3s ease;
+        }
+        .form-control {
+            background-color: var(--card-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--input-text) !important;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .form-control::placeholder {
+            color: var(--input-placeholder-text) !important;
+            opacity: 0.7;
+        }
+        .btn {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        /* Dark mode toggle specific styles */
+        .form-check-label.text-light {
+             color: var(--navbar-text) !important;
+        }
+        /* Checkbox label text color */
+        .form-check-label.checkbox-label {
+            color: var(--checkbox-text);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" id="app-navbar-title" href="#">ADK Agent</a>
+            <div class="form-check form-switch ms-auto">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                <label class="form-check-label text-light" for="darkModeToggle">Dark Mode</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h4 class="text-center mb-4" style="color: var(--label-text);">Login</h4>
+            <div class="mb-3">
+                <label for="usernameInput" class="form-label">Username</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Enter your username">
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="startWhereLeftOff" checked>
+                <label class="form-check-label checkbox-label" for="startWhereLeftOff">
+                  Resume session (if available)
+                </label>
+            </div>
+            <button id="loginBtn" class="btn btn-primary w-100">Login</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/index_script.js"></script>
+</body>
+</html>

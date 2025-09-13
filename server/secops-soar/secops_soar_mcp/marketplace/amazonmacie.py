@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the AmazonMacie integration.
 
     @mcp.tool()
-    async def amazon_macie_get_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_id: Annotated[str, Field(..., description="Finding ID to get details for. Parameter can take multiple values as a comma separated string.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_get_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_id: Annotated[str, Field(..., description="Finding ID to get details for. Parameter can take multiple values as a comma separated string.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get Amazon Macie findings based on specified Finding ID. Note: Action is not working with Siemplify Entities.
 
         Returns:
@@ -99,7 +100,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_list_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_type: Annotated[str, Field(default=None, description="Finding type to search for, for example SensitiveData:S3Object/Credentials or SensitiveData:S3Object/Multiple. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all types of findings.")], time_frame: Annotated[str, Field(default=None, description="Specify a time frame in hours for which to fetch findings.")], severity: Annotated[str, Field(default=None, description="Finding severity to search - High, Medium or Low. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all findings regardless of severity.")], include_archived_findings: Annotated[bool, Field(default=None, description="Specify whether to include archived findings in results or not.")], record_limit: Annotated[str, Field(default=None, description="Specify how many records can be returned by the action.")], sort_by: Annotated[str, Field(default=None, description="Specify a parameter for sorting the data, eg updatedAt")], sort_order: Annotated[List[Any], Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_list_findings(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], finding_type: Annotated[str, Field(default=None, description="Finding type to search for, for example SensitiveData:S3Object/Credentials or SensitiveData:S3Object/Multiple. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all types of findings.")], time_frame: Annotated[str, Field(default=None, description="Specify a time frame in hours for which to fetch findings.")], severity: Annotated[str, Field(default=None, description="Finding severity to search - High, Medium or Low. Parameter accepts multiple values as a comma separated string. If nothing is specified - return all findings regardless of severity.")], include_archived_findings: Annotated[bool, Field(default=None, description="Specify whether to include archived findings in results or not.")], record_limit: Annotated[str, Field(default=None, description="Specify how many records can be returned by the action.")], sort_by: Annotated[str, Field(default=None, description="Specify a parameter for sorting the data, eg updatedAt")], sort_order: Annotated[List[str], Field(default=None, description="Sort order.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Amazon Macie findings based on the specified action input parameters.  Note: Action is not working with Siemplify entities, only with action input parameters.
 
         Returns:
@@ -187,7 +188,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_delete_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_id: Annotated[str, Field(..., description="Amazon Macie custom data identifier id to delete.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_delete_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_id: Annotated[str, Field(..., description="Amazon Macie custom data identifier id to delete.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Delete Amazon Macie Custom Data Identifier. Note: Action is not working with Siemplify Entities.
 
         Returns:
@@ -262,7 +263,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_disable_macie(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_disable_macie(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Disable Amazon Macie service. Note: Action is not working with Siemplify Entities.
 
         Returns:
@@ -336,7 +337,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Amazon Macie service with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
@@ -410,7 +411,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_enable_macie(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_enable_macie(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enable Amazon Macie service. Note: Action is not working with Siemplify Entities.
 
         Returns:
@@ -484,7 +485,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def amazon_macie_create_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_name: Annotated[str, Field(..., description="Amazon Macie new custom data identifier name.")], custom_data_identifier_regular_expression: Annotated[str, Field(..., description="Amazon Macie new custom data identifier regular expression, eg I[a@]mAB[a@]dRequest")], custom_data_identifier_description: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier description.")], custom_data_identifier_keywords: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier keywords.")], custom_data_identifier_ignore_words: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier ignore words.")], custom_data_identifier_maximum_match_distance: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier maximum match distance. Default value is 50.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def amazon_macie_create_custom_data_identifier(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_data_identifier_name: Annotated[str, Field(..., description="Amazon Macie new custom data identifier name.")], custom_data_identifier_regular_expression: Annotated[str, Field(..., description="Amazon Macie new custom data identifier regular expression, eg I[a@]mAB[a@]dRequest")], custom_data_identifier_description: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier description.")], custom_data_identifier_keywords: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier keywords.")], custom_data_identifier_ignore_words: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier ignore words.")], custom_data_identifier_maximum_match_distance: Annotated[str, Field(default=None, description="Amazon Macie new custom data identifier maximum match distance. Default value is 50.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create Amazon Macie Custom Data Identifier. Note: Action is not working with Siemplify Entities.
 
         Returns:

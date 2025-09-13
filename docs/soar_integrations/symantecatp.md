@@ -12,7 +12,7 @@ Update resolution on the incident.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `incident_uuid` (str, required): Specify the UUID of the incident.
-*   `resolution_status` (List[Any], required): Specify what resolution status to set on the incident.
+*   `resolution_status` (List[str], required): Specify what resolution status to set on the incident.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default='All entities'): Defines the scope for the action.
 

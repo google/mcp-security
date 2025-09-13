@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FireEyeHelix integration.
 
     @mcp.tool()
-    async def fire_eye_helix_index_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query for the search, for example: srcserver=172.30.202.130")], time_frame: Annotated[str, Field(default=None, description="Specify the time frame for the search. Only hours and days are supported. This is the FireEye Helix limitation. Examples of the values: 7h - 7 hours 1d - 1 day")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_index_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query for the search, for example: srcserver=172.30.202.130")], time_frame: Annotated[str, Field(default=None, description="Specify the time frame for the search. Only hours and days are supported. This is the FireEye Helix limitation. Examples of the values: 7h - 7 hours 1d - 1 day")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Perform index search in FireEye Helix.
 
         Returns:
@@ -103,7 +104,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_enrich_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_enrich_user(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Fetch information about users from FireEye Helix.
 
         Returns:
@@ -177,7 +178,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_close_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be closed in FireEye Helix.")], revision_note: Annotated[str, Field(default=None, description="Specify revision note for the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_close_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be closed in FireEye Helix.")], revision_note: Annotated[str, Field(default=None, description="Specify revision note for the alert.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Close Alert in FireEye Helix.
 
         Returns:
@@ -254,7 +255,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Fetch endpoint's system information by its hostname.
 
         Returns:
@@ -328,7 +329,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_archive_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query for the search, for example: srcserver=172.30.202.130")], time_frame: Annotated[str, Field(..., description="Specify the time frame for the search. Only hours and days are supported. Note: end time will be 4 hours earlier than current time and time frame will start calculation from that point. For example, if 'Time Frame' is 3h, then the start time will be the current time - 7h, while the end time will be the current time -4h. API doesn't allow archive search to be performed on events that are only 3 hours old. This is the FireEye Helix limitation. Examples of the values: 7h - 7 hours, 1d - 1 day")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_archive_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query for the search, for example: srcserver=172.30.202.130")], time_frame: Annotated[str, Field(..., description="Specify the time frame for the search. Only hours and days are supported. Note: end time will be 4 hours earlier than current time and time frame will start calculation from that point. For example, if 'Time Frame' is 3h, then the start time will be the current time - 7h, while the end time will be the current time -4h. API doesn't allow archive search to be performed on events that are only 3 hours old. This is the FireEye Helix limitation. Examples of the values: 7h - 7 hours, 1d - 1 day")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Perform archive search in FireEye Helix.
 
         Returns:
@@ -406,7 +407,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the FireEye Helix with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
@@ -480,7 +481,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_get_list_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], list_short_name: Annotated[str, Field(..., description="Specify the short name of the list.")], value: Annotated[str, Field(default=None, description="Specify value filter for the items.")], type: Annotated[List[Any], Field(default=None, description="Specify type filter for the items.")], sort_by: Annotated[List[Any], Field(default=None, description="Specify which parameter should be used for sorting results.")], sort_order: Annotated[List[Any], Field(default=None, description="Specify the sorting order for the results.")], max_items_to_return: Annotated[str, Field(default=None, description="Specify how many items to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_get_list_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], list_short_name: Annotated[str, Field(..., description="Specify the short name of the list.")], value: Annotated[str, Field(default=None, description="Specify value filter for the items.")], type: Annotated[List[str], Field(default=None, description="Specify type filter for the items.")], sort_by: Annotated[List[str], Field(default=None, description="Specify which parameter should be used for sorting results.")], sort_order: Annotated[List[str], Field(default=None, description="Specify the sorting order for the results.")], max_items_to_return: Annotated[str, Field(default=None, description="Specify how many items to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about FireEye Helix lists items.
 
         Returns:
@@ -565,7 +566,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_get_alert_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be enriched in FireEye Helix.")], max_notes_to_return: Annotated[str, Field(default=None, description="Specify how many associated notes to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_get_alert_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be enriched in FireEye Helix.")], max_notes_to_return: Annotated[str, Field(default=None, description="Specify how many associated notes to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve information about Alert from FireEye Helix.
 
         Returns:
@@ -642,7 +643,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_suppress_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be suppressed in FireEye Helix.")], duration: Annotated[str, Field(..., description="Specify for how long the Alert should be suppressed in minutes.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_suppress_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify ID of the Alert that needs to be suppressed in FireEye Helix.")], duration: Annotated[str, Field(..., description="Specify for how long the Alert should be suppressed in minutes.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Suppress Alert in FireEye Helix.
 
         Returns:
@@ -718,7 +719,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_get_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(default=None, description="Specify name filter.")], short_name: Annotated[str, Field(default=None, description="Specify short name filter.")], active: Annotated[bool, Field(default=None, description="Specify, whether action should only return active lists.")], internal: Annotated[bool, Field(default=None, description="Specify, whether action should only return internal lists.")], protected: Annotated[bool, Field(default=None, description="Specify, whether action should only return protected lists.")], sort_by: Annotated[List[Any], Field(default=None, description="Specify which parameter should be used for sorting results.")], sort_order: Annotated[List[Any], Field(default=None, description="Specify the sorting order for the results.")], max_lists_to_return: Annotated[str, Field(default=None, description="Specify how many lists to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_get_lists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(default=None, description="Specify name filter.")], short_name: Annotated[str, Field(default=None, description="Specify short name filter.")], active: Annotated[bool, Field(default=None, description="Specify, whether action should only return active lists.")], internal: Annotated[bool, Field(default=None, description="Specify, whether action should only return internal lists.")], protected: Annotated[bool, Field(default=None, description="Specify, whether action should only return protected lists.")], sort_by: Annotated[List[str], Field(default=None, description="Specify which parameter should be used for sorting results.")], sort_order: Annotated[List[str], Field(default=None, description="Specify the sorting order for the results.")], max_lists_to_return: Annotated[str, Field(default=None, description="Specify how many lists to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about FireEye Helix lists.
 
         Returns:
@@ -808,7 +809,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_add_note_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify Alert ID to add note to.")], note: Annotated[str, Field(..., description="Specify note for the alert.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_add_note_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="Specify Alert ID to add note to.")], note: Annotated[str, Field(..., description="Specify note for the alert.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a Note to Alert in FireEye Helix.
 
         Returns:
@@ -884,7 +885,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_helix_add_entities_to_a_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], list_short_name: Annotated[str, Field(..., description="Specify the short name of the list.")], risk: Annotated[List[Any], Field(default=None, description="Specify the risk of the items.")], note: Annotated[str, Field(default=None, description="Specify notes that should be added to the items.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_helix_add_entities_to_a_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], list_short_name: Annotated[str, Field(..., description="Specify the short name of the list.")], risk: Annotated[List[str], Field(default=None, description="Specify the risk of the items.")], note: Annotated[str, Field(default=None, description="Specify notes that should be added to the items.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add Siemplify entities to the FireEye Helix list.
 
         Returns:

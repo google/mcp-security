@@ -17,7 +17,7 @@ Add attachment to a table record in ServiceNow.
 *   `table_name` (str, required): Specify name of the table, where is located the record to which you want to add attachment.
 *   `record_sys_id` (str, required): Specify sys id of the record to which you want to add attachment.
 *   `file_path` (str, required): Specify a comma-separated list of absolute paths to the files that need to be attached.
-*   `mode` (Optional[List[Any]], optional, default=None): Specify the mode for the action. If \"Add New Attachment\" is selected, action will add a new attachment, if it even has the same name. If \"Overwrite Existing Attachment\" is selected, action will remove other attachments with the same name and add a new attachment.
+*   `mode` (Optional[List[str]], optional, default=None): Specify the mode for the action. If \"Add New Attachment\" is selected, action will add a new attachment, if it even has the same name. If \"Overwrite Existing Attachment\" is selected, action will remove other attachments with the same name and add a new attachment.
 *   `target_entities` (List[TargetEntity], optional, default=list()): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -56,7 +56,7 @@ Add a comment to a specific table record in ServiceNow. Note: Action is running 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `table_name` (str, required): Specify the name of the table to which you want to add a comment or work note. Example: incident.
-*   `type` (List[Any], required): Specify whether comment or work note should be added to the record.
+*   `type` (List[str], required): Specify whether comment or work note should be added to the record.
 *   `record_sys_id` (str, required): Specify the record ID to which you want to add a comment or work note.
 *   `text` (str, required): Specify the content of the comment or work note.
 *   `wait_for_reply` (bool, required): If enabled, action will wait for reply. Note: action will track comments, if comments are sent and work notes, if work notes are sent.
@@ -86,7 +86,7 @@ Close a ServiceNow incident
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `incident_number` (str, required): Specify number of the incident. Format: INCxxxxxxx
 *   `close_reason` (str, required): Specify the reason, why incident was closed.
-*   `resolution_code` (List[Any], required): Specify the resolution code for the incident.
+*   `resolution_code` (List[str], required): Specify the resolution code for the incident.
 *   `close_notes` (str, required): Specify the close notes for the incident.
 *   `target_entities` (List[TargetEntity], optional, default=list()): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -256,7 +256,7 @@ List comments related to a specific table record in ServiceNow.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `table_name` (str, required): Specify the name of the table for which you want to list comments or work notes. Example: incident.
 *   `record_sys_id` (str, required): Specify the record ID for which you want to list comments or work notes.
-*   `type` (List[Any], required): Specify whether comment or work note should be listed.
+*   `type` (List[str], required): Specify whether comment or work note should be listed.
 *   `max_results_to_return` (Optional[str], optional, default=None): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=list()): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -332,8 +332,8 @@ Wait for comments related to a specific table record in ServiceNow. Note: Action
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `table_name` (str, required): Specify the name of the table in which you want to wait for a comment or work note. Example: incident.
 *   `record_sys_id` (str, required): Specify the record ID in which you want to wait for a comment or work note.
-*   `type` (List[Any], required): Specify for what type of object action needs to wait.
-*   `wait_mode` (List[Any], required): Specify the wait mode for the action. If \"Until Timeout\" is selected, action will wait until and return all of the comments in that timeframe. If \"Until First Message\" is selected, action will wait until a new message appears after action execution. If \"Until Specific Text\" is selected, action will wait until there is a message that is equal to the string provided in the \"Text\" parameter. Note: \"Text\" parameter is mandatory, if \"Until Specific Text\" is provided.
+*   `type` (List[str], required): Specify for what type of object action needs to wait.
+*   `wait_mode` (List[str], required): Specify the wait mode for the action. If \"Until Timeout\" is selected, action will wait until and return all of the comments in that timeframe. If \"Until First Message\" is selected, action will wait until a new message appears after action execution. If \"Until Specific Text\" is selected, action will wait until there is a message that is equal to the string provided in the \"Text\" parameter. Note: \"Text\" parameter is mandatory, if \"Until Specific Text\" is provided.
 *   `text` (Optional[str], optional, default=None): Specify the text for which action needs to wait. Note: this parameter is only relevant, if \"Until Specific Text\" is selected for \"Wait Mode\" parameter.
 *   `target_entities` (List[TargetEntity], optional, default=list()): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

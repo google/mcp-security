@@ -13,7 +13,7 @@
 # limitations under the License.
 from enum import StrEnum
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional, Any
 
 
 class CasePriority(StrEnum):

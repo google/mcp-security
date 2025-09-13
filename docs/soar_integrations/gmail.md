@@ -48,7 +48,7 @@ This integration provides tools to interact with Gmail for sending emails, manag
 *   `subject_filter` (string, optional): A filter condition that specifies the email subject to search for. This filter uses the “contains” logic and requires you to specify search items in full words. This filter doesn’t support partial matches. Defaults to None.
 *   `sender_filter` (string, optional): A filter condition that specifies the email sender to search for. This filter uses the “equals” logic. Defaults to None.
 *   `time_frame_minutes` (string, optional): A filter condition that specifies the timeframe in minutes to search for emails. Defaults to None.
-*   `email_status` (List[Any], optional): A status of the email to search for. Defaults to None.
+*   `email_status` (List[str], optional): A status of the email to search for. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -102,7 +102,7 @@ This integration provides tools to interact with Gmail for sending emails, manag
 *   `sender_filter` (string, optional): A filter condition that specifies the email sender to search for. Defaults to None.
 *   `recipient_filter` (string, optional): A filter condition that specifies the email recipient to search for. Defaults to None.
 *   `time_frame_minutes` (string, optional): A filter condition that specifies the timeframe in minutes to search for emails. Defaults to None.
-*   `email_status` (List[Any], optional): A status of the email to search for. Defaults to None.
+*   `email_status` (List[str], optional): A status of the email to search for. Defaults to None.
 *   `headers_to_return` (string, optional): A comma-separated list of headers to return in the action output. The action always returns the following headers: date, from, to, cc, bcc, in-reply-to, reply-to, message-id and subject headers. If you don’t provide any value, the action returns all headers.This parameter is case sensitive. Defaults to None.
 *   `return_email_body` (boolean, optional): If selected, the action returns the full body content of an email in the action output. If not selected, the information about the attachment names in the email is unavailable. Defaults to None.
 *   `max_emails_to_return` (string, optional): The maximum number of emails for the action to return. Defaults to None.
@@ -155,7 +155,7 @@ This integration provides tools to interact with Gmail for sending emails, manag
 *   `subject_filter` (string, optional): A filter condition that specifies the email subject to search for. This filter uses the “contains” logic and requires you to specify search items in full words. This filter doesn’t support partial matches. Defaults to None.
 *   `sender_filter` (string, optional): A filter condition that specifies the email sender to search for. This filter uses the “equals” logic. Defaults to None.
 *   `time_frame_minutes` (string, optional): A filter condition that specifies the timeframe in minutes to search for emails. Defaults to None.
-*   `email_status` (List[Any], optional): A status of the email to search for. Defaults to None.
+*   `email_status` (List[str], optional): A status of the email to search for. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -251,7 +251,7 @@ This integration provides tools to interact with Gmail for sending emails, manag
 *   `subject_filter` (string, optional): A filter condition that specifies the email subject to search for. This filter uses the “contains” logic and requires you to specify search items in full words. This filter doesn’t support partial matches. Defaults to None.
 *   `sender_filter` (string, optional): A filter condition that specifies the email sender to search for. This filter uses the “equals” logic. Defaults to None.
 *   `time_frame_minutes` (string, optional): A filter condition that specifies the timeframe in minutes to search for emails. Defaults to None.
-*   `email_status` (List[Any], optional): A status of the email to search for. Defaults to None.
+*   `email_status` (List[str], optional): A status of the email to search for. Defaults to None.
 *   `move_to_trash` (boolean, optional): If selected, the action moves emails to Trash and doesn’t search through emails with the Trash label unless you configure the Labels Filter parameter to include the following label: Trash. If not selected, the action executes search across the whole mailbox and deletes emails forever. Selected by default. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

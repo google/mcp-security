@@ -89,11 +89,11 @@ Create Azure Sentinel Scheduled Alert Rule.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `enable_alert_rule` (bool, required): Enable or disable new alert rule.
 *   `name` (string, required): Display name of the new alert rule.
-*   `severity` (List[Any], required): Severity of the new alert rule.
+*   `severity` (List[str], required): Severity of the new alert rule.
 *   `query` (string, required): Query of the new alert rule.
 *   `frequency` (string, required): How frequently to run the query, use the following format: PT + number + (M, H), where M - minutes, H - hours. Use P + number + D to specify a number of days. Can be combined as P1DT1H1M - 1 day, 1 hour and 1 minute. Minimum is 5 minutes, maximum is 14 days.
 *   `period_of_lookup_data` (string, required): Time of the last lookup data, use the following format: PT + number + (M, H), where M - minutes, H - hours. Use P + number + D to specify a number of days. Can be combined as P1DT1H1M - 1 day, 1 hour and 1 minute. Minimum is 5 minutes, maximum is 14 days.
-*   `trigger_operator` (List[Any], required): Trigger operator for this alert rule. Possible values are: GreaterThan, LessThan, Equal, NotEqual.
+*   `trigger_operator` (List[str], required): Trigger operator for this alert rule. Possible values are: GreaterThan, LessThan, Equal, NotEqual.
 *   `trigger_threshold` (string, required): Trigger threshold for this alert rule.
 *   `enable_suppression` (bool, required): Whether you want to stop running query after alert is generated.
 *   `suppression_duration` (string, required): How long you want to stop running query after alert is generated, use the following format: PT + number + (M, H), where M - minutes, H - hours. Use P + number + D to specify a number of days. Can be combined as P1DT1H1M - 1 day, 1 hour and 1 minute. Minimum is 5 minutes, maximum is 14 days.
@@ -117,11 +117,11 @@ Update Azure Sentinel Scheduled Alert Rule.
 *   `alert_rule_id` (string, required): Alert Rule ID.
 *   `enable_alert_rule` (bool, optional): Enable or disable new alert rule.
 *   `name` (string, optional): Display name of the new alert rule.
-*   `severity` (List[Any], optional): Severity of the new alert rule.
+*   `severity` (List[str], optional): Severity of the new alert rule.
 *   `query` (string, optional): Query of the new alert rule.
 *   `frequency` (string, optional): How frequently to run the query (format: PThhHmmMssS or PnDTnHnMn.nS). Minimum 5m, max 14d.
 *   `period_of_lookup_data` (string, optional): Time of the last lookup data (format: PThhHmmMssS or PnDTnHnMn.nS). Minimum 5m, max 14d.
-*   `trigger_operator` (List[Any], optional): Trigger operator (GreaterThan, LessThan, Equal, NotEqual).
+*   `trigger_operator` (List[str], optional): Trigger operator (GreaterThan, LessThan, Equal, NotEqual).
 *   `trigger_threshold` (string, optional): Trigger threshold for this alert rule.
 *   `enable_suppression` (bool, optional): Whether you want to stop running query after alert is generated.
 *   `suppression_duration` (string, optional): How long to stop running query after alert is generated (format: PThhHmmMssS or PnDTnHnMn.nS). Minimum 5m, max 14d.
@@ -180,11 +180,11 @@ Update Incident Details v2. Action is a Chronicle SOAR async action and can be c
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_case_number` (string, required): Specify Azure Sentinel incident number to update.
 *   `title` (string, optional): Specify new title for the Azure Sentinel incident.
-*   `status` (List[Any], optional): Specify new status for the Azure Sentinel incident.
-*   `severity` (List[Any], optional): Specify new severity for the Azure Sentinel incident.
+*   `status` (List[str], optional): Specify new status for the Azure Sentinel incident.
+*   `severity` (List[str], optional): Specify new severity for the Azure Sentinel incident.
 *   `description` (string, optional): Specify new description for the Azure Sentinel incident.
 *   `assigned_to` (string, optional): Specify the user to assign the incident to.
-*   `closed_reason` (List[Any], optional): If status of the incident is set to Closed, provide a Closed Reason for the incident.
+*   `closed_reason` (List[str], optional): If status of the incident is set to Closed, provide a Closed Reason for the incident.
 *   `closing_comment` (string, optional): Optional closing comment to provide for the closed Azure Sentinel Incident.
 *   `number_of_retries` (string, optional): Specify the number of retry attempts the action should make if the incident update was unsuccessful.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -289,11 +289,11 @@ Update Incident Details. Please consider moving to the v2 version of the action,
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_case_number` (string, required): Specify Azure Sentinel incident number to update.
 *   `title` (string, optional): Specify new title for the Azure Sentinel incident.
-*   `status` (List[Any], optional): Specify new status for the Azure Sentinel incident.
-*   `severity` (List[Any], optional): Specify new severity for the Azure Sentinel incident.
+*   `status` (List[str], optional): Specify new status for the Azure Sentinel incident.
+*   `severity` (List[str], optional): Specify new severity for the Azure Sentinel incident.
 *   `description` (string, optional): Specify new description for the Azure Sentinel incident.
 *   `assigned_to` (string, optional): Specify the user to assign the incident to.
-*   `closed_reason` (List[Any], optional): If status of the incident is set to Closed, provide a Closed Reason for the incident.
+*   `closed_reason` (List[str], optional): If status of the incident is set to Closed, provide a Closed Reason for the incident.
 *   `closing_comment` (string, optional): Optional closing comment to provide for the closed Azure Sentinel Incident.
 *   `number_of_retries` (string, optional): Specify the number of retry attempts the action should make if the incident update was unsuccessful.
 *   `retry_every` (string, optional): Specify what time period action should wait between incident update retries.

@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Mandiant integration.
 
     @mcp.tool()
-    async def mandiant_enrich_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ioc_identifiers: Annotated[str, Field(..., description="Specify a comma-separated list of IOCs that need to be enriched")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_enrich_io_cs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ioc_identifiers: Annotated[str, Field(..., description="Specify a comma-separated list of IOCs that need to be enriched")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get information about ioc related from Mandiant.
 
@@ -102,7 +103,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mandiant_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Mandiant with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
@@ -176,7 +177,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mandiant_get_related_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], lowest_severity_score: Annotated[str, Field(..., description="Specify the lowest severity score that will be used to return related indicators. Maximum: 100.")], max_io_cs_to_return: Annotated[str, Field(default=None, description="Specify how many indicators action needs to process per entity. Default: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_get_related_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], lowest_severity_score: Annotated[str, Field(..., description="Specify the lowest severity score that will be used to return related indicators. Maximum: 100.")], max_io_cs_to_return: Annotated[str, Field(default=None, description="Specify how many indicators action needs to process per entity. Default: 100.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get information about ioc related to entities using information from Mandiant. Supported entities: Hostname, IP Address, URL, File Hash, Threat Actor.
 
@@ -256,7 +257,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mandiant_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], severity_score_threshold: Annotated[str, Field(..., description="Specify the lowest severity score that will be used to mark the entity as suspicious. Note: only indicators (hostname, IP address, file hash, url) can be marked as suspicious. Maximum: 100.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], only_suspicious_entity_insight: Annotated[bool, Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled. Insights for \"Threat Actor\" and \"Vulnerability\" entities will also be created even though they are not marked as suspicious.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], severity_score_threshold: Annotated[str, Field(..., description="Specify the lowest severity score that will be used to mark the entity as suspicious. Note: only indicators (hostname, IP address, file hash, url) can be marked as suspicious. Maximum: 100.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], only_suspicious_entity_insight: Annotated[bool, Field(default=None, description="If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled. Insights for \"Threat Actor\" and \"Vulnerability\" entities will also be created even though they are not marked as suspicious.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Enrich entities using information from Mandiant. Supported entities: Hostname, IP Address, URL, File Hash, Threat Actor, Vulnerability. Note: only MD5, SHA-1 and SHA-256 are supported.
 
@@ -338,7 +339,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mandiant_get_malware_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], malware_names: Annotated[str, Field(..., description="Specify a comma-separated list of malware names that need to be enriched.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing information about the malware.")], fetch_related_io_cs: Annotated[bool, Field(default=None, description="If enabled, action will fetch indicators that are related to the provided malware.")], max_related_io_cs_to_return: Annotated[str, Field(default=None, description="Specify how many indicators action needs to process per malware. Default: 100.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mandiant_get_malware_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], malware_names: Annotated[str, Field(..., description="Specify a comma-separated list of malware names that need to be enriched.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing information about the malware.")], fetch_related_io_cs: Annotated[bool, Field(default=None, description="If enabled, action will fetch indicators that are related to the provided malware.")], max_related_io_cs_to_return: Annotated[str, Field(default=None, description="Specify how many indicators action needs to process per malware. Default: 100.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get information about malware from Mandiant.
 
         Returns:

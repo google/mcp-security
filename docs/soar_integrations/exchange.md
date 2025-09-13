@@ -68,7 +68,7 @@ Creates or updates an inbox rule to filter emails based on sender domains.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_add_domains_to` (List[Any], required): Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.
+*   `rule_to_add_domains_to` (List[str], required): Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.
 *   `domains` (string, optional): Specify the Domains you would like to add to the rule, in a comma separated list.
 *   `perform_action_in_all_mailboxes` (bool, optional): If checked, action will be performed in all mailboxes accessible with current impersonalization settings. If delegated access is used, implicitly specify the mailboxes to search in the "Mailboxes" parameter.
 *   `how_many_mailboxes_to_process_in_a_single_batch` (string, optional): In case "Perform action in all mailboxes" is checked, action works in batches, this parameter controls how many mailboxes action should process in single batch (single connection to mail server).
@@ -177,7 +177,7 @@ Send emails with easy answering options, to allow stakeholders to be combined in
 *   `subject` (string, required): The mail subject part.
 *   `send_to` (string, required): Arbitrary comma separated list of email addresses for the email recipients. For example: user1@company.co, user2@company.co.
 *   `question_or_decision_description` (EmailContent, required): The question you would like to ask, or describe the decision you would like the recipient to be able to respond to.
-*   `structure_of_voting_options` (List[Any], required): Choose the structure of the vote to be sent to the recipients.
+*   `structure_of_voting_options` (List[str], required): Choose the structure of the vote to be sent to the recipients.
 *   `cc` (string, optional): Arbitrary comma separated list of email addresses to be put in the CC field of email. Format is the same as for the "Send to" field.
 *   `bcc` (string, optional): Arbitrary comma separated list of email addresses to be put in the BCC field of email. Format is the same as for the "Send to" field.
 *   `attachments_paths` (string, optional): Comma separated list of attachments file paths stored on the server for addition to the email. For example: C:\\<Siemplify work dir>\\file1.pdf, C:\\<Siemplify work dir>\\image2.jpg.
@@ -196,7 +196,7 @@ Lists Exchange-Siemplify inbox rules for specified mailboxes.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_name_to_list` (List[Any], required): Specify the Rule name you would like to list from the relevant mailboxes.
+*   `rule_name_to_list` (List[str], required): Specify the Rule name you would like to list from the relevant mailboxes.
 *   `mailboxes_list_to_perform_on` (string, optional): Filter condition, If you have a specific list of mailboxes you would like to conduct the operation on, for better timing, please provide them here. Should accept a comma separated list of mail addresses to list the rules from. If a mailboxes list is provided, "Perform Action in all Mailboxes" parameter will be ignored.
 *   `perform_action_in_all_mailboxes` (bool, optional): If checked, action will be performed in all mailboxes accessible with current impersonalization settings. If delegated access is used, implicitly specify the mailboxes to search in the "Mailboxes" parameter.
 *   `how_many_mailboxes_to_process_in_a_single_batch` (string, optional): In case "Perform action in all mailboxes" is checked, action works in batches, this parameter controls how many mailboxes action should process in single batch (single connection to mail server).
@@ -215,7 +215,7 @@ Deletes specified Exchange-Siemplify inbox rules from mailboxes.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_name_to_delete` (List[Any], required): Specify the Rule name you would like to completely delete from the relevant mailboxes.
+*   `rule_name_to_delete` (List[str], required): Specify the Rule name you would like to completely delete from the relevant mailboxes.
 *   `perform_action_in_all_mailboxes` (bool, optional): If checked, action will be performed in all mailboxes accessible with current impersonalization settings. If delegated access is used, implicitly specify the mailboxes to search in the "Mailboxes" parameter.
 *   `how_many_mailboxes_to_process_in_a_single_batch` (string, optional): In case "Perform action in all mailboxes" is checked, action works in batches, this parameter controls how many mailboxes action should process in single batch (single connection to mail server).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -315,7 +315,7 @@ Removes specified domains from existing Exchange-Siemplify inbox rules.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_remove_domains_from` (List[Any], required): Specify the rule to remove the Domains from. If the rule doesn’t exist - action will do nothing.
+*   `rule_to_remove_domains_from` (List[str], required): Specify the rule to remove the Domains from. If the rule doesn’t exist - action will do nothing.
 *   `domains` (string, optional): Specify the Domains you would like to remove from the rule, in a comma separated list.
 *   `remove_domains_from_all_available_rules` (bool, optional): Specify whether action should look for the provided domains in all of Siemplify inbox rules.
 *   `perform_action_in_all_mailboxes` (bool, optional): If checked, action will be performed in all mailboxes accessible with current impersonalization settings. If delegated access is used, implicitly specify the mailboxes to search in the "Mailboxes" parameter.
@@ -335,7 +335,7 @@ Removes specified senders (email addresses) from existing Exchange-Siemplify inb
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_remove_senders_from` (List[Any], required): Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.
+*   `rule_to_remove_senders_from` (List[str], required): Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.
 *   `senders` (string, optional): Specify the Senders you would like to remove from the rule, in a comma separated list. If no parameter will be provided, action will work with entities.
 *   `remove_senders_from_all_available_rules` (bool, optional): Specify whether action should look for the provided Senders in all of Siemplify inbox rules.
 *   `should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well` (bool, optional): Specify whether the action should automatically take the domains of the provided email addresses and remove them as well from the corresponding domain rules (same rule action for domains).
@@ -479,7 +479,7 @@ Adds specified senders (email addresses) to an Exchange-Siemplify inbox rule. Ca
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_add_senders_to` (List[Any], required): Specify the rule to add the sender to. If the rule doesn't exist - action will create it where it's missing.
+*   `rule_to_add_senders_to` (List[str], required): Specify the rule to add the sender to. If the rule doesn't exist - action will create it where it's missing.
 *   `senders` (string, optional): Specify the Senders you would like to add to the rule, in a comma separated list. If no parameter will be provided, action will work with User entities.
 *   `should_add_senders_domain_to_the_corresponding_domains_list_rule_as_well` (bool, optional): Specify whether the action should automatically take the domains of the provided email addresses and add them as well to the corresponding domain rules (same rule action for domains).
 *   `perform_action_in_all_mailboxes` (bool, optional): If checked, action will be performed in all mailboxes accessible with current impersonalization settings. If delegated access is used, implicitly specify the mailboxes to search in the "Mailboxes" parameter.

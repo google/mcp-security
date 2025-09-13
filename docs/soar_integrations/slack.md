@@ -46,9 +46,9 @@ Get a list of Slack channels based on the provided criteria. Note that action is
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `max_channels_to_return` (Optional[str], optional, default=None): Specify how many channels to return.
 *   `type_filter` (Optional[str], optional, default=None): Specify what type of conversations to return. Example: public_channel,private_channel. Possible Values: public_channel, private_channel, mpim, im.
-*   `filter_key` (Optional[List[Any]], optional, default=None): Specify the key that needs to be used to filter channels.
+*   `filter_key` (Optional[List[str]], optional, default=None): Specify the key that needs to be used to filter channels.
 *   `filter_value` (Optional[str], optional, default=None): Specify what value should be used in the filter. If “Equal“ is selected, action will try to find the exact match among results and if “Contains“ is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
-*   `filter_logic` (Optional[List[Any]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
+*   `filter_logic` (Optional[List[str]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -61,7 +61,7 @@ Get conversation history for a user or a channel based on provided input criteri
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `channel_or_user_id` (str, required): Specify the channel or user id to fetch the conversation history for.
-*   `time_frame` (Optional[List[Any]], optional, default=None): Specify a time frame for the results. If Custom is selected, you also need to provide Start Time.
+*   `time_frame` (Optional[List[str]], optional, default=None): Specify a time frame for the results. If Custom is selected, you also need to provide Start Time.
 *   `start_time` (Optional[str], optional, default=None): Specify the start time for the results. This parameter is mandatory, if Custom is selected for the Time Frame parameter. 'Format: ISO 8601. Example: 2021-08-05T05:18:42Z'
 *   `end_time` (Optional[str], optional, default=None): Specify the end time for the results. 'Format: ISO 8601. Example: 2021-08-05T05:18:42Z'. If nothing is provided and Custom is selected for the Time Frame parameter then this parameter will use current time.
 *   `max_records_to_return` (Optional[str], optional, default=None): Specify how many records to return. If nothing is provided, action will return 20 records.
@@ -111,7 +111,7 @@ Get Slack user details based on provided input criteria. Note: that action is no
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `search_by` (List[Any], required): Specify the parameter to search user details by.
+*   `search_by` (List[str], required): Specify the parameter to search user details by.
 *   `user_value` (str, required): Specify the user value to search by.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -138,9 +138,9 @@ Send an advanced message to a Slack channel or user. Action provides an ability 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `recipient` (str, required): Specify the recipient to send a message to.
-*   `recipient_type` (List[Any], required): Specify channel or user name (full name) to send message to. Optionally channel or user id can be specified, or email address of a user.
+*   `recipient_type` (List[str], required): Specify channel or user name (full name) to send message to. Optionally channel or user id can be specified, or email address of a user.
 *   `message` (str, required): Specify the message content to send.
-*   `message_type` (List[Any], required): Specify the message type to send.
+*   `message_type` (List[str], required): Specify the message type to send.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -181,7 +181,7 @@ Send an interactive message to a channel or a user and when based on the provide
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `recipient` (str, required): Specify the recipient to send a message to.
-*   `recipient_type` (List[Any], required): Specify channel or user name (full name) to send message to. Optionally channel or user id can be specified, or email address of a user.
+*   `recipient_type` (List[str], required): Specify channel or user name (full name) to send message to. Optionally channel or user id can be specified, or email address of a user.
 *   `message` (str, required): Specify the message content to send.
 *   `webhook_token_uuid` (str, required): Specify the Webhook token UUID to monitor for the user’s response.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -224,8 +224,8 @@ Get a list of Slack users based on the provided criteria. Note that action is no
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `max_records_to_return` (Optional[str], optional, default=None): Specify how many user accounts to return.
-*   `filter_key` (Optional[List[Any]], optional, default=None): Specify the key that needs to be used to filter user accounts.
+*   `filter_key` (Optional[List[str]], optional, default=None): Specify the key that needs to be used to filter user accounts.
 *   `filter_value` (Optional[str], optional, default=None): Specify what value should be used in the filter. If “Equal“ is selected, action will try to find the exact match among results and if “Contains“ is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
-*   `filter_logic` (Optional[List[Any]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
+*   `filter_logic` (Optional[List[str]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the “Filter Key” parameter.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

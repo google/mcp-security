@@ -23,7 +23,7 @@ from mcp.shared.memory import (
 )
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_server_connection():
     """Test that the server is running and accessible."""
 
@@ -376,7 +376,7 @@ async def test_get_entities_related(
             {"hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"},
             "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/behaviour_summary",
             {
-                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
+                "data": {"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}},
             },
             {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
         ), 
@@ -394,7 +394,7 @@ async def test_get_entities_related(
             {"id": "collection_id"},
             "/api/v3/collections/collection_id/mitre_tree",
             {
-                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
+                "data": {"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}},
             },
             {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
         ), 
@@ -415,7 +415,7 @@ async def test_get_simple_tools(
     vt_get_object_mock,
     tool_name,
     tool_arguments,
-    expected):
+    expected): 
     """Test simple tools that just retrieve information from GTI."""
 
     # Execute tool call.
@@ -683,3 +683,514 @@ async def test_search_threats(
         assert isinstance(result.content[0], mcp.types.TextContent)
         assert json.loads(result.content[0].text) == expected
 
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            "get_collection_feature_matches",
+            {
+                "collection_id": "collection_id",
+                "feature_type": "attack_techniques",
+                "feature_id": "T1497.001",
+                "entity_type": "file",
+                "search_space": "collection",
+                "entity_type_plural": "files",
+                "descriptors_only": True,
+            },
+            "/api/v3/collections/collection_id/features/search",
+            {
+                "feature_type": "attack_techniques",
+                "feature_id": "T1497.001",
+                "entity_type": "file",
+                "search_space": "collection",
+                "type": "files",
+                "descriptors_only": "true",
+            },
+            {
+                "data": [{
+                    "id": "file_id",
+                    "type": "file",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }]
+            },
+            {
+                "id": "file_id",
+                "type": "file",
+                "attributes": {"foo": "foo", "bar": "bar"},
+            },
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_with_params_mock")
+async def test_get_collection_feature_matches(
+    vt_get_object_with_params_mock,
+    tool_name,
+    tool_arguments,
+    expected,
+):
+    """Test get_collection_feature_matches tool."""
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            "get_collections_commonalities",
+            {"collection_id": "67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6"},
+            "/api/v3/collections/67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6",
+            {"attributes": "aggregations"},
+            {
+                "data": {
+                    "id": "67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6",
+                    "type": "collection",
+                    "links": {
+                        "self": "https://www.virustotal.com/api/v3/collections/67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6"
+                    },
+                    "attributes": {
+                        "aggregations": {
+                            "files": {
+                                "itw_urls": [
+                                    {
+                                        "value": "https://pcsdl.com/short-url-v2/000585065547/scenario/f91705e56983ba3c3cd940d62bc2ed35___158e5ef2-6f0f-46fd-b1b7-feaa02550432.vbs?protocol=https",
+                                        "count": 1,
+                                        "total_related": 1,
+                                        "prevalence": 1.0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            (
+                "# Commonalities for 67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6\n\n"
+                "## files commonalities\n\n"
+                "### itw urls\n"
+                "- 1 matches of https://pcsdl.com/short-url-v2/000585065547/scenario/f91705e56983ba3c3cd940d62bc2ed35___158e5ef2-6f0f-46fd-b1b7-feaa02550432.vbs?protocol=https with a prevalence of 1\n\n"
+            )
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_with_params_mock")
+async def test_get_collections_commonalities(
+    vt_get_object_with_params_mock,
+    tool_name,
+    tool_arguments,
+    expected,
+    vt_object_response
+):
+    """Test test_get_collections_commonalities tool."""
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert isinstance(result.content[0].text, str)
+        assert result.content[0].text == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments",
+        "vt_endpoint",
+        "vt_request_params",
+        "vt_object_response",
+        "expected",
+    ],
+    argvalues=[
+        (
+            {
+                "name": "My Collection",
+                "description": "Test collection",
+                "iocs": ["evil-domain.com", "165.227.148.68"],
+                "private": False
+            },
+            "/api/v3/collections",
+            {
+                "data": {
+                    "attributes": {
+                        "name": "My Collection",
+                        "description": "Test collection",
+                        "private": False,
+                    }, 
+                    "raw_items": "evil-domain.com, 165.227.148.68",
+                    "type": "collection",
+                }
+            },
+            {
+                "data": {
+                    "id": "new_collection_id",
+                    "type": "collection",
+                    "attributes": {
+                        "name": "My Collection",
+                        "description": "Test collection",
+                        "foo": "foo",
+                        "bar": "bar",
+                    },
+                    "links": {
+                        "self": "/api/v3/collections/new_collection_id"
+                    },
+                }
+            },
+            {
+                "id": "new_collection_id",
+                "type": "collection",
+                "attributes": {
+                    "name": "My Collection",
+                    "description": "Test collection",
+                    "foo": "foo",
+                    "bar": "bar",
+                },
+                "links": {
+                    "self": "/api/v3/collections/new_collection_id"
+                },
+            },
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_post_object_mock")
+async def test_create_collection(
+    vt_post_object_mock,
+    tool_arguments,
+    expected,
+):
+    """Test `create_collection` tool."""
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("create_collection", arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert not result.isError
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments",
+        "vt_endpoint",
+        "vt_request_params",
+        "vt_object_response",
+        "expected",
+    ],
+    argvalues=[
+        (
+            {
+                "id": "my_collection_id",
+                "attributes": {"name": "Updated Collection Name", "description": "Updated description."},
+            },
+            "/api/v3/collections/my_collection_id",
+            {
+                "data": {
+                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."}, 
+                    "type": "collection",
+                }
+            },
+            {
+                "data": {
+                    "id": "my_collection_id",
+                    "type": "collection",
+                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."}, 
+                }
+            },
+            {
+                "id": "my_collection_id",
+                "type": "collection",
+                "attributes": {"name": "Updated Collection Name", "description": "Updated description."},
+            },
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_patch_object_mock")
+async def test_update_collection_attributes(
+    vt_patch_object_mock,
+    tool_arguments,
+    expected,
+):
+    """Test `update_collection_attributes` tool."""
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("update_collection_attributes", arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert not result.isError
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response"
+    ],
+    argvalues=[
+        # Case 1: Add domains
+        (
+            {"id": "c_id", "relationship": "domains", "iocs": ["evil.com"], "operation": "add"},
+            "/api/v3/collections/c_id/domains",
+            {"data": [{"type": "domain", "id": "evil.com"}]},
+            {},
+        ),
+        # Case 2: Add URLs (special handling in the tool)
+        (
+            {"id": "c_id", "relationship": "urls", "iocs": ["http://bad-url.com/path"], "operation": "add"},
+            "/api/v3/collections/c_id/urls",
+            {"data": [{"type": "url", "url": "http://bad-url.com/path"}]},
+            {},
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_post_object_mock")
+async def test_add_iocs_in_collection_success(
+    vt_post_object_mock,
+    tool_arguments,
+    vt_endpoint, 
+    vt_request_params, 
+    vt_object_response,
+):
+    """Test successful 'add' operations for `update_iocs_in_collection`."""
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("update_iocs_in_collection", arguments=tool_arguments)
+        assert not result.isError
+        assert result.content[0].text == "Sucesssfully updated collection"
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=["tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response"],
+    argvalues=[
+        # Case 1: Remove files
+        (
+            {"id": "c_id", "relationship": "files", "iocs": ["hash123"], "operation": "remove"},
+            "/api/v3/collections/c_id/files",
+            {"data": [{"type": "file", "id": "hash123"}]},
+            {},
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params",  "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_delete_object_mock")
+async def test_remove_iocs_from_collection_success(
+    tool_arguments,
+    vt_endpoint, 
+    vt_request_params, 
+    vt_object_response,
+):
+    """Test successful 'remove' operations for `update_iocs_in_collection`."""
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("update_iocs_in_collection", arguments=tool_arguments)
+        assert not result.isError
+        assert result.content[0].text == "Sucesssfully updated collection"
+
+
+# Invalid Local Argument Handling
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments", "expected_error"
+    ],
+    argvalues=[
+        (
+            {"id": "c_id", "relationship": "domains", "iocs": ["e.com"], "operation": "invalid_op"},
+            "Error: Invalid operation 'invalid_op'. Must be one of 'add' or 'remove'",
+        ),
+        (
+            {"id": "c_id", "relationship": "indicators", "iocs": ["e.com"], "operation": "add"},
+            "Error: Invalid IOC type 'indicators'. Must be one of ['domains', 'files', 'ip_addresses', 'urls']",
+        ),
+    ],
+)
+async def test_update_iocs_in_collection_invalid_args(tool_arguments, expected_error):
+    """Test `update_iocs_in_collection` for invalid local arguments."""
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("update_iocs_in_collection", arguments=tool_arguments)
+        assert not result.isError
+        assert result.content[0].text == expected_error
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "expected"
+    ],
+    argvalues=[
+        (
+            {"query": "my-brand"},
+            "/api/v3/dtm/docs/search",
+            {"query": "my-brand"},
+            {
+                "timed_out": False,
+                    "total_docs": 200,
+                    "docs" : [
+                        {"foo": "foo"},
+                        {"bar": "bar"}
+                    ]
+            },
+            {
+                "timed_out": False,
+                "total_docs": 200,
+                "docs" : [
+                        {"foo": "foo"},
+                        {"bar": "bar"}
+                    ]
+            },
+        )
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_post_object_mock")
+async def test_search_digital_threat_monitoring(
+    vt_post_object_mock,
+    tool_arguments,
+    expected
+):
+    """Test `search_digital_threat_monitoring` tool."""
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool("search_digital_threat_monitoring", arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert not result.isError
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+import asyncio
+from unittest.mock import patch, MagicMock, AsyncMock
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "mock_response_text, mock_headers, side_effect, expected_error",
+    [
+        (
+            "<html><body>request timed out</body></html>",
+            {"Content-Type": "text/html"},
+            None,
+            "The request timed out. Please try reducing the scope of your query by using `since` and `until` parameters to add time delimiters",
+        ),
+        (
+            "<html><body>Error</body></html>",
+            {"Content-Type": "text/html"},
+            None,
+            "API returned an HTML error page instead of JSON: <html><body>Error</body></html>",
+        ),
+        (
+            "Invalid JSON",
+            {"Content-Type": "application/json"},
+            None,
+            "Failed to parse server response: Expecting value: line 1 column 1 (char 0).",
+        ),
+        (
+            "",
+            {},
+            TimeoutError, # Use built-in TimeoutError
+            "The request timed out. Please try reducing the scope of your query by using `since` and `until` parameters to add time delimiters",
+        ),
+        (
+            "",
+            {},
+            RuntimeError("Test Exception"),
+            "An unexpected error occurred: Test Exception",
+        ),
+    ],
+)
+async def test_search_digital_threat_monitoring_errors(
+    mock_response_text, mock_headers, side_effect, expected_error
+):
+    """Test error handling in search_digital_threat_monitoring."""
+    with patch('gti_mcp.tools.files.vt_client') as mock_vt_client:
+        mock_client_instance = MagicMock()
+        mock_response = MagicMock()
+
+        async def text_async():
+            return mock_response_text
+        
+        async def json_async():
+            if mock_response_text == "Invalid JSON":
+                raise json.JSONDecodeError("Expecting value", mock_response_text, 0)
+            return json.loads(mock_response_text)
+
+        mock_response.text_async = text_async
+        mock_response.json_async = json_async
+        mock_response.headers = mock_headers
+
+        mock_post_async = AsyncMock() # Use AsyncMock here
+        if side_effect:
+            mock_post_async.side_effect = side_effect
+        else:
+            mock_post_async.return_value = mock_response
+        
+        mock_client_instance.post_async = mock_post_async
+        
+        # Setup the async context manager
+        mock_cm = MagicMock()
+        mock_cm.__aenter__.return_value = mock_client_instance
+        mock_vt_client.return_value = mock_cm
+
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_digital_threat_monitoring", arguments={"query": "test"}
+            )
+            assert isinstance(result, mcp.types.CallToolResult)
+            assert result.isError == False # The tool call itself doesn't fail
+            assert len(result.content) == 1
+            content = json.loads(result.content[0].text)
+            assert "error" in content
+            assert content["error"] == expected_error
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            "get_entities_related_to_a_collection",
+            {"id": "collection_id", "relationship_name": "files", "descriptors_only": "True"},
+            "/api/v3/collections/collection_id/relationship/files",
+            {
+                "data": [],
+            },
+            [],
+        ),  
+    ],
+    indirect=["vt_endpoint", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_mock")
+async def test_get_entities_related_empty_result(
+    vt_get_object_mock,
+    tool_name,
+    tool_arguments,
+    expected    
+):
+    """Test tools.get_entities_related_to_a_collection when the API returns an empty list."""
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert result.structuredContent == {"result": expected}

@@ -46,7 +46,7 @@ The following actions are available through the RSA NetWitness EDR integration:
 *   **Parameters:**
     *   `case_id` (str, required): The ID of the case.
     *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    *   `ioc_level_threshold` (List[Any], required): Specify IOC level threshold for the entity. If the entity exceeds the threshold, the related entity will be marked as suspicious.
+    *   `ioc_level_threshold` (List[str], required): Specify IOC level threshold for the entity. If the entity exceeds the threshold, the related entity will be marked as suspicious.
     *   `target_entities` (List[TargetEntity], optional, default: []): Optional list of specific target entities (Identifier, EntityType) to run the action on.
     *   `scope` (str, optional, default: "All entities"): Defines the scope for the action.
 

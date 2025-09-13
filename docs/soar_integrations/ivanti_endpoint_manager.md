@@ -16,8 +16,8 @@ This integration provides tools to interact with Ivanti Endpoint Manager, allowi
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `type` (Optional[List[Any]], optional): Specify the delivery type that needs to be returned. Defaults to None.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Defaults to None.
+*   `type` (Optional[List[str]], optional): Specify the delivery type that needs to be returned. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among items and if "Contains" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Defaults to None.
 *   `max_delivery_methods_to_return` (Optional[str], optional): Specify how many delivery methods to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -64,7 +64,7 @@ This integration provides tools to interact with Ivanti Endpoint Manager, allowi
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among items and if "Contains" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Defaults to None.
 *   `max_column_sets_to_return` (Optional[str], optional): Specify how many column sets to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -129,7 +129,7 @@ This integration provides tools to interact with Ivanti Endpoint Manager, allowi
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `column_set` (string, required): Specify the name of the column set for which you want to return fields.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among items and if "Contains" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Defaults to None.
 *   `max_fields_to_return` (Optional[str], optional): Specify how many column sets to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -191,7 +191,7 @@ This integration provides tools to interact with Ivanti Endpoint Manager, allowi
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among items and if "Contains" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Defaults to None.
 *   `max_queries_to_return` (Optional[str], optional): Specify how many queries to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -213,7 +213,7 @@ This integration provides tools to interact with Ivanti Endpoint Manager, allowi
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among items and if "Contains" is selected, action will try to find items that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Defaults to None.
 *   `max_packages_to_return` (Optional[str], optional): Specify how many packages to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.

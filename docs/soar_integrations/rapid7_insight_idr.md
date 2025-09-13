@@ -31,8 +31,8 @@ The following actions are available through the Rapid7 InsightIDR integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `investigation_id` (string, required): ID of the investigation to update.
-        *   `status` (List[Any], optional): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
-        *   `disposition` (List[Any], optional): New disposition (e.g., `["BENIGN"]`, `["MALICIOUS"]`).
+        *   `status` (List[str], optional): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
+        *   `disposition` (List[str], optional): New disposition (e.g., `["BENIGN"]`, `["MALICIOUS"]`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 
@@ -61,7 +61,7 @@ The following actions are available through the Rapid7 InsightIDR integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `investigation_id` (string, required): ID of the investigation (UUID format).
-        *   `status` (List[Any], required): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
+        *   `status` (List[str], required): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 

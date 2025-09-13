@@ -29,6 +29,59 @@ Chronicle Security Operations suite.
 - **`get_threat_intel(query, project_id=None, customer_id=None, region=None)`**
     - Get answers to general security domain questions and specific threat intelligence information using Chronicle's AI capabilities.
 
+### Log Ingestion Tools
+
+- **`ingest_raw_log(log_type, log_message, project_id=None, customer_id=None, region=None, forwarder_id=None, labels=None, log_entry_time=None, collection_time=None)`**
+    - Ingest raw logs directly into Chronicle SIEM. Supports various formats (JSON, XML, CEF, etc.) and batch ingestion.
+
+- **`ingest_udm_events(udm_events, project_id=None, customer_id=None, region=None)`**
+    - Ingest events already formatted in Chronicle's Unified Data Model (UDM) format, bypassing the parsing stage.
+
+- **`get_available_log_types(project_id=None, customer_id=None, region=None, search_term=None)`**
+    - Get available log types supported by Chronicle for ingestion, optionally filtered by search term.
+
+### Parser Management Tools
+
+- **`create_parser(log_type, parser_code, project_id=None, customer_id=None, region=None, validated_on_empty_logs=True)`**
+    - Create a custom parser for a specific log type to transform raw logs into Chronicle's UDM format.
+
+- **`get_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - Get details of a specific parser including its configuration and metadata.
+
+- **`activate_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - Activate a parser, making it the active parser for the specified log type.
+
+- **`deactivate_parser(log_type, parser_id, project_id=None, customer_id=None, region=None)`**
+    - Deactivate a parser, stopping it from processing incoming logs of the specified type.
+
+- **`run_parser_against_sample_logs(log_type, parser_code, sample_logs, project_id=None, customer_id=None, region=None, parser_extension_code=None, statedump_allowed=False)`**
+    - Test parser configuration against sample log entries to validate parsing logic before deployment.
+
+### Data Table Management Tools
+
+- **`create_data_table(name, description, header, project_id=None, customer_id=None, region=None, rows=None)`**
+    - Create a structured data table that can be referenced in detection rules. Supports multiple column types (STRING, CIDR, INT64, BOOL).
+
+- **`add_rows_to_data_table(table_name, rows, project_id=None, customer_id=None, region=None)`**
+    - Add new rows to an existing data table, expanding the dataset available for detection rules.
+
+- **`list_data_table_rows(table_name, project_id=None, customer_id=None, region=None, max_rows=50)`**
+    - List rows in a data table to review contents and verify data integrity.
+
+- **`delete_data_table_rows(table_name, row_ids, project_id=None, customer_id=None, region=None)`**
+    - Delete specific rows from a data table based on their row IDs.
+
+### Reference List Management Tools
+
+- **`create_reference_list(name, description, entries, project_id=None, customer_id=None, region=None, syntax_type="STRING")`**
+    - Create a reference list containing values that can be referenced in detection rules. Supports STRING, CIDR, and REGEX syntax types.
+
+- **`get_reference_list(name, project_id=None, customer_id=None, region=None, include_entries=True)`**
+    - Get details and contents of a reference list including metadata and entries.
+
+- **`update_reference_list(name, project_id=None, customer_id=None, region=None, entries=None, description=None)`**
+    - Update the contents or description of an existing reference list.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -39,10 +92,38 @@ The MCP server provides the following capabilities:
 4.  **List Security Rules**: List detection rules
 5.  **Search Security Rules**: Searches detection rules using regex
 6.  **Get IoC Matches**: Get Indicators of Compromise matches
+7.  **Get Threat Intel**: Get AI-powered threat intelligence answers
+8.  **Log Ingestion**: Ingest raw logs and UDM events
+9.  **Parser Management**: Create, manage, and test log parsers
+10. **Data Table Management**: Create and manage structured data tables for detection rules
+11. **Reference List Management**: Create and manage reference lists for detection rules
 
 ### Example
 
 See `example.py` for a complete example of using the MCP server.
+
+## Tool Categories and Use Cases
+
+### Security Operations Tools
+These tools focus on core security operations tasks:
+- **Event Search & Investigation**: Use `search_security_events` to find security events using natural language queries
+- **Alert Management**: Use `get_security_alerts` to retrieve and monitor security alerts
+- **Entity Analysis**: Use `lookup_entity` to investigate IPs, domains, hashes, and other indicators
+- **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
+- **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
+
+### Data Ingestion & Parsing Tools
+These tools help you get data into Chronicle:
+- **Raw Log Ingestion**: Use `ingest_raw_log` for logs in their original format (JSON, XML, CEF, etc.)
+- **UDM Event Ingestion**: Use `ingest_udm_events` for pre-formatted security events
+- **Parser Development**: Use the parser management tools to create custom parsers for unique log formats
+- **Testing**: Use `run_parser_against_sample_logs` to validate parser logic before deployment
+
+### Context Data Management Tools
+These tools help you maintain reference data for enhanced detections:
+- **Data Tables**: Use for structured data with multiple columns (e.g., asset inventories with criticality ratings)
+- **Reference Lists**: Use for simple lists of values (e.g., IP addresses, domains, usernames)
+- **Detection Enhancement**: Both data tables and reference lists can be referenced in detection rules to make them more dynamic and maintainable
 
 ## Configuration
 

@@ -16,7 +16,7 @@
 
 #!/bin/bash
 
-ENV_FILE="./run-with-google-adk/google-mcp-security-agent/.env"
+ENV_FILE="./run-with-google-adk/google_mcp_security_agent/.env"
 
 # Function to create .env file
 create_env_file() {
@@ -31,9 +31,8 @@ create_env_file() {
   # Create the .env file
   touch "$env_file"
 
-  # Add variables to the .env file
-  for var in "$@"; do
-    key=$(echo "$var" | cut -d'=' -f1)
+  # Add container variables to the .env file - required by UV based MCP servers.
+  for key in `env | cut -d "=" -f1`; do
     value=$(eval "echo \$$key") # Expand the variable
     echo "$key=$value" >> "$env_file"
   done
@@ -50,29 +49,72 @@ if [ "$1" = "deploy" ]; then
     exit 1
   fi
 
-  # Read the .env file, line by line
-  while IFS='=' read -r key value; do
-    # Skip empty lines and comments
-    if [[ -n "$key" && "$key" != "#"* ]]; then
-      # Replace commas with semi commas for DEFAULT_PROMPT
+  env_vars=""
+  while read -r line || [[ -n "$line" ]]; do
+      trimmed_line=$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+
+      if [[ -z "$trimmed_line" ]]; then
+          continue
+      fi
+
+      if [[ "$trimmed_line" =~ ^# ]]; then
+          continue
+      fi
+
+      if [[ ! "$trimmed_line" =~ = ]]; then
+          continue
+      fi
+
+      if [[  "$trimmed_line" =~ ^DEFAULT_PROMPT ]]; then
+          continue
+      fi
+
+      key=`echo $trimmed_line | cut -d "=" -f1`
+      value=`echo $trimmed_line | cut -d "=" -f2`
+
       if [ "$key" = "GOOGLE_CLOUD_LOCATION" ]; then
         GOOGLE_CLOUD_LOCATION="$value"
       fi
       if [ "$key" = "GOOGLE_CLOUD_PROJECT" ]; then
         GOOGLE_CLOUD_PROJECT="$value"
-      fi
-      if [ "$key" = "DEFAULT_PROMPT" ]; then
-        value=$(echo "$value" | sed 's/,/;/g')
-      fi
-      # Append to the env_vars string
-      if [ -z "$env_vars" ]; then
+      fi      
+
+      if [[ $env_vars == "" ]]; then
         env_vars="$key=$value"
       else
         env_vars="$env_vars,$key=$value"
       fi
-      echo "Adding environment variable: $key"
-    fi
-  done < "$ENV_FILE"
+      env_vars="$env_vars,$key=$value"
+      #echo "$line"
+  done < "$ENV_FILE"  
+  
+  #echo $env_vars
+
+
+# Handling default prompt separately
+  PYTHON_SCRIPT_PATH="/tmp/default_prompt.py"
+
+cat << EOF > "$PYTHON_SCRIPT_PATH"
+import os
+import dotenv
+from dotenv import load_dotenv
+
+load_dotenv('$ENV_FILE')
+
+text = os.environ.get("DEFAULT_PROMPT")
+
+if text is None:
+    print("")
+else:
+    prepared_text = text.replace('"', '\\\"')
+    prepared_text = prepared_text.replace('\\n', '\\\n')
+    prepared_text = prepared_text.replace(',', ';')
+    prepared_text = prepared_text.replace('-', '~')
+    print(prepared_text)
+EOF
+
+  default_prompt=$(python $PYTHON_SCRIPT_PATH)  
+  env_vars="$env_vars,DEFAULT_PROMPT=$default_prompt,GCS_SA_JSON=object-viewer-sa1.json"
 
   # Check if any environment variables were found
   if [ -z "$env_vars" ]; then
@@ -88,6 +130,9 @@ if [ "$1" = "deploy" ]; then
 
   # Copying files in the top level directory as required by cloud run deployment
   echo "Temporarily copying files in the top level directory for image creation."
+  if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
+      cp ./run-with-google-adk/object-viewer-sa.json object-viewer-sa1.json 
+  fi
   cp ./run-with-google-adk/cloudrun_deploy_run.sh .
   cp ./run-with-google-adk/cloudrun_deploy.py .
   cp ./run-with-google-adk/Dockerfile .
@@ -114,37 +159,31 @@ if [ "$1" = "deploy" ]; then
     rm ./cloudrun_deploy.py
     rm ./Dockerfile
     rm ./.dockerignore
+    if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
+        rm object-viewer-sa1.json
+    fi
+
     echo "Successfully deployed the service."
   else
     rm ./cloudrun_deploy_run.sh
     rm ./cloudrun_deploy.py
     rm ./Dockerfile
     rm ./.dockerignore
+    if [[ -e "./run-with-google-adk/object-viewer-sa.json" ]]; then
+        rm object-viewer-sa1.json
+    fi
     echo "Failed to deploy the service."
-    exit 1
+    #exit 1
   fi
 
 elif [ "$1" = "run" ]; then
   echo "Creating .env file with specified variables..."
-  # Create the .env file with the specified variables
-  create_env_file "/tmp/.env" \
-    "LOAD_SECOPS_MCP=$LOAD_SECOPS_MCP" \
-    "CHRONICLE_PROJECT_ID=$CHRONICLE_PROJECT_ID" \
-    "CHRONICLE_CUSTOMER_ID=$CHRONICLE_CUSTOMER_ID" \
-    "CHRONICLE_REGION=$CHRONICLE_REGION" \
-    "LOAD_GTI_MCP=$LOAD_GTI_MCP" \
-    "VT_APIKEY=$VT_APIKEY" \
-    "LOAD_SECOPS_SOAR_MCP=$LOAD_SECOPS_SOAR_MCP" \
-    "SOAR_URL=$SOAR_URL" \
-    "SOAR_APP_KEY=$SOAR_APP_KEY" \
-    "GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI" \
-    "GOOGLE_API_KEY=$GOOGLE_API_KEY" \
-    "GOOGLE_MODEL=$GOOGLE_MODEL" \
-    "DEFAULT_PROMPT=$DEFAULT_PROMPT"
-
-    echo "Starting uvicorn server ..."
-    uvicorn cloudrun_deploy:app --host 0.0.0.0 --port $PORT
+  # Create the .env file with the variables from the container's environment
+  # These are required for the uv based MCPs to run.
+  create_env_file "/tmp/.env"
+  echo "Starting uvicorn server ..."
+  uvicorn cloudrun_deploy:app --host 0.0.0.0 --port $PORT
 else
   echo "Error: Invalid command. Use 'deploy' or 'run'."
-  exit 1
+  #exit 1
 fi

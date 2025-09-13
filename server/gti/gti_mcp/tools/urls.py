@@ -79,20 +79,21 @@ async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]
     Report with insights about the URL.
   """
   url_id = url_to_base64(url)
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "urls",
-      "url",
-      url_id,
-      relationships=["associations"],
-      params={"exclude_attributes": "last_analysis_results"})
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "urls",
+        "url",
+        url_id,
+        relationships=["associations"],
+        params={"exclude_attributes": "last_analysis_results"})
   return utils.sanitize_response(res)
 
 
 @server.tool()
 async def get_entities_related_to_an_url(
     url: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> list[dict[str, typing.Any]]:
   """Retrieve entities related to the the given URL.
 
     The following table shows a summary of available relationships for URL objects.
@@ -147,11 +148,12 @@ async def get_entities_related_to_an_url(
     }
 
   url_id = url_to_base64(url)
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx),
-      "urls", 
-      url_id,
-      relationships=[relationship_name],
-      descriptors_only=descriptors_only,
-      limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client,
+        "urls", 
+        url_id,
+        relationships=[relationship_name],
+        descriptors_only=descriptors_only,
+        limit=limit)
   return utils.sanitize_response(res.get(relationship_name, []))

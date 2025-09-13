@@ -44,9 +44,10 @@ async def list_threat_profiles(
   Returns:
     List of Threat Profiles.
   """
-  res = await utils.consume_vt_iterator(
-      vt_client(ctx), "/threat_profiles", limit=limit
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client, "/threat_profiles", limit=limit
+    )
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
@@ -88,12 +89,13 @@ async def get_threat_profile(
   Returns:
     Threat Profile object.
   """
-  res = await utils.fetch_object(
-      vt_client(ctx),
-      "threat_profiles",
-      "threat_profile",
-      profile_id,
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object(
+        client,
+        "threat_profiles",
+        "threat_profile",
+        profile_id,
+    )
   return utils.sanitize_response(res)
 
 
@@ -136,8 +138,9 @@ async def get_threat_profile_recommendations(
       List of Threat (collection) objects identifiers associated to 
       the Threat Profile. Use `get_collection_report` to retrieve the full objects.
   """
-  res = await utils.fetch_object_relationships(
-      vt_client(ctx), "threat_profiles", profile_id, ['recommendations'], limit=limit)
+  async with vt_client(ctx) as client:
+    res = await utils.fetch_object_relationships(
+        client, "threat_profiles", profile_id, ['recommendations'], limit=limit)
   return utils.sanitize_response(res.get('recommendations', []))
 
 
@@ -161,9 +164,10 @@ async def get_threat_profile_associations_timeline(
   Returns:
     List of dictionaries containing timeline associations.
   """
-  res = await utils.consume_vt_iterator(
-      vt_client(ctx),
-      f"/threat_profiles/{profile_id}/timeline/associations",
-      limit=limit,
-  )
+  async with vt_client(ctx) as client:
+    res = await utils.consume_vt_iterator(
+        client,
+        f"/threat_profiles/{profile_id}/timeline/associations",
+        limit=limit,
+    )
   return utils.sanitize_response([o.to_dict() for o in res])
