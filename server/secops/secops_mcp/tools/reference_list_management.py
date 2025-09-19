@@ -257,9 +257,16 @@ async def get_reference_list(
             if entries:
                 result += 'Entries:\n'
                 for i, entry in enumerate(entries):
-                    entry_value = entry.get("value", "Unknown")
+                    if isinstance(entry, str):
+                        entry_value = entry
+                    elif isinstance(entry, dict):
+                        entry_value = entry.get("value", "Unknown")
+                    elif hasattr(entry, "value"):
+                        entry_value = entry.value
+                    else:
+                        entry_value = str(entry)
                     result += f'  {i+1}. {entry_value}\n'
-                    
+
                     # Limit display for very large lists
                     if i >= 49:  # Show first 50 entries
                         remaining = entry_count - 50
