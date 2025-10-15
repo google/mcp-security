@@ -19,7 +19,6 @@ from typing import Any, Dict, Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
-
 # Configure logging
 logger = logging.getLogger("secops-mcp")
 
