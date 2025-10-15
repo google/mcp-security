@@ -108,7 +108,7 @@ Initiate action execution on the alert in Sophos. Use action "List Alert Actions
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `alert_id` (str, required): Specify the ID of the alert on which you want to execute the action.
-*   `action` (List[Any], required): Specify an action that should be executed on the alert.
+*   `action` (List[str], required): Specify an action that should be executed on the alert.
 *   `message` (Optional[str], optional, default=None): Specify a message explaining why the action was executed.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

@@ -36,7 +36,7 @@ The following actions are available through the VMware Carbon Black EDR integrat
         *   `query` (string, optional): Query string for process search (e.g., `process_name:svchost.exe`, `process_hash:<hash>`).
         *   `time_frame` (string, optional): Time frame in hours to search within.
         *   `sort_by` (string, optional): Parameter to sort results by.
-        *   `sort_order` (List[Any], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`).
+        *   `sort_order` (List[str], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`).
         *   `target_entities` (List[TargetEntity], optional): Specific Hostname entities to search on.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 
@@ -59,7 +59,7 @@ The following actions are available through the VMware Carbon Black EDR integrat
         *   `search_criteria` (string, optional): Additional search criteria (e.g., comma-separated `event_type` values like `netconn`).
         *   `time_frame` (string, optional): Time frame in hours to search within.
         *   `sort_by` (string, optional): Parameter to sort results by.
-        *   `sort_order` (List[Any], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`).
+        *   `sort_order` (List[str], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (typically Process entity with GUID).
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 

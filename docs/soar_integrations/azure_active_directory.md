@@ -166,9 +166,9 @@ List Azure Active Directory groups based on the specified search criteria. Note:
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `order_by` (List[Any], optional): Specifies the result order (Ascending/Descending). Groups are sorted by display name.
+*   `order_by` (List[str], optional): Specifies the result order (Ascending/Descending). Groups are sorted by display name.
 *   `results_limit` (string, optional): Specify max number of groups to return.
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains) for the Name field.
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains) for the Name field.
 *   `filter_value` (string, optional): Specify the value to filter the Name field by.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -188,8 +188,8 @@ List members in the specified Azure AD group.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `group_name` (string, optional): Specify group name to list members for.
 *   `group_id` (string, optional): Specify the ID of the group. Takes priority over `group_name`. Example: 00e40000-1971-439d-80fc-d0e000001dbd.
-*   `filter_key` (List[Any], optional): Specify the key to filter group members by.
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains) based on `filter_key`.
+*   `filter_key` (List[str], optional): Specify the key to filter group members by.
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains) based on `filter_key`.
 *   `filter_value` (string, optional): Specify the value to filter by based on `filter_key`.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -256,8 +256,8 @@ List Azure AD groups user is a member of. Note: The user name can be provided ei
 *   `user_name` (string, optional): Specify user name (username@domain format, comma-separated for multiple).
 *   `return_only_security_enabled_groups` (bool, optional): If enabled, only returns security groups.
 *   `return_detailed_groups_information` (bool, optional): If enabled, returns detailed group information.
-*   `filter_key` (List[Any], optional): Specify the key to filter groups by.
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains) based on `filter_key`.
+*   `filter_key` (List[str], optional): Specify the key to filter groups by.
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains) based on `filter_key`.
 *   `filter_value` (string, optional): Specify the value to filter by based on `filter_key`.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports User entities (username@domain format).
@@ -275,11 +275,11 @@ List Azure Active Directory users based on the specified search criteria. Note: 
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter` (List[Any], optional): Specifies which fields will be included in the results. Default: all fields.
-*   `order_by_field` (List[Any], optional): Specifies the field to order results by.
-*   `order_by` (List[Any], optional): Specifies the result order (Ascending/Descending).
+*   `filter` (List[str], optional): Specifies which fields will be included in the results. Default: all fields.
+*   `order_by_field` (List[str], optional): Specifies the field to order results by.
+*   `order_by` (List[str], optional): Specifies the result order (Ascending/Descending).
 *   `results_limit` (string, optional): Specify max number of users to return.
-*   `advanced_filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains) for the Username field.
+*   `advanced_filter_logic` (List[str], optional): Specify filter logic (Equals/Contains) for the Username field.
 *   `advanced_filter_value` (string, optional): Specify the value to filter the Username field by.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

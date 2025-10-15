@@ -27,8 +27,10 @@ async def list_security_rules(
     project_id: str = None,
     customer_id: str = None,
     region: str = None,
+    page_size: int = 100,
+    page_token: str | None = None,
 ) -> Dict[str, Any]:
-    """List security detection rules configured in Chronicle SIEM.
+    """List security detection rules configured in Chronicle SIEM, with support for pagination.
 
     Retrieves the definitions of detection rules currently active or configured
     within the Chronicle SIEM instance.
@@ -50,6 +52,8 @@ async def list_security_rules(
         project_id (str): Google Cloud project ID (required).
         customer_id (str): Chronicle customer ID (required).
         region (str): Chronicle region (e.g., "us", "europe") (required).
+        page_size (int): Maximum number of rules to return. Defaults to 100. Max is 1000.
+        page_token (str | None): Page token for pagination.
 
     Returns:
         Dict[str, Any]: Raw response from the Chronicle API, typically containing a list
@@ -63,10 +67,12 @@ async def list_security_rules(
         - Document relevant rule information in associated cases using a case management tool.
     """
     try:
-        
+        if page_size > 1000:
+            logger.warning("page_size cannot exceed 1000. Setting to 1000.")
+            page_size = 1000
         
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        rules_response = chronicle.list_rules()
+        rules_response = chronicle.list_rules(page_size=page_size, page_token=page_token)
         return rules_response
     except Exception as e:
         logger.error(f'Error listing security rules: {str(e)}', exc_info=True)
@@ -124,6 +130,87 @@ async def search_security_rules(
     except Exception as e:
         logger.error(f'Error searching security rules: {str(e)}', exc_info=True)
         return {'error': str(e), 'rules': []}
+
+@server.tool()
+async def get_detection_rule(
+    rule_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Retrieve the complete definition and metadata of a specific detection rule from Chronicle SIEM.
+
+    Fetches the full rule content including YARA-L code, metadata, configuration,
+    and status information for a specific detection rule by its RuleId. This is essential
+    for reviewing, analyzing, or modifying existing detection rules.
+
+    **Workflow Integration:**
+    - Use when you need to examine the complete logic and configuration of a specific detection rule.
+    - Essential for rule analysis, debugging, or understanding how a particular alert was generated.
+    - Useful for copying or modifying existing rules as templates for new detections.
+    - Critical for compliance audits or rule documentation processes.
+
+    **Use Cases:**
+    - Retrieve rule content to understand detection logic after an alert is triggered.
+    - Copy existing rule definitions as starting points for new custom rules.
+    - Analyze rule metadata and configuration for operational documentation.
+    - Review rule syntax and conditions for troubleshooting or optimization.
+    - Extract rule content for backup, version control, or migration purposes.
+    - Examine rule versioning and modification history.
+
+    **Rule Analysis Capabilities:**
+    - Complete YARA-L 2.0 rule text with all conditions and logic
+    - Rule metadata including description, author, severity, and MITRE mappings
+    - Rule configuration including severity, author, and scheduling frequency
+    - Version information and timestamps
+    - Associated rule ID, display name, and revision tracking
+
+    Args:
+        rule_id (str): Unique ID of the detection rule to retrieve.
+                      Examples: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" (latest version),
+                      "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890" (specific version).
+                      If no version suffix is provided, the latest version is returned.
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+
+    Returns:
+        Dict[str, Any]: Complete rule information including:
+                       - Rule text (YARA-L code)
+                       - Metadata (description, author, severity, etc.)
+                       - Configuration and status information
+                       - Version and timestamp details
+                       Returns error structure if the API call fails.
+
+    Example Usage:
+        # Get the latest version of a rule
+        rule_content = get_detection_rule("ru_661a3961-7370-4be7-abda-f233f7ff29ac")
+        
+        # Get a specific version of a rule
+        rule_content = get_detection_rule("ru_661a3961-7370-4be7-abda-f233f7ff29ac@v_1234567890_123456789")
+
+    Next Steps (using MCP-enabled tools):
+        - Analyze the rule text to understand detection logic and conditions.
+        - Use the rule content as a template for creating similar detection rules with `create_rule`.
+        - Test rule modifications using `test_rule` before deploying changes.
+        - Validate rule syntax using `validate_rule` if making modifications.
+        - Monitor rule performance using `get_rule_detections` and `list_rule_errors`.
+        - Document rule purpose and logic for operational teams and compliance audits.
+    """
+    try:
+        logger.info(f'Retrieving detection rule: {rule_id}')
+        
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        
+        # Get the rule using the client
+        rule_response = chronicle.get_rule(rule_id)
+        
+        logger.info(f'Successfully retrieved rule: {rule_id}')
+        return rule_response
+        
+    except Exception as e:
+        logger.error(f'Error retrieving detection rule {rule_id}: {str(e)}', exc_info=True)
+        return {'error': f'Error retrieving detection rule: {str(e)}', 'rule': {}}
 
 @server.tool()
 async def get_rule_detections(

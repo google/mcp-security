@@ -42,7 +42,7 @@ Search information about process activity on the host with CB sensor based on th
 *   `query` (string, optional): Query to execute in process search. For example, `process_name:svchost.exe` or `process_hash:9520a99e77d6196d0d09833146424113`.
 *   `time_frame` (string, optional): Specify a time frame in hours for which to fetch alerts (e.g., `24`).
 *   `sort_by` (string, optional): Specify a parameter for sorting the data (e.g., `last_update`).
-*   `sort_order` (List[Any], optional): Sort order (Ascending/Descending).
+*   `sort_order` (List[str], optional): Sort order (Ascending/Descending).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Hostname entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -79,7 +79,7 @@ Get events associated with specific processes based on the information from the 
 *   `search_criteria` (string, optional): Specify a search criteria for the request. Currently, only `event_type` values are accepted (e.g., `netconn`, comma-separated for multiple).
 *   `time_frame` (string, optional): Specify a time frame in hours for which to fetch events.
 *   `sort_by` (string, optional): Specify a parameter for sorting the data.
-*   `sort_order` (List[Any], optional): Sort order (Ascending/Descending).
+*   `sort_order` (List[str], optional): Sort order (Ascending/Descending).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Process entities (GUID format).
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

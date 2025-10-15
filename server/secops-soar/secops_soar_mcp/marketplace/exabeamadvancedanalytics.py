@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the ExabeamAdvancedAnalytics integration.
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_list_watchlist_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_titles: Annotated[str, Field(..., description="Specify a comma-separated list of watchlist titles for which you want to return items.")], max_items_to_return: Annotated[str, Field(default=None, description="Specify how many watchlist items should be returned.")], max_days_backwards: Annotated[str, Field(default=None, description="Specify how many days backwards to list watchlists. Default: 1")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_list_watchlist_items(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_titles: Annotated[str, Field(..., description="Specify a comma-separated list of watchlist titles for which you want to return items.")], max_items_to_return: Annotated[str, Field(default=None, description="Specify how many watchlist items should be returned.")], max_days_backwards: Annotated[str, Field(default=None, description="Specify how many days backwards to list watchlists. Default: 1")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available items in watchlists from Exabeam Advanced Analytics.
 
         Returns:
@@ -103,7 +104,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_delete_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist that needs to be deleted.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_delete_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist that needs to be deleted.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Delete a watchlist in Exabeam Advanced Analytics.
 
         Returns:
@@ -178,7 +179,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Exabeam Advanced Analytics with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
@@ -252,7 +253,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], return_entity_timeline: Annotated[bool, Field(..., description="If enabled, action will return the timeline for the entity.")], event_time_frame: Annotated[str, Field(default=None, description="Specify the frame for the events that you want to see in hours.")], only_anomaly_events: Annotated[bool, Field(default=None, description="If enabled, action will only return events that are considered to be anomalies.")], lowest_event_risk_score_to_fetch: Annotated[str, Field(default=None, description="Specify what should be the lowest risk score of the event in order to ingest it. If nothing is specified, action will not do any filtering.")], return_comments: Annotated[bool, Field(default=None, description="If enabled, action will return comments related to the entity.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight per entity.")], max_events_to_return: Annotated[str, Field(default=None, description="Specify how many events should be returned. If nothing is specified, action will return all of the events.")], max_comments_to_return: Annotated[str, Field(default=None, description="Specify how many comments to return.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], return_entity_timeline: Annotated[bool, Field(..., description="If enabled, action will return the timeline for the entity.")], event_time_frame: Annotated[str, Field(default=None, description="Specify the frame for the events that you want to see in hours.")], only_anomaly_events: Annotated[bool, Field(default=None, description="If enabled, action will only return events that are considered to be anomalies.")], lowest_event_risk_score_to_fetch: Annotated[str, Field(default=None, description="Specify what should be the lowest risk score of the event in order to ingest it. If nothing is specified, action will not do any filtering.")], return_comments: Annotated[bool, Field(default=None, description="If enabled, action will return comments related to the entity.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight per entity.")], max_events_to_return: Annotated[str, Field(default=None, description="Specify how many events should be returned. If nothing is specified, action will return all of the events.")], max_comments_to_return: Annotated[str, Field(default=None, description="Specify how many comments to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich entities using the information from Exabeam Advanced Analytics. Supported entities: Hostname, IP and User. Event time frame parameter works with hours.
 
         Returns:
@@ -341,7 +342,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_create_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Specify the title of the watchlist.")], category: Annotated[List[Any], Field(..., description="Specify the category for the watchlist.")], access_control: Annotated[List[Any], Field(..., description="Specify the access control for the watchlist.")], description: Annotated[str, Field(default=None, description="Specify description for the watchlist.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_create_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Specify the title of the watchlist.")], category: Annotated[List[str], Field(..., description="Specify the category for the watchlist.")], access_control: Annotated[List[str], Field(..., description="Specify the access control for the watchlist.")], description: Annotated[str, Field(default=None, description="Specify description for the watchlist.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a watchlist in Exabeam Advanced Analytics.
 
         Returns:
@@ -420,7 +421,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_add_comments_to_entity(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(..., description="Specify the comment that needs to be added to the entity.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_add_comments_to_entity(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(..., description="Specify the comment that needs to be added to the entity.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add comments to entities in Exabeam Advanced Analytics. Supported entities: Hostname, IP and User.
 
         Returns:
@@ -495,7 +496,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_remove_entity_from_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist from which you want to remove entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_remove_entity_from_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist from which you want to remove entities.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Remove entities from the watchlist in Exabeam Advanced Analytics. Note: Watchlists with categori 'AssetLabels' and 'UserLabels' are not supported in this action.
 
         Returns:
@@ -570,7 +571,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_add_entity_to_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist of which you want to add entities.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_add_entity_to_watchlist(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], watchlist_title: Annotated[str, Field(..., description="Specify the title of the watchlist of which you want to add entities.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add entities to the watchlist in Exabeam Advanced Analytics. Note: Watchlists with category 'AssetLabels' and 'UserLabels' are not supported in this action.
 
         Returns:
@@ -645,7 +646,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def exabeam_advanced_analytics_list_watchlists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_watchlists_to_return: Annotated[str, Field(default=None, description="Specify how many watchlists should be returned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def exabeam_advanced_analytics_list_watchlists(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], max_watchlists_to_return: Annotated[str, Field(default=None, description="Specify how many watchlists should be returned.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available watchlists in Exabeam Advanced Analytics.
 
         Returns:

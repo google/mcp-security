@@ -57,7 +57,7 @@ This integration provides tools to interact with the IntSights Threat Intelligen
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert which you want to close.
-*   `reason` (List[Any], required): Specify the reason why the alert needs to be closed.
+*   `reason` (List[str], required): Specify the reason why the alert needs to be closed.
 *   `additional_info` (string, optional): Specify additional information explaining why the alert should be closed. Defaults to None.
 *   `rate` (string, optional): Specify the rating of the alert. Maximum is 5. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.

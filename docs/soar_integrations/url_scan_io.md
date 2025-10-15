@@ -26,7 +26,7 @@ Submit a URL to be scanned and get the scan details.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `visibility` (List[Any], optional, default=None): Scans on urlscan.io have one of three visibility levels, make sure to use the appropriate level for your submission.
+*   `visibility` (List[str], optional, default=None): Scans on urlscan.io have one of three visibility levels, make sure to use the appropriate level for your submission.
 *   `threshold` (str, optional, default=None): Mark entity as suspicious if the score of verdicts is equal or above the given threshold. Default is 0, in this case, we consider every scanned url as suspicious.
 *   `create_insight` (bool, optional, default=None): If enabled, action will create an insight containing information about entities.
 *   `only_suspicious_insight` (bool, optional, default=None): If enabled, action will only create insight for suspicious entities. Note: "Create Insight" parameter needs to be enabled.

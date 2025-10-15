@@ -117,14 +117,14 @@ The following actions are available through the QRadar integration:
     *   Parameters:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-        *   `table_name` (List[Any], required): Table to query (e.g., `["events"]`, `["flows"]`).
+        *   `table_name` (List[str], required): Table to query (e.g., `["events"]`, `["flows"]`).
         *   `fields_to_return` (string, optional): Comma-separated fields to return (default is all).
         *   `where_filter` (string, optional): AQL WHERE clause content (without the `WHERE` keyword).
-        *   `time_frame` (List[Any], optional): Predefined time frame or `Custom`.
+        *   `time_frame` (List[str], optional): Predefined time frame or `Custom`.
         *   `start_time` (string, optional): Start time (ISO-8601) if `time_frame` is `Custom`.
         *   `end_time` (string, optional): End time (ISO-8601) if `time_frame` is `Custom` (defaults to now).
         *   `sort_field` (string, optional): Field to sort results by.
-        *   `sort_order` (List[Any], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`). Requires `sort_field`.
+        *   `sort_order` (List[str], optional): Sort order (e.g., `["ASC"]`, `["DESC"]`). Requires `sort_field`.
         *   `max_results_to_return` (string, optional, default=50): Maximum results to return.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
@@ -190,7 +190,7 @@ The following actions are available through the QRadar integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `offense_id` (string, required): The ID of the QRadar offense to update.
-        *   `status` (List[Any], required): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
+        *   `status` (List[str], required): New status (e.g., `["OPEN"]`, `["CLOSED"]`).
         *   `assigned_to` (string, optional): User login to assign the offense to.
         *   `closing_reason` (string, optional): Required if status is `CLOSED`. QRadar closing reason name.
         *   `follow_up` (bool, optional): Mark offense for follow-up.

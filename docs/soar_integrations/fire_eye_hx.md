@@ -48,7 +48,7 @@ Lists alert groups related to a specific host (identified by Hostname or IP Addr
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `acknowledgment_filter` (List[Any], optional): Filters alert groups based on acknowledgment status (e.g., "Acknowledged", "Unacknowledged", "All").
+*   `acknowledgment_filter` (List[str], optional): Filters alert groups based on acknowledgment status (e.g., "Acknowledged", "Unacknowledged", "All").
 *   `max_alert_groups_to_return` (string, optional): The maximum number of alert groups to return per entity. Defaults to 20.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Hostname or IP Address entities are expected.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -145,7 +145,7 @@ Acknowledges or unacknowledges specified alert groups in FireEye HX.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_groups_i_ds` (string, required): A comma-separated list of Alert Group IDs to acknowledge or unacknowledge.
-*   `acknowledgment` (List[Any], required): Specifies whether to "Acknowledge" or "Unacknowledge" the alert groups.
+*   `acknowledgment` (List[str], required): Specifies whether to "Acknowledge" or "Unacknowledge" the alert groups.
 *   `acknowledgment_comment` (string, optional): An optional comment to add to the acknowledgment status.
 *   `limit` (string, optional): The maximum number of alert group listings to return in the result.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -182,10 +182,10 @@ Retrieves FireEye HX alerts based on specified search conditions and associated 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `limit` (string, optional): The maximum number of alerts to return (e.g., 100).
-*   `has_share_mode` (List[Any], optional): Filters alerts by indicator share mode ("any", "restricted", "unrestricted").
-*   `alert_resolution_status` (List[Any], optional): Filters alerts by resolution status ("any", "active_threat", "alert", "block", "partial_block").
+*   `has_share_mode` (List[str], optional): Filters alerts by indicator share mode ("any", "restricted", "unrestricted").
+*   `alert_resolution_status` (List[str], optional): Filters alerts by resolution status ("any", "active_threat", "alert", "block", "partial_block").
 *   `alert_reported_in_last_x_hours` (string, optional): Filters alerts reported within the last X hours (e.g., "4").
-*   `alert_source` (List[Any], optional): Filters alerts by source ("any", "exd", "mal", "ioc").
+*   `alert_source` (List[str], optional): Filters alerts by source ("any", "exd", "mal", "ioc").
 *   `alert_id` (string, optional): Retrieves a specific alert by its identifier.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Hostname or IP Address entities are expected.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -205,7 +205,7 @@ Retrieves information about Indicators of Compromise (IOCs) from the FireEye HX 
 *   `indicator_category` (string, optional): Filters indicators by category.
 *   `search_term` (string, optional): A general search term (name, category, signature, source, condition value).
 *   `limit` (string, optional): The maximum number of indicators to return (e.g., 100).
-*   `share_mode` (List[Any], optional): Filters indicators by share mode ("any", "restricted", "unrestricted", "visible").
+*   `share_mode` (List[str], optional): Filters indicators by share mode ("any", "restricted", "unrestricted", "visible").
 *   `sort_by_field` (string, optional): Sorts results by the specified field (ascending).
 *   `created_by` (string, optional): Filters indicators by author.
 *   `has_associated_alerts` (boolean, optional): If True, returns only indicators with associated alerts.

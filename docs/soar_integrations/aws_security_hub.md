@@ -33,7 +33,7 @@ The following actions are available through the AWS Security Hub integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `insight_name` (string, required): Specify the name of the insight.
-        *   `group_by_attribute` (List[Any], required): Specify the name of the attribute by which findings should be grouped under one insight.
+        *   `group_by_attribute` (List[str], required): Specify the name of the attribute by which findings should be grouped under one insight.
         *   `filter_json_object` (Union[str, dict], required): Specify a filter for the findings as a JSON object. Refer to action documentation for details.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
@@ -55,12 +55,12 @@ The following actions are available through the AWS Security Hub integration:
         *   `product_arn` (string, required): Specify the product ARN of the finding that you want to update.
         *   `note` (string, optional): Specify new text for the note on the finding. (Requires `note_author`).
         *   `note_author` (string, optional): Specify the author of the note. (Requires `note`).
-        *   `severity` (List[Any], optional): Specify new severity for the finding.
-        *   `verification_state` (List[Any], optional): Specify a new verification state for the finding.
+        *   `severity` (List[str], optional): Specify new severity for the finding.
+        *   `verification_state` (List[str], optional): Specify a new verification state for the finding.
         *   `confidence` (string, optional): Specify new confidence for the finding.
         *   `criticality` (string, optional): Specify new criticality for the finding.
         *   `types` (string, optional): Specify a comma-separated list of types for the finding (e.g., `type1,type2`).
-        *   `workflow_status` (List[Any], optional): Specify new workflow status for the finding.
+        *   `workflow_status` (List[str], optional): Specify new workflow status for the finding.
         *   `custom_fields` (string, optional): Specify custom fields to update (Format: `Custom_field_1:value,Custom_field_2:value`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
@@ -72,7 +72,7 @@ The following actions are available through the AWS Security Hub integration:
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `insight_arn` (string, required): Specify the ARN of the insight.
         *   `insight_name` (string, optional): Specify the new name of the insight.
-        *   `group_by_attribute` (List[Any], optional): Specify a new name of the attribute by which findings should be grouped.
+        *   `group_by_attribute` (List[str], optional): Specify a new name of the attribute by which findings should be grouped.
         *   `filter_json_object` (Union[str, dict], optional): Specify a new filter for the findings as a JSON object.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.

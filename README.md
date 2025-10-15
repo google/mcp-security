@@ -32,6 +32,136 @@ The server uses Google's authentication. Make sure you have either:
 2. Set a GOOGLE_APPLICATION_CREDENTIALS environment variable
 3. Used `gcloud auth application-default login`
 
+## Standalone Usage
+
+Each MCP server can be installed and used as a standalone package.
+
+### Installation
+
+You can install the packages using `uv tool install` (recommended):
+
+```bash
+# Install packages
+uv tool install google-secops-mcp
+uv tool install gti-mcp
+uv tool install scc-mcp
+uv tool install secops-soar-mcp
+```
+
+Alternatively, you can use pip:
+
+```bash
+pip install google-secops-mcp
+pip install gti-mcp
+pip install scc-mcp
+pip install secops-soar-mcp
+```
+
+### Running Standalone
+
+After installation, you can run the servers directly using uvx:
+
+```bash
+# Run SecOps MCP server
+uvx --from google-secops-mcp secops_mcp
+
+# Run GTI MCP server
+uvx gti_mcp
+
+# Run SCC MCP server
+uvx scc_mcp
+
+# Run SecOps SOAR MCP server (with optional integrations)
+uvx secops_soar_mcp --integrations CSV,OKTA
+```
+
+With environment variables:
+
+```bash
+CHRONICLE_PROJECT_ID="your-project-id" \
+CHRONICLE_CUSTOMER_ID="01234567-abcd-4321-1234-0123456789ab" \
+CHRONICLE_REGION="us" \
+uvx secops_mcp
+```
+
+### Using with MCP Clients (Recommended)
+
+You can configure MCP clients to use the installed packages with uvx. Here's an example configuration:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "google-secops-mcp",
+        "secops_mcp"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "gti": {
+      "command": "uvx",
+      "args": [
+        "gti_mcp"
+      ],
+      "env": {
+        "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "scc-mcp": {
+      "command": "uvx",
+      "args": [
+        "scc_mcp"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "secops-soar": {
+      "command": "uvx",
+      "args": [
+        "secops_soar_mcp",
+        "--integrations",
+        "CSV,OKTA"
+      ],
+      "env": {
+        "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
+        "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+You can also use environment files with uvx:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "uvx",
+      "args": [
+        "--env-file",
+        "/path/to/.env",
+        "secops_mcp"
+      ],
+      "disabled": false
+    }
+  }
+}
+```
+
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients
@@ -42,6 +172,31 @@ The configuration for Claude Desktop and Cline is the same (provided below for [
 ### Using the prebuilt Google ADK agent as client
 
 Please refer to the [README file](./run-with-google-adk/README.md) for both - locally running the prebuilt agent and [Cloud Run](https://cloud.google.com/run) deployment.
+
+## MCP Client Config Locations
+
+MCP clients all use the same JSON configuration format (see the [MCP Server Configuration Reference](https://google.github.io/mcp-security/usage_guide.html#mcp-server-configuration-reference)), but they expect the file in different locations.
+
+| Client Application       | Scope     | macOS / Linux Location                | Windows Location                                                                    | Notes                                                                                                                                                                                                |
+| ------------------------ | --------- | ------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gemini CLI**           | Global    | `~/.gemini/settings.json`             | `%USERPROFILE%\.gemini\settings.json`                                               | File must include `mcpServers`. Confirmed in [Google Security Ops post](https://security.googlecloudcommunity.com/google-security-operations-2/google-cloud-security-mcp-servers-in-gemini-cli-922). |
+| **Claude Desktop**       | Global    | `~/Claude/claude_desktop_config.json` | `%USERPROFILE%\Claude\claude_desktop_config.json`                                   | Config accessible via *Claude > Settings > Developer > Edit Config*.                                                                                                                                 |
+| **Claude Code**          | Global    | `~/.claude.json`                      | `%USERPROFILE%\.claude.json`                                                             | Primary config file for Claude Code CLI and extensions.                                                                                                                                              |
+| **Cursor IDE (Global)**  | Global    | `~/.cursor/mcp.json`                  | `%USERPROFILE%\.cursor\mcp.json`                                                    | Enables MCP servers globally across all projects.                                                                                                                                                    |
+| **Cursor IDE (Project)** | Project   | `<project-root>/.cursor/mcp.json`     | `<project-root>/.cursor/mcp.json`                                                   | Workspace/project-specific config file.                                                                                                                                                              |
+| **VS Code (Workspace)**  | Workspace | `<project-root>/.vscode/mcp.json`     | `<project-root>/.vscode/mcp.json`                                                   | Workspace-level config used when an MCP extension (like **Cline**) is installed. Overrides global config if present.                                                                                 |
+| **Cline (VS Code Ext.)** | Global    | Inside VS Code extension data         | `%APPDATA%\Code\User\globalStorage\<extension-id>\settings\cline_mcp_settings.json` | Exact path varies by VS Code variant and platform. `<extension-id>` corresponds to the installed extension folder (e.g., `saoudrizwan.claude-dev`).                                                  |
+
+### Additional Notes for Windows
+
+- `%USERPROFILE%` → `C:\Users\<username>`
+- `%APPDATA%` → `C:\Users\<username>\AppData\Roaming`
+- `<project-root>` → folder opened in VS Code or IDE for the project
+- `<extension-id>` → name of the installed extension folder (e.g., `saoudrizwan.claude-dev` for Claude/Cline)
+
+### Tip: Single Config with Symlinks
+
+If you use multiple MCP clients, you can maintain a **single config file** and symlink it into each expected location. This avoids drift and keeps your server definitions consistent.
 
 
 ### Using uv (Recommended)

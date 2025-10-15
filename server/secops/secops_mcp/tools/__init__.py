@@ -22,4 +22,5 @@ from .threat_intel import *
 from .log_ingestion import *
 from .parser_management import *
 from .data_table_management import *
-from .reference_list_management import * 
+from .reference_list_management import *
+from .feed_management import *

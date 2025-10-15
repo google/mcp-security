@@ -53,7 +53,7 @@ Enrich entities using information from TruSTAR. Supported entities: All.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `security_level_threshold` (List[Any], required): Specify what should be the lowest security level for the entity to be marked as suspicious.
+*   `security_level_threshold` (List[str], required): Specify what should be the lowest security level for the entity to be marked as suspicious.
 *   `enclave_filter` (str, optional, default=None): Specify a comma-separated list of enclave names that should be used during the enrichment.
 *   `target_entities` (List[TargetEntity], optional, default=None): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -66,7 +66,7 @@ List available enclaves in TruSTAR.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional, default=None): Specify what filter logic should be applied.
+*   `filter_logic` (List[str], optional, default=None): Specify what filter logic should be applied.
 *   `filter_value` (str, optional, default=None): Specify what value should be used in the filter.
 *   `max_enclaves_to_return` (str, optional, default=None): Specify how many enclaves to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=None): Optional list of specific target entities (Identifier, EntityType) to run the action on.

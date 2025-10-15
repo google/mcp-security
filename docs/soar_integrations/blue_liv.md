@@ -97,7 +97,7 @@ Mark or unmark a specified threat as a favorite in BlueLiv.
 *   `module_type` (string, required): Specify the module type the resource belongs to.
 *   `module_id` (string, required): Specify the module ID the resource belongs to.
 *   `resource_id` (string, required): Specify the Resource ID of the threat.
-*   `favorite_status` (List[Any], required): Specify the Favorite status to apply (e.g., Favorite, Not Favorite).
+*   `favorite_status` (List[str], required): Specify the Favorite status to apply (e.g., Favorite, Not Favorite).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

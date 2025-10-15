@@ -197,7 +197,7 @@ This integration provides tools to interact with Google Cloud Identity and Acces
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `project_id` (string, optional): Specify the name of the project, where you want to list the roles. If nothing is provided, the project will be extracted from integration configuration. Defaults to None.
-*   `view` (List[Any], optional): Specify which view should be used to return role information. Defaults to None.
+*   `view` (List[str], optional): Specify which view should be used to return role information. Defaults to None.
 *   `max_rows_to_return` (string, optional): Specify how many roles the action should return. Defaults to None.
 *   `list_custom_roles_only` (boolean, optional): If enabled, action will return only custom roles defined for the current project or orgranization. Defaults to None.
 *   `show_deleted` (boolean, optional): If enabled, action will also return deleted roles. Defaults to None.

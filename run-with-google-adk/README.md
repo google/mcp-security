@@ -104,7 +104,7 @@ GOOGLE_GENAI_USE_VERTEXAI=False
 GOOGLE_API_KEY=NOT_SET
 # If you plan to use Gemini API - Models list - https://ai.google.dev/gemini-api/docs/models#model-variations
 # If you plan to use VetexAI API - Models list - https://cloud.google.com/vertex-ai/generative-ai/docs/models
-GOOGLE_MODEL=gemini-2.5-flash-preview-04-17
+GOOGLE_MODEL=gemini-2.5-flash
 # Should be single quote, avoid commas if possible but if you use them they are replaced with semicommas on the cloud run deployment
 # you can change them there.
 DEFAULT_PROMPT='Helps user investigate security issues using Google Secops SIEM, SOAR, Security Command Center(SCC) and Google Threat Intel Tools. All authentication actions are automatically approved. If the query is about a SOAR case try to provide a backlink to the user. A backlink is formed by adding /cases/<case id> to this URL when present in field ui_base_link of your input. If the user asks with only ? or are you there? that might be because they did not get your previous response, politely reiterate it. Try to respond in markdown whenever possible.'

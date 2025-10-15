@@ -20,8 +20,8 @@ Return endpoint events related to the endpoints in McAfee ePO. Supported entitie
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `fields_to_return` (string, optional): Specify what fields to return. If nothing is specified action will return all available fields.
 *   `sort_field` (string, optional): Specify what field should be used for ordering of the results.
-*   `sort_order` (List[Any], optional): Specify what sort order should be applied to the query.
-*   `time_frame` (List[Any], optional): Specify a time frame for the events. If “Custom” is selected, you also need to provide “Start Time”.
+*   `sort_order` (List[str], optional): Specify what sort order should be applied to the query.
+*   `time_frame` (List[str], optional): Specify a time frame for the events. If “Custom” is selected, you also need to provide “Start Time”.
 *   `start_time` (string, optional): Specify the start time for the events. This parameter is mandatory, if “Custom” is selected for the “Time Frame” parameter. Format: ISO 8601
 *   `end_time` (string, optional): Specify the end time for the events. Format: ISO 8601. If nothing is provided and “Custom” is selected for the “Time Frame” parameter then this parameter will use current time.
 *   `max_events_to_return` (string, optional): Specify how many events to return. Default: 50.
@@ -195,7 +195,7 @@ List available queries in McAfee ePO.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied.
 *   `filter_value` (string, optional): Specify what value should be used in the filter.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -277,11 +277,11 @@ Execute an entity query in McAfee ePO. Note: this action prepares the "Where" cl
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `table_name` (string, required): Specify the name of the table from which you want to fetch results.
 *   `stop_if_not_enough_entities` (bool, required): If enabled, action will not start execution, unless all of the entity types are available for the specified ".. Entity Keys". Example: if "IP Entity Key" and "File Hash Entity Key" are specified, but in the scope there are no file hashes then if this parameter is enabled, action will not execute the query.
-*   `cross_entity_operator` (List[Any], required): Specify what should be the logical operator used between different entity types.
+*   `cross_entity_operator` (List[str], required): Specify what should be the logical operator used between different entity types.
 *   `fields_to_return` (string, optional): Specify what fields to return. If nothing is specified action will return all available fields.
 *   `sort_field` (string, optional): Specify what field should be used for ordering of the results.
-*   `sort_order` (List[Any], optional): Specify what sort order should be applied to the query.
-*   `time_frame` (List[Any], optional): Specify a time frame for the results. If “Custom” is selected, you also need to provide “Start Time”.
+*   `sort_order` (List[str], optional): Specify what sort order should be applied to the query.
+*   `time_frame` (List[str], optional): Specify a time frame for the results. If “Custom” is selected, you also need to provide “Start Time”.
 *   `start_time` (string, optional): Specify the start time for the results. This parameter is mandatory, if “Custom” is selected for the “Time Frame” parameter. Format: ISO 8601
 *   `end_time` (string, optional): Specify the end time for the results. Format: ISO 8601. If nothing is provided and “Custom” is selected for the “Time Frame” parameter then this parameter will use current time.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
@@ -310,7 +310,7 @@ Execute a custom query in McAfee ePO.
 *   `fields_to_return` (string, optional): Specify what fields to return. If nothing is specified action will return all available fields.
 *   `where_clause` (string, optional): Specify the where clause for the query. For more information please refer to the documentation portal.
 *   `sort_field` (string, optional): Specify what field should be used for ordering of the results.
-*   `sort_order` (List[Any], optional): Specify what sort order should be applied to the query.
+*   `sort_order` (List[str], optional): Specify what sort order should be applied to the query.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -348,8 +348,8 @@ Retrieve information about events related to hashes. Note: only MD5 hashes are s
 *   `create_insight` (bool, optional): If enabled, action will create an insight containing information about which hashes have events associated with them.
 *   `fields_to_return` (string, optional): Specify what fields to return. If nothing is specified action will return all available fields.
 *   `sort_field` (string, optional): Specify what field should be used for ordering of the results.
-*   `sort_order` (List[Any], optional): Specify what sort order should be applied to the query.
-*   `time_frame` (List[Any], optional): Specify a time frame for the events. If “Custom” is selected, you also need to provide “Start Time”.
+*   `sort_order` (List[str], optional): Specify what sort order should be applied to the query.
+*   `time_frame` (List[str], optional): Specify a time frame for the events. If “Custom” is selected, you also need to provide “Start Time”.
 *   `start_time` (string, optional): Specify the start time for the events. This parameter is mandatory, if “Custom” is selected for the “Time Frame” parameter. Format: ISO 8601
 *   `end_time` (string, optional): Specify the end time for the events. Format: ISO 8601. If nothing is provided and “Custom” is selected for the “Time Frame” parameter then this parameter will use current time.
 *   `max_events_to_return` (string, optional): Specify how many events to return per table that is queried. Default: 50.

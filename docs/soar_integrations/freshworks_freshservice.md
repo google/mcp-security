@@ -16,7 +16,7 @@ This integration provides tools to interact with Freshworks Freshservice for man
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `ticket_type` (List[Any], optional): Specify ticket type to return. Defaults to None.
+*   `ticket_type` (List[str], optional): Specify ticket type to return. Defaults to None.
 *   `requester` (string, optional): Specify the requester email of tickets to return. Defaults to None.
 *   `include_stats` (boolean, optional): If enabled, action will return additional stats on the tickets. Defaults to None.
 *   `search_for_last_x_hours` (string, optional): Specify the timeframe to search tickets for. Defaults to None.
@@ -69,11 +69,11 @@ This integration provides tools to interact with Freshworks Freshservice for man
 *   `subject` (string, required): Specify subject field for created ticket.
 *   `description` (string, required): Specify description field for created ticket.
 *   `requester_email` (string, required): Specify requester email for created ticket.
-*   `priority` (List[Any], required): Specify priority to assign to the ticket.
+*   `priority` (List[str], required): Specify priority to assign to the ticket.
 *   `agent_assign_to` (string, optional): Specify the agent email to assign the ticket to. Defaults to None.
 *   `group_assign_to` (string, optional): Specify the group name to assign the ticket to. Defaults to None.
-*   `urgency` (List[Any], optional): Specify urgency to assign to the ticket. Defaults to None.
-*   `impact` (List[Any], optional): Specify impact to assign to the ticket. Defaults to None.
+*   `urgency` (List[str], optional): Specify urgency to assign to the ticket. Defaults to None.
+*   `impact` (List[str], optional): Specify impact to assign to the ticket. Defaults to None.
 *   `tags` (string, optional): Specify tags to assign to the ticket. Parameter accepts multiple values as a comma separated string. Defaults to None.
 *   `custom_fields` (string, optional): Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {"key1":"value1","key2":"value2"}. Defaults to None.
 *   `file_attachments_to_add` (string, optional): Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB. Defaults to None.
@@ -189,7 +189,7 @@ This integration provides tools to interact with Freshworks Freshservice for man
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `agent_email` (string, optional): Specify the email address to return agent records for. Defaults to None.
-*   `agent_state` (List[Any], optional): Specify agent states to return. Defaults to None.
+*   `agent_state` (List[str], optional): Specify agent states to return. Defaults to None.
 *   `include_not_active_agents` (boolean, optional): If enabled, results will include not active agent records. Defaults to None.
 *   `rows_per_page` (string, optional): Specify how many agent records should be returned per page for Freshservice pagination. Defaults to None.
 *   `start_at_page` (string, optional): Specify starting from which page agent records should be returned with Freshservice pagination. Defaults to None.
@@ -409,15 +409,15 @@ This integration provides tools to interact with Freshworks Freshservice for man
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `ticket_id` (string, required): Specify ticket id to update.
-*   `status` (List[Any], optional): Specify new status for the ticket. Defaults to None.
+*   `status` (List[str], optional): Specify new status for the ticket. Defaults to None.
 *   `subject` (string, optional): Specify subject field to update. Defaults to None.
 *   `description` (string, optional): Specify description field to update. Defaults to None.
 *   `requester_email` (string, optional): Specify requester email to update. Defaults to None.
 *   `agent_assign_to` (string, optional): Specify the agent email to update. Defaults to None.
 *   `group_assign_to` (string, optional): Specify the group name to update. Defaults to None.
-*   `priority` (List[Any], optional): Specify priority to update. Defaults to None.
-*   `urgency` (List[Any], optional): Specify urgency to update. Defaults to None.
-*   `impact` (List[Any], optional): Specify impact to update. Defaults to None.
+*   `priority` (List[str], optional): Specify priority to update. Defaults to None.
+*   `urgency` (List[str], optional): Specify urgency to update. Defaults to None.
+*   `impact` (List[str], optional): Specify impact to update. Defaults to None.
 *   `tags` (string, optional): Specify tags to replace in the ticket. Parameter accepts multiple values as a comma separated string. Note that due to the Freshservice API limitations action replaces existing tags in the ticket, not appending new ones to existing. Defaults to None.
 *   `custom_fields` (string, optional): Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {"key1":"value1","key2":"value2"}. Defaults to None.
 *   `file_attachments_to_add` (string, optional): Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB. Defaults to None.
@@ -470,7 +470,7 @@ This integration provides tools to interact with Freshworks Freshservice for man
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `ticket_id` (string, required): Specify ticket ID to return conversations for.
 *   `note_text` (string, required): Specify note text to add to ticket.
-*   `note_type` (List[Any], optional): Specify the type of note action should add to the ticket. Defaults to None.
+*   `note_type` (List[str], optional): Specify the type of note action should add to the ticket. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

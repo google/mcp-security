@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the PaloAltoPrismaCloud integration.
 
     @mcp.tool()
-    async def palo_alto_prisma_cloud_enrich_assets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_identifiers: Annotated[str, Field(..., description="Comma-separated list of asset identifiers  which you want to fetch the details for. An asset identifier is either an Asset ID or Asset RRN.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_prisma_cloud_enrich_assets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], asset_identifiers: Annotated[str, Field(..., description="Comma-separated list of asset identifiers  which you want to fetch the details for. An asset identifier is either an Asset ID or Asset RRN.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich information about a resource using Palo Alto Prisma Cloud.
 
         Returns:
@@ -99,7 +100,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_prisma_cloud_respond_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="ID of the response alert.")], response_type: Annotated[List[Any], Field(default=None, description="Alert status. If the Snooze value is selected, the Snooze Time parameter is required. Possible values: Dismiss Snooze Reopen Remediate")], snooze_time: Annotated[str, Field(default=None, description="Snooze time in hours.")], dismiss_note: Annotated[str, Field(default=None, description="Note for a dismissal.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_prisma_cloud_respond_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_id: Annotated[str, Field(..., description="ID of the response alert.")], response_type: Annotated[List[str], Field(default=None, description="Alert status. If the Snooze value is selected, the Snooze Time parameter is required. Possible values: Dismiss Snooze Reopen Remediate")], snooze_time: Annotated[str, Field(default=None, description="Snooze time in hours.")], dismiss_note: Annotated[str, Field(default=None, description="Note for a dismissal.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Respond to an alert in Palo Alto Prisma Cloud.
 
         Returns:
@@ -180,7 +181,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_prisma_cloud_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_prisma_cloud_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Palo Alto Prisma Cloud with parameters provided at the integration configuration page in the Chronicle Marketplace tab.
 
         Returns:

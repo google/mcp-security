@@ -37,7 +37,7 @@ Create IP address range in Microsoft Defender for Cloud Apps.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `name` (string, required): Specify the name for the IP address range.
-*   `category` (List[Any], required): Specify the category for the IP address range.
+*   `category` (List[str], required): Specify the category for the IP address range.
 *   `subnets` (string, required): Specify a comma-separated list of subnets (e.g., 192.168.1.0/24,10.0.0.0/8).
 *   `organization` (string, optional): Specify the organization for the IP address range.
 *   `tags` (string, optional): Specify a comma-separated list of tags for the IP address range.
@@ -57,9 +57,9 @@ Close alert in Microsoft Defender for Cloud Apps.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert that needs to be closed.
-*   `state` (List[Any], required): Specify the state of the alert (e.g., Benign, True Positive).
+*   `state` (List[str], required): Specify the state of the alert (e.g., Benign, True Positive).
 *   `comment` (string, optional): Specify a comment about why the alert is closed.
-*   `reason` (List[Any], optional): Specify a reason why the alert should be closed (not applicable if state is "True Positive").
+*   `reason` (List[str], optional): Specify a reason why the alert should be closed (not applicable if state is "True Positive").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -172,8 +172,8 @@ List available files in Microsoft Defender for Cloud Apps based on specified fil
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key to filter files (e.g., File Type, Share Status, File Name, ID).
-*   `filter_logic` (List[Any], optional): Specify filter logic (e.g., Equals, Contains). Note: Contains logic only works for File Name and ID.
+*   `filter_key` (List[str], optional): Specify the key to filter files (e.g., File Type, Share Status, File Name, ID).
+*   `filter_logic` (List[str], optional): Specify filter logic (e.g., Equals, Contains). Note: Contains logic only works for File Name and ID.
 *   `filter_value` (string, optional): Specify the value to filter by.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50. Note: Contains logic only searches the first 1000 results.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

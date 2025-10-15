@@ -56,9 +56,9 @@ This integration provides tools to interact with Google Security Command Center 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `asset_resource_names` (string, required): Specify a comma-separated list of resource names of the assets for which you want to return data.
-*   `timeframe` (List[Any], optional): Specify the timeframe for the vulnerabilities/misconfiguration search. Defaults to None.
-*   `record_types` (List[Any], optional): Specify what kind of records should be returned. Defaults to None.
-*   `output_type` (List[Any], optional): Specify what kind of output should be returned in the JSON result for the asset. Defaults to None.
+*   `timeframe` (List[str], optional): Specify the timeframe for the vulnerabilities/misconfiguration search. Defaults to None.
+*   `record_types` (List[str], optional): Specify what kind of records should be returned. Defaults to None.
+*   `output_type` (List[str], optional): Specify what kind of output should be returned in the JSON result for the asset. Defaults to None.
 *   `max_records_to_return` (string, optional): Specify how many records to return per record type per assets: Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -80,8 +80,8 @@ This integration provides tools to interact with Google Security Command Center 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `finding_name` (string, required): Specify a comma-separated list of finding names which you want to update. Note: finding name has the following structure: organizations/{organization_id}/sources/{source_id}/findings/{finding_id}.
-*   `mute_status` (List[Any], optional): Specify the mute status for the finding. Defaults to None.
-*   `state_status` (List[Any], optional): Specify the state status for the finding. Defaults to None.
+*   `mute_status` (List[str], optional): Specify the mute status for the finding. Defaults to None.
+*   `state_status` (List[str], optional): Specify the state status for the finding. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

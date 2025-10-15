@@ -8,10 +8,25 @@ version = "0.1.2"
 description = "Google Threat Intelligence MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [
+    { name = "Google SecOps Team", email = "chronicle@google.com" }
+]
+keywords = ["google", "security", "chronicle", "gti", "mcp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+]
 dependencies = [
     "mcp",
     "vt-py"
 ]
+
+[project.urls]
+Homepage = "https://github.com/google/mcp-security"
+Documentation = "https://github.com/google/mcp-security/tree/main/server/gti#readme"
+Repository = "https://github.com/google/mcp-security/tree/main/server/gti"
+Issues = "https://github.com/google/mcp-security/issues"
 
 [project.optional-dependencies]
 test = ["pytest", "pytest_httpserver", "pytest_asyncio", "pytest-mock"]
@@ -21,3 +36,6 @@ find = {}
 
 [project.scripts]
 gti_mcp = "gti_mcp.server:main"
+
+[project.entry-points.mcp]
+gti-mcp = "gti_mcp.server:main"

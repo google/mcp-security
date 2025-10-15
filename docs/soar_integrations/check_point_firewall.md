@@ -78,8 +78,8 @@ Add a SAM (suspicious activity monitoring) rule for Checkpoint Firewall. Refer t
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `security_gateway_to_create_sam_rule_on` (string, required): Specify the name of Security Gateway to create a rule for.
-*   `action_for_the_matching_connections` (List[Any], required): Specify the action (e.g., `drop`, `reject`).
-*   `how_to_track_matching_connections` (List[Any], required): Specify tracking option (e.g., `log`, `alert`).
+*   `action_for_the_matching_connections` (List[str], required): Specify the action (e.g., `drop`, `reject`).
+*   `how_to_track_matching_connections` (List[str], required): Specify tracking option (e.g., `log`, `alert`).
 *   `source_ip` (string, optional): Specify the source IP.
 *   `source_netmask` (string, optional): Specify the source netmask.
 *   `destination_ip` (string, optional): Specify the destination IP.
@@ -151,8 +151,8 @@ Remove a SAM (suspicious activity monitoring) rule from Checkpoint Firewall. Not
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `security_gateway` (string, required): Specify the name of Security Gateway from where to remove SAM Rule.
-*   `action_for_the_matching_connections` (List[Any], required): Specify the action of the rule to remove.
-*   `how_to_track_matching_connections` (List[Any], required): Specify the tracking option of the rule to remove.
+*   `action_for_the_matching_connections` (List[str], required): Specify the action of the rule to remove.
+*   `how_to_track_matching_connections` (List[str], required): Specify the tracking option of the rule to remove.
 *   `source_ip` (string, optional): Specify the source IP of the rule to remove.
 *   `source_netmask` (string, optional): Specify the source netmask of the rule to remove.
 *   `destination_ip` (string, optional): Specify the destination IP of the rule to remove.
@@ -175,8 +175,8 @@ Retrieve logs from CheckPoint FireWall based on the filter.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `time_frame` (List[Any], required): Specify what time frame should be used for log retrieval (e.g., Last Hour, Last Day, Custom).
-*   `log_type` (List[Any], required): Specify what type of logs should be returned (e.g., Firewall, Audit).
+*   `time_frame` (List[str], required): Specify what time frame should be used for log retrieval (e.g., Last Hour, Last Day, Custom).
+*   `log_type` (List[str], required): Specify what type of logs should be returned (e.g., Firewall, Audit).
 *   `query_filter` (string, optional): Specify the query filter (Check Point syntax) to return logs.
 *   `max_logs_to_return` (string, optional): Specify how many logs to return. Maximum is 100 (Checkpoint limitation).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

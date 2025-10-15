@@ -18,7 +18,7 @@ Stop a subscription to a chosen Office 365 Management API content type. Note: Wh
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `stop_a_subscription_for` (List[Any], required): Specify for which content type to stop a subscription (e.g., Audit.AzureActiveDirectory, Audit.Exchange, Audit.SharePoint).
+*   `stop_a_subscription_for` (List[str], required): Specify for which content type to stop a subscription (e.g., Audit.AzureActiveDirectory, Audit.Exchange, Audit.SharePoint).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -49,7 +49,7 @@ Start a subscription to a chosen Office 365 Management API content type.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `start_a_subscription_for` (List[Any], required): Specify for which content type to start a subscription (e.g., Audit.AzureActiveDirectory, Audit.Exchange, Audit.SharePoint).
+*   `start_a_subscription_for` (List[str], required): Specify for which content type to start a subscription (e.g., Audit.AzureActiveDirectory, Audit.Exchange, Audit.SharePoint).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

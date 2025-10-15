@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FireEyeNX integration.
 
     @mcp.tool()
-    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[List[Any], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[List[Any], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[str, Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[List[str], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[List[str], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[str, Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IPS Policy Exception in FireEye NX. Note: IP entities are treated as "Attacker IP Address".
 
         Returns:
@@ -103,7 +104,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_nx_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_nx_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the FireEye NX with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
@@ -177,7 +178,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def fire_eye_nx_download_alert_artifacts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_uuid: Annotated[str, Field(..., description="Specify the alert uuid from where we need to download artifacts.")], download_path: Annotated[str, Field(..., description="Specify where the action should save the files.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_nx_download_alert_artifacts(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_uuid: Annotated[str, Field(..., description="Specify the alert uuid from where we need to download artifacts.")], download_path: Annotated[str, Field(..., description="Specify where the action should save the files.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Download alert artifacts.
 
         Returns:

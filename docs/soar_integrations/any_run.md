@@ -30,17 +30,17 @@ Create Any.Run file analysis task. Note: Action is not working with Siemplify en
 *   `file_path` (str, required): Specify full path to file to analyze.
 *   `try_to_create_submission_for_x_times` (str, required): How many attempts action should make to check if the API concurrency limit is not exceeded and try to create a new submission. Check is made every 2 seconds.
 *   `wait_for_the_report` (Optional[bool], optional, default=None): Specify whether action should wait for the report creation. Report also can be obtained later with Get report action once scan is completed.
-*   `os_version` (Optional[List[Any]], optional, default=None): OS version to run analysis on.
-*   `operation_system_bitness` (Optional[List[Any]], optional, default=None): Bitness of Operation System
-*   `os_environment_type` (Optional[List[Any]], optional, default=None): Environment type to run analysis on.
-*   `network_connection_status` (Optional[List[Any]], optional, default=None): Network connection state for analysis.
-*   `fake_net_feature_status` (Optional[List[Any]], optional, default=None): FakeNet feature state for analysis.
-*   `use_tor` (Optional[List[Any]], optional, default=None): Use TOR or not while running analysis.
-*   `opt_network_mitm` (Optional[List[Any]], optional, default=None): HTTPS MITM proxy option.
-*   `opt_network_geo` (Optional[List[Any]], optional, default=None): Geo location option.
-*   `opt_kernel_heavyevasion` (Optional[List[Any]], optional, default=None): Heavy evasion option.
-*   `opt_privacy_type` (Optional[List[Any]], optional, default=None): Privacy settings for analysis.
-*   `obj_ext_startfolder` (Optional[List[Any]], optional, default=None): Start location for analysis.
+*   `os_version` (Optional[List[str]], optional, default=None): OS version to run analysis on.
+*   `operation_system_bitness` (Optional[List[str]], optional, default=None): Bitness of Operation System
+*   `os_environment_type` (Optional[List[str]], optional, default=None): Environment type to run analysis on.
+*   `network_connection_status` (Optional[List[str]], optional, default=None): Network connection state for analysis.
+*   `fake_net_feature_status` (Optional[List[str]], optional, default=None): FakeNet feature state for analysis.
+*   `use_tor` (Optional[List[str]], optional, default=None): Use TOR or not while running analysis.
+*   `opt_network_mitm` (Optional[List[str]], optional, default=None): HTTPS MITM proxy option.
+*   `opt_network_geo` (Optional[List[str]], optional, default=None): Geo location option.
+*   `opt_kernel_heavyevasion` (Optional[List[str]], optional, default=None): Heavy evasion option.
+*   `opt_privacy_type` (Optional[List[str]], optional, default=None): Privacy settings for analysis.
+*   `obj_ext_startfolder` (Optional[List[str]], optional, default=None): Start location for analysis.
 *   `opt_timeout` (Optional[str], optional, default=None): Timeout period for analysis in range from 10 to 9999 seconds.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -67,17 +67,17 @@ Create Any.Run file analysis task. Note: Action is not working with Siemplify en
 *   `url_to_file` (str, required): Specify URL to file to download and analyze.
 *   `try_to_create_submission_for_x_times` (str, required): How many attempts action should make to check if the API concurrency limit is not exceeded and try to create a new submission. Check is made every 2 seconds.
 *   `wait_for_the_report` (Optional[bool], optional, default=None): Specify whether action should wait for the report creation. Report also can be obtained later with Get report action once scan is completed.
-*   `os_version` (Optional[List[Any]], optional, default=None): OS version to run analysis on.
-*   `operation_system_bitness` (Optional[List[Any]], optional, default=None): Bitness of Operation System
-*   `os_environment_type` (Optional[List[Any]], optional, default=None): Environment type to run analysis on.
-*   `network_connection_status` (Optional[List[Any]], optional, default=None): Network connection state for analysis.
-*   `fake_net_feature_status` (Optional[List[Any]], optional, default=None): FakeNet feature state for analysis.
-*   `use_tor` (Optional[List[Any]], optional, default=None): Use TOR or not while running analysis.
-*   `opt_network_mitm` (Optional[List[Any]], optional, default=None): HTTPS MITM proxy option.
-*   `opt_network_geo` (Optional[List[Any]], optional, default=None): Geo location option.
-*   `opt_kernel_heavyevasion` (Optional[List[Any]], optional, default=None): Heavy evasion option.
-*   `opt_privacy_type` (Optional[List[Any]], optional, default=None): Privacy settings for analysis.
-*   `obj_ext_startfolder` (Optional[List[Any]], optional, default=None): Start location for analysis.
+*   `os_version` (Optional[List[str]], optional, default=None): OS version to run analysis on.
+*   `operation_system_bitness` (Optional[List[str]], optional, default=None): Bitness of Operation System
+*   `os_environment_type` (Optional[List[str]], optional, default=None): Environment type to run analysis on.
+*   `network_connection_status` (Optional[List[str]], optional, default=None): Network connection state for analysis.
+*   `fake_net_feature_status` (Optional[List[str]], optional, default=None): FakeNet feature state for analysis.
+*   `use_tor` (Optional[List[str]], optional, default=None): Use TOR or not while running analysis.
+*   `opt_network_mitm` (Optional[List[str]], optional, default=None): HTTPS MITM proxy option.
+*   `opt_network_geo` (Optional[List[str]], optional, default=None): Geo location option.
+*   `opt_kernel_heavyevasion` (Optional[List[str]], optional, default=None): Heavy evasion option.
+*   `opt_privacy_type` (Optional[List[str]], optional, default=None): Privacy settings for analysis.
+*   `obj_ext_startfolder` (Optional[List[str]], optional, default=None): Start location for analysis.
 *   `opt_timeout` (Optional[str], optional, default=None): Timeout period for analysis in range from 10 to 9999 seconds.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -108,17 +108,17 @@ Create Any.Run analysis task for the provided URL. Note: URL can be provided eit
 *   `url_for_analysis` (str, required): Specify URL to analyze. If URL is provided in both as entity and as this input parameter - action will be executed on input parameter.
 *   `try_to_create_submission_for_x_times` (str, required): How many attempts action should make to check if the API concurrency limit is not exceeded and try to create a new submission. Check is made every 2 seconds.
 *   `wait_for_the_report` (Optional[bool], optional, default=None): Specify whether action should wait for the report creation. Report also can be obtained later with Get report action once scan is completed.
-*   `os_version` (Optional[List[Any]], optional, default=None): OS version to run analysis on.
-*   `operation_system_bitness` (Optional[List[Any]], optional, default=None): Bitness of Operation System
-*   `os_environment_type` (Optional[List[Any]], optional, default=None): Environment type to run analysis on.
-*   `network_connection_status` (Optional[List[Any]], optional, default=None): Network connection state for analysis.
-*   `fake_net_feature_status` (Optional[List[Any]], optional, default=None): FakeNet feature state for analysis.
-*   `use_tor` (Optional[List[Any]], optional, default=None): Use TOR or not while running analysis.
-*   `opt_network_mitm` (Optional[List[Any]], optional, default=None): HTTPS MITM proxy option.
-*   `opt_network_geo` (Optional[List[Any]], optional, default=None): Geo location option.
-*   `opt_kernel_heavyevasion` (Optional[List[Any]], optional, default=None): Heavy evasion option.
-*   `opt_privacy_type` (Optional[List[Any]], optional, default=None): Privacy settings for analysis.
-*   `obj_ext_startfolder` (Optional[List[Any]], optional, default=None): Start location for analysis.
+*   `os_version` (Optional[List[str]], optional, default=None): OS version to run analysis on.
+*   `operation_system_bitness` (Optional[List[str]], optional, default=None): Bitness of Operation System
+*   `os_environment_type` (Optional[List[str]], optional, default=None): Environment type to run analysis on.
+*   `network_connection_status` (Optional[List[str]], optional, default=None): Network connection state for analysis.
+*   `fake_net_feature_status` (Optional[List[str]], optional, default=None): FakeNet feature state for analysis.
+*   `use_tor` (Optional[List[str]], optional, default=None): Use TOR or not while running analysis.
+*   `opt_network_mitm` (Optional[List[str]], optional, default=None): HTTPS MITM proxy option.
+*   `opt_network_geo` (Optional[List[str]], optional, default=None): Geo location option.
+*   `opt_kernel_heavyevasion` (Optional[List[str]], optional, default=None): Heavy evasion option.
+*   `opt_privacy_type` (Optional[List[str]], optional, default=None): Privacy settings for analysis.
+*   `obj_ext_startfolder` (Optional[List[str]], optional, default=None): Start location for analysis.
 *   `opt_timeout` (Optional[str], optional, default=None): Timeout period for analysis in range from 10 to 9999 seconds.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

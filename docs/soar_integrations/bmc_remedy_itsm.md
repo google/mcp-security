@@ -27,12 +27,12 @@ Update an incident in BMC Remedy ITSM.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): Specify the id of the incident that needs to be updated.
-*   `status` (List[Any], optional): Specify the status for the incident. Note: if status is "Pending" or "Resolved", then you also need to provide "Status Reason" value.
+*   `status` (List[str], optional): Specify the status for the incident. Note: if status is "Pending" or "Resolved", then you also need to provide "Status Reason" value.
 *   `status_reason` (string, optional): Specify the status reason for the incident.
-*   `impact` (List[Any], optional): Specify the impact for the incident.
-*   `urgency` (List[Any], optional): Specify the urgency for the incident.
+*   `impact` (List[str], optional): Specify the impact for the incident.
+*   `urgency` (List[str], optional): Specify the urgency for the incident.
 *   `description` (string, optional): Specify the description of the incident.
-*   `incident_type` (List[Any], optional): Specify the incident type for the incident.
+*   `incident_type` (List[str], optional): Specify the incident type for the incident.
 *   `assigned_group` (string, optional): Specify the assigned group for the incident.
 *   `assignee` (string, optional): Specify the assignee for the incident.
 *   `resolution` (string, optional): Specify the resolution for the incident.
@@ -42,7 +42,7 @@ Update an incident in BMC Remedy ITSM.
 *   `resolution_product_category_tier_1` (string, optional): Specify the resolution product category tier 1 for the incident.
 *   `resolution_product_category_tier_2` (string, optional): Specify the resolution product category tier 2 for the incident.
 *   `resolution_product_category_tier_3` (string, optional): Specify the resolution product category tier 3 for the incident.
-*   `reported_source` (List[Any], optional): Specify the reported source.
+*   `reported_source` (List[str], optional): Specify the reported source.
 *   `custom_fields` (string, optional): Specify a JSON object containing all of the needed fields and values that need to be updated. Note: this parameter will overwrite other provided parameters.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -215,14 +215,14 @@ Create an incident in BMC Remedy ITSM.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `status` (List[Any], optional): Specify the status for the incident.
-*   `impact` (List[Any], optional): Specify the impact for the incident.
-*   `urgency` (List[Any], optional): Specify the urgency for the incident.
+*   `status` (List[str], optional): Specify the status for the incident.
+*   `impact` (List[str], optional): Specify the impact for the incident.
+*   `urgency` (List[str], optional): Specify the urgency for the incident.
 *   `description` (string, optional): Specify the description of the incident.
 *   `company` (string, optional): Specify the company for the incident.
 *   `customer` (string, optional): Specify the customer for the incident. Note: Customer needs to be provided in the format "{Last Name} {First Name}". Example: Allbrook Allen.
 *   `template_name` (string, optional): Specify the name of the template for the incident. Note: action will try to find the ID of the template. For better precision provide the template ID via Custom Fields.
-*   `incident_type` (List[Any], optional): Specify the incident type for the incident.
+*   `incident_type` (List[str], optional): Specify the incident type for the incident.
 *   `assigned_group` (string, optional): Specify the assigned group for the incident.
 *   `assignee` (string, optional): Specify the assignee for the incident.
 *   `resolution` (string, optional): Specify the resolution for the incident.
@@ -232,7 +232,7 @@ Create an incident in BMC Remedy ITSM.
 *   `resolution_product_category_tier_1` (string, optional): Specify the resolution product category tier 1.
 *   `resolution_product_category_tier_2` (string, optional): Specify the resolution product category tier 2.
 *   `resolution_product_category_tier_3` (string, optional): Specify the resolution product category tier 3.
-*   `reported_source` (List[Any], optional): Specify the reported source.
+*   `reported_source` (List[str], optional): Specify the reported source.
 *   `custom_fields` (string, optional): Specify a JSON object containing additional fields and values. Note: this parameter will overwrite other provided parameters.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -251,7 +251,7 @@ Wait for incident fields update in BMC Remedy ITSM.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): Specify the ID of the incident that needs to be updated.
 *   `fail_if_timeout` (bool, required): If enabled, action will be failed, if not all of the fields were updated within the timeout period.
-*   `status` (List[Any], optional): Specify the expected status for the incident.
+*   `status` (List[str], optional): Specify the expected status for the incident.
 *   `fields_to_check` (string, optional): Specify a JSON object containing the fields and their expected values (e.g., `{"Status": "Closed"}`). Note: this parameter has priority over the "Status" field.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

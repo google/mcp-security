@@ -13,6 +13,7 @@
 # limitations under the License.
 """Security Operations MCP tools for security alerts."""
 
+import json
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -144,7 +145,7 @@ async def get_security_alerts(
 
             result += '\n'
 
-        return result
+        return json.dumps(result)
     except Exception as e:
         return f'Error retrieving security alerts: {str(e)}'
 
@@ -172,16 +173,14 @@ async def get_security_alert_by_id(
     - View a specific Alert
     - Monitor for specific high-severity alerts or rule triggers.
     - Check for SIEM alerts that might not have corresponding cases yet in other systems.
-    - May need to get this so you know which Alert to update 
+    - May need to get this so you know which Alert to update
 
     Args:
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours to look back for alerts. Defaults to 24.
-        max_alerts (int): Maximum number of alerts to return. Defaults to 10.
-        status_filter (str): Query string to filter alerts by status (e.g., 'feedback_summary.status != "CLOSED"').
-                             Defaults to excluding closed alerts.
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        alert_id (Optional[str]): The unique identifier of the alert to retrieve.
+        include_detections (bool): Whether to include detection details in the response. Defaults to True.
 
     Returns:
         str: A formatted string summarizing the retrieved security alerts, including rule name,
@@ -203,7 +202,7 @@ async def get_security_alert_by_id(
     except Exception as e:
         return f'Error retrieving security alert for {alert_id}: {str(e)}'
 
-    return response
+    return json.dumps(response)
 
 @server.tool()
 async def do_update_security_alert(
@@ -287,4 +286,4 @@ Next Steps (using MCP-enabled tools):
     except Exception as e:
         return f'Error retrieving security alert for {alert_id}: {str(e)}'
 
-    return response
+    return json.dumps(response)

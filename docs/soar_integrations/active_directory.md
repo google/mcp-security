@@ -13,7 +13,7 @@ Get the members list of the provided group name in Active Directory
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `group_name` (str, required): Specify whether the name of the group of which you would like to list down the group members.
-*   `members_type` (List[Any], required): Specify the member type of the group.
+*   `members_type` (List[str], required): Specify the member type of the group.
 *   `perform_nested_search` (bool, required): Specify whether the action should fetch additional details regarding groups found in the main group.
 *   `limit` (str, required): Specify the maximum number of listings to fetch from Active Directory
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.

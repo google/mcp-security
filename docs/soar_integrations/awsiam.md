@@ -73,7 +73,7 @@ Attach the specified managed policy to an identity (user, group, role).
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `identity_type` (List[Any], required): IAM Identity type.
+*   `identity_type` (List[str], required): IAM Identity type.
 *   `identity_name` (str, required): The name (friendly name, not ARN) of the identity to attach the policy to. Identity names can not include spaces and must contain only alphanumeric characters and/or the following: +=.@_-.
 *   `policy_name` (str, required): The name (friendly name, not ARN) of the policy to attach the policy to. Policy names can not include spaces and must contain only alphanumeric characters and/or the following: +=.@_-.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.

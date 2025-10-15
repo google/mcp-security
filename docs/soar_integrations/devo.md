@@ -42,7 +42,7 @@ Execute an advanced query based on the provided parameters using Devo's LINQ que
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `query` (string, required): Specify a query to execute against Devo instance. Example format: 'from siem.logtrust.alert.info'.
-*   `time_frame` (List[Any], optional): Specify a time frame for the results (e.g., Last Hour, Last Day, Custom). If 'Custom' is selected, `start_time` is required.
+*   `time_frame` (List[str], optional): Specify a time frame for the results (e.g., Last Hour, Last Day, Custom). If 'Custom' is selected, `start_time` is required.
 *   `start_time` (string, optional): Specify the start time (ISO 8601 format, e.g., `2021-08-05T05:18:42Z`). Required if `time_frame` is "Custom".
 *   `end_time` (string, optional): Specify the end time (ISO 8601 format). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_rows_to_return` (string, optional): Specify max number of rows the action should return.
@@ -64,7 +64,7 @@ Execute a simple query based on the provided parameters. Note that action is not
 *   `table_name` (string, required): Specify what table should be queried (e.g., `siem.logtrust.alert.info`).
 *   `fields_to_return` (string, optional): Specify what fields to return (comma-separated). If empty, returns all fields.
 *   `where_filter` (string, optional): Specify the WHERE filter for the query.
-*   `time_frame` (List[Any], optional): Specify a time frame for the results. If 'Custom' is selected, `start_time` is required.
+*   `time_frame` (List[str], optional): Specify a time frame for the results. If 'Custom' is selected, `start_time` is required.
 *   `start_time` (string, optional): Specify the start time (ISO 8601 format). Required if `time_frame` is "Custom".
 *   `end_time` (string, optional): Specify the end time (ISO 8601 format). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_rows_to_return` (string, optional): Specify max number of rows the action should return.

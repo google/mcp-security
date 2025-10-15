@@ -84,7 +84,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 
 @server.tool()
 async def get_entities_related_to_a_collection(
-    id: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
+    id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
 ) -> typing.List[typing.Dict[str, typing.Any]]:
   """Retrieve entities related to the the given collection ID.
 
@@ -107,11 +107,15 @@ async def get_entities_related_to_a_collection(
     | suspected_threat_actors | List of related suspected threat actors        | collection   |
     | hunting_rulesets     | Google Threat Intelligence Yara rules that identify the given collection | hunting_ruleset |
 
+    Note on descriptors_only: When True, returns basic descriptors. When False, returns
+    detailed attributes.
+    IMPORTANT: `descriptors_only` must be `False` for the 'attack_techniques' relationship.
+    
     Args:
       id (required): Collection identifier.
       relationship_name (required): Relationship name.
-      descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
-      limit: Limit the number of collections to retrieve. 10 by default.
+      limit (optional): Limit the number of collections to retrieve. 10 by default.
+      descriptors_only (optional)): Bool. Default True. Must be False when the target object type is 'attack_techniques'.
     Returns:
       List of objects related to the collection.
   """
@@ -228,8 +232,7 @@ async def search_threats(
         },
         limit=limit,
     )
-  res = utils.sanitize_response([o.to_dict() for o in res])
-  return res
+  return utils.sanitize_response([o.to_dict() for o in res])
 
 
 @server.tool()

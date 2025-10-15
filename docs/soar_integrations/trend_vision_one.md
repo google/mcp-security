@@ -14,7 +14,7 @@ Ensure the Trend Vision One integration is configured in the SOAR platform with 
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `message_id` (str, required): Specify the ID of the message to act upon.
-    - `action` (List[Any], optional): Specify the action for the email (refer to Trend Vision One documentation for valid actions). Defaults to None.
+    - `action` (List[str], optional): Specify the action for the email (refer to Trend Vision One documentation for valid actions). Defaults to None.
     - `mailbox` (str, optional): Specify the mailbox related to the message. Defaults to None.
     - `description` (str, optional): Specify a description for the performed action. Defaults to None.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -68,7 +68,7 @@ Ensure the Trend Vision One integration is configured in the SOAR platform with 
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `alert_id` (str, required): Specify the ID of the workbench alert to update.
-    - `status` (List[Any], required): Specify the new status for the alert (refer to Trend Vision One documentation for valid statuses).
+    - `status` (List[str], required): Specify the new status for the alert (refer to Trend Vision One documentation for valid statuses).
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.
 - **Returns:** (dict) A dictionary containing the result of the update operation.

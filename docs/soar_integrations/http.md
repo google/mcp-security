@@ -88,7 +88,7 @@ This integration provides basic tools for making HTTP GET and POST requests. For
 *   `password` (string, optional): Password for basic authentication. Defaults to None.
 *   `ssl_verification` (boolean, optional): Whether to verify the SSL certificate of the destination server. Defaults to None.
 *   `headers_json` (Union[str, dict], optional): JSON object of HTTP headers to be sent with the request. Defaults to None.
-*   `content_type` (List[Any], optional): Content Type. If set to application/json the input data must be JSON string. Defaults to None.
+*   `content_type` (List[str], optional): Content Type. If set to application/json the input data must be JSON string. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

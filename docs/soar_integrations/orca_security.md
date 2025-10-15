@@ -20,7 +20,7 @@ Retrieve information about vulnerabilities from Orca Security based on CVE IDs.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `cve_i_ds` (string, required): Specify a comma-separated list of CVEs that need to be enriched.
 *   `fields_to_return` (string, optional): Specify a comma-separated list of fields to return (uses flattened JSON keys, e.g., `object_id`).
-*   `output` (List[Any], optional): Specify output type ("JSON" or "CSV"). CSV creates a file in the execution folder.
+*   `output` (List[str], optional): Specify output type ("JSON" or "CSV"). CSV creates a file in the execution folder.
 *   `create_insight` (bool, optional): If enabled, creates an insight for every enriched vulnerability.
 *   `max_assets_to_return` (string, optional): Specify how many assets related to the CVE to return. Default: 50. Maximum: 10000.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports CVE entities.
@@ -40,9 +40,9 @@ Update alert status, snooze state, or initiate verification in Orca Security.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert needs to be updated.
 *   `verify_alert` (bool, optional): If enabled, initiates the verification process for the alert.
-*   `snooze_state` (List[Any], optional): Specify the snooze state for the alert.
+*   `snooze_state` (List[str], optional): Specify the snooze state for the alert.
 *   `snooze_days` (string, optional): Specify how many days alert needs to be snoozed (mandatory if Snooze State is "Snooze"). Default: 1 day.
-*   `status` (List[Any], optional): Specify what status to set for the alert.
+*   `status` (List[str], optional): Specify what status to set for the alert.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -125,7 +125,7 @@ Retrieve information about assets in Orca Security.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `asset_i_ds` (string, required): Specify a comma-separated list of asset ids for which you want to return details.
-*   `lowest_severity_for_vulnerabilities` (List[Any], required): Lowest severity that needs to be used to fetch vulnerabilities.
+*   `lowest_severity_for_vulnerabilities` (List[str], required): Lowest severity that needs to be used to fetch vulnerabilities.
 *   `return_vulnerabilities_information` (bool, optional): If enabled, action will return vulnerabilities related to the asset.
 *   `max_vulnerabilities_to_fetch` (string, optional): Specify how many vulnerabilities to return per asset. Default: 50. Maximum: 100.
 *   `create_insight` (bool, optional): If enabled, action will create an insight for every enriched asset.

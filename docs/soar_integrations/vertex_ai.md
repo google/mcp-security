@@ -17,7 +17,7 @@ Ensure the Vertex AI integration is configured in the SOAR platform, likely requ
     - `model_id` (str, optional): The ID of the model to use (e.g., "gemini-1.5-flash-002"). Defaults to None (likely uses a default configured model).
     - `temperature` (str, optional): Float value (0.0-1.0) controlling randomness. Higher values increase creativity. Defaults to None (uses model default).
     - `candidate_count` (str, optional): Number of response variations to return. Defaults to None (likely 1).
-    - `response_mime_type` (List[Any], optional): Output MIME type (e.g., ["application/json"]). Available for gemini-1.5 models. Defaults to None.
+    - `response_mime_type` (List[str], optional): Output MIME type (e.g., ["application/json"]). Available for gemini-1.5 models. Defaults to None.
     - `response_schema` (str, optional): OpenAPI schema for the response structure. Requires `response_mime_type`. Available for gemini-1.5 models. Defaults to None.
     - `max_input_tokens` (str, optional): Maximum input tokens allowed. Fails if exceeded. Defaults to None (no limit).
     - `max_output_tokens` (str, optional): Maximum output tokens to generate per response. Defaults to None (uses model default).

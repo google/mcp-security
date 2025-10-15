@@ -88,7 +88,7 @@ The following actions are available through the SCC Enterprise integration:
 *   **Parameters:**
     *   `case_id` (str, required): The ID of the case.
     *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    *   `output` (Optional[List[Any]], optional, default: None):
+    *   `output` (Optional[List[str]], optional, default: None):
     *   `target_entities` (List[TargetEntity], optional, default: []): Optional list of specific target entities (Identifier, EntityType) to run the action on.
     *   `scope` (str, optional, default: "All entities"): Defines the scope for the action.
 

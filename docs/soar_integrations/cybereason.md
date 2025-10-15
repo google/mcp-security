@@ -26,7 +26,7 @@ List information about items with reputation (blacklist/whitelist) in Cybereason
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains).
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains).
 *   `filter_value` (string, optional): Specify the value to filter by (e.g., a specific hash, IP, or domain).
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -125,7 +125,7 @@ Set a reputation (blacklist/whitelist) for entity in Cybereason. Supported entit
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `reputation_list_type` (List[Any], required): Specify the reputation (`blacklist` or `whitelist`).
+*   `reputation_list_type` (List[str], required): Specify the reputation (`blacklist` or `whitelist`).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports FileHash (MD5, SHA1), IP Address, URL entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -279,7 +279,7 @@ Execute investigation search based on parameters in Cybereason. Note: Does not s
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `fields_to_return` (string, required): Comma-separated list of API field names to return.
-*   `request_type` (List[Any], optional): Specify what should be queried (e.g., `machines`, `users`).
+*   `request_type` (List[str], optional): Specify what should be queried (e.g., `machines`, `users`).
 *   `query_filters` (string, optional): Specify the query filter(s). Follows `"{API field} {Operator} {Value}"` pattern. Use new lines for multiple filters.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -381,7 +381,7 @@ Update status for the Malop in Cybereason. Note: detection malops support only "
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `malop_id` (string, required): Specify the ID of the malop that needs to be updated.
-*   `status` (List[Any], required): Specify the new status for the malop (e.g., `OPEN`, `CLOSED`, `REMEDIATED`, `NOT_RELEVANT`).
+*   `status` (List[str], required): Specify the new status for the malop (e.g., `OPEN`, `CLOSED`, `REMEDIATED`, `NOT_RELEVANT`).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

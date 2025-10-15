@@ -77,9 +77,9 @@ This integration provides tools to interact with the Google Cloud Recommender se
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `recommendation_location` (string, required): Specify the GCP location to fetch recommendations for.
 *   `recommendation_filter` (string, optional): Specify the filter to fetch the recommendations for. Parameter expects a string of a format "<projects or organizations>/<project or organization name or id>" or "//cloudresourcemanager.googleapis.com/<projects or organizations>/<project or organization name or id>" for which to fetch the recommendations for. If nothing is provided - action will take the project id from the service account configured. Defaults to None.
-*   `recommendation_state` (List[Any], optional): Specify the recommendation state to return. Defaults to None.
+*   `recommendation_state` (List[str], optional): Specify the recommendation state to return. Defaults to None.
 *   `recommendation_priority` (string, optional): Specify the recommender priority to return, multiple values can be specified as a comma separated string. Defaults to None.
-*   `recommender_subtype` (List[Any], optional): Specify the recommender subtype to return. Defaults to None.
+*   `recommender_subtype` (List[str], optional): Specify the recommender subtype to return. Defaults to None.
 *   `max_records_to_return` (string, optional): Specify how many records to return. If nothing is provided, action will return 50 records. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -101,8 +101,8 @@ This integration provides tools to interact with the Google Cloud Recommender se
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `recommendation_name` (string, required): Specify the recommendation name to update. Action accepts multiple values as a comma separated string. Example of expected input: projects/projectname/locations/global/recommenders/google.iam.policy.Recommender/recommendations/0f262740-bf4a-4c3d-9573-0da3345cf3f7.
-*   `recommendation_state` (List[Any], optional): Specify the state for the recommendation to change to. Defaults to None.
-*   `recommendation_result` (List[Any], optional): Specify the result for the recommendation to change to. Defaults to None.
+*   `recommendation_state` (List[str], optional): Specify the state for the recommendation to change to. Defaults to None.
+*   `recommendation_result` (List[str], optional): Specify the result for the recommendation to change to. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

@@ -27,9 +27,9 @@ Search for IOCs in the VirusTotal's dataset, using the same query syntax that yo
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `query` (str, required): Specify the query according to the VirusTotal query search syntax.
-*   `order_by` (List[Any], required): Specify the order by the selected field, in which results are returned. Default: Use Default Order. Note: Entity types might have different ordering fields. Refer to the VT Intelligence corpus https://docs.virustotal.com/reference/intelligence-search for more information.
+*   `order_by` (List[str], required): Specify the order by the selected field, in which results are returned. Default: Use Default Order. Note: Entity types might have different ordering fields. Refer to the VT Intelligence corpus https://docs.virustotal.com/reference/intelligence-search for more information.
 *   `create_entities` (bool, optional, default=None): If enabled, action will create entities for the returned IOCs. Note: this action does not enrich entities.
-*   `sort_order` (List[Any], optional, default=None): Specify the direction in which the results should be returned. If “Use Default Order” is chosen for “Order By” field, this parameter will be ignored.
+*   `sort_order` (List[str], optional, default=None): Specify the direction in which the results should be returned. If “Use Default Order” is chosen for “Order By” field, this parameter will be ignored.
 *   `max_io_cs_to_return` (str, optional, default=None): Specify how many IOCs to return. Max IOCs to return is 300. Default: 10.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -54,10 +54,10 @@ Enrich Hash using information from VirusTotal. Supported entities: Filehash. Not
 *   `create_insight` (bool, optional, default=None): If enabled, action will create an insight containing information about the entities.
 *   `only_suspicious_entity_insight` (bool, optional, default=None): If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.
 *   `max_comments_to_return` (str, optional, default=None): Specify how many comments to return. Default: 10.
-*   `widget_theme` (List[Any], optional, default=None): Specify the theme for the widget.
+*   `widget_theme` (List[str], optional, default=None): Specify the theme for the widget.
 *   `fetch_widget` (bool, optional, default=None): If enabled, action will fetch augmented widget related to the entity.
 *   `fetch_mitre_details` (bool, optional, default=None): If enabled, action will return information about related MITRE techniques and tactics.
-*   `lowest_mitre_technique_severity` (List[Any], optional, default=None): Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".
+*   `lowest_mitre_technique_severity` (List[str], optional, default=None): Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -69,7 +69,7 @@ Get related IPs to the provided entities from VirusTotal. Note: this action requ
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `results` (List[Any], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
+*   `results` (List[str], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
 *   `max_i_ps_to_return` (str, optional, default=None): Specify how many URLs to return. Depending on the parameter \"Results\", this parameter will behave differently. For \"Combined\" the limit will define how many results to return from ALL entities. For \"Per Entity\" this parameter dictates how many results to return per entity. Default: 40.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -82,7 +82,7 @@ Get related domains to the provided entities from VirusTotal. Note: this action 
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `results` (List[Any], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
+*   `results` (List[str], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
 *   `max_domains_to_return` (str, optional, default=None): Specify how many URLs to return. Depending on the parameter \"Results\", this parameter will behave differently. For \"Combined\" the limit will define how many results to return from ALL entities. For \"Per Entity\" this parameter dictates how many results to return per entity. Default: 40.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -102,7 +102,7 @@ Enrich IP using information from VirusTotal. Supported entities: IP address. Ret
 *   `create_insight` (bool, optional, default=None): If enabled, action will create an insight containing information about the entities.
 *   `only_suspicious_entity_insight` (bool, optional, default=None): If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.
 *   `max_comments_to_return` (str, optional, default=None): Specify how many comments to return. Default: 10
-*   `widget_theme` (List[Any], optional, default=None): Specify the theme for the widget.
+*   `widget_theme` (List[str], optional, default=None): Specify the theme for the widget.
 *   `fetch_widget` (bool, optional, default=None): If enabled, action will fetch augmented widget related to the entity.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -133,7 +133,7 @@ Get detailed information about the domain using information from VirusTotal. Sup
 *   `create_insight` (bool, optional, default=None): If enabled, action will create an insight containing information about the entities.
 *   `only_suspicious_entity_insight` (bool, optional, default=None): If enabled, action will only create an insight for suspicious entities. Note: parameter \"Create Insight\" should be enabled.
 *   `max_comments_to_return` (str, optional, default=None): Specify how many comments to return. Default: 10.
-*   `widget_theme` (List[Any], optional, default=None): Specify the theme for the widget.
+*   `widget_theme` (List[str], optional, default=None): Specify the theme for the widget.
 *   `fetch_widget` (bool, optional, default=None): If enabled, action will fetch augmented widget related to the entity.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -147,7 +147,7 @@ Search graphs based on custom filters in VirusTotal. Returns: dict: A dictionary
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `query` (str, required): Specify the query filter for the graph. Please refer to the documentation portal for more details.
-*   `sort_field` (List[Any], optional, default=None): Specify what should be the sort field.
+*   `sort_field` (List[str], optional, default=None): Specify what should be the sort field.
 *   `max_graphs_to_return` (str, optional, default=None): Specify how many graphs to return.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -160,7 +160,7 @@ Search graphs based on the entities in VirusTotal. Supported entities: IP, URL, 
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `sort_field` (List[Any], optional, default=None): Specify what should be the sort field.
+*   `sort_field` (List[str], optional, default=None): Specify what should be the sort field.
 *   `max_graphs_to_return` (str, optional, default=None): Specify how many graphs to return.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -174,8 +174,8 @@ Enrich IOCs using information from VirusTotal. Returns: dict: A dictionary conta
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `io_cs` (str, required): Specify a comma-separated list of IOCs for which you want to ingest data.
-*   `ioc_type` (List[Any], optional, default=None): Specify the type of the IOC.
-*   `widget_theme` (List[Any], optional, default=None): Specify the theme for the widget.
+*   `ioc_type` (List[str], optional, default=None): Specify the type of the IOC.
+*   `widget_theme` (List[str], optional, default=None): Specify the theme for the widget.
 *   `fetch_widget` (bool, optional, default=None): If enabled, action will fetch augmented widget related to the entity.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -201,7 +201,7 @@ Get related hashes to the provided entities from VirusTotal. Note: this action r
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `results` (List[Any], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
+*   `results` (List[str], optional, default=None): Specify how the JSON result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
 *   `max_hashes_to_return` (str, optional, default=None): Specify how many URLs to return. Depending on the parameter \"Results\", this parameter will behave differently. For \"Combined\" the limit will define how many results to return from ALL entities. For \"Per Entity\" this parameter dictates how many results to return per entity. Default: 40.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -214,7 +214,7 @@ Add a vote to entities in VirusTotal. Supported entities: File Hash, URL, Hostna
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `vote` (List[Any], required): Specify the vote that should be added to entities.
+*   `vote` (List[str], required): Specify the vote that should be added to entities.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -248,7 +248,7 @@ Enrich URL using information from VirusTotal. Supported entities: URL. Returns: 
 *   `create_insight` (bool, optional, default=None): If enabled, action will create an insight containing information about the entities.
 *   `max_comments_to_return` (str, optional, default=None): Specify how many comments to return. Default: 10.
 *   `resubmit_after_days` (str, optional, default=None): Specify how many days since the last submission should pass for the entity to be submitted again. Note: parameter \"Resubmit URL\" needs to be enabled. Default: 30.
-*   `widget_theme` (List[Any], optional, default=None): Specify the theme for the widget.
+*   `widget_theme` (List[str], optional, default=None): Specify the theme for the widget.
 *   `fetch_widget` (bool, optional, default=None): If enabled, action will fetch augmented widget related to the entity.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -272,7 +272,7 @@ Submit a file and return results from VirusTotal. Returns: dict: A dictionary co
 *   `linux_password` (str, optional, default=None): Specify the password of the remote linux server, where the file is located.
 *   `private_submission` (bool, optional, default=None): If enabled, action will submit the file privately. Note: this functionality requires premium VT access.
 *   `fetch_mitre_details` (bool, optional, default=None): If enabled, action will return information about related MITRE techniques and tactics.
-*   `lowest_mitre_technique_severity` (List[Any], optional, default=None): Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".
+*   `lowest_mitre_technique_severity` (List[str], optional, default=None): Specify the lowest signature severity related to MITRE technique for technique to be returned. \"Unknown\" severity is treated as \"Info\".
 *   `retrieve_ai_summary` (bool, optional, default=None): Experimental. If enabled, action will retrieve an AI Summary for the submitted file. AI Summary is only available for private submissions.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -285,7 +285,7 @@ Get related urls to the provided entities from VirusTotal. Note: this action req
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `results` (List[Any], optional, default=None): Specify how the JSON  result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
+*   `results` (List[str], optional, default=None): Specify how the JSON  result should look like. If \"Combined\" is selected then action will return all of the unique results that were found among the provided entities. If \"Per Entity\" is selected, then action will return all of the unique items per entity.
 *   `max_ur_ls_to_return` (str, optional, default=None): Specify how many URLs to return. Depending on the parameter \"Results\", this parameter will behave differently. For \"Combined\" the limit will define how many results to return from ALL entities. For \"Per Entity\" this parameter dictates how many results to return per entity. Default: 40.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

@@ -36,7 +36,7 @@ Enrich entities using information from Outpost24. Supported entities: IP Address
 *   `finding_risk_level_filter` (string, optional): Comma-separated list of risk levels to filter findings (Initial, Recommendation, Low, Medium, High, Critical). If empty, fetches all levels.
 *   `max_findings_to_return` (string, optional): Max number of findings to process per entity. Default: 100.
 *   `return_finding_information` (bool, optional): If enabled, retrieves information about findings found on the endpoint.
-*   `finding_type` (List[Any], optional): Specify what kind of findings should be returned.
+*   `finding_type` (List[str], optional): Specify what kind of findings should be returned.
 *   `create_insight` (bool, optional): If enabled, creates an insight containing retrieved information about the entity.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports IP Address and Hostname entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
