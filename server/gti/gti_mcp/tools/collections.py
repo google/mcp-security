@@ -637,3 +637,47 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
     sanitized_data = utils.sanitize_response(data["data"])
     markdown_output = utils.parse_collection_commonalities(sanitized_data)
   return markdown_output
+
+\
+@server.tool()
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 5) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+  """Retrieve top N community and curated rules for a specific collection.
+
+  Args:
+    collection_id (required): The ID of the collection.
+    top_n (optional): The number of top rules to return from each category. Defaults to 5.
+  Returns:
+    A list of dictionaries, where each dictionary contains a rule, its metadata, and rule_type.
+  """
+  async with vt_client(ctx) as client:
+    try:
+      data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
+      data = await data.json_async()
+    except Exception as e:
+      return {"error": f"Error fetching collection {collection_id}"}
+
+    all_top_rules = []
+    attributes = data.get("data", {}).get("attributes", {})
+    if not attributes:
+      return []
+
+    files_aggregations = attributes.get("aggregations", {}).get("files", {})
+    if not files_aggregations:
+      return []
+
+    rule_keys_map = {
+        "crowdsourced_ids_results": "crowdsourced_ids",
+        "crowdsourced_sigma_results": "crowdsourced_sigma",
+        "crowdsourced_yara_results": "crowdsourced_yara",
+    }
+
+    for key, rule_type in rule_keys_map.items():
+      rules = files_aggregations.get(key, [])
+      if rules:
+        sorted_rules = sorted(rules, key=lambda x: x.get("count", 0), reverse=True)
+        top_rules = sorted_rules[:top_n]
+        for rule in top_rules:
+          rule["rule_type"] = rule_type
+        all_top_rules.extend(top_rules)
+
+    return utils.sanitize_response(all_top_rules)

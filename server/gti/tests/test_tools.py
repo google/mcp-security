@@ -14,9 +14,12 @@
 import json
 import mcp
 import pytest
+import asyncio
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from gti_mcp.server import server
 from gti_mcp import tools
+from gti_mcp.tools import collections
 
 from mcp.shared.memory import (
     create_connected_server_and_client_session as client_session,
@@ -277,7 +280,7 @@ async def test_get_reports(
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
             },
             {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
-        ), 
+        ),
         (
             "get_entities_related_to_a_domain",
             {"domain": "theevil.com", "relationship_name": "associations", "descriptors_only": "True"},
@@ -901,7 +904,7 @@ async def test_create_collection(
         (
             {
                 "id": "my_collection_id",
-                "attributes": {"name": "Updated Collection Name", "description": "Updated description."},
+                "attributes": {"name": "Updated Collection Name", "description": "Updated description."}, 
             },
             "/api/v3/collections/my_collection_id",
             {
@@ -1078,9 +1081,6 @@ async def test_search_digital_threat_monitoring(
         assert isinstance(result.content[0], mcp.types.TextContent)
         assert json.loads(result.content[0].text) == expected
 
-import asyncio
-from unittest.mock import patch, MagicMock, AsyncMock
-
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "mock_response_text, mock_headers, side_effect, expected_error",
@@ -1194,3 +1194,103 @@ async def test_get_entities_related_empty_result(
         assert isinstance(result, mcp.types.CallToolResult)
         assert result.isError == False
         assert result.structuredContent == {"result": expected}
+
+@pytest.mark.asyncio
+async def test_get_collection_rules():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+    mock_response = MagicMock()
+
+    mock_response_data = {
+        "data": {
+            "attributes": {
+                "aggregations": {
+                    "files": {
+                        "crowdsourced_ids_results": [
+                            {"rule_id": "ids1", "count": 10},
+                            {"rule_id": "ids2", "count": 5},
+                        ],
+                        "crowdsourced_sigma_results": [
+                            {"rule_id": "sigma1", "count": 8},
+                        ],
+                        "crowdsourced_yara_results": [
+                            {"rule_id": "yara1", "count": 12},
+                            {"rule_id": "yara2", "count": 3},
+                            {"rule_id": "yara3", "count": 7},
+                        ],
+                    }
+                }
+            }
+        }
+    }
+
+    async def json_async():
+        return mock_response_data
+
+    mock_response.json_async = json_async
+    mock_client_instance.get_async.return_value = mock_response
+
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+    
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+
+    expected_result = [
+        {"rule_id": "ids1", "count": 10, "rule_type": "crowdsourced_ids"},
+        {"rule_id": "ids2", "count": 5, "rule_type": "crowdsourced_ids"},
+        {"rule_id": "sigma1", "count": 8, "rule_type": "crowdsourced_sigma"},
+        {"rule_id": "yara1", "count": 12, "rule_type": "crowdsourced_yara"},
+        {"rule_id": "yara3", "count": 7, "rule_type": "crowdsourced_yara"},
+    ]
+
+    # Sort both lists to ensure order doesn't affect comparison
+    result.sort(key=lambda x: (x['rule_type'], -x['count']))
+    expected_result.sort(key=lambda x: (x['rule_type'], -x['count']))
+
+    assert result == expected_result
+
+@pytest.mark.asyncio
+async def test_get_collection_rules_empty():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+    mock_response = MagicMock()
+
+    mock_response_data = {
+        "data": {
+            "attributes": {
+                "aggregations": {
+                    "files": {}
+                }
+            }
+        }
+    }
+
+    async def json_async():
+        return mock_response_data
+
+    mock_response.json_async = json_async
+    mock_client_instance.get_async.return_value = mock_response
+
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+
+    assert result == []
+
+@pytest.mark.asyncio
+async def test_get_collection_rules_error():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+
+    mock_client_instance.get_async.side_effect = Exception("API Error")
+
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+
+    assert result == {"error": "Error fetching collection test_id"}
