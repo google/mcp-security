@@ -640,7 +640,7 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
 
 \
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 5) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_crowdsourced_rules(collection_id: str, ctx: Context, top_n: int = 5) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community and curated rules for a specific collection.
 
   Args:

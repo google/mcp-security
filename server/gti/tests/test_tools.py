@@ -1234,7 +1234,7 @@ async def test_get_collection_rules():
     mock_vt_client.__aenter__.return_value = mock_client_instance
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
 
     expected_result = [
         {"rule_id": "ids1", "count": 10, "rule_type": "crowdsourced_ids"},
@@ -1276,7 +1276,7 @@ async def test_get_collection_rules_empty():
     mock_vt_client.__aenter__.return_value = mock_client_instance
 
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
 
     assert result == []
 
@@ -1291,6 +1291,6 @@ async def test_get_collection_rules_error():
     mock_vt_client.__aenter__.return_value = mock_client_instance
 
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
 
     assert result == {"error": "Error fetching collection test_id"}
