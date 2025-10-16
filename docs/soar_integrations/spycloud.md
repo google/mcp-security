@@ -14,7 +14,7 @@ Return information about breaches related to entities. Supported entity types: I
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `time_frame` (List[Any], required): Specify a time frame for the search. If "Custom" is selected, you also need to provide "Start Time".
+*   `time_frame` (List[str], required): Specify a time frame for the search. If "Custom" is selected, you also need to provide "Start Time".
 *   `catalog_filter` (Optional[str], optional, default=None): Specify the name of the category in which you want to search for breaches.
 *   `start_time` (Optional[str], optional, default=None): Specify the start time for the search. This parameter is mandatory, if "Custom" is selected for the "Time Frame" parameter. Format: ISO 8601. Note: action will only take the datetime for action execution.
 *   `end_time` (Optional[str], optional, default=None): Specify the end time for the search. Format: ISO 8601. If nothing is provided and "Custom" is selected for the "Time Frame" parameter then this parameter will use current time. Note: action will only take the datetime for action execution.
@@ -41,8 +41,8 @@ List available catalogs in SpyCloud.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `time_frame` (List[Any], required): Specify a time frame for the search. If "Custom" is selected, you also need to provide "Start Time".
-*   `filter_logic` (Optional[List[Any]], optional, default=None): Specify what filter logic should be applied.
+*   `time_frame` (List[str], required): Specify a time frame for the search. If "Custom" is selected, you also need to provide "Start Time".
+*   `filter_logic` (Optional[List[str]], optional, default=None): Specify what filter logic should be applied.
 *   `filter_value` (Optional[str], optional, default=None): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. "Equal" works with "title" parameter, while "Contains" works with all values in response. If nothing is provided in this parameter, the filter will not be applied.
 *   `start_time` (Optional[str], optional, default=None): Specify the start time for the search. This parameter is mandatory, if "Custom" is selected for the "Time Frame" parameter. Format: ISO 8601
 *   `end_time` (Optional[str], optional, default=None): Specify the end time for the search. Format: ISO 8601. If nothing is provided and "Custom" is selected for the "Time Frame" parameter then this parameter will use current time.

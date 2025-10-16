@@ -63,7 +63,7 @@ Stop a running process and remove its file. If the process is not running, then 
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `process_identifier_type` (List[Any], required): Specify which process identifier type to use.
+*   `process_identifier_type` (List[str], required): Specify which process identifier type to use.
 *   `process_identifier` (string, required): Specify the value for the process identifier.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports IP and Host entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

@@ -118,9 +118,9 @@ Retrieves items from a specified list within FireEye Helix, with optional filter
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `list_short_name` (string, required): The short name of the list to retrieve items from.
 *   `value` (string, optional): Filters items based on their value.
-*   `type` (List[Any], optional): Filters items based on their type.
-*   `sort_by` (List[Any], optional): Specifies the field to sort the results by.
-*   `sort_order` (List[Any], optional): Specifies the sort order (ascending/descending).
+*   `type` (List[str], optional): Filters items based on their type.
+*   `sort_by` (List[str], optional): Specifies the field to sort the results by.
+*   `sort_order` (List[str], optional): Specifies the sort order (ascending/descending).
 *   `max_items_to_return` (string, optional): The maximum number of list items to return.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -176,8 +176,8 @@ Retrieves information about available lists in FireEye Helix, with optional filt
 *   `active` (boolean, optional): Filters for active lists only.
 *   `internal` (boolean, optional): Filters for internal lists only.
 *   `protected` (boolean, optional): Filters for protected lists only.
-*   `sort_by` (List[Any], optional): Specifies the field to sort the results by.
-*   `sort_order` (List[Any], optional): Specifies the sort order (ascending/descending).
+*   `sort_by` (List[str], optional): Specifies the field to sort the results by.
+*   `sort_order` (List[str], optional): Specifies the sort order (ascending/descending).
 *   `max_lists_to_return` (string, optional): The maximum number of lists to return.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -212,7 +212,7 @@ Adds SOAR entities (e.g., IPs, domains, hashes) to a specified list in FireEye H
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `list_short_name` (string, required): The short name of the list to add entities to.
-*   `risk` (List[Any], optional): Specifies the risk level to associate with the added items.
+*   `risk` (List[str], optional): Specifies the risk level to associate with the added items.
 *   `note` (string, optional): An optional note to add to the list items.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) whose identifiers will be added to the list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

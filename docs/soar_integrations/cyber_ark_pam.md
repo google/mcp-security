@@ -28,7 +28,7 @@ List accounts available in the CyberArk PAM based on provided criteria. Note: Th
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `search_query` (string, optional): Specify the search query to use (e.g., username, address).
-*   `search_operator` (List[Any], optional): Specify the search operator (e.g., `contains`, `equals`).
+*   `search_operator` (List[str], optional): Specify the search operator (e.g., `contains`, `equals`).
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `records_offset` (string, optional): Specify the offset for pagination.
 *   `filter_query` (string, optional): Specify a filter query (e.g., `safeName eq MySafe`, `modificationTime ge 1678886400`).

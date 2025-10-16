@@ -17,7 +17,7 @@ Ensure the Stellar Cyber Starlight integration is configured in the SOAR platfor
     - `query` (str, required): Specify the query filter for the search.
     - `max_results_to_return` (str, optional): Specify the maximum number of results to return. Defaults to None.
     - `sort_field` (str, optional): Specify the field to sort results by. Defaults to None.
-    - `sort_order` (List[Any], optional): Specify the sort order (e.g., ["asc"], ["desc"]). Defaults to None.
+    - `sort_order` (List[str], optional): Specify the sort order (e.g., ["asc"], ["desc"]). Defaults to None.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.
 - **Returns:** (dict) A dictionary containing the search results.
@@ -38,7 +38,7 @@ Ensure the Stellar Cyber Starlight integration is configured in the SOAR platfor
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `index` (str, required): Specify the index of the security event.
     - `id` (str, required): Specify the ID of the security event to update.
-    - `status` (List[Any], required): Specify the new status for the security event (refer to Stellar Cyber documentation for valid statuses).
+    - `status` (List[str], required): Specify the new status for the security event (refer to Stellar Cyber documentation for valid statuses).
     - `comment` (str, optional): Specify a comment to add to the security event. Defaults to None.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.

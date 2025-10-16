@@ -37,7 +37,7 @@ This integration provides tools to interact with the LogPoint SIEM platform, all
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `query` (string, required): Specify the query that needs to be executed in Logpoint.
-*   `time_frame` (List[Any], required): Specify the time frame for the query. If “Custom” is selected, you need to also provide start time and end time.
+*   `time_frame` (List[str], required): Specify the time frame for the query. If “Custom” is selected, you need to also provide start time and end time.
 *   `start_time` (Optional[str], optional): Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp. Defaults to None.
 *   `end_time` (Optional[str], optional): Specify the end time for the query.Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time. Defaults to None.
 *   `repos` (Optional[str], optional): Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos. Defaults to None.
@@ -81,7 +81,7 @@ This integration provides tools to interact with the LogPoint SIEM platform, all
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): Specify the id of the incident, which you want to update.
-*   `action` (List[Any], required): Specify the action for the incident.
+*   `action` (List[str], required): Specify the action for the incident.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -102,9 +102,9 @@ This integration provides tools to interact with the LogPoint SIEM platform, all
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `query` (string, required): Specify the query that needs to be executed. Please refer to the action documentation for details.
-*   `time_frame` (List[Any], required): Specify the time frame for the query. If “Custom” is selected, you need also provide start time, end time by default will be current time.
+*   `time_frame` (List[str], required): Specify the time frame for the query. If “Custom” is selected, you need also provide start time, end time by default will be current time.
 *   `stop_if_not_enough_entities` (bool, required): If enabled, action will not start execution, unless all of the entity types are available for the specified ".. Entity Keys". Example: if "IP Entity Key" and "File Hash Entity Keys" are specified, but in the scope there are no file hashes then if this parameter is enabled, action will not execute the query.
-*   `cross_entity_operator` (List[Any], required): Specify what should be the logical operator used between different entity types.
+*   `cross_entity_operator` (List[str], required): Specify what should be the logical operator used between different entity types.
 *   `start_time` (Optional[str], optional): Specify the start time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp. Defaults to None.
 *   `end_time` (Optional[str], optional): Specify the end time for the query. Format: YYYY-MM-DDThh:mm:ssZ or timestamp. If nothing is provided action will use current time as end time. Defaults to None.
 *   `repos` (Optional[str], optional): Specify a comma-separated list of names of the repos. If nothing is provided, action will search in all repos. Defaults to None.

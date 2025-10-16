@@ -23,6 +23,9 @@ Chronicle Security Operations suite.
 - **`search_security_rules(query, project_id=None, customer_id=None, region=None)`**
     - Searches security detection rules from Chronicle using regex.
 
+- **`get_detection_rule(rule_id, project_id=None, customer_id=None, region=None)`**
+    - Retrieves complete YARA-L detection rule code and metadata from Chronicle by Rule Id.
+
 - **`get_ioc_matches(project_id=None, customer_id=None, hours_back=24, max_matches=20, region=None)`**
     - Retrieves Indicators of Compromise (IoCs) matches from Chronicle within a specified time range.
 
@@ -82,6 +85,32 @@ Chronicle Security Operations suite.
 - **`update_reference_list(name, project_id=None, customer_id=None, region=None, entries=None, description=None)`**
     - Update the contents or description of an existing reference list.
 
+### Feed Management Tools
+
+- **`list_feeds(project_id=None, customer_id=None, region=None)`**
+    - Lists all configured feeds in Chronicle, providing details such as feed name, status, log type, and source type.
+
+- **`get_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Get detailed information about a specific feed by ID, including connection settings, log type, state, and metadata.
+
+- **`create_feed(display_name, feed_details, project_id=None, customer_id=None, region=None)`**
+    - Creates a new feed configuration for ingesting data into Chronicle. Supports various feed types including HTTP, S3, GCS, and GCP SCC.
+
+- **`update_feed(feed_id, display_name=None, feed_details=None, project_id=None, customer_id=None, region=None)`**
+    - Modifies the configuration of an existing feed. Can update the display name, connection settings, or other properties.
+
+- **`enable_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Activates a feed that is currently in the INACTIVE state, allowing it to resume data ingestion.
+
+- **`disable_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Stops data ingestion for a feed by setting its state to INACTIVE. The feed configuration remains but no new data will be processed.
+
+- **`delete_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Permanently removes a feed configuration from Chronicle. This action cannot be undone.
+
+- **`generate_feed_secret(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Creates a new authentication secret for feeds that support authentication (e.g., HTTP feeds with basic auth). This replaces any existing secret.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -97,6 +126,7 @@ The MCP server provides the following capabilities:
 9.  **Parser Management**: Create, manage, and test log parsers
 10. **Data Table Management**: Create and manage structured data tables for detection rules
 11. **Reference List Management**: Create and manage reference lists for detection rules
+12. **Feed Management**: Create, update, enable, disable, and delete data feeds
 
 ### Example
 
@@ -118,6 +148,7 @@ These tools help you get data into Chronicle:
 - **UDM Event Ingestion**: Use `ingest_udm_events` for pre-formatted security events
 - **Parser Development**: Use the parser management tools to create custom parsers for unique log formats
 - **Testing**: Use `run_parser_against_sample_logs` to validate parser logic before deployment
+- **Feed Management**: Use feed management tools (`list_feeds`, `create_feed`, etc.) to configure and manage data collection sources
 
 ### Context Data Management Tools
 These tools help you maintain reference data for enhanced detections:

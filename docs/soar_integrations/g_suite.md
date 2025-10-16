@@ -68,7 +68,7 @@ This integration provides tools to interact with Google Workspace (formerly G Su
 *   `gender` (string, optional): The gender of the user. Valid values: female, male, other, unknown. Defaults to None.
 *   `department` (string, optional): The name of the department of the user. Defaults to None.
 *   `organization` (string, optional): The name of the organization of the user. Defaults to None.
-*   `user_status` (List[Any], optional): Specify if user status should be updated to blocked or unblocked. By default action is no changing the user status. Defaults to None.
+*   `user_status` (List[str], optional): Specify if user status should be updated to blocked or unblocked. By default action is no changing the user status. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

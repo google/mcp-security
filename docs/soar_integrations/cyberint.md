@@ -25,8 +25,8 @@ Update alert status in Cyberint.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert that needs to have the status updated.
-*   `status` (List[Any], optional): Specify the status for the event (e.g., `Open`, `Closed`, `In Progress`). Note: if "Closed" is selected, `closure_reason` is required.
-*   `closure_reason` (List[Any], optional): Specify the closure reason if the status is set to "Closed".
+*   `status` (List[str], optional): Specify the status for the event (e.g., `Open`, `Closed`, `In Progress`). Note: if "Closed" is selected, `closure_reason` is required.
+*   `closure_reason` (List[str], optional): Specify the closure reason if the status is set to "Closed".
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

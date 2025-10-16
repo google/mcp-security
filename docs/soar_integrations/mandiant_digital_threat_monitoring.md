@@ -17,7 +17,7 @@ This integration provides tools to interact with the Mandiant Digital Threat Mon
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert that needs to be updated.
-*   `status` (Optional[List[Any]], optional): Specify the status for the alert. Defaults to None.
+*   `status` (Optional[List[str]], optional): Specify the status for the alert. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

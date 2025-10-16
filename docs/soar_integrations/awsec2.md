@@ -52,7 +52,7 @@ Removes the specified egress rules (outbound rules) from a security group for us
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `security_group_i_ds` (str, required): One or more security group IDs. Separated by comma.
-*   `ip_protocol` (Optional[List[Any]], optional, default=None): The IP protocol name. Use “all” to specify all protocols. Specifying “all” allows traffic on all ports, regardless of any port range you specify.
+*   `ip_protocol` (Optional[List[str]], optional, default=None): The IP protocol name. Use “all” to specify all protocols. Specifying “all” allows traffic on all ports, regardless of any port range you specify.
 *   `from_port` (Optional[str], optional, default=None): The start of port range for the TCP and UDP protocols, or an ICMP type number.
 *   `to_port` (Optional[str], optional, default=None): The end of port range for the TCP and UDP protocols allows traffic on all ports, regardless of any port range you specify.
 *   `ip_ranges_cidr_ip` (Optional[str], optional, default=None): The IPv4 CIDR range. To specify a single IPv4 address, use the /32 prefix length.
@@ -69,7 +69,7 @@ Adds the specified ingress rule to a security group. An inbound rule permits ins
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `security_group_i_ds` (str, required): One or more security group IDs. Separated by comma.
-*   `ip_protocol` (Optional[List[Any]], optional, default=None): The IP protocol name. Use "all" to specify all protocols. Specifying "all" allows traffic on all ports, regardless of any port range you specify.
+*   `ip_protocol` (Optional[List[str]], optional, default=None): The IP protocol name. Use "all" to specify all protocols. Specifying "all" allows traffic on all ports, regardless of any port range you specify.
 *   `from_port` (Optional[str], optional, default=None): The start of port range for the TCP and UDP protocols, or an ICMP type number.
 *   `to_port` (Optional[str], optional, default=None): The end of port range for the TCP and UDP protocols allows traffic on all ports, regardless of any port range you specify.
 *   `ip_ranges_cidr_ip` (Optional[str], optional, default=None): The IPv4 CIDR range. To specify a single IPv4 address, use the /32 prefix length.
@@ -86,7 +86,7 @@ Removes the specified ingress rules (inbound rules) from a security group. To re
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `security_group_i_ds` (str, required): One or more security group IDs. Separated by comma.
-*   `ip_protocol` (Optional[List[Any]], optional, default=None): The IP protocol name. Use "all" to specify all protocols. Specifying "all" allowes traffic on all ports, regardless of any port range you specify.
+*   `ip_protocol` (Optional[List[str]], optional, default=None): The IP protocol name. Use "all" to specify all protocols. Specifying "all" allowes traffic on all ports, regardless of any port range you specify.
 *   `from_port` (Optional[str], optional, default=None): The start of port range for the TCP and UDP protocols, or an ICMP type number.
 *   `to_port` (Optional[str], optional, default=None): The end of port range for the TCP and UDP protocols allows traffic on all ports, regardless of any port range you specify.
 *   `ip_ranges_cidr_ip` (Optional[str], optional, default=None): The IPv4 address in  CIDR format. To specify a single IPv4 address, use the /32 prefix length.

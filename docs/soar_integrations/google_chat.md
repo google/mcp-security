@@ -56,8 +56,8 @@ This integration provides tools to interact with Google Chat for sending message
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter Google Chat spaces. Defaults to None.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter Google Chat spaces. Defaults to None.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `filter_value` (string, optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `max_records_to_return` (string, optional): Specify how many records to return. If nothing is provided, action will return 50 records. Defaults to None.
 *   `include_user_memberships` (boolean, optional): If enabled, user memberships information will be added to the action Case Wall table and JSON result. Defaults to None.

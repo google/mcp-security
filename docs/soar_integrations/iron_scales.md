@@ -16,7 +16,7 @@ This integration provides tools to interact with the IronScales email security p
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `period` (List[Any], required): Specify the time period for which you would like to get incident mitigation details for.
+*   `period` (List[str], required): Specify the time period for which you would like to get incident mitigation details for.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -38,7 +38,7 @@ This integration provides tools to interact with the IronScales email security p
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incidents_i_ds` (string, required): Provide a comma separated list of incident IDs to search for.
 *   `max_pages_to_fetch` (string, required): Specify the maximum number of pages you would like to fetch.
-*   `period` (Optional[List[Any]], optional): Specify the time period for which you would like to get mitigations per mailbox for. Defaults to None.
+*   `period` (Optional[List[str]], optional): Specify the time period for which you would like to get mitigations per mailbox for. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -97,7 +97,7 @@ This integration provides tools to interact with the IronScales email security p
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `period` (List[Any], required): Specify the time period for which you would like to get mitigation impersonation details for.
+*   `period` (List[str], required): Specify the time period for which you would like to get mitigation impersonation details for.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -118,7 +118,7 @@ This integration provides tools to interact with the IronScales email security p
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incidents_i_ds` (string, required): Specify IDs of incidents to classify.
-*   `new_classification` (List[Any], required): Specify the new classification for these incidents. Note: For Phishing Attack classification enter “Attack”, for False positive: “False Positive”, for spam: “Spam”.
+*   `new_classification` (List[str], required): Specify the new classification for these incidents. Note: For Phishing Attack classification enter “Attack”, for False positive: “False Positive”, for spam: “Spam”.
 *   `classifying_user_email` (string, required): Specify which user is performing the classification by providing his mail address. Note: This email address should be recognized by IronScales.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

@@ -93,7 +93,7 @@ Action pauses the playbook execution and periodically connects to EasyVista unti
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `ticket_identifier` (string, required): EasyVista ticket identifier (e.g., `S201001_000001`).
-*   `field_to_monitor` (List[Any], optional): EasyVista ticket field to monitor for the update (e.g., `Status`, `Assignment Group`).
+*   `field_to_monitor` (List[str], optional): EasyVista ticket field to monitor for the update (e.g., `Status`, `Assignment Group`).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

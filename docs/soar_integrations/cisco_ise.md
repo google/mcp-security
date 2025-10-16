@@ -93,8 +93,8 @@ List available endpoint identity groups in Cisco ISE.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key to filter groups by (e.g., `name`, `description`).
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains).
+*   `filter_key` (List[str], optional): Specify the key to filter groups by (e.g., `name`, `description`).
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains).
 *   `filter_value` (string, optional): Specify the value to filter by.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 100. Maximum: 100.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

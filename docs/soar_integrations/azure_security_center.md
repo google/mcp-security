@@ -79,7 +79,7 @@ Update status of the alert in Microsoft Azure Security Center.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify an ID of the alert, where you want to update status.
 *   `location` (string, required): Specify the location of the alert. Example: centralus.
-*   `status` (List[Any], required): Specify the status for the alert (e.g., Dismissed, Activated).
+*   `status` (List[str], required): Specify the status for the alert (e.g., Dismissed, Activated).
 *   `subscription_id` (string, optional): Specify the ID of the subscription. Overrides integration-level setting if provided.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

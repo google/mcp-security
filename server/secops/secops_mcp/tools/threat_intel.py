@@ -13,6 +13,7 @@
 # limitations under the License.
 """Security Operations MCP tools for threat intelligence."""
 
+import json
 import logging
 
 from secops_mcp.server import get_chronicle_client, server
@@ -95,7 +96,7 @@ async def get_threat_intel(
             return response
         else:
             # If response is in an unexpected format, try to convert it to string
-            return str(response)
+            return json.dumps(response)
 
     except Exception as e:
         logger.error(f'Error getting threat intelligence: {str(e)}', exc_info=True)

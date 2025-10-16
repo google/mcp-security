@@ -53,7 +53,7 @@ Reject message in Mimecast. Note: only messages with status "Held" can be reject
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `message_id` (string, required): Specify the ID of the message that needs to be rejected.
 *   `note` (string, optional): Specify an additional note containing an explanation regarding why the message was rejected.
-*   `reason` (List[Any], optional): Specify the reason for rejection.
+*   `reason` (List[str], optional): Specify the reason for rejection.
 *   `notify_sender` (bool, optional): If enabled, action will notify the sender about rejection.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -120,7 +120,7 @@ Search archive emails using defined parameters in Mimecast. Note: when providing
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `fields_to_return` (string, required): Specify a comma-separated list of fields that needs to be returned.
-*   `time_frame` (List[Any], required): Specify a time frame for the search. If "Custom" is selected, provide "Start Time".
+*   `time_frame` (List[str], required): Specify a time frame for the search. If "Custom" is selected, provide "Start Time".
 *   `mailboxes` (string, optional): Specify a comma-separated list of mailboxes that need to be searched.
 *   `from_` (string, optional): Specify a comma-separated list of email addresses from which the emails were sent.
 *   `to` (string, optional): Specify a comma-separated list of email addresses to which the emails were sent.
@@ -145,7 +145,7 @@ Deprecated. Report message in Mimecast. Note: only messages with status "Held", 
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `message_id` (string, required): Specify the ID of the message that needs to be reported.
 *   `comment` (string, optional): Specify the comment for the report.
-*   `report_as` (List[Any], optional): Specify the report type for the message.
+*   `report_as` (List[str], optional): Specify the report type for the message.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

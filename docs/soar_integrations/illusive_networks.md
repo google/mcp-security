@@ -75,8 +75,8 @@ This integration provides tools to interact with the Illusive Networks platform 
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `deceptive_type` (List[Any], required): Specify what kind of deceptive items should be returned.
-*   `deceptive_state` (List[Any], required): Specify what kind of deceptive items should be returned based on state.
+*   `deceptive_type` (List[str], required): Specify what kind of deceptive items should be returned.
+*   `deceptive_state` (List[str], required): Specify what kind of deceptive items should be returned based on state.
 *   `max_items_to_return` (string, optional): Specify how many items to return. Default: 50. If nothing is specified, action will return all items. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

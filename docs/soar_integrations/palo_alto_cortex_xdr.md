@@ -36,8 +36,8 @@ Updates specific fields of a Cortex XDR incident, such as status, severity, and 
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): The ID of the incident to be updated.
 *   `assigned_user_name` (string, optional): The updated full name of the incident assignee.
-*   `severity` (List[Any], optional): Administrator-defined severity (e.g., low, medium, high, critical).
-*   `status` (List[Any], optional): Updated incident status (e.g., new, under_investigation, resolved).
+*   `severity` (List[str], optional): Administrator-defined severity (e.g., low, medium, high, critical).
+*   `status` (List[str], optional): Updated incident status (e.g., new, under_investigation, resolved).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -100,7 +100,7 @@ Resolves (closes) a specific XDR incident with a resolution status and comment.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): The ID of the incident to be updated.
-*   `status` (List[Any], required): Updated incident status (typically a resolved status like 'resolved_benign', 'resolved_false_positive', etc.).
+*   `status` (List[str], required): Updated incident status (typically a resolved status like 'resolved_benign', 'resolved_false_positive', etc.).
 *   `resolve_comment` (string, optional): Descriptive comment explaining the incident change/resolution.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

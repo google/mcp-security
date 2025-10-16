@@ -128,7 +128,7 @@ Scan URL/domain for analysis.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `threshold` (string, required): Mark entity as suspicious if number of av detection is equal or above the given threshold.
-*   `environment` (List[Any], required): The environment to use for the scan.
+*   `environment` (List[str], required): The environment to use for the scan.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports URL and Hostname entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -145,7 +145,7 @@ Submit files for analysis. This action differs from "Analyze File" as it doesn't
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `file_path` (string, required): The full path of the file to analyze. For multiple, use comma separated values.
-*   `environment` (List[Any], required): The environment to use for the scan.
+*   `environment` (List[str], required): The environment to use for the scan.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

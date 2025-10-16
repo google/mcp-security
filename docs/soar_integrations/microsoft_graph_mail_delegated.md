@@ -22,8 +22,8 @@ Use the Send Vote Email action to send emails with the predefined answering opti
 *   `subject` (string, required): The email subject.
 *   `send_to` (string, required): A comma-separated list of email addresses for the email recipients.
 *   `email_html_template` (EmailContent, required): The type of the HTML template to use. The default value is Email HTML Template.
-*   `structure_of_voting_options` (List[Any], required): The structure of the vote to send to recipients (Yes/No or Approve/Reject). Default: Yes/No.
-*   `attachment_location` (List[Any], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `structure_of_voting_options` (List[str], required): The structure of the vote to send to recipients (Yes/No or Approve/Reject). Default: Yes/No.
+*   `attachment_location` (List[str], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `cc` (string, optional): A comma-separated list of email addresses for the email CC field.
 *   `bcc` (string, optional): A comma-separated list of email addresses for the email BCC field.
 *   `attachments_paths` (string, optional): A comma-separated list of paths for file attachments stored on the server.
@@ -65,7 +65,7 @@ Use the Send Thread Reply action to send a message as a reply to the email threa
 *   `mail_id` (string, required): The email ID or the internetMessageId value of the email to reply to.
 *   `folder_name` (string, required): A mailbox folder in which to search for an email (e.g., Inbox/Subfolder).
 *   `mail_content` (string, required): The email body.
-*   `attachment_location` (List[Any], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `attachment_location` (List[str], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `attachments_paths` (string, optional): A comma-separated list of paths for file attachments stored on the server.
 *   `reply_all` (bool, optional): If selected, sends a reply to all recipients related to the original email. Has priority over `reply_to`.
 *   `reply_to` (string, optional): A comma-separated list of emails to reply to. Ignored if `reply_all` is true.
@@ -111,7 +111,7 @@ Use the Forward Email action to forward emails that include previous threads. Wi
 *   `subject` (string, required): The new email subject.
 *   `send_to` (string, required): A comma-separated list of email addresses for the email recipients.
 *   `mail_content` (string, required): The email body.
-*   `attachment_location` (List[Any], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `attachment_location` (List[str], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `folder_name` (string, optional): A mailbox folder in which to search for an email (e.g., Inbox/Subfolder).
 *   `cc` (string, optional): A comma-separated list of email addresses for the email CC field.
 *   `bcc` (string, optional): A comma-separated list of email addresses for the email BCC field.
@@ -199,7 +199,7 @@ Use the Send Email HTML action to send emails using the Google SecOps HTML templ
 *   `subject` (string, required): The email subject.
 *   `send_to` (string, required): A comma-separated list of email addresses for the email recipients.
 *   `email_html_template` (EmailContent, required): The type of the HTML template to use. Default: Email HTML Template.
-*   `attachment_location` (List[Any], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `attachment_location` (List[str], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `cc` (string, optional): A comma-separated list of email addresses for the email CC field.
 *   `bcc` (string, optional): A comma-separated list of email addresses for the email BCC field.
 *   `attachments_paths` (string, optional): A comma-separated list of paths for file attachments stored on the server.
@@ -286,11 +286,11 @@ Use the Send Email action to send emails from a specific mailbox to an arbitrary
 *   `subject` (string, required): The email subject.
 *   `send_to` (string, required): A comma-separated list of email addresses for the email recipients.
 *   `mail_content` (string, required): The email body.
-*   `attachment_location` (List[Any], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `attachment_location` (List[str], required): Location where attachments are stored (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `cc` (string, optional): A comma-separated list of email addresses for the email CC field.
 *   `bcc` (string, optional): A comma-separated list of email addresses for the email BCC field.
 *   `attachments_paths` (string, optional): A comma-separated list of paths for file attachments stored on the server.
-*   `mail_content_type` (List[Any], optional): Type of email content (Text or HTML). Default: Text.
+*   `mail_content_type` (List[str], optional): Type of email content (Text or HTML). Default: Text.
 *   `reply_to_recipients` (string, optional): A comma-separated list of recipients to use in the Reply-To header.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -323,7 +323,7 @@ Use the Download Attachments From Email action to download attachments from emai
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `search_in_mailbox` (string, required): The default mailbox to search in. Accepts multiple values comma-separated.
-*   `download_destination` (List[Any], required): Location to save attachments (GCP Bucket or Local File System). Default: GCP Bucket.
+*   `download_destination` (List[str], required): Location to save attachments (GCP Bucket or Local File System). Default: GCP Bucket.
 *   `download_path` (string, required): Path to download attachments to (Unix-like format, e.g., /tmp/test).
 *   `folder_name` (string, optional): A mailbox folder to search in (e.g., Inbox/Subfolder).
 *   `mail_i_ds` (string, optional): Filter by specific email IDs or internetMessageId values (comma-separated). If provided, ignores Subject and Sender filters.

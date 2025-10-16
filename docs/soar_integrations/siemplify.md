@@ -58,7 +58,7 @@ Automatically change case priority to the given input
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `priority` (Any, required): Priority, which should be set for the case.
+*   `priority` (str, required): Priority, which should be set for the case.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -107,9 +107,9 @@ Set the SLA for a case. This action has the highest priority and it will overrid
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `sla_period` (str, required): The period of time after which the SLA is in breach.
-*   `sla_time_unit` (List[Any], required): Specify the unit for SLA Time.
+*   `sla_time_unit` (List[str], required): Specify the unit for SLA Time.
 *   `sla_time_to_critical_period` (str, required): The period of time after which the SLA enters the critical period.
-*   `sla_time_to_critical_unit` (List[Any], required): Specify the unit for SLA Time To Critical.
+*   `sla_time_to_critical_unit` (List[str], required): Specify the unit for SLA Time To Critical.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -160,8 +160,8 @@ Closes the current alert
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `reason` (Any, required): Alert closure reason.
-*   `root_cause` (Any, required): Root cause of the alert closure.
+*   `reason` (str, required): Alert closure reason.
+*   `root_cause` (str, required): Root cause of the alert closure.
 *   `comment` (str, required): Comment content.
 *   `assign_to_user` (Optional[Any], optional, default=None): User that the closed case will be assigned to.
 *   `tags` (Optional[str], optional, default=None): Comma separated tags values.
@@ -234,7 +234,7 @@ Change case stage to handling
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `stage` (Any, required): Stage to which the case should be moved to.
+*   `stage` (str, required): Stage to which the case should be moved to.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -307,7 +307,7 @@ Action sets a value for a key specified that is stored in the Siemplify database
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `context_scope` (List[Any], required): Specify the Siemplify context scope to return context keys for.
+*   `context_scope` (List[str], required): Specify the Siemplify context scope to return context keys for.
 *   `key_name` (str, required): Specify the key name to set context value for.
 *   `key_value` (str, required): Specify the value to store under the specified key.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -350,7 +350,7 @@ Attach a specific playbook to an alert
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `playbook_name` (Any, required): Playbook, which should be attached to an alert.
+*   `playbook_name` (str, required): Playbook, which should be attached to an alert.
 *   `allow_duplicates` (Optional[bool], optional, default=None): If selected, action will allow the same playbook to be attached multiple times to the alert.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -363,8 +363,8 @@ Closes the case the current alert has been grouped to
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `reason` (Any, required): Closure reason.
-*   `root_cause` (Any, required): Root cause of the case closure.
+*   `reason` (str, required): Closure reason.
+*   `root_cause` (str, required): Root cause of the case closure.
 *   `comment` (str, required): Comment content.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -377,7 +377,7 @@ Assign case to specific user or usergroup
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `assigned_user` (Any, required): User or Usergroup to whom a case should be assigned.
+*   `assigned_user` (str, required): User or Usergroup to whom a case should be assigned.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -412,7 +412,7 @@ Creates an entity and adds to requested alert. Note - Please make sure to read o
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `entities_identifies` (str, required): Entity identifier or comma-separated list of identifiers (Example: value1,value2,value3).
-*   `entity_type` (Any, required): Siemplify entity type. Example: HOSTNAME / USERNAME / etc.
+*   `entity_type` (str, required): Siemplify entity type. Example: HOSTNAME / USERNAME / etc.
 *   `is_internal` (bool, required): Mark if entities are part of an internal network.
 *   `is_suspicious` (bool, required): Mark if entities are suspicious.
 *   `delimiter` (Optional[str], optional, default=None): Provide a delimiter character, with which the action will split the input it gets into a number of entities instead of a single one. If no value will be provided, action will not perform any splitting on the input, and it will be handled as a single entity. Note - Please make sure to read our documentation regarding the differences in the delimiter's behavior, between different Siemplify's platform versions 5.6.0 inclusive and 5.6.2 exclusive.
@@ -494,7 +494,7 @@ Automatically change the alert priority to the given input. Note: This action is
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `alert_priority` (Any, required): Priority to which the alert should be moved to.
+*   `alert_priority` (str, required): Priority to which the alert should be moved to.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -507,9 +507,9 @@ Set the SLA for an alert. This action has the highest priority and it will overr
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `sla_period` (str, required): The period of time after which the SLA is in breach.
-*   `sla_time_unit` (List[Any], required): Specify the unit for SLA Time.
+*   `sla_time_unit` (List[str], required): Specify the unit for SLA Time.
 *   `sla_time_to_critical_period` (str, required): The period of time after which the SLA enters the critical period.
-*   `sla_time_to_critical_unit` (List[Any], required): Specify the unit for SLA Time To Critical.
+*   `sla_time_to_critical_unit` (List[str], required): Specify the unit for SLA Time To Critical.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -535,7 +535,7 @@ Action gets a value stored under a specified key in the Siemplify database. Avai
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `context_scope` (List[Any], required): Specify the Siemplify context scope to return context keys for.
+*   `context_scope` (List[str], required): Specify the Siemplify context scope to return context keys for.
 *   `key_name` (str, required): Optionally specify the key name to get context value for.
 *   `create_case_wall_table` (Optional[bool], optional, default=None): If enabled, the case wall table will be created as part of action results.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.

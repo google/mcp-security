@@ -73,19 +73,19 @@ Create a new request
 *   `requester` (str, required): The requester of the request. If not specified, set to the user of the API key.
 *   `description` (Optional[str], optional, default=None): The description of the request.
 *   `assets` (Optional[str], optional, default=None): Names of Assets to be associated with the request
-*   `status` (Optional[List[Any]], optional, default=None): The status of the request.
+*   `status` (Optional[List[str]], optional, default=None): The status of the request.
 *   `technician` (Optional[str], optional, default=None): The name of the technician assigned to the request.
-*   `priority` (Optional[List[Any]], optional, default=None): The priority of the request.
-*   `urgency` (Optional[List[Any]], optional, default=None): The urgency of the request.
-*   `category` (Optional[List[Any]], optional, default=None): The category of the request.
+*   `priority` (Optional[List[str]], optional, default=None): The priority of the request.
+*   `urgency` (Optional[List[str]], optional, default=None): The urgency of the request.
+*   `category` (Optional[List[str]], optional, default=None): The category of the request.
 *   `request_template` (Optional[str], optional, default=None): The template of the request.
-*   `request_type` (Optional[List[Any]], optional, default=None): The type of the request. i.e: Incident, Service Request, etc.
+*   `request_type` (Optional[List[str]], optional, default=None): The type of the request. i.e: Incident, Service Request, etc.
 *   `due_by_time_ms` (Optional[str], optional, default=None): The due date of the request in milliseconds.
-*   `mode` (Optional[List[Any]], optional, default=None): The mode in which this request is created.Example : E-mail
-*   `level` (Optional[List[Any]], optional, default=None): The level of the request.
+*   `mode` (Optional[List[str]], optional, default=None): The mode in which this request is created.Example : E-mail
+*   `level` (Optional[List[str]], optional, default=None): The level of the request.
 *   `site` (Optional[str], optional, default=None): Denotes the site to which this request belongs
 *   `group` (Optional[str], optional, default=None): Group to which this request belongs
-*   `impact` (Optional[List[Any]], optional, default=None): The impact of the request.
+*   `impact` (Optional[List[str]], optional, default=None): The impact of the request.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 

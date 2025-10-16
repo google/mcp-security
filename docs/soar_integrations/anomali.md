@@ -13,7 +13,7 @@ Enrich entities using information from Anomali ThreatStream. Supported entities:
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `limit` (str, required): Specify how many records to return per entity.
-*   `severity_threshold` (Optional[List[Any]], optional, default=None): Specify what should be the severity threshold for the entity, in order to mark it as suspicious. If multiple records are found for the same entity, action will take the highest severity out of all available records.
+*   `severity_threshold` (Optional[List[str]], optional, default=None): Specify what should be the severity threshold for the entity, in order to mark it as suspicious. If multiple records are found for the same entity, action will take the highest severity out of all available records.
 *   `confidence_threshold` (Optional[str], optional, default=None): Specify what should be the confidence threshold for the entity, in order to mark it as suspicious. Note: Maximum is 100. If multiple records are found for the entity, action will take the average. Active records have priority. Default: 50.
 *   `ignore_false_positive_status` (Optional[bool], optional, default=None): If enabled, action will ignore the false positive status and mark the entity as suspicious based on the "Severity Threshold" and "Confidence Threshold". If disabled, action will never label false positive entities as suspicious, regardless, if they pass the "Severity Threshold" and "Confidence Threshold" conditions or not.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.

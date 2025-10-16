@@ -18,8 +18,8 @@ import setuptools
 setup = setuptools.setup
 
 setup(
-    name="secops-mcp",
-    version="0.1.0",
+    name="google-secops-mcp",
+    version="0.4.0",
     py_modules=["secops_mcp", "main"],  # Include both modules
     install_requires=[
         "fastmcp",
@@ -27,7 +27,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "secops-mcp=secops_mcp:main",
+            "secops-mcp=secops_mcp.server:main",
         ],
     },
 )

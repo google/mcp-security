@@ -18,9 +18,9 @@ List available chats in Teams based on specified filters.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `chat_type` (List[Any], optional): Specify what type of chat should be returned.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter chats.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
+*   `chat_type` (List[str], optional): Specify what type of chat should be returned.
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter chats.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equals, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -57,7 +57,7 @@ Action waits for the reply to a specified message in a channel. Note: You need t
 *   `channel_name` (string, required): Specify name of the channel.
 *   `message_id` (string, required): Specify ID of the message that is expected to have a reply.
 *   `expected_reply` (string, optional): Specify text of the expected reply. If not provided, action stops on any reply.
-*   `wait_method` (List[Any], optional): Specify wait method ("Check First Reply" or "Wait Till Timeout").
+*   `wait_method` (List[str], optional): Specify wait method ("Check First Reply" or "Wait Till Timeout").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -75,7 +75,7 @@ Create a channel in Microsoft Teams.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `team_name` (string, required): Specify the name of the team in which you need to create the channel.
 *   `channel_name` (string, required): Specify a unique name of the channel.
-*   `channel_type` (List[Any], required): Specify the type of the channel (Standard or Private).
+*   `channel_type` (List[str], required): Specify the type of the channel (Standard or Private).
 *   `description` (string, optional): Specify a description for the channel.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -112,8 +112,8 @@ Send a chat message to the user in Microsoft Teams. Supported entities: Username
 *   `text` (string, required): Specify the content of the message.
 *   `user_identifiers` (string, optional): Comma-separated list of user identifiers to send the message to.
 *   `wait_for_reply` (bool, optional): If enabled, action will wait until replies from all entities are available.
-*   `content_type` (List[Any], optional): Specify the content type for the message (e.g., text, html).
-*   `user_selection` (List[Any], optional): Specify user selection method ("From Entities & User Identifiers", "From Entities", "From User Identifiers").
+*   `content_type` (List[str], optional): Specify the content type for the message (e.g., text, html).
+*   `user_selection` (List[str], optional): Specify user selection method ("From Entities & User Identifiers", "From Entities", "From User Identifiers").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Username and Email Address entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -150,7 +150,7 @@ Send a reply to the channel message in Microsoft Teams.
 *   `channel_name` (string, required): Specify the channel name.
 *   `message_id` (string, required): Specify the ID of the message to reply to.
 *   `text` (string, required): Specify the content of the reply message.
-*   `content_type` (List[Any], optional): Specify the content type for the message.
+*   `content_type` (List[str], optional): Specify the content type for the message.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

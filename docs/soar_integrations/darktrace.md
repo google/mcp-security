@@ -41,7 +41,7 @@ Update model breach status in Darktrace.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `status` (List[Any], required): Specify what status to set for the model breach (e.g., `Acknowledged`, `Unacknowledged`, `False Positive`).
+*   `status` (List[str], required): Specify what status to set for the model breach (e.g., `Acknowledged`, `Unacknowledged`, `False Positive`).
 *   `model_breach_id` (string, required): Specify the ID of the model breach to update.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -59,7 +59,7 @@ Execute custom search in Darktrace using its query language.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `query` (string, required): Specify the Darktrace query to execute.
-*   `time_frame` (List[Any], optional): Specify a time frame (e.g., Last Hour, Last Day, Custom, Alert Time Till Now, etc.). If "Custom", `start_time` is required.
+*   `time_frame` (List[str], optional): Specify a time frame (e.g., Last Hour, Last Day, Custom, Alert Time Till Now, etc.). If "Custom", `start_time` is required.
 *   `start_time` (string, optional): Specify the start time (ISO 8601 format). Required if `time_frame` is "Custom".
 *   `end_time` (string, optional): Specify the end time (ISO 8601 format). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50.
@@ -79,7 +79,7 @@ List latest events related to the endpoint in Darktrace. Supported entities: IP,
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `event_type` (string, required): Comma-separated list of event types (e.g., `connection`, `unusualconnection`, `newconnection`, `notice`, `devicehistory`, `modelbreach`).
-*   `time_frame` (List[Any], required): Specify a time frame for the search. If "Custom", `start_time` is required.
+*   `time_frame` (List[str], required): Specify a time frame for the search. If "Custom", `start_time` is required.
 *   `start_time` (string, optional): Specify the start time (ISO 8601 format). Required if `time_frame` is "Custom".
 *   `end_time` (string, optional): Specify the end time (ISO 8601 format). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_events_to_return` (string, optional): Specify how many events to return per event type. Default: 50.

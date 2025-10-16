@@ -30,7 +30,7 @@ List Amazon Macie findings based on the specified action input parameters.  Note
 *   `include_archived_findings` (Optional[bool], optional, default=None): Specify whether to include archived findings in results or not.
 *   `record_limit` (Optional[str], optional, default=None): Specify how many records can be returned by the action.
 *   `sort_by` (Optional[str], optional, default=None): Specify a parameter for sorting the data, eg updatedAt
-*   `sort_order` (Optional[List[Any]], optional, default=None): Sort order.
+*   `sort_order` (Optional[List[str]], optional, default=None): Sort order.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 

@@ -13,6 +13,7 @@
 # limitations under the License.
 """Security Operations MCP tools for security alerts."""
 
+import json
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -144,7 +145,7 @@ async def get_security_alerts(
 
             result += '\n'
 
-        return result
+        return json.dumps(result)
     except Exception as e:
         return f'Error retrieving security alerts: {str(e)}'
 
@@ -172,7 +173,7 @@ async def get_security_alert_by_id(
     - View a specific Alert
     - Monitor for specific high-severity alerts or rule triggers.
     - Check for SIEM alerts that might not have corresponding cases yet in other systems.
-    - May need to get this so you know which Alert to update 
+    - May need to get this so you know which Alert to update
 
     Args:
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
@@ -201,7 +202,7 @@ async def get_security_alert_by_id(
     except Exception as e:
         return f'Error retrieving security alert for {alert_id}: {str(e)}'
 
-    return response
+    return json.dumps(response)
 
 @server.tool()
 async def do_update_security_alert(
@@ -285,4 +286,4 @@ Next Steps (using MCP-enabled tools):
     except Exception as e:
         return f'Error retrieving security alert for {alert_id}: {str(e)}'
 
-    return response
+    return json.dumps(response)

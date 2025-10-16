@@ -16,7 +16,7 @@ This integration provides tools to interact with Google Cloud Compute Engine for
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `type` (List[Any], required): Type of the IP range that will be removed.
+*   `type` (List[str], required): Type of the IP range that will be removed.
 *   `ip_ranges` (string, required): List of IP ranges that needs to be removed from the Firewall Rule.
 *   `resource_name` (string, optional): Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of "Project ID", and "Firewall Rule". Defaults to None.
 *   `project_id` (string, optional): Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration. Defaults to None.
@@ -141,7 +141,7 @@ This integration provides tools to interact with Google Cloud Compute Engine for
 *   `disruption_budget` (string, required): The disruption budget for a patching job. You can use a specific number or a percentage like 10%.
 *   `description` (string, optional): The description for the patching job. Defaults to None.
 *   `patching_config_object` (string, optional): A JSON object that specifies the steps for the patching job to execute. If you don’t set a value, the action patches Compute Engine instances using the default value. To configure this parameter, use the following format: {"key": "value"}. Defaults to None.
-*   `rollout_strategy` (List[Any], optional): The rollout strategy for a patching job. Defaults to None.
+*   `rollout_strategy` (List[str], optional): The rollout strategy for a patching job. Defaults to None.
 *   `wait_for_completion` (boolean, optional): If selected, the action waits for the patching job to complete. Defaults to None.
 *   `fail_if_completed_with_errors` (boolean, optional): If selected and the patching job status is “Completed with errors” or the action reaches a timeout, the action fails. If you didn’t select the “Wait For Completion” parameter, the action ignores this parameter. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -351,7 +351,7 @@ This integration provides tools to interact with Google Cloud Compute Engine for
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `type` (List[Any], required): Type of the IP range that will be added.
+*   `type` (List[str], required): Type of the IP range that will be added.
 *   `ip_ranges` (string, required): List of IP ranges that needs to be added to the Firewall Rule.
 *   `resource_name` (string, optional): Specify the full resource name for the firewall rule. Format: projects/{project_id}/global/firewalls/{firewall}. This parameter has higher priority over the combination of "Project ID", and "Firewall Rule". Defaults to None.
 *   `project_id` (string, optional): Specify the name of the project of your firewall rule. If nothing is provided, the project will be extracted from integration configuration. Defaults to None.

@@ -19,7 +19,7 @@ Retrieve information about intrusions (groups/software) that are associated with
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `technique_id` (string, required): Specify the identifier (Name, ID, or External ID) that will be used to find the associated intrusions.
-*   `identifier_type` (List[Any], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
+*   `identifier_type` (List[str], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
 *   `max_intrusions_to_return` (string, optional): Specify how many intrusions to return.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -37,7 +37,7 @@ Retrieve detailed information about MITRE ATT&CK technique(s).
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `technique_identifier` (string, required): Specify the comma-separated list of identifiers (Name, ID, or External ID) that will be used to find the detailed information about techniques.
-*   `identifier_type` (List[Any], required): Specify what identifier type to use (Name, ID, External ID).
+*   `identifier_type` (List[str], required): Specify what identifier type to use (Name, ID, External ID).
 *   `create_insights` (bool, optional): If enabled, action will create a separate insight for every processed technique.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -55,7 +55,7 @@ Retrieve detailed information about MITRE ATT&CK techniques. (Note: This action 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `technique_identifier` (string, required): Specify the identifier (Name, ID, or External ID) that will be used to find the detailed information about technique. Comma-separated values.
-*   `identifier_type` (List[Any], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
+*   `identifier_type` (List[str], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -87,7 +87,7 @@ Retrieve information about mitigations that are associated with a MITRE ATT&CK t
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `technique_id` (string, required): Specify the identifier (Name, ID, or External ID) that will be used to find the mitigations related to the attack technique.
-*   `identifier_type` (List[Any], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
+*   `identifier_type` (List[str], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
 *   `max_mitigations_to_return` (string, optional): Specify how many mitigations to return.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -105,7 +105,7 @@ Retrieve information about mitigations that are associated with MITRE ATT&CK tec
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `technique_id` (string, required): Specify the identifier (Name, ID, or External ID) that will be used to find the mitigations related to attack technique. Comma-separated values.
-*   `identifier_type` (List[Any], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
+*   `identifier_type` (List[str], required): Specify what identifier type to use (Attack Name, Attack ID, External Attack ID).
 *   `max_mitigations_to_return` (string, optional): Specify how many mitigations to return.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

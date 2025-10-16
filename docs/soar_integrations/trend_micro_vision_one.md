@@ -15,7 +15,7 @@ Execute email action on the endpoint in Trend Vision One. Action is running as a
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `message_id` (str, required): Specify the ID of the message that needs to be used in the action.
-*   `action` (List[Any], optional, default=None): Specify the action for the email.
+*   `action` (List[str], optional, default=None): Specify the action for the email.
 *   `mailbox` (str, optional, default=None): Specify the mailbox related to the message.
 *   `description` (str, optional, default=None): Specify a description for the performed action.
 *   `target_entities` (List[TargetEntity], optional, default=None): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -76,7 +76,7 @@ Update a workbench alert in Trend Vision One.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `alert_id` (str, required): Specify the ID of the alert needs to be updated.
-*   `status` (List[Any], required): Specify what status to set for the alert.
+*   `status` (List[str], required): Specify what status to set for the alert.
 *   `target_entities` (List[TargetEntity], optional, default=None): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 

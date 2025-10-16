@@ -25,8 +25,8 @@ List available firewall rules in a specific Cloudflare zone.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `zone_name` (string, required): Specify the name of the zone containing the firewall rules.
-*   `filter_key` (List[Any], optional): Specify the key to filter results by (e.g., `description`, `action`, `paused`).
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains).
+*   `filter_key` (List[str], optional): Specify the key to filter results by (e.g., `description`, `action`, `paused`).
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains).
 *   `filter_value` (string, optional): Specify the value to filter by.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -64,7 +64,7 @@ Add URLs to a redirect rule list in Cloudflare. Supported Entities: URL. Note: U
 *   `rule_name` (string, required): Specify the name of the rule list (must be of type `redirect`).
 *   `target_url` (string, required): Specify the target URL for the redirect rule list item.
 *   `description` (string, optional): Specify a description for the newly added rule list item.
-*   `status_code` (List[Any], optional): Specify the redirect status code (e.g., `301`, `302`).
+*   `status_code` (List[str], optional): Specify the redirect status code (e.g., `301`, `302`).
 *   `preserve_query_string` (bool, optional): If enabled, preserve the query string during redirect.
 *   `include_subdomains` (bool, optional): If enabled, the rule applies to subdomains.
 *   `subpath_matching` (bool, optional): If enabled, the rule matches subpaths.
@@ -101,7 +101,7 @@ Update an existing firewall rule in Cloudflare.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `rule_name` (string, required): Specify the name of the rule that needs to be updated.
 *   `zone_name` (string, required): Specify the name of the zone containing the firewall rule.
-*   `action` (List[Any], optional): Specify the action for the firewall rule (e.g., `block`, `challenge`, `allow`, `js_challenge`, `log`, `bypass`). If "Bypass", `products` parameter is required.
+*   `action` (List[str], optional): Specify the action for the firewall rule (e.g., `block`, `challenge`, `allow`, `js_challenge`, `log`, `bypass`). If "Bypass", `products` parameter is required.
 *   `expression` (string, optional): Specify the filter expression for the firewall rule.
 *   `products` (string, optional): Comma-separated list of products to bypass (e.g., `zoneLockdown`, `uaBlock`, `bic`, `hot`, `securityLevel`, `rateLimit`, `waf`). Required if `action` is "Bypass".
 *   `priority` (string, optional): Specify the priority for the firewall rule.
@@ -122,7 +122,7 @@ Create a rule list (IP or Redirect) in Cloudflare.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `name` (string, required): Specify the name for the rule list.
-*   `type` (List[Any], optional): Specify the type for the rule list (`ip` or `redirect`).
+*   `type` (List[str], optional): Specify the type for the rule list (`ip` or `redirect`).
 *   `description` (string, optional): Specify the description for the rule list.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -142,7 +142,7 @@ Create a firewall rule in Cloudflare.
 *   `zone_name` (string, required): Specify the name of the zone where the rule will be created.
 *   `expression` (string, required): Specify the filter expression for the firewall rule.
 *   `name` (string, optional): Specify the name for the firewall rule.
-*   `action` (List[Any], optional): Specify the action for the firewall rule (e.g., `block`, `challenge`, `allow`, `js_challenge`, `log`, `bypass`). If "Bypass", `products` parameter is required.
+*   `action` (List[str], optional): Specify the action for the firewall rule (e.g., `block`, `challenge`, `allow`, `js_challenge`, `log`, `bypass`). If "Bypass", `products` parameter is required.
 *   `products` (string, optional): Comma-separated list of products to bypass. Required if `action` is "Bypass".
 *   `priority` (string, optional): Specify the priority for the firewall rule.
 *   `reference_tag` (string, optional): Specify a reference tag (max 50 characters).

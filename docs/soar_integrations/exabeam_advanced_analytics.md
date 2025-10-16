@@ -91,8 +91,8 @@ Create a watchlist in Exabeam Advanced Analytics.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `title` (string, required): Specify the title of the watchlist.
-*   `category` (List[Any], required): Specify the category for the watchlist.
-*   `access_control` (List[Any], required): Specify the access control for the watchlist.
+*   `category` (List[str], required): Specify the category for the watchlist.
+*   `access_control` (List[str], required): Specify the access control for the watchlist.
 *   `description` (string, optional): Specify description for the watchlist.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

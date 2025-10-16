@@ -23,7 +23,7 @@ from mcp.shared.memory import (
 )
 
 
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio(loop_scope="session")
 async def test_server_connection():
     """Test that the server is running and accessible."""
 
@@ -415,7 +415,7 @@ async def test_get_simple_tools(
     vt_get_object_mock,
     tool_name,
     tool_arguments,
-    expected):
+    expected): 
     """Test simple tools that just retrieve information from GTI."""
 
     # Execute tool call.
@@ -906,7 +906,7 @@ async def test_create_collection(
             "/api/v3/collections/my_collection_id",
             {
                 "data": {
-                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."},
+                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."}, 
                     "type": "collection",
                 }
             },
@@ -914,7 +914,7 @@ async def test_create_collection(
                 "data": {
                     "id": "my_collection_id",
                     "type": "collection",
-                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."},
+                    "attributes": {"name": "Updated Collection Name", "description": "Updated description."}, 
                 }
             },
             {
@@ -1077,3 +1077,120 @@ async def test_search_digital_threat_monitoring(
         assert len(result.content) == 1
         assert isinstance(result.content[0], mcp.types.TextContent)
         assert json.loads(result.content[0].text) == expected
+
+import asyncio
+from unittest.mock import patch, MagicMock, AsyncMock
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "mock_response_text, mock_headers, side_effect, expected_error",
+    [
+        (
+            "<html><body>request timed out</body></html>",
+            {"Content-Type": "text/html"},
+            None,
+            "The request timed out. Please try reducing the scope of your query by using `since` and `until` parameters to add time delimiters",
+        ),
+        (
+            "<html><body>Error</body></html>",
+            {"Content-Type": "text/html"},
+            None,
+            "API returned an HTML error page instead of JSON: <html><body>Error</body></html>",
+        ),
+        (
+            "Invalid JSON",
+            {"Content-Type": "application/json"},
+            None,
+            "Failed to parse server response: Expecting value: line 1 column 1 (char 0).",
+        ),
+        (
+            "",
+            {},
+            TimeoutError, # Use built-in TimeoutError
+            "The request timed out. Please try reducing the scope of your query by using `since` and `until` parameters to add time delimiters",
+        ),
+        (
+            "",
+            {},
+            RuntimeError("Test Exception"),
+            "An unexpected error occurred: Test Exception",
+        ),
+    ],
+)
+async def test_search_digital_threat_monitoring_errors(
+    mock_response_text, mock_headers, side_effect, expected_error
+):
+    """Test error handling in search_digital_threat_monitoring."""
+    with patch('gti_mcp.tools.files.vt_client') as mock_vt_client:
+        mock_client_instance = MagicMock()
+        mock_response = MagicMock()
+
+        async def text_async():
+            return mock_response_text
+        
+        async def json_async():
+            if mock_response_text == "Invalid JSON":
+                raise json.JSONDecodeError("Expecting value", mock_response_text, 0)
+            return json.loads(mock_response_text)
+
+        mock_response.text_async = text_async
+        mock_response.json_async = json_async
+        mock_response.headers = mock_headers
+
+        mock_post_async = AsyncMock() # Use AsyncMock here
+        if side_effect:
+            mock_post_async.side_effect = side_effect
+        else:
+            mock_post_async.return_value = mock_response
+        
+        mock_client_instance.post_async = mock_post_async
+        
+        # Setup the async context manager
+        mock_cm = MagicMock()
+        mock_cm.__aenter__.return_value = mock_client_instance
+        mock_vt_client.return_value = mock_cm
+
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_digital_threat_monitoring", arguments={"query": "test"}
+            )
+            assert isinstance(result, mcp.types.CallToolResult)
+            assert result.isError == False # The tool call itself doesn't fail
+            assert len(result.content) == 1
+            content = json.loads(result.content[0].text)
+            assert "error" in content
+            assert content["error"] == expected_error
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            "get_entities_related_to_a_collection",
+            {"id": "collection_id", "relationship_name": "files", "descriptors_only": "True"},
+            "/api/v3/collections/collection_id/relationship/files",
+            {
+                "data": [],
+            },
+            [],
+        ),  
+    ],
+    indirect=["vt_endpoint", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_mock")
+async def test_get_entities_related_empty_result(
+    vt_get_object_mock,
+    tool_name,
+    tool_arguments,
+    expected    
+):
+    """Test tools.get_entities_related_to_a_collection when the API returns an empty list."""
+
+    # Execute tool call.
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(tool_name, arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert result.structuredContent == {"result": expected}

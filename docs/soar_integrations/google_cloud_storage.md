@@ -123,7 +123,7 @@ This integration provides tools to interact with Google Cloud Storage for managi
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `bucket_name` (string, required): Specify the name of the bucket on which you want to modify the Access Control List.
 *   `entity` (string, required): The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers. For more information, please see this reference: https://cloud.google.com/storage/docs/json_api/v1/bucketAccessControls#resource.
-*   `role` (List[Any], required): The access permission for the entity. Possible values: “OWNER”, ”READER”, “WRITER”.
+*   `role` (List[str], required): The access permission for the entity. Possible values: “OWNER”, ”READER”, “WRITER”.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

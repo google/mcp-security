@@ -27,7 +27,7 @@ Use the Execute Query action to execute custom queries in Cloud Logging.
 *   `query` (string, required): A query to find the logs for (using Cloud Logging query language).
 *   `project_id` (string, optional): The project ID to use. Overrides integration configuration if provided.
 *   `organization_id` (string, optional): The organization ID to use. Overrides integration configuration if provided.
-*   `time_frame` (List[Any], optional): A period to retrieve the results from (e.g., Last Hour, Last 6 Hours, Custom). If "Custom", `start_time` is required.
+*   `time_frame` (List[str], optional): A period to retrieve the results from (e.g., Last Hour, Last 6 Hours, Custom). If "Custom", `start_time` is required.
 *   `start_time` (string, optional): The start time (ISO 8601 format). Required if `time_frame` is "Custom".
 *   `end_time` (string, optional): The end time (ISO 8601 format). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_records_to_return` (string, optional): The maximum number of results to return. Default: 50.
