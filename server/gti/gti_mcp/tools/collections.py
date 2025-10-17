@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import typing
+import logging
 
 from mcp.server.fastmcp import Context
 
@@ -663,6 +664,7 @@ async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> ty
         }
       return {"error": f"No data found for YARA ruleset {ruleset_id}"}
   except Exception as e:
+    logging.exception("Error fetching YARA ruleset %s: %s", ruleset_id, e)
     return {"error": f"Error fetching YARA ruleset {ruleset_id}: {e}"}
 
 async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
@@ -689,6 +691,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
         }
       return {"error": f"No data found for Sigma ruleset {ruleset_id}"}
   except Exception as e:
+    logging.exception("Error fetching Sigma ruleset %s: %s", ruleset_id, e)
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
 @server.tool()
@@ -730,7 +733,9 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
         async with vt_client(ctx) as client:
           data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
           data = await data.json_async()
+
         files_aggregations = data.get("data", {}).get("attributes", {}).get("aggregations", {}).get("files", {})
+
         if files_aggregations:
           # Iterate through different community rule types
           for key, rule_type in rule_keys_map.items():
@@ -762,8 +767,8 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
                     "rule_type": rule_type
                   })
       except Exception as e:
-        # Error while getting aggregations, continue
-        pass
+        logging.exception("Error fetching community rules aggregations: %s", e)
+        # Continue execution to fetch other rule types
 
   # Fetch curated hunting rulesets if requested
   if "curated_yara_rule" in rule_types:
@@ -773,6 +778,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
         related_rulesets_resp = await client.get_async(f"/collections/{collection_id}/hunting_rulesets")
         related_rulesets_data = await related_rulesets_resp.json_async()
         related_rulesets = related_rulesets_data.get("data", [])
+
       # Iterate through each related ruleset
       for ruleset in related_rulesets:
         ruleset_id = ruleset.get("id", None)
@@ -784,11 +790,14 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
             ruleset_resp = await client.get_async(f"/intelligence/hunting_rulesets/{ruleset_id}")
             ruleset_data = await ruleset_resp.json_async()
         except Exception as e:
+          logging.exception("Error processing rule: %s", e)
           continue
+
         attributes = ruleset_data.get("data", {}).get("attributes", {})
         rules = attributes.get("rules", "")
         rule_names = attributes.get("rule_names", [])
         n_rules = attributes.get("number_of_rules", 0)
+
         # Append each rule to the curated_rules list
         if n_rules == 1:
           all_rules.append({
@@ -804,6 +813,6 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
                 "rule_content": rules[i],
             })
     except Exception as e:
-      pass  
+      logging.exception("Error fetching curated rules: %s", e)
     
   return utils.sanitize_response(all_rules)
