@@ -27,9 +27,9 @@ async def create_reference_list(
     name: str,
     description: str,
     entries: List[str],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     syntax_type: str = "STRING",
 ) -> str:
     """Create a new reference list in Chronicle SIEM.
@@ -157,9 +157,9 @@ async def create_reference_list(
 @server.tool()
 async def get_reference_list(
     name: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     include_entries: bool = True,
 ) -> str:
     """Get details and contents of a reference list in Chronicle SIEM.
@@ -293,9 +293,9 @@ async def get_reference_list(
 @server.tool()
 async def update_reference_list(
     name: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     entries: Optional[List[str]] = None,
     description: Optional[str] = None,
 ) -> str:

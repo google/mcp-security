@@ -15,7 +15,7 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -26,11 +26,11 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def search_security_events(
     text: str,
-    project_id: str = None,
-    customer_id: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
     hours_back: int = 24,
     max_events: int = 100,
-    region: str = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Search for security events in Chronicle SIEM using natural language.
 
