@@ -14,7 +14,7 @@
 """HTTP client for making requests to the SecOps SOAR API."""
 
 import json
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import aiohttp
 from logger_utils import get_logger
@@ -25,9 +25,10 @@ logger = get_logger(__name__)
 class HttpClient:
     """HTTP client for making requests to the SecOps SOAR API."""
 
-    def __init__(self, base_url: str, app_key: str):
+    def __init__(self, base_url: str, app_key: str, proxy: Optional[str] = None):
         self.base_url = base_url
         self.app_key = app_key
+        self.proxy = proxy
         self._session = None
 
     def _get_session(self) -> aiohttp.ClientSession:
@@ -56,16 +57,21 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        request_kwargs = {"params": params, "headers": headers}
+        if self.proxy:
+            request_kwargs["proxy"] = self.proxy
         try:
             async with self._get_session().get(
-                self.base_url + endpoint, params=params, headers=headers
+                self.base_url + endpoint, **request_kwargs
             ) as response:
                 response.raise_for_status()  # Raise an exception for 4xx/5xx responses
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
+            logger.error("HTTP error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"HTTP error: {e}"}
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
+            logger.error("An error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"Unexpected error: {e}"}
         return None
 
     async def post(
@@ -85,18 +91,41 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        request_kwargs = {"json": req, "params": params, "headers": headers}
+        if self.proxy:
+            request_kwargs["proxy"] = self.proxy
         try:
             async with self._get_session().post(
-                self.base_url + endpoint, json=req, params=params, headers=headers
+                self.base_url + endpoint, **request_kwargs
             ) as response:
+                if response.status == 500:
+                    try:
+                        error_data = await response.json()
+                        logger.error(
+                            "Server error (500) for endpoint %s: %s",
+                            endpoint,
+                            error_data,
+                        )
+                        return {"error": f"Server error (500): {error_data}"}
+                    except Exception:
+                        error_text = await response.text()
+                        logger.error(
+                            "Server error (500) for endpoint %s: %s",
+                            endpoint,
+                            error_text,
+                        )
+                        return {"error": f"Server error (500): {error_text}"}
+
                 response.raise_for_status()
                 data = await response.content.read()
                 decoded_data = data.decode("utf-8")
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
+            logger.error("HTTP error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"HTTP error: {e}"}
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
+            logger.error("An error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"Unexpected error: {e}"}
         return None
 
     async def patch(
@@ -116,16 +145,21 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        request_kwargs = {"json": req, "params": params, "headers": headers}
+        if self.proxy:
+            request_kwargs["proxy"] = self.proxy
         try:
             async with self._get_session().patch(
-                self.base_url + endpoint, json=req, params=params, headers=headers
+                self.base_url + endpoint, **request_kwargs
             ) as response:
                 response.raise_for_status()
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
+            logger.error("HTTP error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"HTTP error: {e}"}
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
+            logger.error("An error occurred for endpoint %s: %s", endpoint, e)
+            return {"error": f"Unexpected error: {e}"}
         return None
 
     async def close(self):
