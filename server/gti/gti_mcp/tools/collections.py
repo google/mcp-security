@@ -639,8 +639,6 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
   return markdown_output
 
 
-
-\
 @server.tool()
 async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
