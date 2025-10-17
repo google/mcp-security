@@ -639,6 +639,58 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
   return markdown_output
 
 
+async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+  """Fetches details for a single YARA ruleset and formats the output."""
+
+  ruleset_id = rule.get("value",{}).get("ruleset_id", None)
+  if not ruleset_id:  
+    return {"error": f"No ruleset_id found in rule"} 
+  
+  try:
+    async with vt_client(ctx) as client:
+      ruleset_resp = await client.get_async(f"/yara_rulesets/{ruleset_id}")
+      ruleset_data = await ruleset_resp.json_async()
+      ruleset_data = ruleset_data.get("data", {})
+      ruleset_attributes = ruleset_data.get("attributes", {})
+      if ruleset_data and ruleset_attributes:
+        return {
+            "rule_id": ruleset_data.get("id"),
+            "rule_name": ruleset_attributes.get("name", ""),
+            "rule_source": ruleset_attributes.get("source", ""),
+            "rule_content": ruleset_attributes.get("rules", ""),
+            "count" : rule.get("count", 0),
+            "rule_type": rule_type
+        }
+      return {"error": f"No data found for YARA ruleset {ruleset_id}"}
+  except Exception as e:
+    return {"error": f"Error fetching YARA ruleset {ruleset_id}: {e}"}
+
+async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+  """Fetches details for a single Sigma ruleset and formats the output."""
+
+  ruleset_id = rule.get("value",{}).get("id", None)
+  if not ruleset_id:  
+    return {"error": f"No ruleset_id found in rule"} 
+  
+  try:
+    async with vt_client(ctx) as client:
+      ruleset_resp = await client.get_async(f"/sigma_rules/{ruleset_id}")
+      ruleset_data = await ruleset_resp.json_async()
+      ruleset_data = ruleset_data.get("data", {})
+      ruleset_attributes = ruleset_data.get("attributes", {})
+      if ruleset_data and ruleset_attributes:
+        return {
+            "rule_id": ruleset_data.get("id", ""),
+            "rule_name": rule.get("value", {}).get("title", ""),
+            "rule_source": ruleset_attributes.get("source_url", ""),
+            "rule_content": ruleset_attributes.get("rule", ""),
+            "count" : rule.get("count", 0),
+            "rule_type": rule_type
+        }
+      return {"error": f"No data found for Sigma ruleset {ruleset_id}"}
+  except Exception as e:
+    return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
+
 @server.tool()
 async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
@@ -667,111 +719,91 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
   if rule_types is None:
     rule_types = ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara", "curated_yara_rule"]
 
-  async with vt_client(ctx) as client:
-    # Fetch community rules from aggregations if requested
-    if any(rt in rule_types for rt in ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara"]):
+  rule_keys_map = {
+      "crowdsourced_yara_results": "crowdsourced_yara",
+      "crowdsourced_sigma_results": "crowdsourced_sigma",
+      "crowdsourced_ids_results": "crowdsourced_ids",
+  }
+  # Fetch community rules from aggregations if requested
+  if any(rt in rule_types for rt in ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara"]):
       try:
-        data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
-        data = await data.json_async()
-        attributes = data.get("data", {}).get("attributes", {})
-        if attributes:
-          files_aggregations = attributes.get("aggregations", {}).get("files", {})
-          if files_aggregations:
-            rule_keys_map = {
-                "crowdsourced_yara_results": "crowdsourced_yara",
-                "crowdsourced_sigma_results": "crowdsourced_sigma",
-                "crowdsourced_ids_results": "crowdsourced_ids",
-            }
-            # Iterate through different community rule types
-            for key, rule_type in rule_keys_map.items():
-              if rule_type in rule_types:
-                rules = files_aggregations.get(key, [])
-                if rules:
-                  # Sort rules by count and take the top N
-                  sorted_rules = sorted(rules, key=lambda x: x.get("count", 0), reverse=True)
-                  top_rules = sorted_rules[:top_n]
-                  # Fetch detailed rule content for each type
-                  for rule in top_rules:
-                    try:
-                      if key == "crowdsourced_yara_results":
-                        ruleset_id = rule.get("value", {}).get("ruleset_id", None)
-                        if ruleset_id:
-                          ruleset_resp = await client.get_async(f"/yara_rulesets/{ruleset_id}")
-                          ruleset_data = await ruleset_resp.json_async()
-                          ruleset_data = ruleset_data.get("data", {})
-                          all_rules.append({
-                            "rule_id": ruleset_data["id"],
-                            "rule_name": ruleset_data.get("attributes", {}).get("name", ""),
-                            "rule_source": ruleset_data.get("attributes", {}).get("source", ""),
-                            "rule_content": ruleset_data.get("attributes", {}).get("rules", ""),
-                            "count" : rule.get("count", 0),
-                            "rule_type": rule_type
-                          })
-                      elif key == "crowdsourced_sigma_results":
-                        ruleset_id = rule.get("value", {}).get("id", None)
-                        if ruleset_id:  
-                          ruleset_resp = await client.get_async(f"/sigma_rules/{ruleset_id}")
-                          ruleset_data = await ruleset_resp.json_async()
-                          ruleset_data = ruleset_data.get("data", {})
-                          all_rules.append({
-                            "rule_id": ruleset_data.get("id", ""),
-                            "rule_name": rule.get("value", {}).get("title", ""),
-                            "rule_source": ruleset_data.get("attributes", {}).get("source_url", ""),
-                            "rule_content": ruleset_data.get("attributes", {}).get("rule", ""),
-                            "count" : rule.get("count", 0),
-                            "rule_type": rule_type
-                          })
-                      else: # IDS rules
-                        all_rules.append({
-                            "rule_id": rule.get("id", ""),
-                            "rule_name": rule.get("value", {}).get("message", ""),
-                            "rule_source": rule.get("value", {}).get("url", ""),
-                            "rule_content": rule.get("value", {}).get("rule", ""),
-                            "count" : rule.get("count", 0),
-                            "rule_type": rule_type
-                          })
-                    except Exception as e:
-                      return {"error": "Error fetching details for rule."}
-      except Exception as e:
-        return {"error": "Error fetching community rules aggregations."}
+        async with vt_client(ctx) as client:
+          data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
+          data = await data.json_async()
+        files_aggregations = data.get("data", {}).get("attributes", {}).get("aggregations", {}).get("files", {})
+        if files_aggregations:
+          # Iterate through different community rule types
+          for key, rule_type in rule_keys_map.items():
+            rules = files_aggregations.get(key, [])
+            if rule_type not in rule_type and not rules:
+              continue
 
-    # Fetch curated hunting rulesets if requested
-    if "curated_yara_rule" in rule_types:
-      try:
+            # Sort rules by count and take the top N
+            sorted_rules = sorted(rules, key=lambda x: x.get("count", 0), reverse=True)
+            top_rules = sorted_rules[:top_n]
+            # Fetch detailed rule content for each type
+            for rule in top_rules:
+              if key == "crowdsourced_yara_results":
+                rule_details = await _get_yara_rule_details(ctx, rule, rule_type)
+                if "error" not in rule_details:
+                  all_rules.append(rule_details)
+              elif key == "crowdsourced_sigma_results":
+                rule_details = await _get_sigma_rule_details(ctx, rule, rule_type)
+                if "error" not in rule_details:
+                  all_rules.append(rule_details)
+              else: # IDS rules
+                rule_value = rule.get("value", {})
+                all_rules.append({
+                    "rule_id": rule.get("id", ""),
+                    "rule_name": rule_value.get("message", ""),
+                    "rule_source": rule_value.get("url", ""),
+                    "rule_content": rule_value.get("rule", ""),
+                    "count" : rule.get("count", 0),
+                    "rule_type": rule_type
+                  })
+      except Exception as e:
+        # Error while getting aggregations, continue
+        pass
+
+  # Fetch curated hunting rulesets if requested
+  if "curated_yara_rule" in rule_types:
+    try:
+      async with vt_client(ctx) as client:
         # 1. Get related hunting ruleset IDs from the collection
         related_rulesets_resp = await client.get_async(f"/collections/{collection_id}/hunting_rulesets")
         related_rulesets_data = await related_rulesets_resp.json_async()
         related_rulesets = related_rulesets_data.get("data", [])
-        curated_rules = []
-        # Iterate through each related ruleset
-        for ruleset in related_rulesets:
-          ruleset_id = ruleset.get("id")
-          if ruleset_id:
-            try:
-              # 2. Get the full hunting ruleset object for each ID.
-              ruleset_resp = await client.get_async(f"/intelligence/hunting_rulesets/{ruleset_id}")
-              ruleset_data = await ruleset_resp.json_async()
-              attributes = ruleset_data.get("data", {}).get("attributes", {})
-              rules = attributes.get("rules", "")
-              rule_names = attributes.get("rule_names", [])
-              n_rules = attributes.get("number_of_rules", 0)
-              # Append each rule to the curated_rules list
-              if n_rules == 1:
-                curated_rules.append({
-                    "rule_type": "curated_yara_rule",
-                    "rule_name": rule_names[0],
-                    "rule_content": rules,
-                })
-              else:
-                for i in range(n_rules):
-                  curated_rules.append({
-                      "rule_type": "curated_yara_rule",
-                      "rule_name": rule_names[i],
-                      "rule_content": rules[i],
-                  })
-            except Exception as e:
-              return {"error": f"Error fetching hunting rulese."}
-        all_rules.extend(curated_rules)
-      except Exception as e:
-        return {"error": "Error fetching related hunting rulesets."}
+      # Iterate through each related ruleset
+      for ruleset in related_rulesets:
+        ruleset_id = ruleset.get("id", None)
+        if not ruleset_id:
+          continue
+        try:
+          # 2. Get the full hunting ruleset object for each ID.
+          async with vt_client(ctx) as client:
+            ruleset_resp = await client.get_async(f"/intelligence/hunting_rulesets/{ruleset_id}")
+            ruleset_data = await ruleset_resp.json_async()
+        except Exception as e:
+          continue
+        attributes = ruleset_data.get("data", {}).get("attributes", {})
+        rules = attributes.get("rules", "")
+        rule_names = attributes.get("rule_names", [])
+        n_rules = attributes.get("number_of_rules", 0)
+        # Append each rule to the curated_rules list
+        if n_rules == 1:
+          all_rules.append({
+              "rule_type": "curated_yara_rule",
+              "rule_name": rule_names[0],
+              "rule_content": rules,
+          })
+        else:
+          for i in range(n_rules):
+            all_rules.append({
+                "rule_type": "curated_yara_rule",
+                "rule_name": rule_names[i],
+                "rule_content": rules[i],
+            })
+    except Exception as e:
+      pass  
+    
   return utils.sanitize_response(all_rules)

@@ -1348,8 +1348,7 @@ async def test_get_collection_rules_empty():
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
-    assert isinstance(result, dict)
-    assert "error" in result
+    assert result == []
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_api_error():
@@ -1361,8 +1360,7 @@ async def test_get_collection_rules_api_error():
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
-    assert isinstance(result, dict)
-    assert "error" in result
+    assert result == []
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_partial_error():
@@ -1401,5 +1399,4 @@ async def test_get_collection_rules_partial_error():
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
-    assert isinstance(result, dict)
-    assert "error" in result
+    assert result == []
