@@ -1196,27 +1196,27 @@ async def test_get_entities_related_empty_result(
         assert result.structuredContent == {"result": expected}
 
 @pytest.mark.asyncio
-async def test_get_collection_rules():
+async def test_get_collection_rules_all_types():
     mock_ctx = AsyncMock()
     mock_client_instance = AsyncMock()
-    mock_response = MagicMock()
 
-    mock_response_data = {
+    # Mock data for aggregations
+    mock_aggregations_data = {
         "data": {
             "attributes": {
                 "aggregations": {
                     "files": {
                         "crowdsourced_ids_results": [
-                            {"rule_id": "ids1", "count": 10},
-                            {"rule_id": "ids2", "count": 5},
+                            {"id": "ids1", "count": 10, "value": {"message": "IDS Rule 1", "url": "http://ids1.com", "rule": "ids rule content 1"}},
+                            {"id": "ids2", "count": 5, "value": {"message": "IDS Rule 2", "url": "http://ids2.com", "rule": "ids rule content 2"}},
                         ],
                         "crowdsourced_sigma_results": [
-                            {"rule_id": "sigma1", "count": 8},
+                            {"id": "sigma1", "count": 8, "value": {"id": "sigma1", "title": "Sigma Rule 1"}},
                         ],
                         "crowdsourced_yara_results": [
-                            {"rule_id": "yara1", "count": 12},
-                            {"rule_id": "yara2", "count": 3},
-                            {"rule_id": "yara3", "count": 7},
+                            {"id": "yara1", "count": 12, "value": {"ruleset_id": "yara1"}},
+                            {"id": "yara2", "count": 3, "value": {"ruleset_id": "yara2"}},
+                            {"id": "yara3", "count": 7, "value": {"ruleset_id": "yara3"}},
                         ],
                     }
                 }
@@ -1224,73 +1224,182 @@ async def test_get_collection_rules():
         }
     }
 
-    async def json_async():
-        return mock_response_data
+    # Mock data for individual rule lookups
+    mock_yara_ruleset_data = {
+        "yara1": {"data": {"id": "yara1", "attributes": {"name": "Yara Rule 1", "source": "source1", "rules": "yara rule content 1"}}},
+        "yara3": {"data": {"id": "yara3", "attributes": {"name": "Yara Rule 3", "source": "source3", "rules": "yara rule content 3"}}},
+    }
+    mock_sigma_ruleset_data = {
+        "sigma1": {"data": {"id": "sigma1", "attributes": {"source_url": "http://sigma1.com", "rule": "sigma rule content 1"}}},
+    }
 
-    mock_response.json_async = json_async
-    mock_client_instance.get_async.return_value = mock_response
+    # Mock data for curated rules
+    mock_related_rulesets = {"data": [{"id": "curated1"}]}
+    mock_curated_ruleset_data = {
+        "curated1": {"data": {"id": "curated1", "attributes": {"rules": "curated yara content 1", "rule_names": ["Curated Rule 1"], "number_of_rules": 1}}},
+    }
+
+    async def mock_get_async(url, **kwargs):
+        mock_resp = MagicMock()
+        if url.startswith("/collections/test_id?attributes=aggregations"):
+            async def json_async(): return mock_aggregations_data
+            mock_resp.json_async = json_async
+        elif url.startswith("/yara_rulesets/"):
+            ruleset_id = url.split("/")[-1]
+            async def json_async(): return mock_yara_ruleset_data.get(ruleset_id, {"data": {}})
+            mock_resp.json_async = json_async
+        elif url.startswith("/sigma_rules/"):
+            ruleset_id = url.split("/")[-1]
+            async def json_async(): return mock_sigma_ruleset_data.get(ruleset_id, {"data": {}})
+            mock_resp.json_async = json_async
+        elif url == "/collections/test_id/hunting_rulesets":
+            async def json_async(): return mock_related_rulesets
+            mock_resp.json_async = json_async
+        elif url.startswith("/intelligence/hunting_rulesets/"):
+            ruleset_id = url.split("/")[-1]
+            async def json_async(): return mock_curated_ruleset_data.get(ruleset_id, {"data": {}})
+            mock_resp.json_async = json_async
+        else:
+            async def json_async(): return {}
+            mock_resp.json_async = json_async
+        return mock_resp
+
+    mock_client_instance.get_async.side_effect = mock_get_async
 
     mock_vt_client = MagicMock()
     mock_vt_client.__aenter__.return_value = mock_client_instance
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
 
     expected_result = [
-        {"rule_id": "ids1", "count": 10, "rule_type": "crowdsourced_ids"},
-        {"rule_id": "ids2", "count": 5, "rule_type": "crowdsourced_ids"},
-        {"rule_id": "sigma1", "count": 8, "rule_type": "crowdsourced_sigma"},
-        {"rule_id": "yara1", "count": 12, "rule_type": "crowdsourced_yara"},
-        {"rule_id": "yara3", "count": 7, "rule_type": "crowdsourced_yara"},
+        {"rule_id": "ids1", "rule_name": "IDS Rule 1", "rule_source": "http://ids1.com", "rule_content": "ids rule content 1", "count": 10, "rule_type": "crowdsourced_ids"},
+        {"rule_id": "ids2", "rule_name": "IDS Rule 2", "rule_source": "http://ids2.com", "rule_content": "ids rule content 2", "count": 5, "rule_type": "crowdsourced_ids"},
+        {"rule_id": "sigma1", "rule_name": "Sigma Rule 1", "rule_source": "http://sigma1.com", "rule_content": "sigma rule content 1", "count": 8, "rule_type": "crowdsourced_sigma"},
+        {"rule_id": "yara1", "rule_name": "Yara Rule 1", "rule_source": "source1", "rule_content": "yara rule content 1", "count": 12, "rule_type": "crowdsourced_yara"},
+        {"rule_id": "yara3", "rule_name": "Yara Rule 3", "rule_source": "source3", "rule_content": "yara rule content 3", "count": 7, "rule_type": "crowdsourced_yara"},
+        {"rule_type": "curated_yara_rule", "rule_name": "Curated Rule 1", "rule_content": "curated yara content 1"},
     ]
 
-    # Sort both lists to ensure order doesn't affect comparison
-    result.sort(key=lambda x: (x['rule_type'], -x['count']))
-    expected_result.sort(key=lambda x: (x['rule_type'], -x['count']))
+    def sort_key(x):
+        return (x['rule_type'], -x.get('count', 0), x.get('rule_id', ''), x.get('rule_name', ''))
+    
+    result.sort(key=sort_key)
+    expected_result.sort(key=sort_key)
 
+    assert result == expected_result
+
+@pytest.mark.asyncio
+async def test_get_collection_rules_filter_types():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+
+    mock_aggregations_data = {
+        "data": {
+            "attributes": {
+                "aggregations": {
+                    "files": {
+                        "crowdsourced_ids_results": [
+                            {"id": "ids1", "count": 10, "value": {"message": "IDS Rule 1", "url": "http://ids1.com", "rule": "ids rule content 1"}},
+                        ],
+                        "crowdsourced_sigma_results": [
+                            {"id": "sigma1", "count": 8, "value": {"id": "sigma1", "title": "Sigma Rule 1"}},
+                        ],
+                    }
+                }
+            }
+        }
+    }
+
+    async def mock_get_async(url, **kwargs):
+        mock_resp = MagicMock()
+        if url.startswith("/collections/test_id?attributes=aggregations"):
+            async def json_async(): return mock_aggregations_data
+            mock_resp.json_async = json_async
+        return mock_resp
+
+    mock_client_instance.get_async.side_effect = mock_get_async
+
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+    
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, rule_types=["crowdsourced_ids"])
+
+    expected_result = [
+        {"rule_id": "ids1", "rule_name": "IDS Rule 1", "rule_source": "http://ids1.com", "rule_content": "ids rule content 1", "count": 10, "rule_type": "crowdsourced_ids"},
+    ]
     assert result == expected_result
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_empty():
     mock_ctx = AsyncMock()
     mock_client_instance = AsyncMock()
-    mock_response = MagicMock()
 
-    mock_response_data = {
+    async def mock_get_async(url, **kwargs):
+        mock_resp = MagicMock()
+        async def json_async(): return {"data": {"attributes": {"aggregations": {"files": {}}}}}
+        mock_resp.json_async = json_async
+        return mock_resp
+
+    mock_client_instance.get_async.side_effect = mock_get_async
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+    
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
+    assert isinstance(result, dict)
+    assert "error" in result
+
+@pytest.mark.asyncio
+async def test_get_collection_rules_api_error():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+    mock_client_instance.get_async.side_effect = Exception("API Error")
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+    
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
+    assert isinstance(result, dict)
+    assert "error" in result
+
+@pytest.mark.asyncio
+async def test_get_collection_rules_partial_error():
+    mock_ctx = AsyncMock()
+    mock_client_instance = AsyncMock()
+
+    mock_aggregations_data = {
         "data": {
             "attributes": {
                 "aggregations": {
-                    "files": {}
+                    "files": {
+                        "crowdsourced_yara_results": [
+                            {"id": "yara1", "count": 12, "value": {"ruleset_id": "yara1"}},
+                        ],
+                    }
                 }
             }
         }
     }
 
-    async def json_async():
-        return mock_response_data
+    async def mock_get_async(url, **kwargs):
+        mock_resp = MagicMock()
+        if url.startswith("/collections/test_id?attributes=aggregations"):
+            async def json_async(): return mock_aggregations_data
+            mock_resp.json_async = json_async
+        elif url.startswith("/yara_rulesets/"):
+            raise Exception("Yara lookup failed")
+        elif url == "/collections/test_id/hunting_rulesets":
+             async def json_async(): return {"data": []}
+             mock_resp.json_async = json_async
+        return mock_resp
 
-    mock_response.json_async = json_async
-    mock_client_instance.get_async.return_value = mock_response
-
+    mock_client_instance.get_async.side_effect = mock_get_async
     mock_vt_client = MagicMock()
     mock_vt_client.__aenter__.return_value = mock_client_instance
-
+    
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
-
-    assert result == []
-
-@pytest.mark.asyncio
-async def test_get_collection_rules_error():
-    mock_ctx = AsyncMock()
-    mock_client_instance = AsyncMock()
-
-    mock_client_instance.get_async.side_effect = Exception("API Error")
-
-    mock_vt_client = MagicMock()
-    mock_vt_client.__aenter__.return_value = mock_client_instance
-
-    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_crowdsourced_rules(collection_id="test_id", ctx=mock_ctx, top_n=2)
-
-    assert result == {"error": "Error fetching collection test_id"}
+        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
+    assert isinstance(result, dict)
+    assert "error" in result

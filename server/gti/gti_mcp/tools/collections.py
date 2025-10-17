@@ -640,16 +640,30 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
 
 
 
+\
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 5, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
+
+  Note:
+    The `rule_types` argument filters the types of rules returned. Available types are:
+    - 'crowdsourced_ids'
+    - 'crowdsourced_sigma'
+    - 'crowdsourced_yara'
+    - 'curated_yara_rule'
+    If `rule_types` is not provided, all types are returned.
+
+  Example:
+    - `rule_types=['crowdsourced_yara']`: Only crowdsourced YARA rules.
+    - `rule_types=['crowdsourced_ids', 'curated_yara_rule']`: Crowdsourced IDS and curated YARA rules.
 
   Args:
     collection_id (required): The ID of the collection.
-    top_n (optional): The number of top community rules to return from each category. Defaults to 5.
-    rule_types (optional): List of rule types to fetch. Can be 'crowdsourced_ids', 'crowdsourced_sigma', 'crowdsourced_yara', or 'curated_yara_rule'. Defaults to all.
+    top_n (optional): The number of top community rules to return from each category. Defaults to 4.
+    rule_types (optional): List of rule types to fetch.
+
   Returns:
-    A list of dictionaries, where each dictionary contains a rule and its metadata.
+    A list of dictionaries, where each dictionary contains a rule and its metadata, or an error dictionary.
   """
   all_rules = []
   if rule_types is None:
@@ -697,17 +711,18 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 5,
                           })
                       elif key == "crowdsourced_sigma_results":
                         ruleset_id = rule.get("value", {}).get("id", None)
-                        ruleset_resp = await client.get_async(f"/sigma_rules/{ruleset_id}")
-                        ruleset_data = await ruleset_resp.json_async()
-                        ruleset_data = ruleset_data.get("data", {})
-                        all_rules.append({
-                          "rule_id": ruleset_data.get("id", ""),
-                          "rule_name": rule.get("value", {}).get("title", ""),
-                          "rule_source": ruleset_data.get("attributes", {}).get("source_url", ""),
-                          "rule_content": ruleset_data.get("attributes", {}).get("rule", ""),
-                          "count" : rule.get("count", 0),
-                          "rule_type": rule_type
-                        })
+                        if ruleset_id:  
+                          ruleset_resp = await client.get_async(f"/sigma_rules/{ruleset_id}")
+                          ruleset_data = await ruleset_resp.json_async()
+                          ruleset_data = ruleset_data.get("data", {})
+                          all_rules.append({
+                            "rule_id": ruleset_data.get("id", ""),
+                            "rule_name": rule.get("value", {}).get("title", ""),
+                            "rule_source": ruleset_data.get("attributes", {}).get("source_url", ""),
+                            "rule_content": ruleset_data.get("attributes", {}).get("rule", ""),
+                            "count" : rule.get("count", 0),
+                            "rule_type": rule_type
+                          })
                       else: # IDS rules
                         all_rules.append({
                             "rule_id": rule.get("id", ""),
