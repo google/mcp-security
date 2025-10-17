@@ -19,9 +19,9 @@ from typing import Any, Dict, List, Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
-
 # Configure logging
-logger = logging.getLogger('secops-mcp')
+logger = logging.getLogger("secops-mcp")
+
 
 @server.tool()
 async def export_udm_search_csv(
@@ -123,8 +123,8 @@ async def export_udm_search_csv(
     """
     try:
         logger.info(
-            f'Exporting UDM search results to CSV - Query: {query}, '
-            f'Fields: {fields}, Hours back: {hours_back}'
+            f"Exporting UDM search results to CSV - Query: {query}, "
+            f"Fields: {fields}, Hours back: {hours_back}"
         )
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -133,7 +133,7 @@ async def export_udm_search_csv(
         end_time = datetime.now(timezone.utc)
         start_time = end_time - timedelta(hours=hours_back)
 
-        logger.info(f'Export time range: {start_time} to {end_time}')
+        logger.info(f"Export time range: {start_time} to {end_time}")
 
         # Call the fetch_udm_search_csv method on the chronicle client
         csv_results = chronicle.fetch_udm_search_csv(
@@ -144,16 +144,43 @@ async def export_udm_search_csv(
             case_insensitive=case_insensitive,
         )
 
-        # Log success
-        lines = csv_results.strip().split('\n')
-        row_count = len(lines) - 1 if lines else 0  # Subtract header row
-        logger.info(f'Successfully exported {row_count} rows to CSV format')
+        if (
+            csv_results.get("queryValidationErrors")
+            or csv_results.get("runtimeErrors")
+            or csv_results.get("failureCsvFieldValidations")
+        ):
 
-        return csv_results
+            export_errors = (
+                csv_results.get("queryValidationErrors")
+                or csv_results.get("runtimeErrors")
+                or csv_results.get("failureCsvFieldValidations")
+            )
+
+            logger.error(
+                f"Error exporting UDM search to CSV: {export_errors}",
+                exc_info=True,
+            )
+            return f"Error exporting UDM search results: {export_errors}"
+
+        row_count = 0
+        if (
+            "csv" in csv_results
+            and csv_results["csv"]
+            and csv_results["csv"].get("row")
+        ):
+            row_count = len(csv_results["csv"]["row"])
+            logger.info(f"Successfully exported {row_count} rows to CSV format")
+            # Returning CSV as a string
+            return "\n".join(csv_results["csv"]["row"])
+
+        # Return raw response as default
+        return "No results found"
 
     except Exception as e:
-        logger.error(f'Error exporting UDM search to CSV: {str(e)}', exc_info=True)
-        return f'Error exporting UDM search results: {str(e)}'
+        logger.error(
+            f"Error exporting UDM search to CSV: {str(e)}", exc_info=True
+        )
+        return f"Error exporting UDM search results: {str(e)}"
 
 
 @server.tool()
@@ -240,7 +267,7 @@ async def find_udm_field_values(
     - Regular use helps maintain awareness of data patterns in your environment.
     """
     try:
-        logger.info(f'Finding UDM field values matching: {query}')
+        logger.info(f"Finding UDM field values matching: {query}")
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
@@ -252,18 +279,18 @@ async def find_udm_field_values(
         # Log success
         if isinstance(results, dict):
             # Try to extract count information if available
-            if 'values' in results:
-                count = len(results['values'])
-            elif 'fieldValues' in results:
-                count = len(results['fieldValues'])
+            if "values" in results:
+                count = len(results["values"])
+            elif "fieldValues" in results:
+                count = len(results["fieldValues"])
             else:
-                count = 'unknown number of'
-            logger.info(f'Found {count} matching field values')
+                count = "unknown number of"
+            logger.info(f"Found {count} matching field values")
         else:
-            logger.info('Field value search completed')
+            logger.info("Field value search completed")
 
         return results
 
     except Exception as e:
-        logger.error(f'Error finding UDM field values: {str(e)}', exc_info=True)
-        return {'error': str(e), 'values': []}
+        logger.error(f"Error finding UDM field values: {str(e)}", exc_info=True)
+        return {"error": str(e), "values": []}

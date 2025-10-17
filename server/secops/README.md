@@ -32,6 +32,15 @@ Chronicle Security Operations suite.
 - **`get_threat_intel(query, project_id=None, customer_id=None, region=None)`**
     - Get answers to general security domain questions and specific threat intelligence information using Chronicle's AI capabilities.
 
+- **`search_udm(query, hours_back=24, project_id=None, customer_id=None, region=None)`**
+    - Searches UDM events directly in Chronicle using raw UDM query syntax. Useful for precise, technical searches when you know the exact UDM field paths.
+
+- **`export_udm_search_csv(query, fields, hours_back=24, case_insensitive=True, project_id=None, customer_id=None, region=None)`**
+    - Exports UDM search results to CSV format with specified fields for analysis and reporting. Great for exporting security event data for offline analysis.
+
+- **`find_udm_field_values(query, page_size=None, project_id=None, customer_id=None, region=None)`**
+    - Finds and autocompletes UDM field values in Chronicle SIEM. Helps discover valid field values when building queries without needing to know exact matches.
+
 ### Log Ingestion Tools
 
 - **`ingest_raw_log(log_type, log_message, project_id=None, customer_id=None, region=None, forwarder_id=None, labels=None, log_entry_time=None, collection_time=None)`**
@@ -127,6 +136,7 @@ The MCP server provides the following capabilities:
 10. **Data Table Management**: Create and manage structured data tables for detection rules
 11. **Reference List Management**: Create and manage reference lists for detection rules
 12. **Feed Management**: Create, update, enable, disable, and delete data feeds
+13. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
 
@@ -141,6 +151,7 @@ These tools focus on core security operations tasks:
 - **Entity Analysis**: Use `lookup_entity` to investigate IPs, domains, hashes, and other indicators
 - **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
 - **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
+- **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools
 These tools help you get data into Chronicle:
