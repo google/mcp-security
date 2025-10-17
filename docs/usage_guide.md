@@ -95,7 +95,8 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
       "env": {
         "CHRONICLE_PROJECT_ID": "your-project-id",
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
-        "CHRONICLE_REGION": "us"
+        "CHRONICLE_REGION": "us",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/your/service-account-key.json"
       },
       "disabled": false,
       "autoApprove": []
@@ -139,7 +140,9 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
         "run",
         "scc_mcp.py"
       ],
-      "env": {},
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/your/service-account-key.json"
+      },
       "disabled": false,
       "autoApprove": []
     }
@@ -175,6 +178,7 @@ Add these lines to your `~/.bashrc`, `~/.zshrc`, or equivalent shell configurati
 export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
 export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
 export CHRONICLE_REGION="us"
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
 
 # SOAR
 export SOAR_URL="your-soar-url"

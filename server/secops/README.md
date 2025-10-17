@@ -181,7 +181,8 @@ Add the following configuration to your MCP client's settings file:
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
         "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}"
       },
       "disabled": false,
       "autoApprove": []
@@ -206,7 +207,8 @@ You can also use pip instead of uv to install and run the MCP server:
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
         "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}"
       },
       "disabled": false,
       "autoApprove": [
@@ -236,6 +238,7 @@ Set up these environment variables in your system:
 export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
 export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
 export CHRONICLE_REGION="us"
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
 ```
 
 **For Windows PowerShell:**
@@ -243,6 +246,7 @@ export CHRONICLE_REGION="us"
 $Env:CHRONICLE_PROJECT_ID = "your-google-cloud-project-id"
 $Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
 $Env:CHRONICLE_REGION = "us"
+$Env:GOOGLE_APPLICATION_CREDENTIALS = "/path/to/your/service-account-key.json"
 ```
 
 The `CHRONICLE_REGION` can be one of:

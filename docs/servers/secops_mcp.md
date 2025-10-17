@@ -28,10 +28,9 @@ Add the following configuration to your MCP client's settings file:
       "env": {
         "CHRONICLE_PROJECT_ID": "your-gcp-project-id",
         "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
-        "CHRONICLE_REGION": "us"
+        "CHRONICLE_REGION": "us",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/your/service-account-key.json"
       },
-      "disabled": false,
-      "autoApprove": []
       "disabled": false,
       "autoApprove": []
     }
@@ -63,6 +62,7 @@ Example .env file:
 CHRONICLE_PROJECT_ID=your-gcp-project-id
 CHRONICLE_CUSTOMER_ID=your-chronicle-customer-id
 CHRONICLE_REGION=us
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
 ```
 
 ### Environment Variable Setup
@@ -74,6 +74,7 @@ Set up these environment variables in your system:
 export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
 export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
 export CHRONICLE_REGION="us"
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
 ```
 
 **For Windows PowerShell:**
@@ -81,6 +82,7 @@ export CHRONICLE_REGION="us"
 $Env:CHRONICLE_PROJECT_ID = "your-google-cloud-project-id"
 $Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
 $Env:CHRONICLE_REGION = "us"
+$Env:GOOGLE_APPLICATION_CREDENTIALS = "/path/to/your/service-account-key.json"
 ```
 
 The `CHRONICLE_REGION` can be one of:

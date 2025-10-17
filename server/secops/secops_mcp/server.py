@@ -19,6 +19,10 @@ security operations tasks using Chronicle, including natural language search.
 
 import logging
 import os
+import signal
+import sys
+import threading
+import time
 from typing import Any, Optional
 
 from mcp.server.fastmcp import FastMCP
@@ -56,6 +60,10 @@ def get_chronicle_client(
 
     Returns:
         Any: Initialized Chronicle client
+        
+    Raises:
+        ValueError: If required configuration is missing
+        RuntimeError: If authentication fails or times out
     """
     # Use provided values or defaults from environment variables
     project_id = project_id or DEFAULT_PROJECT_ID
@@ -69,11 +77,84 @@ def get_chronicle_client(
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
 
-    client = SecOpsClient()
-    chronicle = client.chronicle(
-        customer_id=customer_id, project_id=project_id, region=region
-    )
-    return chronicle
+    # Check for Google Cloud authentication credentials
+    google_creds = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    if not google_creds:
+        # Check if ADC might be available
+        try:
+            from google.auth import default
+            default()
+        except Exception:
+            raise RuntimeError(
+                'Google Cloud authentication is required but not configured.\n\n'
+                'Please set up authentication using one of these methods:\n'
+                '1. Set GOOGLE_APPLICATION_CREDENTIALS environment variable:\n'
+                '   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"\n\n'
+                '2. Use Application Default Credentials (ADC):\n'
+                '   gcloud auth application-default login\n\n'
+                '3. Set up a service account and download the key file\n\n'
+                'For more information, see: https://cloud.google.com/docs/authentication'
+            )
+
+    # Initialize client with timeout protection
+    logger.info('Initializing SecOps client...')
+    
+    # Use threading-based timeout for cross-platform compatibility
+    client_result = [None]
+    client_error = [None]
+    
+    def init_client():
+        try:
+            client = SecOpsClient()
+            chronicle = client.chronicle(
+                customer_id=customer_id, project_id=project_id, region=region
+            )
+            client_result[0] = chronicle
+        except Exception as e:
+            client_error[0] = e
+    
+    # Start initialization in a separate thread
+    init_thread = threading.Thread(target=init_client, daemon=True)
+    init_thread.start()
+    
+    # Wait for initialization with timeout
+    timeout_seconds = 30
+    init_thread.join(timeout=timeout_seconds)
+    
+    if init_thread.is_alive():
+        # Thread is still running - initialization timed out
+        raise TimeoutError(
+            f'SecOps client initialization timed out after {timeout_seconds} seconds. '
+            'This usually indicates an authentication problem.\n\n'
+            'Please verify:\n'
+            '1. GOOGLE_APPLICATION_CREDENTIALS is correctly set\n'
+            '2. The service account has necessary permissions for Chronicle Security Operations\n'
+            '3. Network connectivity to Google Cloud APIs\n'
+            '4. The specified project_id, customer_id, and region are correct'
+        )
+    
+    if client_error[0]:
+        # Initialization failed with an exception
+        logger.error(f'Failed to initialize SecOps client: {str(client_error[0])}')
+        raise RuntimeError(
+            f'Failed to initialize Chronicle SecOps client: {str(client_error[0])}\n\n'
+            'This error often indicates:\n'
+            '1. Missing or invalid GOOGLE_APPLICATION_CREDENTIALS\n'
+            '2. Insufficient permissions on the service account\n'
+            '3. Network connectivity issues\n'
+            '4. Invalid project_id, customer_id, or region\n\n'
+            'Please verify your configuration and try again.'
+        )
+    
+    if client_result[0] is None:
+        # Unexpected case - no result and no error
+        raise RuntimeError(
+            'SecOps client initialization completed but returned no result. '
+            'This may indicate an internal error.'
+        )
+    
+    logger.info('SecOps client initialized successfully')
+    return client_result[0]
 
 
 # Import all tools
