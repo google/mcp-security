@@ -718,7 +718,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
   Returns:
     A list of dictionaries, where each dictionary contains a rule and its metadata, or an error dictionary.
   """
-  all_rules = []
+  crowsourced_rules = []
   if rule_types is None:
     rule_types = ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara", "curated_yara_rule"]
 
@@ -751,14 +751,14 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
               if key == "crowdsourced_yara_results":
                 rule_details = await _get_yara_rule_details(ctx, rule, rule_type)
                 if "error" not in rule_details:
-                  all_rules.append(rule_details)
+                  crowsourced_rules.append(rule_details)
               elif key == "crowdsourced_sigma_results":
                 rule_details = await _get_sigma_rule_details(ctx, rule, rule_type)
                 if "error" not in rule_details:
-                  all_rules.append(rule_details)
+                  crowsourced_rules.append(rule_details)
               else: # IDS rules
                 rule_value = rule.get("value", {})
-                all_rules.append({
+                crowsourced_rules.append({
                     "rule_id": rule.get("id", ""),
                     "rule_name": rule_value.get("message", ""),
                     "rule_source": rule_value.get("url", ""),
@@ -769,7 +769,8 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
       except Exception as e:
         logging.exception("Error fetching community rules aggregations: %s", e)
         # Continue execution to fetch other rule types
-
+  crowsourced_rules = sorted(crowsourced_rules, key=lambda x: x.get("count", 0), reverse=True)
+  curated_rules = []
   # Fetch curated hunting rulesets if requested
   if "curated_yara_rule" in rule_types:
     try:
@@ -800,19 +801,19 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
 
         # Append each rule to the curated_rules list
         if n_rules == 1:
-          all_rules.append({
+          curated_rules.append({
               "rule_type": "curated_yara_rule",
               "rule_name": rule_names[0],
               "rule_content": rules,
           })
         else:
           for i in range(n_rules):
-            all_rules.append({
+            curated_rules.append({
                 "rule_type": "curated_yara_rule",
                 "rule_name": rule_names[i],
                 "rule_content": rules[i],
             })
     except Exception as e:
       logging.exception("Error fetching curated rules: %s", e)
-    
+  all_rules = curated_rules + crowsourced_rules
   return utils.sanitize_response(all_rules)
