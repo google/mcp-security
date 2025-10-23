@@ -69,7 +69,12 @@ def get_chronicle_client(
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
 
-    client = SecOpsClient()
+     service_account_path = os.getenv("SECOPS_SA_PATH")
+     if service_account_path:
+         client = SecOpsClient(service_account_path=service_account_path)
+     else:
+         client = SecOpsClient()
+
     chronicle = client.chronicle(
         customer_id=customer_id, project_id=project_id, region=region
     )
