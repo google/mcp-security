@@ -13,6 +13,7 @@
 # limitations under the License.
 """Security Operations MCP tools for UDM search and export."""
 
+import json
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
@@ -144,6 +145,16 @@ async def export_udm_search_csv(
             case_insensitive=case_insensitive,
         )
 
+        # SDK/Wrapper is returning JSON string directly instead of CSV
+        if isinstance(csv_results, str):
+            try:
+                csv_results = json.loads(csv_results)   
+            except json.JSONDecodeError:
+                return csv_results
+
+        if isinstance(csv_results, list):
+            csv_results = csv_results[0]
+            
         if (
             csv_results.get("queryValidationErrors")
             or csv_results.get("runtimeErrors")

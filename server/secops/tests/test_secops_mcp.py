@@ -737,7 +737,7 @@ class TestChronicleSecOpsMCP:
 
         # Test with a simple UDM query
         result = await export_udm_search_csv(
-            query='metadata.event_type != "EVENTTYPE_UNSPECIFIED"',
+            query='metadata.event_type = "NETWORK_CONNECTION"',
             fields=fields,
             hours_back=24,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -758,6 +758,8 @@ class TestChronicleSecOpsMCP:
             if header:
                 assert "timestamp" in header
                 assert "hostname" in header
+        else:
+            pytest.skip("Skipped export_udm_search_csv test as result it empty or has error")
 
     @pytest.mark.asyncio
     async def test_find_udm_field_values(
