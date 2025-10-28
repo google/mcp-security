@@ -32,7 +32,7 @@ Chronicle Security Operations suite.
 - **`get_threat_intel(query, project_id=None, customer_id=None, region=None)`**
     - Get answers to general security domain questions and specific threat intelligence information using Chronicle's AI capabilities.
 
-- **`search_udm(query, hours_back=24, project_id=None, customer_id=None, region=None)`**
+- **`search_udm(query, hours_back=24, max_events=100, project_id=None, customer_id=None, region=None)`**
     - Searches UDM events directly in Chronicle using raw UDM query syntax. Useful for precise, technical searches when you know the exact UDM field paths.
 
 - **`export_udm_search_csv(query, fields, hours_back=24, case_insensitive=True, project_id=None, customer_id=None, region=None)`**

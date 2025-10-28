@@ -27,15 +27,17 @@ logger = logging.getLogger('secops-mcp')
 async def search_udm(
     query: str,
     hours_back: int = 24,
+    max_events: Optional[int] = None,
     project_id: str = None,
     customer_id: str = None,
     region: str = None,
 ) -> Dict[str, Any]:
-    """Search UDM events in Chronicle.
+    """Search UDM events using UDM query in Chronicle.
 
     Args:
         query (str): UDM query to search for events.
         hours_back (int): How many hours back from the current time to search.
+        max_events (Optional[int]): Maximum number of events to return.
         project_id (Optional[str]): Google Cloud project ID.
         customer_id (Optional[str]): Chronicle customer ID.
         region (Optional[str]): Chronicle region (e.g., "us", "europe").
@@ -61,6 +63,7 @@ async def search_udm(
             query=query,
             start_time=start_time,
             end_time=end_time,
+            max_events=max_events,
         )
 
         logger.info(f'Successfully found {search_results.get("total_events", 0)} events.')
