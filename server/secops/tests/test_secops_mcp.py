@@ -32,6 +32,11 @@ from secops_mcp.tools.entity_lookup import lookup_entity
 from secops_mcp.tools.security_rules import list_security_rules, get_rule_detections, list_rule_errors, search_security_rules
 from secops_mcp.tools.ioc_matches import get_ioc_matches
 from secops_mcp.tools.threat_intel import get_threat_intel
+from secops_mcp.tools.search import search_udm
+from secops_mcp.tools.udm_search import (
+    export_udm_search_csv,
+    find_udm_field_values,
+)
 
 
 class TestChronicleSecOpsMCP:
@@ -621,7 +626,7 @@ class TestChronicleSecOpsMCP:
                 feed_id=feed_id,
                 display_name=f"Updated Test MCP Feed {unique_id[:8]}",
                 feed_details={
-                    "logType": f"projects/{chronicle_config["CHRONICLE_PROJECT_ID"]}/locations/{chronicle_config["CHRONICLE_REGION"]}/instances/{chronicle_config["CHRONICLE_CUSTOMER_ID"]}/logTypes/WINEVTLOG",
+                    "logType": f'projects/{chronicle_config["CHRONICLE_PROJECT_ID"]}/locations/{chronicle_config["CHRONICLE_REGION"]}/instances/{chronicle_config["CHRONICLE_CUSTOMER_ID"]}/logTypes/WINEVTLOG',
                     "feedSourceType": "HTTP",
                     "httpSettings": {
                         "uri": "https://example.com/updated_feed",
@@ -681,3 +686,114 @@ class TestChronicleSecOpsMCP:
                     assert "message" in delete_result
                 except Exception as e:
                     print(f"Warning: Failed to delete test feed: {e}")
+
+    @pytest.mark.asyncio
+    async def test_search_udm(self, chronicle_config: Dict[str, str]) -> None:
+        """Test searching UDM events in Chronicle.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Test with a simple UDM query
+        result = await search_udm(
+            query='metadata.event_type = "NETWORK_CONNECTION"',
+            hours_back=24,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "events" in result or "error" in result
+
+        # If events are returned, check structure
+        if "events" in result and "error" not in result:
+            assert "total_events" in result
+            if result.get("total_events", 0) > 0 and isinstance(
+                result.get("events"), list
+            ):
+                first_event = result["events"][0]
+                assert isinstance(first_event, dict)
+                # UDM events should have metadata
+                assert (
+                    "metadata" in first_event
+                    or "metadata" in first_event["udm"]
+                    or "principal" in first_event
+                    or "target" in first_event
+                )
+
+    @pytest.mark.asyncio
+    async def test_export_udm_search_csv(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test exporting UDM search results to CSV.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Define fields to export
+        fields = ["timestamp", "hostname"]
+
+        # Test with a simple UDM query
+        result = await export_udm_search_csv(
+            query='metadata.event_type = "NETWORK_CONNECTION"',
+            fields=fields,
+            hours_back=24,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, str)
+
+        # Check if CSV header matches requested fields
+        if result and not result.startswith("Error"):
+            lines = result.strip().split("\n")
+            assert len(lines) >= 1  # At least header row
+
+            # Check header contains field names (they might be formatted differently in CSV)
+            header = lines[0].lower()
+            if header:
+                assert "timestamp" in header
+                assert "hostname" in header
+        else:
+            pytest.skip("Skipped export_udm_search_csv test as result it empty or has error")
+
+    @pytest.mark.asyncio
+    async def test_find_udm_field_values(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test finding UDM field values for autocomplete.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Test with a search term that should find some values
+        result = await find_udm_field_values(
+            query="admin",  # Search for values containing "admin"
+            page_size=10,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        # Check if we have values or error
+        assert (
+            "valueMatches" in result and "fieldMatches" in result
+        )
+
+        # If values are returned, verify structure
+        if "values" in result and isinstance(result["values"], list):
+            if result["values"]:
+                first_value = result["values"][0]
+                assert isinstance(first_value, dict)
+
+        # Alternative API response format
+        if "fieldValues" in result and isinstance(result["fieldValues"], list):
+            if result["fieldValues"]:
+                first_value = result["fieldValues"][0]
+                assert isinstance(first_value, dict)
