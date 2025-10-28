@@ -29,9 +29,9 @@ logger = logging.getLogger('secops-mcp')
 async def ingest_raw_log(
     log_type: str,
     log_message: Union[str, List[str]],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     forwarder_id: Optional[str] = None,
     labels: Optional[Dict[str, str]] = None,
     log_entry_time: Optional[str] = None,
@@ -145,9 +145,9 @@ async def ingest_raw_log(
 @server.tool()
 async def ingest_udm_events(
     udm_events: Union[Dict[str, Any], List[Dict[str, Any]]],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Ingest UDM events directly into Chronicle SIEM.
 
@@ -293,9 +293,9 @@ async def ingest_udm_events(
 
 @server.tool()
 async def get_available_log_types(
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     search_term: Optional[str] = None,
 ) -> str:
     """Get available log types supported by Chronicle for ingestion.
