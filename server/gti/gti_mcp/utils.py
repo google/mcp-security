@@ -110,16 +110,52 @@ def sanitize_response(data: typing.Any) -> typing.Any:
       sanitized_value = sanitize_response(value)
       if sanitized_value is not None:
         sanitized_dict[key] = sanitized_value
-    return sanitized_dict if sanitized_dict else None
+    return sanitized_dict
   elif isinstance(data, list):
     sanitized_list = []
     for item in data:
       sanitized_item = sanitize_response(item)
       if sanitized_item is not None:
         sanitized_list.append(sanitized_item)
-    return sanitized_list if sanitized_list else None
+    return sanitized_list
   elif isinstance(data, str):
     return data if data else None
   else:
     return data
+
+
+def parse_collection_commonalities(data: dict) -> str:
+    """
+    Converts a dictionary from a JSON file to a markdown string.
+    """
+    markdown_string = ""
+    collection_id = data.get("id", "N/A")
+    markdown_string += f"# Commonalities for {collection_id}\n\n"
+
+    aggregations = data.get("attributes", {}).get("aggregations", {})
+    for ioc_type, features in aggregations.items():
+        # Replace underscores in ioc_type
+        formatted_ioc_type = ioc_type.replace('_', ' ')
+        markdown_string += f"## {formatted_ioc_type} commonalities\n\n"
+        
+        for feature_type, feature_list in features.items():
+            if isinstance(feature_list, list):
+                # Replace underscores in feature_type
+                formatted_feature_type = feature_type.replace('_', ' ')
+                markdown_string += f"### {formatted_feature_type}\n"
+                
+                for item in feature_list:
+                    value = item.get("value", "N/A")
+                    if isinstance(value, dict):
+                        value = value.get("id", "N/A")
+                    count = item.get("count", "N/A")
+                    prevalence = item.get("prevalence", "N/A")
+                    
+                    if prevalence != "N/A" and float(prevalence) != 0:
+                        markdown_string += f"- {count} matches of {value} with a prevalence of {prevalence:.8g}\n"
+                    else:
+                        markdown_string += f"- {count} matches of {value}\n"
+                markdown_string += "\n"
+
+    return markdown_string
 

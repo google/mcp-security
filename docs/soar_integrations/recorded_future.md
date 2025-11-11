@@ -51,7 +51,7 @@ The following actions are available through the Recorded Future integration:
         *   `note_text` (string, required): Text content of the note.
         *   `note_source` (string, required): Recorded Future ID for the note source (e.g., `VWKdVr` for analyst notes).
         *   `enrich_entity` (bool, required): Whether to enrich the entity first if RF ID is missing.
-        *   `topic` (List[Any], optional): Relevant note topic.
+        *   `topic` (List[str], optional): Relevant note topic.
         *   `target_entities` (List[TargetEntity], optional): Entities (IP, Hash, Domain, URL, CVE) to add the note to.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 
@@ -61,7 +61,7 @@ The following actions are available through the Recorded Future integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `alert_id` (string, required): The ID of the Recorded Future alert to update.
-        *   `status` (List[Any], required): New status for the alert (e.g., `["Dismissed"]`, `["Open"]`).
+        *   `status` (List[str], required): New status for the alert (e.g., `["Dismissed"]`, `["Open"]`).
         *   `assign_to` (string, optional): User ID, username, hash, or email to assign the alert to.
         *   `note` (string, optional): Note to add to the alert update.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.

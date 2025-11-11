@@ -142,7 +142,7 @@ This integration provides tools to interact with the iBoss Cloud Security platfo
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `category_id` (string, required): Specify to which policy category you want to add the IP.
 *   `priority` (string, required): Specify priority of the IP that needs to be blocked.
-*   `direction` (List[Any], required): Specify what is the direction of the IP.
+*   `direction` (List[str], required): Specify what is the direction of the IP.
 *   `start_port` (string, optional): Specify the start port related to the IP that needs to be blocked. Note: if only "Start Port" or "End Port" is specified, the value will be added to both action parameters. Defaults to None.
 *   `end_port` (string, optional): Specify the end port related to the IP that needs to be blocked. Note: if only "Start Port" or "End Port" is specified, the value will be added to both action parameters. Defaults to None.
 *   `note` (string, optional): Add a note related to the IP that needs to be blocked. Defaults to None.
@@ -168,7 +168,7 @@ This integration provides tools to interact with the iBoss Cloud Security platfo
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `category_id` (string, required): Specify to which policy category you want to add the URL.
 *   `priority` (string, required): Specify priority of the URL that needs to be blocked.
-*   `direction` (List[Any], required): Specify what is the direction of the URL.
+*   `direction` (List[str], required): Specify what is the direction of the URL.
 *   `start_port` (string, optional): Specify the start port related to the URL that needs to be blocked. Note: if only "Start Port" or "End Port" is specified, the value will be added to both action parameters. Defaults to None.
 *   `end_port` (string, optional): Specify the end port related to the URL that needs to be blocked. Note: if only "Start Port" or "End Port" is specified, the value will be added to both action parameters. Defaults to None.
 *   `note` (string, optional): Add a note related to the URL that needs to be blocked. Defaults to None.

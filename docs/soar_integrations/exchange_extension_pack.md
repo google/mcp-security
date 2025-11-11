@@ -18,7 +18,7 @@ Adds specified senders (email addresses) to an Exchange-Siemplify mail flow rule
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_add_senders_to` (List[Any], required): Specify the rule to add the sender to. If the rule doesn't exist - action will create it where it's missing.
+*   `rule_to_add_senders_to` (List[str], required): Specify the rule to add the sender to. If the rule doesn't exist - action will create it where it's missing.
 *   `email_addresses` (string, optional): Specify the email addresses you would like to add to the rule, in a comma separated list. If no parameter will be provided, action will work with User entities.
 *   `should_add_senders_domain_to_the_corresponding_domains_list_rule_as_well` (bool, optional): Specify whether the action should automatically take the domains of the provided email addresses and add them as well to the corresponding domain rules (same rule action for domains).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -55,7 +55,7 @@ Removes specified domains from existing Exchange-Siemplify mail flow rules.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_remove_domains_from` (List[Any], required): Specify the rule to remove the Domains from. If the rule doesn't exist - action will do nothing.
+*   `rule_to_remove_domains_from` (List[str], required): Specify the rule to remove the Domains from. If the rule doesn't exist - action will do nothing.
 *   `domains` (string, optional): Specify the Domains you would like to remove from the rule, in a comma separated list.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -106,7 +106,7 @@ Creates or updates a mail flow rule to filter emails based on sender domains.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_add_domains_to` (List[Any], required): Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.
+*   `rule_to_add_domains_to` (List[str], required): Specify the rule to add the Domains to. If the rule doesn't exist - action will create it where it's missing.
 *   `domains` (string, optional): Specify the Domains you would like to add to the rule, in a comma separated list.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -123,7 +123,7 @@ Removes specified senders (email addresses) from existing Exchange-Siemplify mai
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_to_remove_senders_from` (List[Any], required): Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.
+*   `rule_to_remove_senders_from` (List[str], required): Specify the rule to remove the Senders from. If the rule doesn't exist - action will do nothing.
 *   `email_addresses` (string, optional): Specify the email addresses you would like to remove from the rule, in a comma separated list. If no parameter will be provided, action will work with entities.
 *   `should_remove_senders_domains_from_the_corresponding_domains_list_rule_as_well` (bool, optional): Specify whether the action should automatically take the domains of the provided email addresses and remove them as well from the corresponding domain rules (same rule action for domains).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -161,7 +161,7 @@ Run Exchange Compliance Search based on the provided search conditions. If the f
 *   `subject_filter` (string, optional): Filter condition, specify what subject to search for emails.
 *   `sender_filter` (string, optional): Filter condition, specify who should be the sender of needed emails.
 *   `recipient_filter` (string, optional): Filter condition, specify who should be the recipient of needed emails.
-*   `operator` (List[Any], optional): Operator to use to construct query from conditions above.
+*   `operator` (List[str], optional): Operator to use to construct query from conditions above.
 *   `time_frame_hours` (string, optional): Time frame interval in hours to search for emails.
 *   `fetch_compliance_search_results` (bool, optional): Specify whether the action should immediately fetch the compliance search results. Note that maximum of 200 elements will be displayed, but actual search can have more findings that are shown.
 *   `max_emails_to_return` (string, optional): Specify how many emails action can return.
@@ -182,7 +182,7 @@ Lists Exchange-Siemplify mail flow rules.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_name_to_list` (List[Any], required): Specify the Rule name you would like to list.
+*   `rule_name_to_list` (List[str], required): Specify the Rule name you would like to list.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -198,7 +198,7 @@ Deletes specified Exchange-Siemplify mail flow rules.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `rule_name_to_delete` (List[Any], required): Specify the Rule name you would like to completely delete.
+*   `rule_name_to_delete` (List[str], required): Specify the Rule name you would like to completely delete.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

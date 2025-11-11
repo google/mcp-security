@@ -24,7 +24,7 @@ Update status of the alert in Armis.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `alert_id` (str, required): Specify the id of the alert for which you want to update status.
-*   `status` (Optional[List[Any]], optional, default=None): Specify what status should be set for the alert.
+*   `status` (Optional[List[str]], optional, default=None): Specify what status should be set for the alert.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -49,7 +49,7 @@ List connections related to the alert in Armis.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `alert_id` (str, required): Specify the id of the alert for which you want to pull connections data.
-*   `lowest_severity_to_fetch` (Optional[List[Any]], optional, default=None): Specify the lowest severity of the connections that should be used when fetching them.
+*   `lowest_severity_to_fetch` (Optional[List[str]], optional, default=None): Specify the lowest severity of the connections that should be used when fetching them.
 *   `max_connections_to_return` (Optional[str], optional, default=None): Specify how many connections to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

@@ -51,9 +51,9 @@ Submits a URL (or multiple URLs via entities) for analysis by the FireEye AX app
 *   `vm_profile` (string, required): The virtual machine profile to use for analysis (obtainable via "Get Appliance Details").
 *   `create_insight` (boolean, required): If enabled, creates a SOAR insight with the analysis results.
 *   `application_id` (string, optional): The specific application ID to use for analysis (obtainable via "Get Appliance Details"). Defaults to automatic selection by FireEye AX.
-*   `priority` (List[Any], optional): Sets the submission priority ("Normal" or "Urgent").
+*   `priority` (List[str], optional): Sets the submission priority ("Normal" or "Urgent").
 *   `force_rescan` (boolean, optional): If enabled, forces FireEye AX to rescan the URL even if previously analyzed.
-*   `analysis_type` (List[Any], optional): Specifies the analysis type ("Live" or "Sandbox").
+*   `analysis_type` (List[str], optional): Specifies the analysis type ("Live" or "Sandbox").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. URLs from entities will be submitted.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -73,9 +73,9 @@ Submits one or more files (specified by path) for analysis by the FireEye AX app
 *   `vm_profile` (string, required): The virtual machine profile to use for analysis (obtainable via "Get Appliance Details").
 *   `create_insight` (boolean, required): If enabled, creates a SOAR insight with the analysis results.
 *   `application_id` (string, optional): The specific application ID to use for analysis (obtainable via "Get Appliance Details"). Defaults to automatic selection by FireEye AX.
-*   `priority` (List[Any], optional): Sets the submission priority ("Normal" or "Urgent").
+*   `priority` (List[str], optional): Sets the submission priority ("Normal" or "Urgent").
 *   `force_rescan` (boolean, optional): If enabled, forces FireEye AX to rescan the submitted file(s) even if previously analyzed.
-*   `analysis_type` (List[Any], optional): Specifies the analysis type ("Live" or "Sandbox").
+*   `analysis_type` (List[str], optional): Specifies the analysis type ("Live" or "Sandbox").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

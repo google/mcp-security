@@ -31,7 +31,7 @@ Execute a query based on parameters in Snowflake. Note: Action is running as asy
 *   `where_filter` (Optional[str], optional, default=None): Specify the WHERE filter for the query that needs to be executed. Note: you don't need to limit and sort. Also, you don’t need to provide WHERE string in the payload. Only single quotes are supported in the query.
 *   `fields_to_return` (Optional[str], optional, default=None): Specify what fields to return. If nothing is provided action will return all fields. Wildcard character is supported.
 *   `sort_field` (Optional[str], optional, default=None): Specify what parameter should be used for sorting.
-*   `sort_order` (Optional[List[Any]], optional, default=None): Specify the order of sorting.
+*   `sort_order` (Optional[List[str]], optional, default=None): Specify the order of sorting.
 *   `max_results_to_return` (Optional[str], optional, default=None): Specify how many results to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the CiscoOrbital integration.
 
     @mcp.tool()
-    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[str, Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[str, Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[str, Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[str, Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[str, Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute queries on endpoints based on IP and Hostname entities in Cisco Orbital. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed. Maximum timeout is 24 hours.
 
         Returns:
@@ -107,7 +108,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cisco_orbital_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_orbital_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Cisco Orbital with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:

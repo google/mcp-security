@@ -20,8 +20,9 @@ from secops_soar_mcp.utils.models import (
     TargetEntity,
 )
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
@@ -837,17 +838,17 @@ def register_tools(mcp: FastMCP):
             str, Field(..., description="Microsoft Defender ATP Alert ID to update.")
         ],
         status: Annotated[
-            List[Any], Field(default=None, description="Status of the alert")
+            List[str], Field(default=None, description="Status of the alert")
         ],
         assigned_to: Annotated[
             str, Field(default=None, description="User who is assigned to this alert")
         ],
         classification: Annotated[
-            List[Any],
+            List[str],
             Field(default=None, description="Classification to update alert with"),
         ],
         determination: Annotated[
-            List[Any],
+            List[str],
             Field(default=None, description="Determination to update alert with"),
         ],
         target_entities: Annotated[
@@ -1597,14 +1598,14 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         action: Annotated[
-            List[Any],
+            List[str],
             Field(
                 ...,
                 description='Specify the action that needs to be applied to the entities. Note: "Block And Remediate" is supported only for filehash entities.',
             ),
         ],
         severity: Annotated[
-            List[Any],
+            List[str],
             Field(..., description="Specify the severity for the found entities."),
         ],
         indicator_alert_title: Annotated[
@@ -1976,7 +1977,7 @@ def register_tools(mcp: FastMCP):
             List[str], Field(..., description="Identifiers for the alert groups.")
         ],
         antivirus_scan_type: Annotated[
-            List[Any], Field(..., description="Antivirus Scan Type")
+            List[str], Field(..., description="Antivirus Scan Type")
         ],
         comment: Annotated[
             str,

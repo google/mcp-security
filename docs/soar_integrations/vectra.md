@@ -23,7 +23,7 @@ Ensure the Vectra integration is configured in the SOAR platform with the necess
 - **Args:**
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    - `item_type` (List[Any], required): Select the item type ("endpoint" or "detection") to update the note for.
+    - `item_type` (List[str], required): Select the item type ("endpoint" or "detection") to update the note for.
     - `item_id` (str, required): Specify the ID of the detection or endpoint.
     - `note` (str, required): Specify the content of the note to add or update.
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -44,7 +44,7 @@ Ensure the Vectra integration is configured in the SOAR platform with the necess
 - **Args:**
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    - `item_type` (List[Any], required): Select the item type ("endpoint" or "detection") from which to remove tags.
+    - `item_type` (List[str], required): Select the item type ("endpoint" or "detection") from which to remove tags.
     - `item_id` (str, required): Specify the ID of the detection or endpoint.
     - `tags` (str, required): Specify the comma-separated list of tags to remove (e.g., "tag1,tag2").
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -68,7 +68,7 @@ Ensure the Vectra integration is configured in the SOAR platform with the necess
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
     - `detection_id` (str, required): Specify the ID of the detection to update.
-    - `status` (List[Any], required): Specify the new status for the detection (refer to Vectra documentation for valid statuses).
+    - `status` (List[str], required): Specify the new status for the detection (refer to Vectra documentation for valid statuses).
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
     - `scope` (str, optional): Defines the scope for the action (e.g., "All entities"). Defaults to "All entities". Used if `target_entities` is empty.
 - **Returns:** (dict) A dictionary containing the result of the status update operation.
@@ -78,7 +78,7 @@ Ensure the Vectra integration is configured in the SOAR platform with the necess
 - **Args:**
     - `case_id` (str, required): The ID of the case.
     - `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-    - `item_type` (List[Any], required): Select the item type ("endpoint" or "detection") to add tags to.
+    - `item_type` (List[str], required): Select the item type ("endpoint" or "detection") to add tags to.
     - `item_id` (str, required): Specify the ID of the detection or endpoint.
     - `tags` (str, required): Specify the comma-separated list of tags to add (e.g., "tag1,tag2").
     - `target_entities` (List[TargetEntity], optional): Specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.

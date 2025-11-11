@@ -35,7 +35,7 @@ This integration provides enhanced tools for making various HTTP requests, offer
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `method` (List[Any], required): Specify the method for the request.
+*   `method` (List[str], required): Specify the method for the request.
 *   `url_path` (string, required): Specify the URL that needs to be executed.
 *   `fields_to_return` (string, required): Specify what fields to return. Possible values: response_data, redirects, response_code,response_cookies,response_headers,apparent_encoding.
 *   `request_timeout` (string, required): How long to wait for the server to send data before giving up.

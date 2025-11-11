@@ -25,7 +25,7 @@ Update state of the user in Azure AD Identity Protection. Supported entities: Us
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `state` (List[Any], optional): Specify the state for the users (e.g., `dismiss`, `confirmSafe`, `confirmCompromised`).
+*   `state` (List[str], optional): Specify the state for the users (e.g., `dismiss`, `confirmSafe`, `confirmCompromised`).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Username and Email Address entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

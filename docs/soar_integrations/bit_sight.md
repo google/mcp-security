@@ -24,7 +24,7 @@ List highlights (significant security events or rating changes) related to the s
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `company_name` (string, required): Specify the name of the company for which you want to return highlights.
-*   `time_frame` (List[Any], optional): Specify a time frame for the results (e.g., Last 7 Days, Last 30 Days, Custom). If "Custom" is selected, `start_time` is required.
+*   `time_frame` (List[str], optional): Specify a time frame for the results (e.g., Last 7 Days, Last 30 Days, Custom). If "Custom" is selected, `start_time` is required.
 *   `start_time` (string, optional): Specify the start time for the results (Format: ISO 8601). Mandatory if `time_frame` is "Custom".
 *   `end_time` (string, optional): Specify the end time for the results (Format: ISO 8601). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `max_highlights_to_return` (string, optional): Specify the number of highlights you want to return. Default: 20.

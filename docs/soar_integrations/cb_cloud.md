@@ -58,11 +58,11 @@ List reputation overrides configured in VMware Carbon Black Cloud. Note that act
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `reputation_override_list` (List[Any], optional): Specify override list action should return (e.g., BLACK_LIST, WHITE_LIST).
-*   `reputation_override_type` (List[Any], optional): Specify override type action should return (e.g., SHA256, CERT, IT_TOOL).
+*   `reputation_override_list` (List[str], optional): Specify override list action should return (e.g., BLACK_LIST, WHITE_LIST).
+*   `reputation_override_type` (List[str], optional): Specify override type action should return (e.g., SHA256, CERT, IT_TOOL).
 *   `start_from_row` (string, optional): Specify from which row action should fetch data.
 *   `max_rows_to_return` (string, optional): Specify how many rows action should return.
-*   `rows_sort_order` (List[Any], optional): Specify sort order for the returned rows (Ascending/Descending). Rows are sorted based on "create_time" value.
+*   `rows_sort_order` (List[str], optional): Specify sort order for the returned rows (Ascending/Descending). Rows are sorted based on "create_time" value.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -79,7 +79,7 @@ Create a Reputation Override for the provided hash in SHA-256 format. Note: The 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `filename` (string, required): Specify a corresponding file name to add to reputation override.
-*   `reputation_override_list` (List[Any], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
+*   `reputation_override_list` (List[str], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
 *   `sha_256_hash` (string, optional): Specify a SHA-256 hash value to create override for.
 *   `description` (string, optional): Specify a description for the created reputation override.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports FileHash entities.
@@ -98,7 +98,7 @@ Create a Reputation Override for the certificate. Note that action is not workin
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `signed_by` (string, required): Specify the name of the signer to add to reputation override.
-*   `reputation_override_list` (List[Any], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
+*   `reputation_override_list` (List[str], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
 *   `certificate_authority` (string, optional): Specify the Certificate Authority that authorizes the validity of the certificate.
 *   `description` (string, optional): Specify a description for the created reputation override.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -162,7 +162,7 @@ Create a Reputation Override for the specific IT Tool based on a file name and p
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `file_path` (string, required): Specify a file path where corresponding IT Tool is stored on disk. Example: C:\\TMP\\
-*   `reputation_override_list` (List[Any], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
+*   `reputation_override_list` (List[str], required): Specify override list to create (e.g., BLACK_LIST, WHITE_LIST).
 *   `file_name` (string, optional): Specify a corresponding file name.
 *   `description` (string, optional): Specify a description for the created reputation override.
 *   `include_child_processes` (bool, optional): If enabled, include IT Tool's child processes on approved list.
@@ -213,8 +213,8 @@ Dismiss VMware Carbon Black Cloud alert. Note: action accepts alert id in format
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Alert ID to dismiss on VMware Carbon Black Cloud server.
-*   `reason_for_dismissal` (List[Any], required): VMware Carbon Black Cloud reason for alert dismissal.
-*   `determination` (List[Any], required): Specify the determination to set for an alert (e.g., TRUE_POSITIVE, FALSE_POSITIVE).
+*   `reason_for_dismissal` (List[str], required): VMware Carbon Black Cloud reason for alert dismissal.
+*   `determination` (List[str], required): Specify the determination to set for an alert (e.g., TRUE_POSITIVE, FALSE_POSITIVE).
 *   `message_for_alert_dismissal` (string, optional): Message to add to alert dismissal.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

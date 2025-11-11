@@ -57,10 +57,10 @@ This integration provides tools to interact with the LogRhythm SIEM platform, al
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `time_frame` (Optional[List[Any]], optional): Specify a time frame for the results. If “Custom” is selected, you also need to provide “Start Time”. Defaults to None.
+*   `time_frame` (Optional[List[str]], optional): Specify a time frame for the results. If “Custom” is selected, you also need to provide “Start Time”. Defaults to None.
 *   `start_time` (Optional[str], optional): Specify the start time for the results. This parameter is mandatory, if “Custom” is selected for the “Time Frame” parameter. Format: ISO 8601. Example: 2021-04-23T12:38Z. Defaults to None.
 *   `end_time` (Optional[str], optional): Specify the end time for the results. Format: ISO 8601. If nothing is provided and “Custom” is selected for the “Time Frame” parameter then this parameter will use current time. Defaults to None.
-*   `sort_order` (Optional[List[Any]], optional): Specify the sorting logic for the query. Defaults to None.
+*   `sort_order` (Optional[List[str]], optional): Specify the sorting logic for the query. Defaults to None.
 *   `max_events_to_return` (Optional[str], optional): Specify how many events to return. Default: 50. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -142,11 +142,11 @@ This integration provides tools to interact with the LogRhythm SIEM platform, al
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `name` (Optional[str], optional): Specify a new name for the case. Defaults to None.
-*   `priority` (Optional[List[Any]], optional): Specify a new priority for the case. Defaults to None.
+*   `priority` (Optional[List[str]], optional): Specify a new priority for the case. Defaults to None.
 *   `due_date` (Optional[str], optional): Specify a new due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z. Defaults to None.
 *   `description` (Optional[str], optional): Specify a new description for the case. Defaults to None.
 *   `resolution` (Optional[str], optional): Specify how the case was resolved. Defaults to None.
-*   `status` (Optional[List[Any]], optional): Specify the new status for the case. Defaults to None.
+*   `status` (Optional[List[str]], optional): Specify the new status for the case. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -167,7 +167,7 @@ This integration provides tools to interact with the LogRhythm SIEM platform, al
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `name` (string, required): Specify the name for the case.
-*   `priority` (List[Any], required): Specify the priority for the case.
+*   `priority` (List[str], required): Specify the priority for the case.
 *   `due_date` (Optional[str], optional): Specify the due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z. Defaults to None.
 *   `description` (Optional[str], optional): Specify a description for the case. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -254,7 +254,7 @@ This integration provides tools to interact with the LogRhythm SIEM platform, al
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alarm_id` (string, required): Specify the ID of the alarm that needs to be updated in LogRhythm.
-*   `status` (Optional[List[Any]], optional): Specify the status for the alarm. Defaults to None.
+*   `status` (Optional[List[str]], optional): Specify the status for the alarm. Defaults to None.
 *   `risk_score` (Optional[str], optional): Specify a new risk score for the alarm. Maximum: 100. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

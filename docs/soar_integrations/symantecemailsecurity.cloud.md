@@ -12,7 +12,7 @@ Block entities in Symantec Email Security.Cloud. Supported entities: Hostname, I
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `description` (str, required): Specify a description that should be added to the blocked entities.
-*   `remediation_action` (Optional[List[Any]], optional, default=None): Specify the remediation action for the entities.
+*   `remediation_action` (Optional[List[str]], optional, default=None): Specify the remediation action for the entities.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default='All entities'): Defines the scope for the action.
 

@@ -23,11 +23,23 @@ Chronicle Security Operations suite.
 - **`search_security_rules(query, project_id=None, customer_id=None, region=None)`**
     - Searches security detection rules from Chronicle using regex.
 
+- **`get_detection_rule(rule_id, project_id=None, customer_id=None, region=None)`**
+    - Retrieves complete YARA-L detection rule code and metadata from Chronicle by Rule Id.
+
 - **`get_ioc_matches(project_id=None, customer_id=None, hours_back=24, max_matches=20, region=None)`**
     - Retrieves Indicators of Compromise (IoCs) matches from Chronicle within a specified time range.
 
 - **`get_threat_intel(query, project_id=None, customer_id=None, region=None)`**
     - Get answers to general security domain questions and specific threat intelligence information using Chronicle's AI capabilities.
+
+- **`search_udm(query, hours_back=24, max_events=100, project_id=None, customer_id=None, region=None)`**
+    - Searches UDM events directly in Chronicle using raw UDM query syntax. Useful for precise, technical searches when you know the exact UDM field paths.
+
+- **`export_udm_search_csv(query, fields, hours_back=24, case_insensitive=True, project_id=None, customer_id=None, region=None)`**
+    - Exports UDM search results to CSV format with specified fields for analysis and reporting. Great for exporting security event data for offline analysis.
+
+- **`find_udm_field_values(query, page_size=None, project_id=None, customer_id=None, region=None)`**
+    - Finds and autocompletes UDM field values in Chronicle SIEM. Helps discover valid field values when building queries without needing to know exact matches.
 
 ### Log Ingestion Tools
 
@@ -82,6 +94,32 @@ Chronicle Security Operations suite.
 - **`update_reference_list(name, project_id=None, customer_id=None, region=None, entries=None, description=None)`**
     - Update the contents or description of an existing reference list.
 
+### Feed Management Tools
+
+- **`list_feeds(project_id=None, customer_id=None, region=None)`**
+    - Lists all configured feeds in Chronicle, providing details such as feed name, status, log type, and source type.
+
+- **`get_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Get detailed information about a specific feed by ID, including connection settings, log type, state, and metadata.
+
+- **`create_feed(display_name, feed_details, project_id=None, customer_id=None, region=None)`**
+    - Creates a new feed configuration for ingesting data into Chronicle. Supports various feed types including HTTP, S3, GCS, and GCP SCC.
+
+- **`update_feed(feed_id, display_name=None, feed_details=None, project_id=None, customer_id=None, region=None)`**
+    - Modifies the configuration of an existing feed. Can update the display name, connection settings, or other properties.
+
+- **`enable_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Activates a feed that is currently in the INACTIVE state, allowing it to resume data ingestion.
+
+- **`disable_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Stops data ingestion for a feed by setting its state to INACTIVE. The feed configuration remains but no new data will be processed.
+
+- **`delete_feed(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Permanently removes a feed configuration from Chronicle. This action cannot be undone.
+
+- **`generate_feed_secret(feed_id, project_id=None, customer_id=None, region=None)`**
+    - Creates a new authentication secret for feeds that support authentication (e.g., HTTP feeds with basic auth). This replaces any existing secret.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -97,6 +135,8 @@ The MCP server provides the following capabilities:
 9.  **Parser Management**: Create, manage, and test log parsers
 10. **Data Table Management**: Create and manage structured data tables for detection rules
 11. **Reference List Management**: Create and manage reference lists for detection rules
+12. **Feed Management**: Create, update, enable, disable, and delete data feeds
+13. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
 
@@ -111,6 +151,7 @@ These tools focus on core security operations tasks:
 - **Entity Analysis**: Use `lookup_entity` to investigate IPs, domains, hashes, and other indicators
 - **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
 - **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
+- **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools
 These tools help you get data into Chronicle:
@@ -118,6 +159,7 @@ These tools help you get data into Chronicle:
 - **UDM Event Ingestion**: Use `ingest_udm_events` for pre-formatted security events
 - **Parser Development**: Use the parser management tools to create custom parsers for unique log formats
 - **Testing**: Use `run_parser_against_sample_logs` to validate parser logic before deployment
+- **Feed Management**: Use feed management tools (`list_feeds`, `create_feed`, etc.) to configure and manage data collection sources
 
 ### Context Data Management Tools
 These tools help you maintain reference data for enhanced detections:

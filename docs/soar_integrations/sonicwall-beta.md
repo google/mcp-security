@@ -39,7 +39,7 @@ List SonicWall Address Groups.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `address_type` (Optional[List[Any]], optional, default=None): Specify which address type should be using for address groups.
+*   `address_type` (Optional[List[str]], optional, default=None): Specify which address type should be using for address groups.
 *   `max_address_groups_to_return` (Optional[str], optional, default=None): Specify how many address groups to return.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -101,8 +101,8 @@ Create SonicWall CFS Profile. Caution: Successful action execution commits all u
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `name` (str, required): Specify the name of the CFS Profile. Unicode characters are not supported. This is a SonicWall limitation.
-*   `search_order` (List[Any], required): Specify the search order for the CFS Profile.
-*   `operation_for_forbidden_uri` (List[Any], required): Specify the operation for forbidden URI for the CFS Profile.
+*   `search_order` (List[str], required): Specify the search order for the CFS Profile.
+*   `operation_for_forbidden_uri` (List[str], required): Specify the operation for forbidden URI for the CFS Profile.
 *   `enable_smart_filter` (bool, required): Enable Smart Filter.
 *   `enable_google_safe_search` (bool, required): Enable Google Safe Search.
 *   `enable_youtube_restricted_mode` (bool, required): Enable Youtube Restricted Mode.

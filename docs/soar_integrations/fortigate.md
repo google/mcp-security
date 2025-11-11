@@ -17,7 +17,7 @@ This integration provides tools to interact with Fortigate firewalls for managin
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `policy_name` (string, required): Specify the name of the policy to which action should add entities.
-*   `location` (List[Any], optional): Specify the location for the entities. Defaults to None.
+*   `location` (List[str], optional): Specify the location for the entities. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -37,8 +37,8 @@ This integration provides tools to interact with Fortigate firewalls for managin
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter policies. Defaults to None.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter policies. Defaults to None.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `filter_value` (string, optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `max_records_to_return` (string, optional): Specify how many records to return. If nothing is provided, action will return 50 records. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -60,8 +60,8 @@ This integration provides tools to interact with Fortigate firewalls for managin
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key that needs to be used to filter address groups. Defaults to None.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
+*   `filter_key` (List[str], optional): Specify the key that needs to be used to filter address groups. Defaults to None.
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `filter_value` (string, optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `max_records_to_return` (string, optional): Specify how many records to return. If nothing is provided, action will return 50 records. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -123,7 +123,7 @@ This integration provides tools to interact with Fortigate firewalls for managin
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `policy_name` (string, required): Specify the name of the policy from which action should remove entities.
-*   `location` (List[Any], optional): Specify the location for the entities. Defaults to None.
+*   `location` (List[str], optional): Specify the location for the entities. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

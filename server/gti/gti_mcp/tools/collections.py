@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import typing
+import logging
 
 from mcp.server.fastmcp import Context
 
@@ -84,8 +85,8 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 
 @server.tool()
 async def get_entities_related_to_a_collection(
-    id: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+    id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
+) -> typing.List[typing.Dict[str, typing.Any]]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
@@ -107,11 +108,15 @@ async def get_entities_related_to_a_collection(
     | suspected_threat_actors | List of related suspected threat actors        | collection   |
     | hunting_rulesets     | Google Threat Intelligence Yara rules that identify the given collection | hunting_ruleset |
 
+    Note on descriptors_only: When True, returns basic descriptors. When False, returns
+    detailed attributes.
+    IMPORTANT: `descriptors_only` must be `False` for the 'attack_techniques' relationship.
+    
     Args:
       id (required): Collection identifier.
       relationship_name (required): Relationship name.
-      descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
-      limit: Limit the number of collections to retrieve. 10 by default.
+      limit (optional): Limit the number of collections to retrieve. 10 by default.
+      descriptors_only (optional)): Bool. Default True. Must be False when the target object type is 'attack_techniques'.
     Returns:
       List of objects related to the collection.
   """
@@ -228,8 +233,7 @@ async def search_threats(
         },
         limit=limit,
     )
-  res = utils.sanitize_response([o.to_dict() for o in res])
-  return res
+  return utils.sanitize_response([o.to_dict() for o in res])
 
 
 @server.tool()
@@ -407,3 +411,409 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
     data = await data.json_async()
   return utils.sanitize_response(data["data"])
 
+
+@server.tool()
+async def create_collection(
+    name: str,
+    description: str,
+    iocs: typing.List[str],
+    ctx: Context,
+    private: bool = True,
+) -> typing.Dict[str, typing.Any]:
+  """Creates a new collection in Google Threat Intelligence.
+      Ask for the collection's privacy (public or private) if the user doesn't specify.
+
+  Args:
+    name (required): The name of the collection.
+    description (required): A description of the collection.
+    iocs (required): Indicators of Compromise (IOCs) to include in the
+      collection. The items in the list can be domains, files, ip_addresses, or urls.
+      At least one IOC must be provided.
+    private: Indicates whether the collection should be private.
+  Returns:
+    A dictionary representing the newly created collection.
+  """
+  async with vt_client(ctx) as client:
+    collection_data = {
+        "data": {
+            "attributes": {"name": name, "description": description, "private": private},
+            "type": "collection",
+            "raw_items": ", ".join(iocs),
+        }
+    }
+    
+    res = await client.post_async("/collections", json_data=collection_data)
+    data = await res.json_async()
+  return utils.sanitize_response(data["data"])
+
+
+@server.tool()
+async def update_collection_attributes(
+    id: str,
+    ctx: Context,
+    attributes: typing.Dict[str, typing.Any] = None,
+) -> typing.Dict[str, typing.Any]:
+  """Allows updating a collection's attributes (such as name or description)
+  Args:
+    id (required): The ID of the collection to update.
+    attributes: Available attributes in a collection:
+        *  name: string
+        *  description: string
+        *  private: boolean
+        *  tags: array of strings
+        *  alt_names: array of strings
+  Returns:
+    A dictionary representing the updated collection.
+  """
+  async with vt_client(ctx) as client:
+    collection_data = {"data": {"attributes": attributes, "type": "collection"}}          
+
+    res = await client.patch_async(
+        f"/collections/{id}", json_data=collection_data
+    )
+    data = await res.json_async()
+  return utils.sanitize_response(data["data"])
+
+
+@server.tool()
+async def update_iocs_in_collection(
+    id: str,
+    ctx: Context,
+    relationship: str,
+    iocs: typing.List[str],
+    operation: str,
+) -> str:
+  """Updates (add or remove) Indicators of Compromise (IOCs) to a collection.
+  Args:
+    id (required): The ID of the collection to update.
+    relationship (required): The type of relationship to add. Can be "domains", "files",
+      "ip_addresses", or "urls".
+    iocs (required): List of IOCs to add to the collection. For "urls", these
+      are the full URLs. For other types, they are the identifiers (hashes for
+      files, domain names for domains, etc.).
+    operation (required): The operation to perform. Can be "add" or "remove".
+
+  Returns:
+    A string indicating the success or failure of the operation.
+  """
+  async with vt_client(ctx) as client:
+
+    singular_type_map = {
+        "domains": "domain",
+        "files": "file",
+        "ip_addresses": "ip_address",
+        "urls": "url",
+    }
+
+    if relationship not in singular_type_map:
+      return f"Error: Invalid IOC type '{relationship}'. Must be one of {list(singular_type_map.keys())}"
+
+    singular_type = singular_type_map[relationship]
+
+    if relationship == "urls":
+      items = [{"type": singular_type, "url": ioc} for ioc in iocs]
+    else:
+      items = [{"type": singular_type, "id": ioc} for ioc in iocs]
+
+    payload = {"data": items}
+    if operation == "add":
+      res = await client.post_async(f"/collections/{id}/{relationship}", json_data=payload)
+    elif operation == "remove":
+      res = await client.delete_async(f"/collections/{id}/{relationship}", json_data=payload)
+    else:
+      return f"Error: Invalid operation '{operation}'. Must be one of 'add' or 'remove'"
+
+    status = res._aiohttp_resp.status
+    return 'Sucesssfully updated collection' if status == 200 else 'Error updating collection'
+
+
+@server.tool()
+async def get_collection_feature_matches(
+    collection_id: str,
+    feature_type: str,
+    feature_id: str,
+    entity_type: str,
+    search_space: str,
+    entity_type_plural: str,
+    ctx: Context,
+    descriptors_only: bool=True,
+) -> typing.List[typing.Dict[str, typing.Any]]:
+  """Retrieves Indicators of Compromise (IOCs) from a collection that match a specific feature.
+
+  This tool allows pivoting from a commonality to the specific IOCs within a collection that exhibit that feature.
+  Commonalities are shared characteristics and hidden relationships between various Indicators of Compromise (e.g., files, URLs, domains, IPs).
+
+  Available feature types by entity type:
+  Files:
+    - android_certificates, android_main_activities, android_package_names, attributions, behash,
+      collections, compressed_parents, contacted_domains, contacted_ips, contacted_urls,
+      crowdsourced_ids_results, crowdsourced_yara_results, elfhash, email_parents,
+      embedded_domains, embedded_ips, embedded_urls, execution_parents, imphash,
+      itw_domains, itw_urls, mutexes_created, mutexes_opened, pcap_parents,
+      registry_keys_deleted, registry_keys_opened, registry_keys_set, tags, vhash, file_types,
+      crowdsourced_sigma_results, deb_info_packages, debug_codeview_guids, debug_codeview_names,
+      debug_timestamps, dropped_files_path, dropped_files_sha256, elfinfo_exports,
+      elfinfo_imports, exiftool_authors, exiftool_companies, exiftool_create_dates,
+      exiftool_creators, exiftool_last_modified, exiftool_last_printed, exiftool_producers,
+      exiftool_subjects, exiftool_titles, filecondis_dhash, main_icon_dhash,
+      main_icon_raw_md5, netassembly_mvid, nsrl_info_filenames, office_application_names,
+      office_authors, office_creation_datetimes, office_last_saved, office_macro_names,
+      permhash, pe_info_imports, pe_info_exports, pe_info_section_md5,
+      pe_info_section_names, pwdinfo_values, sandbox_verdicts, signature_info_comments,
+      signature_info_copyrights, signature_info_descriptions, signature_info_identifiers,
+      signature_info_internal_names, signature_info_original_names, signature_info_products,
+      symhash, trusted_verdict_filenames, rich_pe_header_hash, telfhash, tlshhash,
+      email_senders, email_subjects, popular_threat_category, popular_threat_name,
+      suggested_threat_label, attack_techniques, malware_config_family_name,
+      malware_config_campaign_id, malware_config_campaign_group, malware_config_dga_seed,
+      malware_config_dns_server, malware_config_service, malware_config_registry_key,
+      malware_config_event, malware_config_pipe, malware_config_mutex, malware_config_folder,
+      malware_config_file, malware_config_process_inject_target, malware_config_crypto_key,
+      malware_config_displayed_message, malware_config_c2_url, malware_config_download_url,
+      malware_config_misc_url, malware_config_decoy_url, malware_config_c2_user_agent,
+      malware_config_download_user_agent, malware_config_misc_user_agent,
+      malware_config_decoy_user_agent, malware_config_c2_password,
+      malware_config_misc_username, malware_config_misc_password,
+      malware_config_host_port, malware_config_dropped_file,
+      malware_config_dropped_file_path, malware_config_registry_value,
+      malware_config_download_password, malware_config_c2_username,
+      malware_config_download_username, malware_config_exfiltration_username,
+      malware_config_exfiltration_password, malware_config_exfiltration_url,
+      malware_config_exfiltration_user_agent, malware_config_pivot_hash,
+      memory_pattern_urls
+
+  Domains:
+    - attributions, collections, communicating_files, downloaded_files,
+      favicon_dhash, favicon_raw_md5, urls, registrant_names
+
+  IP Addresses:
+    - attributions, collections, communicating_files, downloaded_files, urls
+
+  URLs:
+    - attributions, http_response_contents, collections, contacted_domains,
+      communicating_files, cookie_names, cookie_values, downloaded_files,
+      domains, embedded_js, favicon_dhash, favicon_raw_md5, html_titles,
+      ip_addresses, memory_patterns, outgoing_links, path, prefix_paths,
+      suffix_paths, ports, users, passwords, user_passwords, query_strings,
+      query_param_keys, query_param_values, query_param_key_values,
+      referring_files, tags, tracker_ids
+
+  Args:
+    collection_id (required): The ID of the collection to search within.
+    feature_type (required): The type of feature to search for (e.g., 'attack_techniques').
+    feature_id (required): The specific value of the feature (e.g., 'T1497.001').
+    entity_type (required): 
+    search_space (required): The scope of the search. Use 'collection' to search only within the specified collection, or 'corpus' to search across the entire VirusTotal dataset.
+    entity_type_plural (required): The plural of 'entity_type'.
+    descriptors_only (optional): Returns only the descriptors.
+  Returns:
+    A dictionary containing the list of matching IOCs.
+  """
+  async with vt_client(ctx) as client:
+    params = {
+        "feature_type": feature_type,
+        "feature_id": feature_id,
+        "entity_type": entity_type,
+        "search_space": search_space,
+        "type": entity_type_plural,
+        "descriptors_only": str(descriptors_only).lower(),
+    }
+    
+    response = await client.get_async(f"/collections/{collection_id}/features/search", params=params)
+    data = await response.json_async()
+    return utils.sanitize_response(data["data"])
+
+
+@server.tool()
+async def get_collections_commonalities(collection_id: str, ctx: Context) -> str:
+  """Retrieve the common characteristics or features (attributes / relationships) of the indicators of compromise (IoC) within a collection, identified by its ID.
+  Args:
+    collection_id (required): Collection identifier.
+  Returns:
+    Markdown-formatted string with the commonalities of the collection.
+  """
+  async with vt_client(ctx) as client:
+    data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
+    data = await data.json_async()
+    sanitized_data = utils.sanitize_response(data["data"])
+    markdown_output = utils.parse_collection_commonalities(sanitized_data)
+  return markdown_output
+
+
+async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+  """Fetches details for a single YARA ruleset and formats the output."""
+
+  ruleset_id = rule.get("value",{}).get("ruleset_id", None)
+  if not ruleset_id:  
+    return {"error": f"No ruleset_id found in rule"} 
+  
+  try:
+    async with vt_client(ctx) as client:
+      ruleset_resp = await client.get_async(f"/yara_rulesets/{ruleset_id}")
+      ruleset_data = await ruleset_resp.json_async()
+      ruleset_data = ruleset_data.get("data", {})
+      ruleset_attributes = ruleset_data.get("attributes", {})
+      if ruleset_data and ruleset_attributes:
+        return {
+            "rule_id": ruleset_data.get("id"),
+            "rule_name": ruleset_attributes.get("name", ""),
+            "rule_source": ruleset_attributes.get("source", ""),
+            "rule_content": ruleset_attributes.get("rules", ""),
+            "count" : rule.get("count", 0),
+            "rule_type": rule_type
+        }
+      return {"error": f"No data found for YARA ruleset {ruleset_id}"}
+  except Exception as e:
+    logging.exception("Error fetching YARA ruleset %s: %s", ruleset_id, e)
+    return {"error": f"Error fetching YARA ruleset {ruleset_id}: {e}"}
+
+async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+  """Fetches details for a single Sigma ruleset and formats the output."""
+
+  ruleset_id = rule.get("value",{}).get("id", None)
+  if not ruleset_id:  
+    return {"error": f"No ruleset_id found in rule"} 
+  
+  try:
+    async with vt_client(ctx) as client:
+      ruleset_resp = await client.get_async(f"/sigma_rules/{ruleset_id}")
+      ruleset_data = await ruleset_resp.json_async()
+      ruleset_data = ruleset_data.get("data", {})
+      ruleset_attributes = ruleset_data.get("attributes", {})
+      if ruleset_data and ruleset_attributes:
+        return {
+            "rule_id": ruleset_data.get("id", ""),
+            "rule_name": rule.get("value", {}).get("title", ""),
+            "rule_source": ruleset_attributes.get("source_url", ""),
+            "rule_content": ruleset_attributes.get("rule", ""),
+            "count" : rule.get("count", 0),
+            "rule_type": rule_type
+        }
+      return {"error": f"No data found for Sigma ruleset {ruleset_id}"}
+  except Exception as e:
+    logging.exception("Error fetching Sigma ruleset %s: %s", ruleset_id, e)
+    return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
+
+@server.tool()
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+  """Retrieve top N community rules and all curated hunting rules for a specific collection.
+
+  Note:
+    The `rule_types` argument filters the types of rules returned. Available types are:
+    - 'crowdsourced_ids'
+    - 'crowdsourced_sigma'
+    - 'crowdsourced_yara'
+    - 'curated_yara_rule'
+    If `rule_types` is not provided, all types are returned.
+
+  Example:
+    - `rule_types=['crowdsourced_yara']`: Only crowdsourced YARA rules.
+    - `rule_types=['crowdsourced_ids', 'curated_yara_rule']`: Crowdsourced IDS and curated YARA rules.
+
+  Args:
+    collection_id (required): The ID of the collection.
+    top_n (optional): The number of top community rules to return from each category. Defaults to 4.
+    rule_types (optional): List of rule types to fetch.
+
+  Returns:
+    A list of dictionaries, where each dictionary contains a rule and its metadata, or an error dictionary.
+  """
+  crowsourced_rules = []
+  if rule_types is None:
+    rule_types = ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara", "curated_yara_rule"]
+
+  rule_keys_map = {
+      "crowdsourced_yara_results": "crowdsourced_yara",
+      "crowdsourced_sigma_results": "crowdsourced_sigma",
+      "crowdsourced_ids_results": "crowdsourced_ids",
+  }
+  # Fetch community rules from aggregations if requested
+  if any(rt in rule_types for rt in ["crowdsourced_ids", "crowdsourced_sigma", "crowdsourced_yara"]):
+      try:
+        async with vt_client(ctx) as client:
+          data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
+          data = await data.json_async()
+
+        files_aggregations = data.get("data", {}).get("attributes", {}).get("aggregations", {}).get("files", {})
+
+        if files_aggregations:
+          # Iterate through different community rule types
+          for key, rule_type in rule_keys_map.items():
+            rules = files_aggregations.get(key, [])
+            if rule_type not in rule_type and not rules:
+              continue
+
+            # Sort rules by count and take the top N
+            sorted_rules = sorted(rules, key=lambda x: x.get("count", 0), reverse=True)
+            top_rules = sorted_rules[:top_n]
+            # Fetch detailed rule content for each type
+            for rule in top_rules:
+              if key == "crowdsourced_yara_results":
+                rule_details = await _get_yara_rule_details(ctx, rule, rule_type)
+                if "error" not in rule_details:
+                  crowsourced_rules.append(rule_details)
+              elif key == "crowdsourced_sigma_results":
+                rule_details = await _get_sigma_rule_details(ctx, rule, rule_type)
+                if "error" not in rule_details:
+                  crowsourced_rules.append(rule_details)
+              else: # IDS rules
+                rule_value = rule.get("value", {})
+                crowsourced_rules.append({
+                    "rule_id": rule.get("id", ""),
+                    "rule_name": rule_value.get("message", ""),
+                    "rule_source": rule_value.get("url", ""),
+                    "rule_content": rule_value.get("rule", ""),
+                    "count" : rule.get("count", 0),
+                    "rule_type": rule_type
+                  })
+      except Exception as e:
+        logging.exception("Error fetching community rules aggregations: %s", e)
+        # Continue execution to fetch other rule types
+  crowsourced_rules = sorted(crowsourced_rules, key=lambda x: x.get("count", 0), reverse=True)
+  curated_rules = []
+  # Fetch curated hunting rulesets if requested
+  if "curated_yara_rule" in rule_types:
+    try:
+      async with vt_client(ctx) as client:
+        # 1. Get related hunting ruleset IDs from the collection
+        related_rulesets_resp = await client.get_async(f"/collections/{collection_id}/hunting_rulesets")
+        related_rulesets_data = await related_rulesets_resp.json_async()
+        related_rulesets = related_rulesets_data.get("data", [])
+
+      # Iterate through each related ruleset
+      for ruleset in related_rulesets:
+        ruleset_id = ruleset.get("id", None)
+        if not ruleset_id:
+          continue
+        try:
+          # 2. Get the full hunting ruleset object for each ID.
+          async with vt_client(ctx) as client:
+            ruleset_resp = await client.get_async(f"/intelligence/hunting_rulesets/{ruleset_id}")
+            ruleset_data = await ruleset_resp.json_async()
+        except Exception as e:
+          logging.exception("Error processing rule: %s", e)
+          continue
+
+        attributes = ruleset_data.get("data", {}).get("attributes", {})
+        rules = attributes.get("rules", "")
+        rule_names = attributes.get("rule_names", [])
+        n_rules = attributes.get("number_of_rules", 0)
+
+        # Append each rule to the curated_rules list
+        if n_rules == 1:
+          curated_rules.append({
+              "rule_type": "curated_yara_rule",
+              "rule_name": rule_names[0],
+              "rule_content": rules,
+          })
+        else:
+          for i in range(n_rules):
+            curated_rules.append({
+                "rule_type": "curated_yara_rule",
+                "rule_name": rule_names[i],
+                "rule_content": rules[i],
+            })
+    except Exception as e:
+      logging.exception("Error fetching curated rules: %s", e)
+  all_rules = curated_rules + crowsourced_rules
+  return utils.sanitize_response(all_rules)

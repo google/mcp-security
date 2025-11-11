@@ -43,11 +43,11 @@ The following actions are available through the VMware Carbon Black Cloud (CBClo
     *   Parameters:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-        *   `reputation_override_list` (List[Any], optional): Filter by override list type (e.g., `["BLACK_LIST"]`, `["WHITE_LIST"]`).
-        *   `reputation_override_type` (List[Any], optional): Filter by override type (e.g., `["SHA256"]`, `["CERT"]`).
+        *   `reputation_override_list` (List[str], optional): Filter by override list type (e.g., `["BLACK_LIST"]`, `["WHITE_LIST"]`).
+        *   `reputation_override_type` (List[str], optional): Filter by override type (e.g., `["SHA256"]`, `["CERT"]`).
         *   `start_from_row` (string, optional): Row number to start fetching data from.
         *   `max_rows_to_return` (string, optional): Maximum number of overrides to return.
-        *   `rows_sort_order` (List[Any], optional): Sort order based on creation time (e.g., `["ASC"]`, `["DESC"]`).
+        *   `rows_sort_order` (List[str], optional): Sort order based on creation time (e.g., `["ASC"]`, `["DESC"]`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 
@@ -57,7 +57,7 @@ The following actions are available through the VMware Carbon Black Cloud (CBClo
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `filename` (string, required): Corresponding filename for the hash.
-        *   `reputation_override_list` (List[Any], required): Override list to add to (e.g., `["BLACK_LIST"]`).
+        *   `reputation_override_list` (List[str], required): Override list to add to (e.g., `["BLACK_LIST"]`).
         *   `sha_256_hash` (string, optional): SHA-256 hash to override (can also be provided via FileHash entity).
         *   `description` (string, optional): Description for the override.
         *   `target_entities` (List[TargetEntity], optional): Optional FileHash entity.
@@ -69,7 +69,7 @@ The following actions are available through the VMware Carbon Black Cloud (CBClo
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `signed_by` (string, required): Name of the certificate signer.
-        *   `reputation_override_list` (List[Any], required): Override list to add to (e.g., `["WHITE_LIST"]`).
+        *   `reputation_override_list` (List[str], required): Override list to add to (e.g., `["WHITE_LIST"]`).
         *   `certificate_authority` (string, optional): Authorizing Certificate Authority.
         *   `description` (string, optional): Description for the override.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
@@ -105,7 +105,7 @@ The following actions are available through the VMware Carbon Black Cloud (CBClo
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `file_path` (string, required): File path where the IT tool is stored (e.g., `C:\TMP\`).
-        *   `reputation_override_list` (List[Any], required): Override list to add to (e.g., `["WHITE_LIST"]`).
+        *   `reputation_override_list` (List[str], required): Override list to add to (e.g., `["WHITE_LIST"]`).
         *   `file_name` (string, optional): Filename of the IT tool (can also be provided via File entity).
         *   `description` (string, optional): Description for the override.
         *   `include_child_processes` (bool, optional): Also approve child processes of the IT tool.
@@ -135,8 +135,8 @@ The following actions are available through the VMware Carbon Black Cloud (CBClo
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `alert_id` (string, required): The Carbon Black Cloud internal alert ID (not the UI display ID).
-        *   `reason_for_dismissal` (List[Any], required): Reason code for dismissal (e.g., `["FALSE_POSITIVE"]`).
-        *   `determination` (List[Any], required): Determination code (e.g., `["TRUE_POSITIVE_BENIGN"]`).
+        *   `reason_for_dismissal` (List[str], required): Reason code for dismissal (e.g., `["FALSE_POSITIVE"]`).
+        *   `determination` (List[str], required): Determination code (e.g., `["TRUE_POSITIVE_BENIGN"]`).
         *   `message_for_alert_dismissal` (string, optional): Comment to add to the dismissal.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.

@@ -117,7 +117,7 @@ Creates a new IOC feed in FireEye CM based on provided entities (Hashes, Domains
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `action` (List[Any], required): The action to associate with the IOC feed (e.g., "alert", "block").
+*   `action` (List[str], required): The action to associate with the IOC feed (e.g., "alert", "block").
 *   `extract_domain` (boolean, required): If enabled, extracts the domain from URL entities to create domain IOCs.
 *   `comment` (string, optional): An optional comment for the IOC feed.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Entities provide the IOC values.

@@ -122,7 +122,7 @@ Lists all Amazon GuardDuty findings for the specified detector ID.
 *   `detector_id` (str, required): The unique ID of the detector that you want to retrieve.
 *   `max_findings_to_return` (Optional[str], optional, default=None): Specify how many detectors to return. Default is 50.
 *   `sort_by` (Optional[str], optional, default=None): Represents the finding attribute (for example, accountId) to sort findings by.
-*   `order_by` (Optional[List[Any]], optional, default=None): The order by which the sorted findings are to be displayed.
+*   `order_by` (Optional[List[str]], optional, default=None): The order by which the sorted findings are to be displayed.
 *   `aws_region` (Optional[str], optional, default=None): Optionally specify the AWS Region to be used in the action that can be different from the default region specified in the integration configuration page.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -166,7 +166,7 @@ Create a threat intelligence set in AWS GuardDuty. Note: iam:PutRolePolicy permi
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `detector_id` (str, required): Specify the detector ID that should be used to create a Threat Intelligence Set. This parameter can be found in the "Settings" tab.
 *   `name` (str, required): Specify the name of the Threat Intelligence Set.
-*   `file_format` (List[Any], required): Select the format of the file that should be used to create a threat intelligence set.
+*   `file_format` (List[str], required): Select the format of the file that should be used to create a threat intelligence set.
 *   `file_location` (str, required): Specify the URI location, where the file is located.
 *   `active` (bool, required): If enabled, the newly created Threat Intelligence Set will be activated.
 *   `tags` (Optional[str], optional, default=None): Specify additional tags that should be added to the Threat Intelligence Set. Format: key_1:value_1,key_2:value_2.

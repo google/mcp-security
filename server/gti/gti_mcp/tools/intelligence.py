@@ -37,6 +37,8 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
     | domain        | creation_date, last_modification_date, last_update_date, positives                | last_modification_date- |
     | ip            | ip, last_modification_date, positives                                             | last_modification_date- |
 
+  Note: The `entity` modifier can only be used ONCE per query.
+
   You can find all available modifers at:
     - Files: https://gtidocs.virustotal.com/docs/file-search-modifiers
     - URLs: https://gtidocs.virustotal.com/docs/url-search-modifiers
@@ -64,7 +66,7 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
             "query": query,
             "order": order_by},
         limit=limit)
-  return utils.sanitize_response(res)
+  return utils.sanitize_response([o.to_dict() for o in res])
 
 
 @server.tool()
@@ -104,7 +106,7 @@ async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str,
 @server.tool()
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
-) -> typing.Dict[str, typing.Any]:
+) -> list[dict[str, typing.Any]]:
   """Retrieve entities related to the the given Hunting Ruleset.
 
     The following table shows a summary of available relationships for Hunting ruleset objects.

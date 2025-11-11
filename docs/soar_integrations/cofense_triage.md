@@ -74,8 +74,8 @@ List available playbooks in Cofense Triage, with optional filtering.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (List[Any], optional): Specify the key to filter playbooks by (e.g., `name`).
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains). Note: "Equals" is case-sensitive, "Contains" is case-insensitive.
+*   `filter_key` (List[str], optional): Specify the key to filter playbooks by (e.g., `name`).
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains). Note: "Equals" is case-sensitive, "Contains" is case-insensitive.
 *   `filter_value` (string, optional): Specify the value to filter by.
 *   `max_records_to_return` (string, optional): Specify how many records to return. Default: 50. Maximum: 200.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -212,7 +212,7 @@ Download image preview from the email related to the report from Cofense Triage.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `report_id` (string, required): Specify the ID of the report containing the preview.
 *   `download_folder` (string, required): Specify the absolute path to the download folder. Filename will be `{report_id}.<format>`.
-*   `image_format` (List[Any], required): Specify the format of the image (e.g., `png`, `jpg`).
+*   `image_format` (List[str], required): Specify the format of the image (e.g., `png`, `jpg`).
 *   `overwrite` (bool, optional): If enabled, overwrite existing file with the same name.
 *   `create_insight` (bool, optional): If enabled, create an insight containing the raw email (if applicable, might be incorrect description).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

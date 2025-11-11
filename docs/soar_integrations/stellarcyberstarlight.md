@@ -18,7 +18,7 @@ Perform simple search in Stellar Cyber Starlight.
 *   `query` (str, required): Specify query filter for the search.
 *   `max_results_to_return` (Optional[str], optional, default=None): Specify how many results to return in response.
 *   `sort_field` (Optional[str], optional, default=None): Specify the field, which should be used for sorting.
-*   `sort_order` (Optional[List[Any]], optional, default=None): Specify the sort order for the result.
+*   `sort_order` (Optional[List[str]], optional, default=None): Specify the sort order for the result.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -43,7 +43,7 @@ Update security event in Stellar Cyber Starlight.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `index` (str, required): Specify the index of the security event.
 *   `id` (str, required): Specify the ID of the security event.
-*   `status` (List[Any], required): Specify the new status for the security event.
+*   `status` (List[str], required): Specify the new status for the security event.
 *   `comment` (Optional[str], optional, default=None): Specify a comment for the security event.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

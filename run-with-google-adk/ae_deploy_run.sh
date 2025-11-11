@@ -21,7 +21,7 @@ list_of_vars=`cat $ENV_FILE  | grep = | grep -v ^# | cut -d "=" -f1 | tr "\n" ",
 update="n"
 update_resource_name="not_available"
 
-if [[ $# -eq 1 ]] then
+if [[ $# -eq 1 ]]; then
   update="y"
   update_resource_name=$1
 fi

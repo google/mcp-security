@@ -80,12 +80,12 @@ Submit an observable to Siemplify ThreatFuse based on IP, URL, Hash or User enti
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `classification` (List[Any], required): Specify the classification of the observable.
-*   `threat_type` (List[Any], required): Specify the threat type of the observables.
+*   `classification` (List[str], required): Specify the classification of the observable.
+*   `threat_type` (List[str], required): Specify the threat type of the observables.
 *   `source` (Optional[str], optional, default=None): Specify the intelligence source for the observable.
 *   `expiration_date` (Optional[str], optional, default=None): Specify the expiration date in days for the observable. If nothing is specified here, action will create an observable that will never expire.
 *   `trusted_circle_i_ds` (Optional[str], optional, default=None): Specify the comma-separated list of trusted circle ids. Observables will be shared with those trusted circles.
-*   `tlp` (Optional[List[Any]], optional, default=None): Specify the TLP for your observables.
+*   `tlp` (Optional[List[str]], optional, default=None): Specify the TLP for your observables.
 *   `confidence` (Optional[str], optional, default=None): Specify what should be the confidence for the observable. Note: this parameter will only work, if you create observables in your organization and requires 'Override System Confidence' to be enabled.
 *   `override_system_confidence` (Optional[bool], optional, default=None): If enabled, created observables will have the confidence specified in the 'Confidence' parameter. Note: you can't share observables in trusted circles and publicly, when this parameter is enabled.
 *   `anonymous_submission` (Optional[bool], optional, default=None): If enabled, action will make an anonymous submission.
@@ -134,7 +134,7 @@ Retrieve information about IPs, URLs, hashes or User entities with Email regexes
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `severity_threshold` (List[Any], required): Specify what should be the severity threshold for the entity, in order to mark it as suspicious. If multiple records are found for the same entity, action will take the highest severity out of all available records.
+*   `severity_threshold` (List[str], required): Specify what should be the severity threshold for the entity, in order to mark it as suspicious. If multiple records are found for the same entity, action will take the highest severity out of all available records.
 *   `confidence_threshold` (str, required): Specify what should be the confidence threshold for the entity, in order to mark it as suspicious. Note: Maximum is 100. If multiple records are found for the entity, action will take the average. Active records have priority.
 *   `ignore_false_positive_status` (Optional[bool], optional, default=None): If enabled, action will ignore the false positive status and mark the entity as suspicious based on the "Severity Threshold" and "Confidence Threshold". If disabled, action will never label false positive entities as suspicious, regardless, if they pass the "Severity Threshold" and "Confidence Threshold" conditions or not.
 *   `add_threat_type_to_case` (Optional[bool], optional, default=None): If enabled, action will add threat types of the entity from all records as tags to the case. Example: apt

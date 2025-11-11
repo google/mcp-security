@@ -123,7 +123,7 @@ Create a task to isolate machines.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `isolation_type` (List[Any], required): Isolation type (e.g., Full, Selective).
+*   `isolation_type` (List[str], required): Isolation type (e.g., Full, Selective).
 *   `comment` (string, required): Comment why the machine needs to be isolated.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Hostname and IP entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -141,10 +141,10 @@ Update alert details like status, assignee, classification, and determination.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Microsoft Defender ATP Alert ID to update.
-*   `status` (List[Any], optional): Status of the alert.
+*   `status` (List[str], optional): Status of the alert.
 *   `assigned_to` (string, optional): User who is assigned to this alert.
-*   `classification` (List[Any], optional): Classification to update alert with.
-*   `determination` (List[Any], optional): Determination to update alert with.
+*   `classification` (List[str], optional): Classification to update alert with.
+*   `determination` (List[str], optional): Determination to update alert with.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -252,8 +252,8 @@ Submit entities as indicators in Microsoft Defender ATP. Supported entities: Fil
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `action` (List[Any], required): Specify the action that needs to be applied to the entities. Note: "Block And Remediate" is supported only for filehash entities.
-*   `severity` (List[Any], required): Specify the severity for the found entities.
+*   `action` (List[str], required): Specify the action that needs to be applied to the entities. Note: "Block And Remediate" is supported only for filehash entities.
+*   `severity` (List[str], required): Specify the severity for the found entities.
 *   `indicator_alert_title` (string, required): Specify what should be the title for the alert, if they are identified in the environment.
 *   `description` (string, required): Specify the description for the entities.
 *   `application` (string, optional): Specify an application that is related to the entities.
@@ -307,7 +307,7 @@ Create a task to run an antivirus scan on specified machines.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `antivirus_scan_type` (List[Any], required): Antivirus Scan Type (e.g., Quick, Full).
+*   `antivirus_scan_type` (List[str], required): Antivirus Scan Type (e.g., Quick, Full).
 *   `comment` (string, required): Comment why an antivirus scan needs to be executed on the machine.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Hostname and IP entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

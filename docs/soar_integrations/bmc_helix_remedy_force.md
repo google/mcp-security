@@ -66,7 +66,7 @@ List available record types from BMC Helix Remedyforce.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `filter_value` (string, optional): Specify a value to filter record types by (e.g., "Incident").
 *   `max_record_types_to_return` (string, optional): Specify how many record types to return. Default: 50.
-*   `filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains).
+*   `filter_logic` (List[str], optional): Specify filter logic (Equals/Contains).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -116,13 +116,13 @@ Execute a SOQL query based on parameters in BMC Helix Remedyforce.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `record_type` (string, required): Specify what record type should be queried (e.g., `Incident`, `ServiceRequest__c`).
 *   `where_filter` (string, optional): Specify the WHERE filter for the query (without the `WHERE` keyword).
-*   `time_frame` (List[Any], optional): Specify a time frame (e.g., Last 7 Days, Custom). If "Custom", `start_time` is required.
+*   `time_frame` (List[str], optional): Specify a time frame (e.g., Last 7 Days, Custom). If "Custom", `start_time` is required.
 *   `start_time` (string, optional): Start time (ISO 8601). Mandatory if `time_frame` is "Custom".
 *   `end_time` (string, optional): End time (ISO 8601). Uses current time if `time_frame` is "Custom" and this is empty.
 *   `fields_to_return` (string, optional): Specify fields to return (comma-separated). If empty, returns all fields.
 *   `sort_field` (string, optional): Specify the field to sort by.
 *   `max_results_to_return` (string, optional): Specify how many results to return. Default: 50. Maximum: 200.
-*   `sort_order` (List[Any], optional): Specify the sort order (Ascending/Descending).
+*   `sort_order` (List[str], optional): Specify the sort order (Ascending/Descending).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

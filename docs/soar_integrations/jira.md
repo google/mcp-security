@@ -40,7 +40,7 @@ This integration provides tools to interact with Jira, allowing you to manage is
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `issue_key` (string, required): The key of the issue
 *   `file_paths` (string, required): The paths of the files to upload, comma separated
-*   `mode` (Optional[List[Any]], optional): Specify the mode for the action. If "Add New Attachment" is selected, action will add a new attachment, if it even has the same name. If "Overwrite Existing Attachment" is selected, action will remove other attachments with the same name and add a new attachment. Defaults to None.
+*   `mode` (Optional[List[str]], optional): Specify the mode for the action. If "Add New Attachment" is selected, action will add a new attachment, if it even has the same name. If "Overwrite Existing Attachment" is selected, action will remove other attachments with the same name and add a new attachment. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -272,8 +272,8 @@ This integration provides tools to interact with Jira, allowing you to manage is
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_key` (Optional[List[Any]], optional): Specify the key that needs to be used to filter {item type}. Defaults to None.
-*   `filter_logic` (Optional[List[Any]], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
+*   `filter_key` (Optional[List[str]], optional): Specify the key that needs to be used to filter {item type}. Defaults to None.
+*   `filter_logic` (Optional[List[str]], optional): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `filter_value` (Optional[str], optional): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter. Defaults to None.
 *   `max_records_to_return` (Optional[str], optional): Specify how many records to return. If nothing is provided, action will return 50 records. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.

@@ -23,7 +23,7 @@ The following actions are available through the PhishRod integration:
         *   `case_id` (string, required): The ID of the case.
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `incident_id` (string, required): Specify the ID of the incident that needs to be updated.
-        *   `status` (List[Any], optional): Specify the new status for the incident (e.g., `["Benign"]`, `["Malicious"]`, `["Spam"]`). The exact available values depend on the PhishRod configuration.
+        *   `status` (List[str], optional): Specify the new status for the incident (e.g., `["Benign"]`, `["Malicious"]`, `["Spam"]`). The exact available values depend on the PhishRod configuration.
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 
@@ -34,7 +34,7 @@ The following actions are available through the PhishRod integration:
         *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
         *   `incident_id` (string, required): Specify the ID of the incident that needs to be marked.
         *   `comment` (string, required): Specify the comment describing the reasons for marking the incident.
-        *   `status` (List[Any], optional): Specify how the incident needs to be marked (e.g., `["Benign"]`, `["Malicious"]`, `["Spam"]`).
+        *   `status` (List[str], optional): Specify how the incident needs to be marked (e.g., `["Benign"]`, `["Malicious"]`, `["Spam"]`).
         *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities.
         *   `scope` (string, optional, default="All entities"): Defines the scope for the action.
 

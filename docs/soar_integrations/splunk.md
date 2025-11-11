@@ -44,11 +44,11 @@ Update notable events in Splunk ES. Note: This action is only supported for Splu
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `notable_event_i_ds` (str, required): Specify IDs of notable events. Example:1A082D7B-D5A1-4A2B-BB94-41C439BE3EB7@@notable@@cb87390ae72763679d3f6f8f097ebe2b,1D234D5B-1531-2D2B-BB94-41C439BE12B7@@notable@@cb87390ae72763679d3f6f8f097ebe2b
-*   `status` (Optional[List[Any]], optional, default=None): Specify the new status for notable events.
-*   `urgency` (Optional[List[Any]], optional, default=None): Specify the new urgency for the notable event.
+*   `status` (Optional[List[str]], optional, default=None): Specify the new status for notable events.
+*   `urgency` (Optional[List[str]], optional, default=None): Specify the new urgency for the notable event.
 *   `new_owner` (Optional[str], optional, default=None): Specify the new owner of the notable event.
 *   `comment` (Optional[str], optional, default=None): Specify comment for the notable event.
-*   `disposition` (Optional[List[Any]], optional, default=None): Specify the disposition for the notable event.
+*   `disposition` (Optional[List[str]], optional, default=None): Specify the disposition for the notable event.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -72,7 +72,7 @@ Execute a query in Splunk. Note: Please exclude any quotes that are part of the 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `query` (str, required): Specify the query that needs to be executed. Example: index="_internal". You can provide multiple queries in the same action. The format is [“query 1”, “query 2”].
-*   `search_mode` (Optional[List[Any]], optional, default=None): Specify the mode for search execution.
+*   `search_mode` (Optional[List[str]], optional, default=None): Specify the mode for search execution.
 *   `results_count_limit` (Optional[str], optional, default=None): Specify how many results to return. Note: this parameter appends the “head” key word to the provided query. Default is 100.
 *   `results_from` (Optional[str], optional, default=None): Specify the start time for the query. Default: -24h
 *   `results_to` (Optional[str], optional, default=None): Specify the end time for the query. Default: now.
@@ -89,8 +89,8 @@ Execute an entity query in Splunk. Note: this action prepares the “Where” cl
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `query` (str, required): Specify the query that needs to be executed without the “Where” clause. Example: index="_internal"
-*   `cross_entity_operator` (List[Any], required): Specify what should be the logical operator used between different entity types.
-*   `search_mode` (Optional[List[Any]], optional, default=None): Specify the mode for search execution.
+*   `cross_entity_operator` (List[str], required): Specify what should be the logical operator used between different entity types.
+*   `search_mode` (Optional[List[str]], optional, default=None): Specify the mode for search execution.
 *   `results_count_limit` (Optional[str], optional, default=None): Specify how many results to return. Note: this parameter appends the "head" key word to the provided query. Default is 100.
 *   `results_from` (Optional[str], optional, default=None): Specify the start time for the query. Default: -24h
 *   `results_to` (Optional[str], optional, default=None): Specify the end time for the query. Default: now.

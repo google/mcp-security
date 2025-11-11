@@ -94,7 +94,9 @@ def register_tools(integrations_arg: str):
                 if py_file.name == "__init__.py" or not py_file.is_file():
                     continue
 
-                module_stem = py_file.stem  # The filename without .py (e.g., "csv")
+                module_stem = (
+                    py_file.stem
+                )  # The filename without .py (e.g., "csv")
                 if module_stem not in enabled_integrations_set:
                     continue
                 module_import_path = f"marketplace.{module_stem}"  # The import path (e.g., "marketplace.csv")
@@ -167,6 +169,11 @@ async def main():
         logger.error("Error: %s", e)
     finally:
         await bindings.cleanup()
+
+
+def run_main():
+    """Entry point function that properly awaits the async main function."""
+    return asyncio.run(main())
 
 
 if __name__ == "__main__":

@@ -104,7 +104,7 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/the/repo/server/secops-soar",
+        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
         "run",
         "server.py",
         "--integrations",

@@ -19,12 +19,12 @@ This integration provides tools to interact with Mandiant Advantage Attack Surfa
 *   `issue_i_ds` (Optional[str], optional): Specify a comma-separated list of issue ids, for which you want to return details. Defaults to None.
 *   `entity_i_ds` (Optional[str], optional): Specify a comma-separated list of entity ids for which you want to find related issues. Defaults to None.
 *   `entity_name` (Optional[str], optional): Specify a comma-separated list of entity names for which you want to find related issues. Defaults to None.
-*   `time_parameter` (Optional[List[Any]], optional): Specify what parameter should be used for filtering time. Defaults to None.
-*   `time_frame` (Optional[List[Any]], optional): Specify a time frame for the issues. If “Custom” is selected, you also need to provide “Start Time”. Defaults to None.
+*   `time_parameter` (Optional[List[str]], optional): Specify what parameter should be used for filtering time. Defaults to None.
+*   `time_frame` (Optional[List[str]], optional): Specify a time frame for the issues. If “Custom” is selected, you also need to provide “Start Time”. Defaults to None.
 *   `start_time` (Optional[str], optional): Specify the start time for the results. This parameter is mandatory, if “Custom” is selected for the “Time Frame” parameter. Format: ISO 8601. Defaults to None.
 *   `end_time` (Optional[str], optional): Specify the end time for the results. Format: ISO 8601. If nothing is provided and “Custom” is selected for the “Time Frame” parameter then this parameter will use current time. Defaults to None.
-*   `lowest_severity_to_return` (Optional[List[Any]], optional): Specify the lowest severity that should be used to return the issues. If “Select One” is selected, this filter is not applied during the search. Defaults to None.
-*   `status` (Optional[List[Any]], optional): Specify the status filter for the search. If “Select One” is selected, this filter is not applied during the search. Defaults to None.
+*   `lowest_severity_to_return` (Optional[List[str]], optional): Specify the lowest severity that should be used to return the issues. If “Select One” is selected, this filter is not applied during the search. Defaults to None.
+*   `status` (Optional[List[str]], optional): Specify the status filter for the search. If “Select One” is selected, this filter is not applied during the search. Defaults to None.
 *   `tags` (Optional[str], optional): Specify a comma-separated list of tag names, which should be used, when searching for the issues. Defaults to None.
 *   `max_issues_to_return` (Optional[str], optional): Specify how many issues to return. Default: 50. Maximum is 200. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
@@ -66,7 +66,7 @@ This integration provides tools to interact with Mandiant Advantage Attack Surfa
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `issue_id` (string, required): Specify the ID of the issue that needs to be updated.
-*   `status` (List[Any], required): Specify what status to set for the issues.
+*   `status` (List[str], required): Specify what status to set for the issues.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

@@ -29,7 +29,7 @@ Create a network-connection Object in MISP. Requires one of: Dst-port, Src-port,
 *   `layer4_protocol` (string, optional): Specify the related layer 4 protocol.
 *   `layer7_protocol` (string, optional): Specify the related layer 7 protocol.
 *   `use_entities` (bool, optional): If enabled, uses IP Address entities to populate IP-Src/IP-Dst. Has priority over other parameters.
-*   `ip_type` (List[Any], optional): Specify attribute type for IP entities (IP-Src or IP-Dst).
+*   `ip_type` (List[str], optional): Specify attribute type for IP entities (IP-Src or IP-Dst).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -106,7 +106,7 @@ Remove tags from attributes in MISP.
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
 *   `object_uuid` (string, optional): UUID of the object containing the attribute.
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -141,7 +141,7 @@ Set IDS flag for attributes in MISP.
 *   `event_id` (string, optional): Event ID/UUID to search within (required if Attribute Search is "Provided Event").
 *   `category` (string, optional): Comma-separated list of categories to filter attributes.
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -233,7 +233,7 @@ Create an IP-Port Object in MISP. Requires one of: Dst-port, Src-port, Domain, H
 *   `ip_src` (string, optional): Specify the source IP.
 *   `ip_dst` (string, optional): Specify the destination IP.
 *   `use_entities` (bool, optional): If enabled, uses IP Address entities. Has priority over other parameters.
-*   `ip_type` (List[Any], optional): Specify attribute type for IP entities (IP-Src or IP-Dst).
+*   `ip_type` (List[str], optional): Specify attribute type for IP entities (IP-Src or IP-Dst).
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -271,7 +271,7 @@ Add a sighting to attributes in MISP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `sightings_type` (List[Any], required): Specify the type of the Sighting.
+*   `sightings_type` (List[str], required): Specify the type of the Sighting.
 *   `attribute_name` (string, optional): Comma-separated list of attribute identifiers (values).
 *   `event_id` (string, optional): Event ID/UUID to search within (required if Attribute Search is "Provided Event").
 *   `category` (string, optional): Comma-separated list of categories to filter attributes.
@@ -279,7 +279,7 @@ Add a sighting to attributes in MISP.
 *   `source` (string, optional): Specify the source for the sighting (e.g., SIEM, SOAR).
 *   `date_time` (string, optional): Specify the date time for the sighting (Format: YYYY-MM-DD HH:MM:SS).
 *   `object_uuid` (string, optional): UUID of the object containing the attribute.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -297,9 +297,9 @@ Enrich entities based on the attributes in MISP.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `number_of_attributes_to_return` (string, required): Specify how many attributes to return for entities.
-*   `filtering_condition` (List[Any], required): Specify filtering condition ("First" or "Last").
+*   `filtering_condition` (List[str], required): Specify filtering condition ("First" or "Last").
 *   `create_insights` (bool, optional): If enabled, generates an insight for every fully processed entity.
-*   `threat_level_threshold` (List[Any], optional): Specify threat level threshold. Marks entity as suspicious if related event matches or exceeds threshold.
+*   `threat_level_threshold` (List[str], optional): Specify threat level threshold. Marks entity as suspicious if related event matches or exceeds threshold.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -362,7 +362,7 @@ Unset IDS flag for attributes in MISP.
 *   `event_id` (string, optional): Event ID/UUID to search within (required if Attribute Search is "Provided Event").
 *   `category` (string, optional): Comma-separated list of categories to filter attributes.
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -405,8 +405,8 @@ Add attributes based on entities to the event in MISP. Supported hashes: MD5, SH
 *   `category` (string, optional): Specify the category for attributes.
 *   `distribution` (string, optional): Specify the distribution (0-Organisation, 1-Community, 2-Connected, 3-All, 5-Inherit).
 *   `comment` (string, optional): Specify comment related to attribute.
-*   `fallback_ip_type` (List[Any], optional): Specify fallback attribute type for IP address entity.
-*   `fallback_email_type` (List[Any], optional): Specify fallback attribute type for email address entity.
+*   `fallback_ip_type` (List[str], optional): Specify fallback attribute type for IP address entity.
+*   `fallback_email_type` (List[str], optional): Specify fallback attribute type for email address entity.
 *   `extract_domain` (bool, optional): If enabled, extracts domain out of URL entity.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports various entity types (IP, Hash, URL, Email, Domain).
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -430,7 +430,7 @@ Add tags to attributes in MISP.
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
 *   `object_uuid` (string, optional): UUID of the object containing the attribute.
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -505,7 +505,7 @@ List available sightings for attributes in MISP.
 *   `event_id` (string, optional): Event ID/UUID to search within (required if Attribute Search is "Provided Event").
 *   `category` (string, optional): Comma-separated list of categories to filter attributes.
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -528,7 +528,7 @@ Delete attributes in MISP. Supported hashes: MD5, SHA1, SHA224, SHA256, SHA384, 
 *   `type` (string, optional): Comma-separated list of attribute types to filter attributes.
 *   `object_uuid` (string, optional): UUID of the object containing the attribute.
 *   `attribute_uuid` (string, optional): Comma-separated list of attribute UUIDs. Takes priority over Attribute Name.
-*   `attribute_search` (List[Any], optional): Where to search for attributes ("Provided Event" or "All Events").
+*   `attribute_search` (List[str], optional): Where to search for attributes ("Provided Event" or "All Events").
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 

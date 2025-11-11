@@ -19,8 +19,8 @@ Adds a new Intrusion Prevention System (IPS) policy exception in FireEye NX base
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `victim_ip_subnet` (string, required): The IP subnet of the victim for the policy exception (Format: x.x.x.x/xx, e.g., 10.0.0.1/24).
-*   `interface` (List[Any], required): The interface to apply the policy exception to.
-*   `mode` (List[Any], required): The mode for the policy exception.
+*   `interface` (List[str], required): The interface to apply the policy exception to.
+*   `mode` (List[str], required): The mode for the policy exception.
 *   `name` (string, optional): A custom name for the policy exception. If not provided, a default name like `Siemplify_{Interface}_{Mode}` is used.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. IP entities are treated as "Attacker IP Address".
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

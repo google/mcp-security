@@ -127,7 +127,7 @@ Add path to the exclusion list in SentinelOne.
 *   `description` (Optional[str], optional, default=None): Specify additional information related to the path.
 *   `add_to_global_exclusion_list` (Optional[bool], optional, default=None): If enabled, action will add the path to the global exclusion list. Note: when this parameter is enabled, parameters “Site IDs“, “Group IDs“ and “Account IDs“ are ignored.
 *   `include_subfolders` (Optional[bool], optional, default=None): If enabled, action will include subfolders for the provided path. This feature only works, if user provides folder path and not file path.
-*   `mode` (Optional[List[Any]], optional, default=None): Specify what mode should be used for the excluded path.
+*   `mode` (Optional[List[str]], optional, default=None): Specify what mode should be used for the excluded path.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -172,7 +172,7 @@ Retrieve information about threats in SentinelOne.
 *   `resolved_threats` (Optional[bool], optional, default=None): If enabled, action will only return resolved threats.
 *   `threat_display_name` (Optional[str], optional, default=None): Specify a display name of the threat that you want to return. Partial name will also work.
 *   `limit` (Optional[str], optional, default=None): Specify how many threats to return. Default: 10.
-*   `api_version` (Optional[List[Any]], optional, default=None): Specify what version of API to use in the action. If nothing is provided connector will use version 2.1. Note: JSON result structure is different between API versions. It is recommended to use the latest one.
+*   `api_version` (Optional[List[str]], optional, default=None): Specify what version of API to use in the action. If nothing is provided connector will use version 2.1. Note: JSON result structure is different between API versions. It is recommended to use the latest one.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -258,7 +258,7 @@ Update threat incident status in SentinelOne.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `threat_id` (str, required): Specify a comma-separated list of threat ids for which you want to update the incident status.
-*   `status` (List[Any], required): Specify the incident status.
+*   `status` (List[str], required): Specify the incident status.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 
@@ -270,7 +270,7 @@ Executes mitigation actions on the threats in SentinelOne.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `mitigation_action` (List[Any], required): Specify the mitigation actions for the provided threats.
+*   `mitigation_action` (List[str], required): Specify the mitigation actions for the provided threats.
 *   `threat_i_ds` (str, required): Specify a comma-separated list of threat IDs that should be mitigated.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
@@ -309,8 +309,8 @@ List available sites in SentinelOne.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `filter_key` (Optional[List[Any]], optional, default=None): Specify the key that needs to be used to filter sites.
-*   `filter_logic` (Optional[List[Any]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter.
+*   `filter_key` (Optional[List[str]], optional, default=None): Specify the key that needs to be used to filter sites.
+*   `filter_logic` (Optional[List[str]], optional, default=None): Specify what filter logic should be applied. Filtering logic is working based on the value provided in the "Filter Key" parameter.
 *   `filter_value` (Optional[str], optional, default=None): Specify what value should be used in the filter. If "Equal" is selected, action will try to find the exact match among results and if "Contains" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the "Filter Key" parameter.
 *   `max_records_to_return` (Optional[str], optional, default=None): Specify how many records to return.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -391,7 +391,7 @@ Update analyst verdict of the threat in SentinelOne.
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
 *   `threat_id` (str, required): Specify a comma-separated list of threat ids for which you want to update the analyst verdict.
-*   `analyst_verdict` (List[Any], required): Specify the analyst verdict.
+*   `analyst_verdict` (List[str], required): Specify the analyst verdict.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
 

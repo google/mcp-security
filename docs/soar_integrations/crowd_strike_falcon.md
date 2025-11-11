@@ -43,8 +43,8 @@ Submit urls to a sandbox in Crowdstrike. Note: This action requires a Falcon San
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `ur_ls` (string, required): Specify the URLs that need to be submitted (comma-separated for multiple).
-*   `sandbox_environment` (List[Any], optional): Specify the sandbox environment for the analysis (e.g., Windows 7 64-bit).
-*   `network_environment` (List[Any], optional): Specify the network environment for the analysis.
+*   `sandbox_environment` (List[str], optional): Specify the sandbox environment for the analysis (e.g., Windows 7 64-bit).
+*   `network_environment` (List[str], optional): Specify the network environment for the analysis.
 *   `check_duplicate` (bool, optional): If enabled, checks if the URL was previously submitted and returns the existing report.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports URL entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -63,7 +63,7 @@ Update incident status and assignment in Crowdstrike.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `incident_id` (string, required): Specify the ID of the incident that needs to be updated.
 *   `customer_id` (string, optional): Specify the Customer ID (CID) if applicable (MSSP).
-*   `status` (List[Any], optional): Specify the status for the incident (e.g., `New`, `InProgress`, `Closed`).
+*   `status` (List[str], optional): Specify the status for the incident (e.g., `New`, `InProgress`, `Closed`).
 *   `assign_to` (string, optional): Specify the name or email of the analyst to assign the incident to. Use "Unassign" to remove assignment. Format: "{first name} {last name}".
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -153,8 +153,8 @@ Update an alert's status, verdict, or assignment in Crowdstrike.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `alert_id` (string, required): Specify the ID of the alert to update.
-*   `status` (List[Any], optional): Specify the status for the alert (e.g., `new`, `in_progress`, `closed`).
-*   `verdict` (List[Any], optional): Specify the verdict for the alert (e.g., `true_positive`, `false_positive`).
+*   `status` (List[str], optional): Specify the status for the alert (e.g., `new`, `in_progress`, `closed`).
+*   `verdict` (List[str], optional): Specify the verdict for the alert (e.g., `true_positive`, `false_positive`).
 *   `assign_to` (string, optional): Specify the name or email of the analyst to assign the alert to. Use "Unassign" to remove assignment.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -172,7 +172,7 @@ List available hosts in Crowdstrike Falcon, with optional filtering.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `customer_id` (string, optional): Specify the Customer ID (CID) if applicable (MSSP).
-*   `filter_logic` (List[Any], optional): Specify filter logic (e.g., `Equals`, `Contains`).
+*   `filter_logic` (List[str], optional): Specify filter logic (e.g., `Equals`, `Contains`).
 *   `filter_value` (string, optional): Specify the value to filter hosts by (field depends on logic, often hostname or IP).
 *   `max_hosts_to_return` (string, optional): Specify how many hosts to return. Default: 50. Maximum: 1000.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -325,10 +325,10 @@ Add custom IOCs in Crowdstrike Falcon. Supported entities: Hostname, URL, IP add
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `platform` (string, required): Comma-separated list of platforms (Windows, Linux, Mac).
-*   `severity` (List[Any], required): Specify the severity for the IOC (e.g., `High`, `Medium`).
+*   `severity` (List[str], required): Specify the severity for the IOC (e.g., `High`, `Medium`).
 *   `comment` (string, optional): Specify a comment with more context related to IOC.
 *   `host_group_name` (string, optional): Specify the name of the host group to apply the IOC to.
-*   `action` (List[Any], optional): Specify the action (`Detect`, `Block`). Note: "Block" only applies to hashes; defaults to "Detect" for others.
+*   `action` (List[str], optional): Specify the action (`Detect`, `Block`). Note: "Block" only applies to hashes; defaults to "Detect" for others.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Supports Hostname, URL, IP Address, Hash entities.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
 
@@ -366,11 +366,11 @@ Scan the endpoint on demand in Crowdstrike. Note: only Windows hosts are support
 *   `file_paths_to_exclude_from_scan` (string, optional): Comma-separated list of paths to exclude.
 *   `host_group_name` (string, optional): Comma-separated list of host group names to scan.
 *   `scan_description` (string, optional): Description for the scan. Defaults to "Scan initialized by Chronicle SecOps."
-*   `cpu_priority` (List[Any], optional): CPU priority for the scan (e.g., `Low`, `Medium`, `High`).
-*   `sensor_anti_malware_detection_level` (List[Any], optional): Sensor AV detection level.
-*   `sensor_anti_malware_prevention_level` (List[Any], optional): Sensor AV prevention level.
-*   `cloud_anti_malware_detection_level` (List[Any], optional): Cloud AV detection level.
-*   `cloud_anti_malware_prevention_level` (List[Any], optional): Cloud AV prevention level.
+*   `cpu_priority` (List[str], optional): CPU priority for the scan (e.g., `Low`, `Medium`, `High`).
+*   `sensor_anti_malware_detection_level` (List[str], optional): Sensor AV detection level.
+*   `sensor_anti_malware_prevention_level` (List[str], optional): Sensor AV prevention level.
+*   `cloud_anti_malware_detection_level` (List[str], optional): Cloud AV detection level.
+*   `cloud_anti_malware_prevention_level` (List[str], optional): Cloud AV prevention level.
 *   `quarantine_hosts` (bool, optional): If enabled, quarantine hosts as part of scanning.
 *   `create_endpoint_notification` (bool, optional): If enabled, create an endpoint notification for the scan.
 *   `max_scan_duration` (string, optional): Max scan duration in hours. If empty, runs continuously.
@@ -391,7 +391,7 @@ Update an identity protection detection in Crowdstrike. Note: requires an Identi
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `detection_id` (string, required): Specify the ID of the identity protection detection to update.
-*   `status` (List[Any], optional): Specify the status for the detection (e.g., `new`, `closed`).
+*   `status` (List[str], optional): Specify the status for the detection (e.g., `new`, `closed`).
 *   `assign_to` (string, optional): Specify the name or email of the analyst to assign the detection to. Use "Unassign" to remove assignment.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -440,7 +440,7 @@ List available custom IOCs in CrowdStrike Falcon, with optional filtering.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `ioc_type_filter` (string, optional): Comma-separated list of IOC types to return (e.g., `ipv4`, `ipv6`, `md5`, `sha256`, `domain`). If empty, returns all types.
-*   `value_filter_logic` (List[Any], optional): Specify filter logic (Equals/Contains).
+*   `value_filter_logic` (List[str], optional): Specify filter logic (Equals/Contains).
 *   `value_filter_string` (string, optional): Specify the string value to filter IOCs by.
 *   `max_io_cs_to_return` (string, optional): Specify how many IOCs to return. Default: 50. Maximum: 500.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -459,8 +459,8 @@ Submit files to a sandbox in Crowdstrike. Note: Requires Falcon Sandbox license.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `file_paths` (string, required): Specify the file paths to the files that need to be submitted (comma-separated for multiple).
-*   `sandbox_environment` (List[Any], optional): Specify the sandbox environment for the analysis.
-*   `network_environment` (List[Any], optional): Specify the network environment for the analysis.
+*   `sandbox_environment` (List[str], optional): Specify the sandbox environment for the analysis.
+*   `network_environment` (List[str], optional): Specify the network environment for the analysis.
 *   `archive_password` (string, optional): Password for archive files.
 *   `document_password` (string, optional): Password for Adobe or Office files (max 32 characters).
 *   `check_duplicate` (bool, optional): If enabled, check for previous submissions and return existing report.
@@ -482,7 +482,7 @@ Update detection status or assignment in Crowdstrike Falcon.
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `detection_id` (string, required): Specify the ID of the detection to update.
-*   `status` (List[Any], required): Specify the new status for the detection (e.g., `new`, `in_progress`, `true_positive`, `false_positive`, `ignored`).
+*   `status` (List[str], required): Specify the new status for the detection (e.g., `new`, `in_progress`, `true_positive`, `false_positive`, `ignored`).
 *   `assign_detection_to` (string, optional): Specify the email address of the user to assign the detection to.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".

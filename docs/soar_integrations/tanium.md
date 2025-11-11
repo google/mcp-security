@@ -53,12 +53,12 @@ List events related to the endpoints from Tanium. Action works with Tanium Threa
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `event_type` (Optional[List[Any]], optional, default=None): Specify the type of the event that needs to be returned.
-*   `time_frame` (Optional[List[Any]], optional, default=None): Specify a time frame for the results. If "Alert Time Till Now" is selected, action will use start time of the alert as start time for the search and end time will be current time. If "30 Minutes Around Alert Time" is selected, action will search the alerts 30 minutes before the alert happened till the 30 minutes after the alert has happened. Same idea applies to "1 Hour Around Alert Time" and "5 Minutes Around Alert Time". If "Custom" is selected, you also need to provide "Start Time".
+*   `event_type` (Optional[List[str]], optional, default=None): Specify the type of the event that needs to be returned.
+*   `time_frame` (Optional[List[str]], optional, default=None): Specify a time frame for the results. If "Alert Time Till Now" is selected, action will use start time of the alert as start time for the search and end time will be current time. If "30 Minutes Around Alert Time" is selected, action will search the alerts 30 minutes before the alert happened till the 30 minutes after the alert has happened. Same idea applies to "1 Hour Around Alert Time" and "5 Minutes Around Alert Time". If "Custom" is selected, you also need to provide "Start Time".
 *   `start_time` (Optional[str], optional, default=None): Specify the start time for the results. This parameter is mandatory, if "Custom" is selected for the "Time Frame" parameter. Format: ISO 8601
 *   `end_time` (Optional[str], optional, default=None): Specify the end time for the results. Format: ISO 8601. If nothing is provided and "Custom" is selected for the "Time Frame" parameter then this parameter will use current time.
 *   `sort_field` (Optional[str], optional, default=None): Specify what parameter should be used for sorting.
-*   `sort_order` (Optional[List[Any]], optional, default=None): Specify the order of sorting.
+*   `sort_order` (Optional[List[str]], optional, default=None): Specify the order of sorting.
 *   `max_events_to_return` (Optional[str], optional, default=None): Specify how many events to return per entity. Default: 50. Maximum: 500.
 *   `target_entities` (List[TargetEntity], optional, default=factory): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.

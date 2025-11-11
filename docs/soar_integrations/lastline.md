@@ -18,7 +18,7 @@ This integration provides tools to interact with the Lastline analysis service (
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
 *   `search_in_last_x_scans` (string, required): Search for report in last x analyses executed in Lastline.
 *   `submission_name` (Optional[str], optional): Submission name to search for. Can be either URL or Filehash in a format of MD5 and SHA1. Defaults to None.
-*   `submission_type` (Optional[List[Any]], optional): Optionally specify a submission type to search for, either URL or FileHash. Defaults to None.
+*   `submission_type` (Optional[List[str]], optional): Optionally specify a submission type to search for, either URL or FileHash. Defaults to None.
 *   `max_hours_backwards` (Optional[str], optional): Time frame for which to search for completed analysis tasks. Defaults to None.
 *   `skip_first_x_scans` (Optional[str], optional): Skip first x scans returned by Lastline API. Defaults to None.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on. Defaults to empty list.

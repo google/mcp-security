@@ -34,7 +34,7 @@ Create an internal data group in F5 BIG-IP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `type` (List[Any], required): Specify the type for the data group (e.g., ip, string).
+*   `type` (List[str], required): Specify the type for the data group (e.g., ip, string).
 *   `name` (string, required): Specify the name of the data group that needs to be created.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (string, optional): Defines the scope for the action. Defaults to "All entities".
@@ -118,7 +118,7 @@ List available address lists in F5 BIG-IP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter. Filtering is based on the address list name.
 *   `max_address_lists_to_return` (string, optional): Specify how many address lists to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -232,7 +232,7 @@ List available port lists in F5 BIG-IP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter. Filtering is based on the port list name.
 *   `max_port_lists_to_return` (string, optional): Specify how many port lists to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -299,7 +299,7 @@ List available iRules in F5 BIG-IP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter. Filtering is based on the iRule name.
 *   `max_i_rules_to_return` (string, optional): Specify how many iRules to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.
@@ -317,7 +317,7 @@ List available internal data groups in F5 BIG-IP.
 
 *   `case_id` (string, required): The ID of the case.
 *   `alert_group_identifiers` (List[string], required): Identifiers for the alert groups.
-*   `filter_logic` (List[Any], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
+*   `filter_logic` (List[str], optional): Specify what filter logic should be applied (e.g., Equal, Contains).
 *   `filter_value` (string, optional): Specify what value should be used in the filter. Filtering is based on the data group name.
 *   `max_data_groups_to_return` (string, optional): Specify how many data groups to return. Default: 50.
 *   `target_entities` (List[TargetEntity], optional): Optional list of specific target entities (Identifier, EntityType) to run the action on.

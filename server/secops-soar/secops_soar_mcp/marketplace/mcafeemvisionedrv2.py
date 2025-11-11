@@ -16,15 +16,16 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, Any, List, Dict, Union, Annotated
+from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
+from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 
 def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the McAfeeMvisionEDRV2 integration.
 
     @mcp.tool()
-    async def mc_afee_mvision_edrv2_create_investigation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], case_type: Annotated[List[Any], Field(..., description="Defines the type of alert.")], priority: Annotated[List[Any], Field(..., description="Assigns a priority to the investigation.")], hint: Annotated[str, Field(default=None, description="Automatically links related investigations and avoids creating many cases from multiple alerts related to the same incident. If the same hint is used, the evidences will be added to the already existing investigation.")], name: Annotated[str, Field(default=None, description="Gives the investigation a meaningful name. If the name is missing, a default case name is assigned.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_mvision_edrv2_create_investigation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], case_type: Annotated[List[str], Field(..., description="Defines the type of alert.")], priority: Annotated[List[str], Field(..., description="Assigns a priority to the investigation.")], hint: Annotated[str, Field(default=None, description="Automatically links related investigations and avoids creating many cases from multiple alerts related to the same incident. If the same hint is used, the evidences will be added to the already existing investigation.")], name: Annotated[str, Field(default=None, description="Gives the investigation a meaningful name. If the name is missing, a default case name is assigned.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create investigations for IP addresses and hostnames.
 
         Returns:
@@ -104,7 +105,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mc_afee_mvision_edrv2_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], Field(default_factory=list, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_mvision_edrv2_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test Connectivity
 
         Returns:
