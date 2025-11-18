@@ -60,7 +60,9 @@ Detailed instructions are provided [here](https://github.com/google/mcp-security
 #### For cline.bot VS Code Extension:
 
 1. Install the [cline.bot](https://cline.bot/) [extension in VS Code](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
-2. Update your `cline_mcp_settings.json` with the appropriate configuration. See [sample on GitHub](https://github.com/google/mcp-security/blob/main/cline_mcp_settings.json.example)
+2. Update your `cline_mcp_settings.json` with the appropriate configuration. See [sample on GitHub](https://github.com/google/mcp-security/blob/main/cline_mcp_settings.json.example) In greater detail, go to "MCP Server" Icon on the top row of icons in the Cline.bot tab of the vscode window. Next click on "Installed" in the row of links under "MCP Servers" see example pic. Copy the the cline_mcp_setting.json file from the Google /mcp-security github repo and paste to vscode. Make sure you input the correct api keys for SecOps, SOAR, GTI and SCC as appropriate and then save the file.  Go back to the "MCP Server" icon in the Cline tab and "Installed" and you should see the MCP servers in the list. See pic ![2025-05-29_15-44-55](https://github.com/user-attachments/assets/2b53bfb0-9a37-4727-b357-873f4086523e)
+
+
 3. Restart VS Code
 
 ### Step 3: Using the Tools
