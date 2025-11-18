@@ -24,9 +24,9 @@ logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def list_security_rules(
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     page_size: int = 100,
     page_token: str | None = None,
 ) -> Dict[str, Any]:
@@ -81,9 +81,9 @@ async def list_security_rules(
 @server.tool()
 async def search_security_rules(
     query: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Search security detection rules configured in Chronicle SIEM.
 
@@ -356,9 +356,9 @@ async def list_rule_errors(
 @server.tool()
 async def create_rule(
     rule_text: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Create a new detection rule in Chronicle SIEM.
 
@@ -468,9 +468,9 @@ async def create_rule(
 @server.tool()
 async def test_rule(
     rule_text: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     hours_back: int = 168,  # 7 days default
     max_results: int = 100,
 ) -> str:
@@ -652,9 +652,9 @@ async def test_rule(
 @server.tool()
 async def validate_rule(
     rule_text: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Validate a YARA-L 2.0 detection rule syntax in Chronicle SIEM.
 

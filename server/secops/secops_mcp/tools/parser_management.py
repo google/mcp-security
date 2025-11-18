@@ -28,9 +28,9 @@ logger = logging.getLogger('secops-mcp')
 async def create_parser(
     log_type: str,
     parser_code: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     validated_on_empty_logs: bool = True,
 ) -> str:
     """Create a new parser for a specific log type in Chronicle.
@@ -146,9 +146,9 @@ async def create_parser(
 async def get_parser(
     log_type: str,
     parser_id: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Get details of a specific parser in Chronicle.
 
@@ -242,9 +242,9 @@ async def get_parser(
 async def activate_parser(
     log_type: str,
     parser_id: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Activate a parser for a specific log type in Chronicle.
 
@@ -317,9 +317,9 @@ async def activate_parser(
 async def deactivate_parser(
     log_type: str,
     parser_id: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Deactivate a parser for a specific log type in Chronicle.
 
@@ -397,9 +397,9 @@ async def run_parser_against_sample_logs(
     log_type: str,
     parser_code: str,
     sample_logs: List[str],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     parser_extension_code: Optional[str] = None,
     statedump_allowed: bool = False,
 ) -> str:

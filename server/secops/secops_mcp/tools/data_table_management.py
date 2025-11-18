@@ -27,9 +27,9 @@ async def create_data_table(
     name: str,
     description: str,
     header: Dict[str, str],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     rows: Optional[List[List[str]]] = None,
 ) -> str:
     """Create a new data table in Chronicle SIEM.
@@ -165,9 +165,9 @@ async def create_data_table(
 async def add_rows_to_data_table(
     table_name: str,
     rows: List[List[str]],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Add rows to an existing data table in Chronicle SIEM.
 
@@ -273,9 +273,9 @@ async def add_rows_to_data_table(
 @server.tool()
 async def list_data_table_rows(
     table_name: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     max_rows: int = 50,
 ) -> str:
     """List rows in a data table in Chronicle SIEM.
@@ -377,9 +377,9 @@ async def list_data_table_rows(
 async def delete_data_table_rows(
     table_name: str,
     row_ids: List[str],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> str:
     """Delete specific rows from a data table in Chronicle SIEM.
 

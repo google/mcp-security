@@ -26,12 +26,12 @@ logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def get_security_alerts(
-    project_id: str = None,
-    customer_id: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
     hours_back: int = 24,
     max_alerts: int = 10,
     status_filter: str = 'feedback_summary.status != "CLOSED"',
-    region: str = None,
+    region: Optional[str] = None,
 ) -> str:
     """Get security alerts directly from Chronicle SIEM.
 
@@ -151,10 +151,10 @@ async def get_security_alerts(
 
 @server.tool()
 async def get_security_alert_by_id(
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
-    alert_id: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    alert_id: Optional[str] = None,
     include_detections: bool = True
 ) -> str:
     """Get security alert by ID directly from Chronicle SIEM.
@@ -206,10 +206,10 @@ async def get_security_alert_by_id(
 
 @server.tool()
 async def do_update_security_alert(
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
-    alert_id: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    alert_id: Optional[str] = None,
     reason: Optional[str] = None,
     priority: Optional[str] = None,
     status: Optional[str] = None,
