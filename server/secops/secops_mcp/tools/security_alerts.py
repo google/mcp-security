@@ -17,7 +17,7 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 
-from typing import Any, Dict, Optional, Literal, Union
+from typing import Any, Dict, Optional
 from secops_mcp.server import get_chronicle_client, server
 
 
@@ -215,8 +215,8 @@ async def do_update_security_alert(
     status: Optional[str] = None,
     verdict: Optional[str] = None,
     severity: Optional[int] = None,
-    comment: Optional[Union[str, Literal[""]]] = None,
-    root_cause: Optional[Union[str, Literal[""]]] = None
+    comment: Optional[str] = None,
+    root_cause: Optional[str] = None
 ) -> str:
     """
         Update security alert attributes directly in Chronicle SIEM.
