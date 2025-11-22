@@ -549,6 +549,6 @@ Remove tags from a case.
 
 *   `case_id` (str, required): The ID of the case.
 *   `alert_group_identifiers` (List[str], required): Identifiers for the alert groups.
-*   `tag` (str, required): Specify the tag that needs to be removed. Comma seperated values.
+*   `tag` (str, required): Specify the tag that needs to be removed. Comma separated values.
 *   `target_entities` (List[TargetEntity], optional, default=[]): Optional list of specific target entities (Identifier, EntityType) to run the action on.
 *   `scope` (str, optional, default="All entities"): Defines the scope for the action.
