@@ -392,9 +392,13 @@ async def get_collection_timeline_events(id: str, ctx: Context):
     List of events related to the given collection.
   """
   async with vt_client(ctx) as client:
-    data = await client.get_async(f"/collections/{id}/timeline/events")
-    data = await data.json_async()
-  return utils.sanitize_response(data["data"])
+    resp = await client.get_async(f"/collections/{id}/timeline/events")
+    if resp.status != 200:
+        error_json = await resp.json_async()
+        error_info = error_json.get("error", {})
+        return [{"error": f"API Error: {error_info.get('message', 'Unknown error')}"}]
+    data = await resp.json_async()
+  return utils.sanitize_response(data.get("data", []))
 
 
 @server.tool()
@@ -407,9 +411,13 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
     A dictionary including the tactics and techniques associated to the given threat.
   """
   async with vt_client(ctx) as client:
-    data = await client.get_async(f"/collections/{id}/mitre_tree")
-    data = await data.json_async()
-  return utils.sanitize_response(data["data"])
+    resp = await client.get_async(f"/collections/{id}/mitre_tree")
+    if resp.status != 200:
+        error_json = await resp.json_async()
+        error_info = error_json.get("error", {})
+        return {"error": f"API Error: {error_info.get('message', 'Unknown error')}"}
+    data = await resp.json_async()
+  return utils.sanitize_response(data.get("data", {}))
 
 
 @server.tool()
@@ -620,8 +628,12 @@ async def get_collection_feature_matches(
     }
     
     response = await client.get_async(f"/collections/{collection_id}/features/search", params=params)
+    if response.status != 200:
+        error_json = await response.json_async()
+        error_info = error_json.get("error", {})
+        return [{"error": f"API Error: {error_info.get('message', 'Unknown error')}"}]
     data = await response.json_async()
-    return utils.sanitize_response(data["data"])
+    return utils.sanitize_response(data.get("data", []))
 
 
 @server.tool()
