@@ -47,17 +47,31 @@ async def fetch_object(
   if relationships:
     params["relationships"] = ",".join(relationships)
 
-  obj = await vt_client.get_object_async(
-      f"/{resource_collection_type}/{resource_id}", params=params)
+  try:
+    obj = await vt_client.get_object_async(
+        f"/{resource_collection_type}/{resource_id}", params=params)
 
-  if obj.error:
-    logging.error(
-        f"Error fetching main {resource_type} report for {resource_id}: {obj.error}"
+    if obj.error:
+      logging.error(
+          f"Error fetching main {resource_type} report for {resource_id}: {obj.error}"
+      )
+      return {
+          "error": f"Failed to get main {resource_type} report: {obj.error}",
+          # "details": report.get("details"),
+      }
+  except vt.error.APIError as e:
+    logging.warning(
+        f"VirusTotal API Error fetching {resource_type} {resource_id}: {e.code} - {e.message}"
     )
     return {
-        "error": f"Failed to get main {resource_type} report: {obj.error}",
-        # "details": report.get("details"),
+        "error": f"VirusTotal API Error: {e.code} - {e.message}",
+        "details": f"The requested {resource_type} '{resource_id}' could not be found or there was an issue with the API request."
     }
+  except Exception as e:
+    logging.exception(
+        f"Unexpected error fetching {resource_type} {resource_id}: {e}"
+    )
+    return {"error": "An unexpected internal error occurred."}
 
   # Build response.
   obj_dict = obj.to_dict()
