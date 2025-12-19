@@ -1,6 +1,6 @@
 [project]
 name = "google-secops-mcp"
-version = "0.5.0"
+version = "0.5.1"
 description = "Google SecOps MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,11 +15,11 @@ classifiers = [
 ]
 dependencies = [
     "httpx>=0.28.1",
-    "mcp[cli]>=1.4.1",
-    "secops>=0.18.0",
-    "google-auth>=2.38.0",
-    "google-auth-httplib2>=0.2.0",
-    "google-api-python-client>=2.164.0"
+    "mcp[cli]>=1.23.0",
+    "secops>=0.29.0",
+    "google-auth>=2.45.0",
+    "google-auth-httplib2>=0.3.0",
+    "google-api-python-client>=2.187.0"
 ]
 
 [project.urls]
