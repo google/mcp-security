@@ -237,6 +237,14 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
   async with vt_client(ctx) as client:
     res = await client.get_async(f"/files/{hash}/behaviour_summary")
     res = await res.json_async()
+
+  if "data" not in res:
+      if "error" in res:
+          logging.warning(f"VirusTotal API Error: {res['error']}")
+          return {"error": f"VirusTotal API Error: {res['error']}"}
+      logging.warning(f"Unexpected response format from VirusTotal API: {res}")
+      return {"error": f"Unexpected response format from VirusTotal API: {res}"}
+
   return utils.sanitize_response(res["data"])
 
 
