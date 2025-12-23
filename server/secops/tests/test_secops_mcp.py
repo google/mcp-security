@@ -12,20 +12,31 @@ To run these tests:
 3. Run: pytest -xvs server/secops/tests/test_secops_mcp.py
 """
 
-import json
-import os
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List
+import uuid
+from typing import Dict
 
 import pytest
-from mcp.server.fastmcp import FastMCP
 
 from secops_mcp.tools.security_events import search_security_events
+from secops_mcp.tools.feed_management import (
+    create_feed,
+    delete_feed,
+    disable_feed,
+    enable_feed,
+    get_feed,
+    list_feeds,
+    update_feed,
+)
 from secops_mcp.tools.security_alerts import get_security_alerts, get_security_alert_by_id, do_update_security_alert
 from secops_mcp.tools.entity_lookup import lookup_entity
 from secops_mcp.tools.security_rules import list_security_rules, get_rule_detections, list_rule_errors, search_security_rules
 from secops_mcp.tools.ioc_matches import get_ioc_matches
 from secops_mcp.tools.threat_intel import get_threat_intel
+from secops_mcp.tools.search import search_udm
+from secops_mcp.tools.udm_search import (
+    export_udm_search_csv,
+    find_udm_field_values,
+)
 
 
 class TestChronicleSecOpsMCP:
@@ -405,6 +416,9 @@ class TestChronicleSecOpsMCP:
         """
         rule_id = "ru_<insert rule_id>"
 
+        if "insert" in rule_id:
+            pytest.skip("No rule id provided to test get_rule_detections")
+
         result = await get_rule_detections(
             rule_id,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -424,6 +438,9 @@ class TestChronicleSecOpsMCP:
         """
         rule_id = "ru_<insert rule_id>"
 
+        if "insert" in rule_id:
+            pytest.skip("No rule id provided to test get_rule_detection_errors")
+
         result = await list_rule_errors(
             rule_id,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -442,6 +459,9 @@ class TestChronicleSecOpsMCP:
             chronicle_config: Dictionary with Chronicle configuration
         """
         alert_id = "de_<insert_detection_id>"
+        
+        if "insert" in alert_id:
+            pytest.skip("No alert id provided to test do_update_security_alert")
 
         result = await do_update_security_alert(
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -465,6 +485,9 @@ class TestChronicleSecOpsMCP:
         """
         alert_id = "de_<insert_detection_id>"
 
+        if "insert" in alert_id:
+            pytest.skip("No alert id provided to test get_security_alert_by_id")
+
         result = await get_security_alert_by_id(
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
             customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
@@ -474,3 +497,303 @@ class TestChronicleSecOpsMCP:
         
         # This should return either a valid response or an error dict
         assert isinstance(result, dict)
+
+    @pytest.mark.asyncio
+    async def test_list_feeds(self, chronicle_config: Dict[str, str]) -> None:
+        """Test listing feeds.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        result = await list_feeds(
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+
+        # Expect either feeds list or error
+        assert "feeds" in result or "error" in result
+
+        # Verify feeds list structure if no error
+        if "feeds" in result and not "error" in result:
+            assert "total_feeds" in result
+            assert isinstance(result["feeds"], list)
+
+            # Check counters
+            assert "active_feeds" in result
+            assert "disabled_feeds" in result
+            assert isinstance(result["active_feeds"], int)
+            assert isinstance(result["disabled_feeds"], int)
+
+            # If we have feeds, check the structure of the first one
+            if result["feeds"]:
+                first_feed = result["feeds"][0]
+                assert "name" in first_feed
+                assert "displayName" in first_feed
+                assert "state" in first_feed
+                assert "details" in first_feed
+                assert "feedSourceType" in first_feed["details"]
+                assert "logType" in first_feed["details"]
+
+    @pytest.mark.asyncio
+    async def test_get_feed(self, chronicle_config: Dict[str, str]) -> None:
+        """Test getting details of a feed.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # First list feeds to get an ID
+        feeds_result = await list_feeds(
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Skip test if no feeds or error
+        if "error" in feeds_result or not feeds_result.get("feeds"):
+            pytest.skip("No feeds available to test get_feed")
+
+        # Get the first feed ID
+        feed_id = feeds_result["feeds"][0]["name"].split("/")[-1]
+
+        # Get feed details
+        result = await get_feed(
+            feed_id=feed_id,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+
+        # Should either have expected fields or an error
+        if "error" not in result:
+            assert "name" in result
+            assert "displayName" in result
+            assert "state" in result
+            assert "details" in result
+
+    @pytest.mark.asyncio
+    async def test_create_update_disable_delete_feed(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test the full lifecycle of a feed.
+
+        Tests feed creation, updating, disabling/enabling and deletion.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Create a unique display name with UUID
+        unique_id = str(uuid.uuid4())
+        display_name = f"Test Feed MCP SDK {unique_id[:8]}"
+        feed_details = {
+            "logType": f"projects/{chronicle_config['CHRONICLE_PROJECT_ID']}/locations/us/instances/{chronicle_config['CHRONICLE_CUSTOMER_ID']}/logTypes/WINEVTLOG",
+            "feedSourceType": "HTTP",
+            "httpSettings": {
+                "uri": "https://example.com/test_feed",
+                "sourceType": "FILES",
+            },
+            "labels": {"environment": "test", "created_by": "mcp_test"},
+        }
+
+        feed_id = None
+        # Step 1: Create feed
+        try:
+            create_result = await create_feed(
+                display_name=display_name,
+                feed_details=feed_details,
+                project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+                customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+                region=chronicle_config["CHRONICLE_REGION"],
+            )
+
+            # Skip remaining tests if creation fails
+            if "error" in create_result:
+                pytest.fail(f"Feed creation failed: {create_result['error']}")
+
+            # Verify creation result
+            assert "name" in create_result
+            assert create_result["displayName"] == display_name
+            feed_id = create_result["name"].split("/")[-1]
+
+            # Step 2: Update feed
+            update_result = await update_feed(
+                feed_id=feed_id,
+                display_name=f"Updated Test MCP Feed {unique_id[:8]}",
+                feed_details={
+                    "logType": f'projects/{chronicle_config["CHRONICLE_PROJECT_ID"]}/locations/{chronicle_config["CHRONICLE_REGION"]}/instances/{chronicle_config["CHRONICLE_CUSTOMER_ID"]}/logTypes/WINEVTLOG',
+                    "feedSourceType": "HTTP",
+                    "httpSettings": {
+                        "uri": "https://example.com/updated_feed",
+                        "sourceType": "FILES",
+                    },
+                    "labels": {
+                        "environment": "test",
+                        "created_by": "mcp_test",
+                    },
+                },
+                project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+                customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+                region=chronicle_config["CHRONICLE_REGION"],
+            )
+
+            # Verify update result
+            assert "name" in update_result
+            assert "Updated Test MCP Feed" in update_result["displayName"]
+
+            # Step 3: Disable feed
+            disable_result = await disable_feed(
+                feed_id=feed_id,
+                project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+                customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+                region=chronicle_config["CHRONICLE_REGION"],
+            )
+
+            # Verify disable result
+            assert "id" in disable_result
+            assert disable_result["state"] == "INACTIVE"
+
+            # Step 4: Enable feed
+            enable_result = await enable_feed(
+                feed_id=feed_id,
+                project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+                customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+                region=chronicle_config["CHRONICLE_REGION"],
+            )
+
+            # Verify enable result
+            assert "id" in enable_result
+            assert enable_result["state"] == "ACTIVE"
+
+        finally:
+            # Always attempt to clean up by deleting the feed
+            if feed_id:
+                try:
+                    delete_result = await delete_feed(
+                        feed_id=feed_id,
+                        project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+                        customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+                        region=chronicle_config["CHRONICLE_REGION"],
+                    )
+
+                    # Verify delete result
+                    assert "id" in delete_result
+                    assert "message" in delete_result
+                except Exception as e:
+                    print(f"Warning: Failed to delete test feed: {e}")
+
+    @pytest.mark.asyncio
+    async def test_search_udm(self, chronicle_config: Dict[str, str]) -> None:
+        """Test searching UDM events in Chronicle.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Test with a simple UDM query
+        result = await search_udm(
+            query='metadata.event_type = "NETWORK_CONNECTION"',
+            hours_back=24,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "events" in result or "error" in result
+
+        # If events are returned, check structure
+        if "events" in result and "error" not in result:
+            assert "total_events" in result
+            if result.get("total_events", 0) > 0 and isinstance(
+                result.get("events"), list
+            ):
+                first_event = result["events"][0]
+                assert isinstance(first_event, dict)
+                # UDM events should have metadata
+                assert (
+                    "metadata" in first_event
+                    or "metadata" in first_event["udm"]
+                    or "principal" in first_event
+                    or "target" in first_event
+                )
+
+    @pytest.mark.asyncio
+    async def test_export_udm_search_csv(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test exporting UDM search results to CSV.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Define fields to export
+        fields = ["timestamp", "hostname"]
+
+        # Test with a simple UDM query
+        result = await export_udm_search_csv(
+            query='metadata.event_type = "NETWORK_CONNECTION"',
+            fields=fields,
+            hours_back=24,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, str)
+
+        # Check if CSV header matches requested fields
+        if result and not result.startswith("Error"):
+            lines = result.strip().split("\n")
+            assert len(lines) >= 1  # At least header row
+
+            # Check header contains field names (they might be formatted differently in CSV)
+            header = lines[0].lower()
+            if header:
+                assert "timestamp" in header
+                assert "hostname" in header
+        else:
+            pytest.skip("Skipped export_udm_search_csv test as result it empty or has error")
+
+    @pytest.mark.asyncio
+    async def test_find_udm_field_values(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test finding UDM field values for autocomplete.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Test with a search term that should find some values
+        result = await find_udm_field_values(
+            query="admin",  # Search for values containing "admin"
+            page_size=10,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        # Check if we have values or error
+        assert (
+            "valueMatches" in result and "fieldMatches" in result
+        )
+
+        # If values are returned, verify structure
+        if "values" in result and isinstance(result["values"], list):
+            if result["values"]:
+                first_value = result["values"][0]
+                assert isinstance(first_value, dict)
+
+        # Alternative API response format
+        if "fieldValues" in result and isinstance(result["fieldValues"], list):
+            if result["fieldValues"]:
+                first_value = result["fieldValues"][0]
+                assert isinstance(first_value, dict)

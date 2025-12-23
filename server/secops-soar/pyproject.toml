@@ -1,6 +1,6 @@
 [project]
 name = "secops-soar-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Google SecOps SOAR MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,10 +31,10 @@ test = [
 ]
 
 [project.scripts]
-secops_soar_mcp = "secops_soar_mcp.server:main"
+secops_soar_mcp = "secops_soar_mcp.server:run_main"
 
 [project.entry-points.mcp]
-secops-soar = "secops_soar_mcp.server:main"
+secops-soar = "secops_soar_mcp.server:run_main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

@@ -16,8 +16,8 @@
 import logging
 from typing import Any, Dict, List, Optional
 
+from secops.chronicle import ReferenceListView
 from secops_mcp.server import get_chronicle_client, server
-
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
@@ -27,9 +27,9 @@ async def create_reference_list(
     name: str,
     description: str,
     entries: List[str],
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     syntax_type: str = "STRING",
 ) -> str:
     """Create a new reference list in Chronicle SIEM.
@@ -157,9 +157,9 @@ async def create_reference_list(
 @server.tool()
 async def get_reference_list(
     name: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     include_entries: bool = True,
 ) -> str:
     """Get details and contents of a reference list in Chronicle SIEM.
@@ -228,7 +228,11 @@ async def get_reference_list(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Determine view based on include_entries parameter
-        view = "FULL" if include_entries else "BASIC"
+        view = (
+            ReferenceListView.FULL
+            if include_entries
+            else ReferenceListView.BASIC
+        )
         
         # Get the reference list
         reference_list = chronicle.get_reference_list(name, view=view)
@@ -257,9 +261,16 @@ async def get_reference_list(
             if entries:
                 result += 'Entries:\n'
                 for i, entry in enumerate(entries):
-                    entry_value = entry.get("value", "Unknown")
+                    if isinstance(entry, str):
+                        entry_value = entry
+                    elif isinstance(entry, dict):
+                        entry_value = entry.get("value", "Unknown")
+                    elif hasattr(entry, "value"):
+                        entry_value = entry.value
+                    else:
+                        entry_value = str(entry)
                     result += f'  {i+1}. {entry_value}\n'
-                    
+
                     # Limit display for very large lists
                     if i >= 49:  # Show first 50 entries
                         remaining = entry_count - 50
@@ -282,9 +293,9 @@ async def get_reference_list(
 @server.tool()
 async def update_reference_list(
     name: str,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
     entries: Optional[List[str]] = None,
     description: Optional[str] = None,
 ) -> str:
