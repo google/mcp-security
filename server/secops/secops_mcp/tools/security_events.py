@@ -28,6 +28,8 @@ async def search_security_events(
     text: str,
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
+    start_time: Optional[str] = None,
+    end_time: Optional[str] = None,
     hours_back: int = 24,
     max_events: int = 100,
     region: Optional[str] = None,
@@ -62,7 +64,12 @@ async def search_security_events(
         text (str): Natural language description of the events you want to find.
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        start_time (Optional[str]): Start time for the search in ISO 8601 format (e.g., "2023-01-01T12:00:00Z").
+                                    If provided, overrides hours_back.
+        end_time (Optional[str]): End time for the search in ISO 8601 format (e.g., "2023-01-02T12:00:00Z").
+                                  Defaults to current time if not specified.
         hours_back (int): How many hours back from the current time to search. Defaults to 24.
+                          Used only if start_time is not provided.
         max_events (int): Maximum number of event records to return. Defaults to 100.
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
@@ -118,10 +125,39 @@ async def search_security_events(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
-        end_time = datetime.now(timezone.utc)
-        start_time = end_time - timedelta(hours=hours_back)
+        if start_time:
+            try:
+                # Handle start_time
+                if isinstance(start_time, str):
+                    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+                else:
+                    start_dt = start_time
 
-        logger.info(f'Search time range: {start_time} to {end_time}')
+                # Handle end_time
+                if end_time:
+                    if isinstance(end_time, str):
+                        end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+                    else:
+                        end_dt = end_time
+                else:
+                    end_dt = datetime.now(timezone.utc)
+
+                # Ensure timezones
+                if start_dt.tzinfo is None:
+                    start_dt = start_dt.replace(tzinfo=timezone.utc)
+                if end_dt.tzinfo is None:
+                    end_dt = end_dt.replace(tzinfo=timezone.utc)
+
+            except ValueError as e:
+                return {
+                    'udm_query': None,
+                    'events': {'error': f"Error parsing date format: {str(e)}. Use ISO 8601 format (e.g., 2023-01-01T12:00:00Z)", 'events': [], 'total_events': 0},
+                }
+        else:
+            end_dt = datetime.now(timezone.utc)
+            start_dt = end_dt - timedelta(hours=hours_back)
+
+        logger.info(f'Search time range: {start_dt} to {end_dt}')
 
         # Use the new natural language search method
         udm_query = chronicle.translate_nl_to_udm(text)
@@ -129,8 +165,8 @@ async def search_security_events(
 
         events = chronicle.search_udm(
             query=udm_query,
-            start_time=start_time,
-            end_time=end_time,
+            start_time=start_dt,
+            end_time=end_dt,
             max_events=max_events,
         )
 

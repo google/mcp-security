@@ -28,6 +28,8 @@ logger = logging.getLogger("secops-mcp")
 async def export_udm_search_csv(
     query: str,
     fields: List[str],
+    start_time: str = None,
+    end_time: str = None,
     hours_back: int = 24,
     case_insensitive: bool = True,
     project_id: str = None,
@@ -72,7 +74,12 @@ async def export_udm_search_csv(
                     - 'target.hostname = "server1" AND metadata.event_type = "FILE_MODIFICATION"'
         fields (List[str]): List of UDM fields to include in the CSV export.
                            Each field will become a column in the output.
+        start_time (Optional[str]): Start time for the search in ISO 8601 format (e.g., "2023-01-01T12:00:00Z").
+                                    If provided, overrides hours_back.
+        end_time (Optional[str]): End time for the search in ISO 8601 format (e.g., "2023-01-02T12:00:00Z").
+                                  Defaults to current time if not specified.
         hours_back (int): How many hours back from the current time to search. Defaults to 24.
+                          Used only if start_time is not provided.
         case_insensitive (bool): Whether to perform case-insensitive search. Defaults to True.
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
@@ -96,7 +103,7 @@ async def export_udm_search_csv(
             hours_back=48
         )
 
-        # Export network connections to specific IP
+        # Export network connections to specific IP with specific time range
         export_udm_search_csv(
             query='network.ip = "10.0.0.5"',
             fields=[
@@ -106,7 +113,8 @@ async def export_udm_search_csv(
                 "network.sent_bytes",
                 "network.received_bytes"
             ],
-            hours_back=72
+            start_time="2023-11-01T10:00:00Z",
+            end_time="2023-11-01T12:00:00Z"
         )
 
     Next Steps (using MCP-enabled tools):
@@ -131,16 +139,43 @@ async def export_udm_search_csv(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Calculate time range
-        end_time = datetime.now(timezone.utc)
-        start_time = end_time - timedelta(hours=hours_back)
+        if start_time:
+            try:
+                # Handle start_time
+                if isinstance(start_time, str):
+                    start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+                else:
+                    start_dt = start_time
 
-        logger.info(f"Export time range: {start_time} to {end_time}")
+                # Handle end_time
+                if end_time:
+                    if isinstance(end_time, str):
+                        end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+                    else:
+                        end_dt = end_time
+                else:
+                    end_dt = datetime.now(timezone.utc)
+
+                # Ensure timezones
+                if start_dt.tzinfo is None:
+                    start_dt = start_dt.replace(tzinfo=timezone.utc)
+                if end_dt.tzinfo is None:
+                    end_dt = end_dt.replace(tzinfo=timezone.utc)
+
+            except ValueError as e:
+                return f"Error parsing date format: {str(e)}. Use ISO 8601 format (e.g., 2023-01-01T12:00:00Z)"
+        else:
+            # Default to hours_back
+            end_dt = datetime.now(timezone.utc)
+            start_dt = end_dt - timedelta(hours=hours_back)
+
+        logger.info(f"Export time range: {start_dt} to {end_dt}")
 
         # Call the fetch_udm_search_csv method on the chronicle client
         csv_results = chronicle.fetch_udm_search_csv(
             query=query,
-            start_time=start_time,
-            end_time=end_time,
+            start_time=start_dt,
+            end_time=end_dt,
             fields=fields,
             case_insensitive=case_insensitive,
         )
