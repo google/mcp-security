@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.utils import parse_time_range
 
 # Configure logging
 logger = logging.getLogger("secops-mcp")
@@ -29,6 +30,8 @@ async def export_udm_search_csv(
     query: str,
     fields: List[str],
     hours_back: int = 24,
+    start_time: Optional[str] = None,
+    end_time: Optional[str] = None,
     case_insensitive: bool = True,
     project_id: str = None,
     customer_id: str = None,
@@ -72,7 +75,9 @@ async def export_udm_search_csv(
                     - 'target.hostname = "server1" AND metadata.event_type = "FILE_MODIFICATION"'
         fields (List[str]): List of UDM fields to include in the CSV export.
                            Each field will become a column in the output.
-        hours_back (int): How many hours back from the current time to search. Defaults to 24.
+        hours_back (int): How many hours back from the current time to search. Used if start_time is not provided.
+        start_time (Optional[str]): Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
+        end_time (Optional[str]): End time in ISO 8601 format. Defaults to current time if not provided.
         case_insensitive (bool): Whether to perform case-insensitive search. Defaults to True.
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
@@ -123,24 +128,24 @@ async def export_udm_search_csv(
     - Use case_insensitive=False for exact matching when needed.
     """
     try:
+        try:
+            start_dt, end_dt = parse_time_range(start_time, end_time, hours_back)
+        except ValueError as e:
+            logger.error(f'Error parsing date format: {str(e)}', exc_info=True)
+            return f"Error parsing date format: {str(e)}. Use ISO 8601 format (e.g., 2023-01-01T12:00:00Z)"
+
         logger.info(
             f"Exporting UDM search results to CSV - Query: {query}, "
-            f"Fields: {fields}, Hours back: {hours_back}"
+            f"Fields: {fields}, Effective Time Range: {start_dt} to {end_dt}"
         )
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
-        # Calculate time range
-        end_time = datetime.now(timezone.utc)
-        start_time = end_time - timedelta(hours=hours_back)
-
-        logger.info(f"Export time range: {start_time} to {end_time}")
-
         # Call the fetch_udm_search_csv method on the chronicle client
         csv_results = chronicle.fetch_udm_search_csv(
             query=query,
-            start_time=start_time,
-            end_time=end_time,
+            start_time=start_dt,
+            end_time=end_dt,
             fields=fields,
             case_insensitive=case_insensitive,
         )
