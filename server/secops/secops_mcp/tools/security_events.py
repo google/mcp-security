@@ -18,10 +18,12 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.utils import parse_time_range
 
 
 # Configure logging
 logger = logging.getLogger('secops-mcp')
+
 
 @server.tool()
 async def search_security_events(
@@ -29,6 +31,8 @@ async def search_security_events(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     hours_back: int = 24,
+    start_time: Optional[str] = None,
+    end_time: Optional[str] = None,
     max_events: int = 100,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -62,7 +66,9 @@ async def search_security_events(
         text (str): Natural language description of the events you want to find.
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours back from the current time to search. Defaults to 24.
+        hours_back (int): How many hours back from the current time to search. Used if start_time is not provided.
+        start_time (Optional[str]): Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
+        end_time (Optional[str]): End time in ISO 8601 format. Defaults to current time if not provided.
         max_events (int): Maximum number of event records to return. Defaults to 100.
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
@@ -112,16 +118,20 @@ async def search_security_events(
         *   *Result: 6 events (Success!)* - This indicates the user identifier was primarily in an `email` field, not the generic `user` field, and removing the `USER_LOGIN` constraint helped.
     """
     try:
+        try:
+            start_dt, end_dt = parse_time_range(start_time, end_time, hours_back)
+        except ValueError as e:
+            logger.error(f'Error parsing date format: {str(e)}', exc_info=True)
+            return {
+                'udm_query': None,
+                'events': {'error': f"Error parsing date format: {str(e)}. Use ISO 8601 format (e.g., 2023-01-01T12:00:00Z)", 'events': [], 'total_events': 0},
+            }
+
         logger.info(
-            f'Searching security events with natural language query: {text}'
+            f'Searching security events - Query: {text}, Effective Time Range: {start_dt} to {end_dt}'
         )
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-
-        end_time = datetime.now(timezone.utc)
-        start_time = end_time - timedelta(hours=hours_back)
-
-        logger.info(f'Search time range: {start_time} to {end_time}')
 
         # Use the new natural language search method
         udm_query = chronicle.translate_nl_to_udm(text)
@@ -129,8 +139,8 @@ async def search_security_events(
 
         events = chronicle.search_udm(
             query=udm_query,
-            start_time=start_time,
-            end_time=end_time,
+            start_time=start_dt,
+            end_time=end_dt,
             max_events=max_events,
         )
 

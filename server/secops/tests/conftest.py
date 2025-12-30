@@ -10,7 +10,10 @@ import pathlib
 from typing import Dict, Generator, Any
 
 import pytest
-from secops import SecOpsClient
+try:
+    from secops import SecOpsClient
+except ImportError:
+    SecOpsClient = None
 
 
 @pytest.fixture
