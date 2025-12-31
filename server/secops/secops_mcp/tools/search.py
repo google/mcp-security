@@ -49,6 +49,8 @@ async def search_udm(
 
     Returns:
         Dict containing the search results with events.
+
+    This tool wraps the `search_udm` function from the secops-wrapper library.
     """
     try:
         try:
