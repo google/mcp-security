@@ -81,6 +81,7 @@ With environment variables:
 CHRONICLE_PROJECT_ID="your-project-id" \
 CHRONICLE_CUSTOMER_ID="01234567-abcd-4321-1234-0123456789ab" \
 CHRONICLE_REGION="us" \
+GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json" \
 uvx secops_mcp
 ```
 
@@ -101,7 +102,8 @@ You can configure MCP clients to use the installed packages with uvx. Here's an 
       "env": {
         "CHRONICLE_PROJECT_ID": "your-project-id",
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
-        "CHRONICLE_REGION": "us"
+        "CHRONICLE_REGION": "us",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/your/service-account-key.json"
       },
       "disabled": false,
       "autoApprove": []
@@ -122,7 +124,9 @@ You can configure MCP clients to use the installed packages with uvx. Here's an 
       "args": [
         "scc_mcp"
       ],
-      "env": {},
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/your/service-account-key.json"
+      },
       "disabled": false,
       "autoApprove": []
     },
