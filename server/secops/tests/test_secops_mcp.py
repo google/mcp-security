@@ -9,9 +9,12 @@ To run these tests:
    your Chronicle credentials (see conftest.py for format)
 2. Authenticate with Google Cloud using ADC: 
    gcloud auth application-default login
+   OR set SECOPS_SA_PATH environment variable to use service account:
+   export SECOPS_SA_PATH=/path/to/service-account.json
 3. Run: pytest -xvs server/secops/tests/test_secops_mcp.py
 """
 
+import os
 import uuid
 from typing import Dict
 
@@ -797,3 +800,56 @@ class TestChronicleSecOpsMCP:
             if result["fieldValues"]:
                 first_value = result["fieldValues"][0]
                 assert isinstance(first_value, dict)
+
+    @pytest.mark.asyncio
+    async def test_service_account_authentication(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Test tool execution using service account authentication.
+
+        This test verifies that tools work correctly when using service
+        account authentication (via SECOPS_SA_PATH environment variable)
+        instead of Application Default Credentials (ADC).
+        
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        # Check if service account path is available
+        service_account_path = os.getenv("SECOPS_SA_PATH")
+        
+        if not service_account_path:
+            pytest.skip(
+                "Skipping service account test: SECOPS_SA_PATH "
+                "environment variable not set"
+            )
+        
+        # Verify the service account file exists
+        if not os.path.exists(service_account_path):
+            pytest.fail(
+                f"Service account file not found at: "
+                f"{service_account_path}"
+            )
+        
+        # Test with a simple tool call to verify authentication works
+        result = await search_security_events(
+            text="Show me network connections from the last 24 hours",
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            hours_back=24,
+            max_events=5,
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+        
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "udm_query" in result
+        assert "events" in result
+        
+        # Verify UDM query was generated
+        assert isinstance(result["udm_query"], str)
+        assert len(result["udm_query"]) > 0
+        
+        # Verify events structure
+        events = result["events"]
+        assert isinstance(events, dict)
+        assert "total_events" in events
