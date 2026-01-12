@@ -29,6 +29,8 @@ If you're new to this project, we recommend starting with the [Usage Guide](usag
 
 Each server provides different capabilities:
 
+- [**Remote MCP Server**](remote_server.md) - Fully managed, enterprise-ready MCP server for Google SecOps (Recommended)
+
 - [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
 - [Security Command Center (SCC) Server](servers/scc_mcp.md) - Manage cloud security posture and vulnerabilities
 - [Chronicle Security Operations (SecOps) Server](servers/secops_mcp.md) - Search and analyze security events and alerts
