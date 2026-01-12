@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('secops-mcp')
 
 # Constants
-USER_AGENT = 'secops-app/1.0'
+USER_AGENT = 'secops-app/0.5.2'
 
 # Default Chronicle configuration from environment variables
 DEFAULT_PROJECT_ID = os.environ.get('CHRONICLE_PROJECT_ID', '725716774503')
