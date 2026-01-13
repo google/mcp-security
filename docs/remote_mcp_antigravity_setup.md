@@ -132,9 +132,6 @@ Contains ~27 tools for daily SOC operations:
 - **Rules**: `list_rules`, `get_rule`...
 - **Search**: `udm_search`, `get_ioc_match`
 
-![Investigation Toolset](img/remote_mcp_secops_investigate_toolset.png)
-
-
 ### remote-secops-admin (Administration & Configuration)
 Contains ~30 tools for engineering and configuration:
 - **Feeds**: `list_feeds`, `create_feed`...
@@ -142,3 +139,9 @@ Contains ~30 tools for engineering and configuration:
 - **Data Tables**: `list_data_tables`, `add_rows_to_data_table`...
 - **Reference Lists**: `create_reference_list`...
 - **Integrations/Playbooks**: `list_integrations`, `list_playbooks`...
+
+### Antigravity Example
+
+The following image shows the *Investigation & Response* toolset enabled in Antigravity. Note how the configuration splits the tools to stay within the 50-tool limit.
+
+![Investigation Toolset](img/remote_mcp_secops_investigate_toolset.png)
