@@ -169,6 +169,7 @@ You can also use environment files with uvx:
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients
 2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-prebuilt-google-adk-agent-as-client))
+3. [Gemini Skills Extension](https://google.github.io/mcp-security/google_secops_extension.html) - Install our example extension for Gemini CLI to get specialized security skills (Triage, Investigate, Hunt).
 
 The configuration for Claude Desktop and Cline is the same (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
 

@@ -1,0 +1,3 @@
+[submodule "external"]
+	path = external
+	url = https://github.com/dandye/ai-runbooks.git
