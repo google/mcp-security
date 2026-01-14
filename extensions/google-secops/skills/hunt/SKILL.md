@@ -23,23 +23,23 @@ Select the most appropriate procedure from the options below.
 *   `gti-mcp.get_collection_report`
 *   `gti-mcp.get_entities_related_to_a_collection` (Initial IOC gathering)
 *   `gti-mcp.get_collection_timeline_events` (for TTP context)
-*   `secops-mcp.get_ioc_matches` (Initial SIEM check)
-*   `secops-mcp.lookup_entity` (SIEM check for specific IOCs)
-*   `secops-mcp.search_security_events` (SIEM check for specific IOCs)
+*   `get_ioc_match` (Initial SIEM check)
+*   `summarize_entity` (SIEM check for specific IOCs)
+*   `udm_search` (SIEM check for specific IOCs)
 *   `gti-mcp` enrichment tools
-*   `secops-soar` tools
+*   SecOps SOAR tools
 
 **Workflow**:
 
 1.  **Analyst Input**: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
-2.  **Context**: Call `gti-mcp.get_collection_report` and `gti-mcp.get_collection_timeline_events` for context.
+2.  **Context**: Call `gti-mcp.get_collection_report` and `gti-mcp.`get_collection_timeline_events` for context.
 3.  **IOC Gathering**: Identify relevant IOC relationships (files, domains, ips, urls) and retrieve them using `gti-mcp.get_entities_related_to_a_collection`.
-4.  **Initial Scan**: Use `secops-mcp.get_ioc_matches` to check for recent IOC hits.
-5.  **Phase 1 Lookup**: For prioritized IOCs, use `secops-mcp.lookup_entity` to confirm presence.
+4.  **Initial Scan**: Use `get_ioc_match` to check for recent IOC hits.
+5.  **Phase 1 Lookup**: For prioritized IOCs, use `summarize_entity` to confirm presence.
 6.  **Phase 2 Deep Investigation (Confirmed IOCs)**:
-    *   Search SIEM events (`secops-mcp.search_security_events`) for confirmed IOCs.
+    *   Search SIEM events (`udm_search`) for confirmed IOCs.
     *   Perform deep GTI enrichment (`get_domain_report`, etc.) and pivot (`get_entities_related_to...`).
-    *   Check for related SIEM alerts (`get_security_alerts`) and SOAR cases (Refer to **Find Relevant SOAR Case** below).
+    *   Check for related SIEM alerts (`list_security_alerts`) and SOAR cases (Refer to **Find Relevant SOAR Case** below).
 7.  **Synthesis**: Synthesize all findings.
 8.  **Output**: Ask user to Create Case, Update Case, or Generate Report.
     *   If **Report**: Generate a markdown report file.
@@ -57,11 +57,11 @@ Select the most appropriate procedure from the options below.
 **Workflow**:
 
 1.  **Research**: Use `gti-mcp.get_threat_intel` to understand the techniques.
-2.  **Develop Queries**: Formulate UDM queries for `secops-mcp.search_security_events` (e.g., specific process names, command lines).
+2.  **Develop Queries**: Formulate UDM queries for `udm_search` (e.g., specific process names, command lines).
 3.  **Execute**: Run the searches.
 4.  **Analyze**: Review for anomalies.
-5.  **Enrich**: Lookup suspicious entities with `secops-mcp.lookup_entity` and `gti-mcp`.
-6.  **Document**: Post findings to a SOAR case using `secops-soar.post_case_comment`.
+5.  **Enrich**: Lookup suspicious entities with `summarize_entity` and `gti-mcp`.
+6.  **Document**: Post findings to a SOAR case using `create_case_comment`.
 7.  **Escalate**: Identify if a new incident needs to be raised.
 
 ## Common Procedures
@@ -74,6 +74,6 @@ Select the most appropriate procedure from the options below.
 *   `${SEARCH_TERMS}`: List of values to search (IOCs, etc.).
 
 **Steps**:
-1.  **Search**: Use `secops-soar.list_cases` with the search terms.
-2.  **Refine**: Optionally use `get_case_full_details` to verify relevance.
+1.  **Search**: Use `list_cases` with the search terms.
+2.  **Refine**: Optionally use `get_case` to verify relevance.
 3.  **Output**: Return list of relevant `${RELEVANT_CASE_IDS}`.
