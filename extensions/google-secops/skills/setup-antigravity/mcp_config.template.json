@@ -33,12 +33,11 @@
                 "create_reference_list",
                 "get_reference_list",
                 "update_reference_list",
-                "list_integrations",
-                "list_integration_instances",
-                "list_integration_actions",
                 "list_playbooks",
                 "list_playbook_instances",
-                "translate_udm_query"
+                "create_rule",
+                "validate_rule",
+                "list_rule_errors"
             ]
         },
         "remote-secops-admin": {
@@ -67,15 +66,8 @@
                 "summarize_entity",
                 "get_involved_entity",
                 "list_involved_entities",
-                "list_rules",
-                "get_rule",
-                "validate_rule",
-                "create_rule",
-                "list_rule_detections",
-                "list_rule_errors",
                 "list_connector_events",
                 "get_connector_event",
-                "udm_search",
                 "get_ioc_match"
             ]
         }

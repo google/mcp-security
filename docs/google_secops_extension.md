@@ -1,10 +1,48 @@
-# Google SecOps Extension & Gemini Skills
+# Google SecOps Extension
 
-This folder contains the **Google SecOps Gemini CLI Extension**, providing specialized skills for security operations.
+This folder contains the **Google SecOps Extension**, providing specialized skills for security operations.
 
 ## Overview
 
-The extension `extensions/google-secops` packages key security workflows into ease-to-use skills for the Gemini agent. It is designed to work seamlessly with the [Gemini CLI](https://geminicli.com) and the Google SecOps Remote MCP Server.
+The extension `extensions/google-secops` packages setup and key security workflows into [skills](https://agentskills.io/specification). 
+
+The skills are designed to work seamlessly with:
+ * [Gemini CLI](https://geminicli.com) and the Google SecOps Remote MCP Server.
+ * [Antigravity](https://antigravity.google/docs/skills)
+    
+The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https://antigravity.google/docs/skills) at the workspace level. You could also install/copy/symlink the skills to `~/.gemini/antigravity/skills/` to make them available globally to all workspaces.
+
+
+## Prerequisites
+
+Requires preview:
+
+```
+ npm install -g @google/gemini-cli@preview
+```
+
+And previewFeatures adn experimental.skills in settings.json:
+```
+cat ~/.gemini/settings.json
+{
+  "security": {
+    "auth": {
+      "selectedType": "gemini-api-key"
+    }
+  },
+  "general": {
+    "previewFeatures": true
+  },
+  "experimental": {
+    "skills": true
+  }
+}
+```
+
+Verify skills are enabled from the Gemini CLI prompt:
+```
+/skills list
+```
 
 ## Installation
 

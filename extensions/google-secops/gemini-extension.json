@@ -3,7 +3,8 @@
   "description": "Essential Security Operations skills for Triage, Investigation, and Hunting.",
   "version": "1.0.0",
   "skills": [
-    "skills/setup",
+    "skills/setup-gemini-cli",
+    "skills/setup-antigravity",
     "skills/triage",
     "skills/investigate",
     "skills/hunt"
