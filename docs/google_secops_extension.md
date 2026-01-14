@@ -18,19 +18,23 @@ To install this extension in your Gemini CLI environment:
 
 ## Available Skills
 
-### 1. Setup Assistant (`secops-setup`)
-*   **Trigger**: "Help me set up the remote server", "Configure security tools".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings.
+### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
+*   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
+*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/config.json`).
 
-### 2. Alert Triage (`secops-triage`)
+### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
+*   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
+*   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/antigravity/mcp_config.json`).
+
+### 3. Alert Triage (`secops-triage`)
 *   **Trigger**: "Triage alert [ID]", "Analyze case [ID]".
 *   **Function**: Orchestrates a Tier 1 triage workflow by following the `triage_alerts.md` runbook. It checks for duplicates, enriches entities, and provides a classification recommendation (FP/TP).
 
-### 3. Investigation (`secops-investigate`)
+### 4. Investigation (`secops-investigate`)
 *   **Trigger**: "Investigate case [ID]", "Deep dive on [Entity]".
 *   **Function**: Guides deep-dive investigations using specialized runbooks (e.g., Lateral Movement, Malware).
 
-### 4. Threat Hunting (`secops-hunt`)
+### 5. Threat Hunting (`secops-hunt`)
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 

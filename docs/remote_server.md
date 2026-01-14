@@ -91,6 +91,12 @@ All administrative and access activities are recorded in Cloud Audit Logs.
 
 The remote server can be used with any MCP-compatible client. Since JSON configuration for MCP is not yet fully standardized across all clients, here are examples for common tools.
 
+### Automated Setup
+
+For **Gemini CLI** and **Antigravity**, you can use the automated setup skills provided in the [Google SecOps Extension](./google_secops_extension.md):
+*   **Gemini CLI**: Use the `secops-setup-gemini-cli` skill.
+*   **Antigravity**: Use the `secops-setup-antigravity` skill.
+
 ### Gemini CLI
 
 Using the `google_credentials` auth provider (native support):
