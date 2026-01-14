@@ -15,29 +15,27 @@ The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https:
 
 ## Prerequisites
 
-Requires preview:
+1.  **Install Gemini CLI (Preview)**:
+    ```bash
+    npm install -g @google/gemini-cli@preview
+    ```
 
-```
- npm install -g @google/gemini-cli@preview
-```
-
-And previewFeatures adn experimental.skills in settings.json:
-```
-cat ~/.gemini/settings.json
-{
-  "security": {
-    "auth": {
-      "selectedType": "gemini-api-key"
+2.  **Enable Skills**: Ensure your `~/.gemini/settings.json` has `experimental.skills` enabled:
+    ```json
+    {
+      "security": {
+        "auth": {
+          "selectedType": "gemini-api-key"
+        }
+      },
+      "general": {
+        "previewFeatures": true
+      },
+      "experimental": {
+        "skills": true
+      }
     }
-  },
-  "general": {
-    "previewFeatures": true
-  },
-  "experimental": {
-    "skills": true
-  }
-}
-```
+    ```
 
 Verify skills are enabled from the Gemini CLI prompt:
 ```
