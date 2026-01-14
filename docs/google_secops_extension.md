@@ -88,3 +88,16 @@ These skills are designed to be compatible with **Claude Code** and other AI age
 
 *   `slash_command`: Defines the equivalent command pattern (e.g., `/security:triage`).
 *   `personas`: detailed which security personas (e.g., `threat_hunter`) are best suited for the task.
+
+
+## References
+* [Agent Skills Specification](https://agentskills.io/specification)
+* [Gemini CLI Documentation](https://geminicli.com)
+* [Gemini CLI Preview Features](https://geminicli.com/docs/settings/general#previewfeatures)
+* [Antigravity Skills](https://antigravity.google/docs/skills)
+
+
+
+
+
+
