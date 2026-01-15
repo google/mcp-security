@@ -8,5 +8,32 @@
     "skills/triage",
     "skills/investigate",
     "skills/hunt"
-  ]
+  ],
+  "settings": [
+    {
+      "name": "PROJECT_ID",
+      "description": "Your Google Cloud Project ID.",
+      "envVar": "PROJECT_ID"
+    },
+    {
+      "name": "SERVER_URL",
+      "defaultValue": "https://staging-chronicle.sandbox.googleapis.com/mcp",
+      "description": "The URL of the remote MCP server.",
+      "envVar": "SERVER_URL"
+    }
+  ],
+  "mcpServers": {
+    "remote-mcp-secops": {
+      "httpUrl": "${SERVER_URL}",
+      "authProviderType": "google_credentials",
+      "oauth": {
+        "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform"
+        ]
+      },
+      "headers": {
+        "x-goog-user-project": "${PROJECT_ID}"
+      }
+    }
+  }
 }

@@ -6,9 +6,11 @@ This folder contains the **Google SecOps Extension**, providing specialized skil
 
 The extension `extensions/google-secops` packages setup and key security workflows into [skills](https://agentskills.io/specification). 
 
-The skills are designed to work seamlessly with:
- * [Gemini CLI](https://geminicli.com) and the Google SecOps Remote MCP Server.
- * [Antigravity](https://antigravity.google/docs/skills)
+These skills are **Adaptive**, designed to work seamlessly with:
+ *   [Google SecOps Remote MCP Server](https://google.github.io/mcp-security/docs/remote_server.html) (Preferred)
+ *   **Local Python Tools** (Fallback)
+
+This allows the skills to function in diverse environments, automatically selecting the best available tool for the job.
     
 The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https://antigravity.google/docs/skills) at the workspace level. You could also install/copy/symlink the skills to `~/.gemini/antigravity/skills/` to make them available globally to all workspaces.
 
@@ -52,6 +54,11 @@ To install this extension in your Gemini CLI environment:
     gemini extensions install ./extensions/google-secops
     ```
 
+You will be prompted for two environment variables for the MCP configuration:
+
+1. `PROJECT_ID`
+2. `SERVER_URL`
+
 ## Available Skills
 
 ### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
@@ -78,8 +85,18 @@ To install this extension in your Gemini CLI environment:
 
 These skills act as **Driver Agents** that:
 1.  **Read** the standardized Runbooks in `rules_bank/run_books/`.
-2.  **Execute** the steps using the available MCP tools (`secops`, `gti`, `secops-soar`).
+2.  **Execute** the steps using the available MCP tools.
 3.  **Standardize** the output according to SOC best practices.
+
+### Tool Selection
+
+The skills employ an **Adaptive Execution** strategy to ensure robustness:
+
+1.  **Check Environment**: The skill first identifies which tools are available in the current workspace.
+2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
+3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
+
+For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
 
 
 ## Cross-Compatibility
