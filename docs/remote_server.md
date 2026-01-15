@@ -134,7 +134,7 @@ curl --location 'https://chronicle.us.rep.googleapis.com/mcp' \
   -d '{
     "method": "tools/call",
     "params": {
-      "name": "list_cases",
+      "name": "list_rules",
       "arguments": {
         "project_id": "<YOUR_PROJECT_ID>",
         "customer_id": "<YOUR_CUSTOMER_ID>",
