@@ -112,9 +112,3 @@ These skills are designed to be compatible with **Claude Code** and other AI age
 * [Gemini CLI Documentation](https://geminicli.com)
 * [Gemini CLI Preview Features](https://geminicli.com/docs/settings/general#previewfeatures)
 * [Antigravity Skills](https://antigravity.google/docs/skills)
-
-
-
-
-
-
