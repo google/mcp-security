@@ -1,4 +1,4 @@
-google-adk[eval]>=1.22.1
+google-adk[eval]~=1.22.1
 google-auth
 requests
 python-dotenv

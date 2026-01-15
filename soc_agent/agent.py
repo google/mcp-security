@@ -36,7 +36,7 @@ toolset = McpToolset(
 # 3. Create Agent
 root_agent = Agent(
     name="oc_agent",
-    model=os.getenv("GOOGLE_MODEL", "gemini-2.5-pro"),
+    model=os.getenv("GOOGLE_MODEL", "gemini-2.5-flash"),
     description="ADK Agent to test the Remote SecOps MCP Server",
     instruction=f"""You are an Agent that tests the remote MCP server's tools.
 
