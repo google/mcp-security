@@ -24,7 +24,7 @@ def get_access_token():
 # 2. Configure Toolset
 toolset = McpToolset(
     connection_params=StreamableHTTPConnectionParams(
-        url=os.getenv("REMOTE_MCP_URL", "https://chronicle.googleapis.com/mcp"),
+        url=os.getenv("REMOTE_MCP_URL", "https://chronicle.us.rep.googleapis.com/mcp"),
         headers={
             "Authorization": f"Bearer {get_access_token()}",
             "Accept": "application/json",
