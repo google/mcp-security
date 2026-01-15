@@ -192,7 +192,8 @@ Add the following configuration to your MCP client's settings file:
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
         "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}",
+        "SECOPS_SA_PATH": "${SECOPS_SA_PATH}"
       },
       "disabled": false,
       "autoApprove": []
@@ -200,6 +201,10 @@ Add the following configuration to your MCP client's settings file:
   }
 }
 ```
+
+**Note:** The `SECOPS_SA_PATH` environment variable is optional. If not
+set, the server will use Application Default Credentials (ADC). Only
+include this variable if you want to use service account authentication.
 
 #### Using pip
 
@@ -217,7 +222,8 @@ You can also use pip instead of uv to install and run the MCP server:
       "env": {
         "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
         "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
-        "CHRONICLE_REGION": "${CHRONICLE_REGION}"
+        "CHRONICLE_REGION": "${CHRONICLE_REGION}",
+        "SECOPS_SA_PATH": "${SECOPS_SA_PATH}"
       },
       "disabled": false,
       "autoApprove": [
@@ -232,6 +238,9 @@ You can also use pip instead of uv to install and run the MCP server:
   }
 }
 ```
+
+**Note:** The `SECOPS_SA_PATH` environment variable is optional. See the
+Authentication section below for more details.
 
 #### When to use uv vs pip
 
@@ -260,6 +269,39 @@ The `CHRONICLE_REGION` can be one of:
 - `us` - United States (default)
 - `eu` - Europe
 - `asia` - Asia-Pacific
+
+### Authentication
+
+The MCP server supports two authentication methods:
+
+#### 1. Application Default Credentials (ADC) - Default
+
+The server uses Google Cloud Application Default Credentials by
+default. Authenticate using:
+
+```bash
+gcloud auth application-default login
+```
+
+#### 2. Service Account Authentication - Optional
+
+To use a service account instead of ADC, set the `SECOPS_SA_PATH`
+environment variable to point to your service account JSON key file:
+
+**For macOS/Linux:**
+```bash
+export SECOPS_SA_PATH="/path/to/service-account-key.json"
+```
+
+**For Windows PowerShell:**
+```powershell
+$Env:SECOPS_SA_PATH = "C:\path\to\service-account-key.json"
+```
+
+When `SECOPS_SA_PATH` is set, the server will use the specified
+service account for authentication. This is useful for automated
+deployments, CI/CD pipelines, or environments where ADC is not
+available.
 
 ## License
 

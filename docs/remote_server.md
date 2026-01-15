@@ -105,7 +105,7 @@ Using the `google_credentials` auth provider (native support):
 {
  "mcpServers": {
    "secops-hosted-mcp": {
-     "httpUrl": "https://chronicle.googleapis.com/mcp",
+     "httpUrl": "https://chronicle.us.rep.googleapis.com/mcp",
      "authProviderType": "google_credentials",
      "oauth": {
        "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
@@ -126,7 +126,7 @@ Using the `google_credentials` auth provider (native support):
 You can verify access directly without an MCP client:
 
 ```bash
-curl --location 'https://chronicle.googleapis.com/mcp' \
+curl --location 'https://chronicle.us.rep.googleapis.com/mcp' \
   -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
   -H 'content-type: application/json' \
   -H 'accept: application/json, text/event-stream' \
@@ -134,7 +134,7 @@ curl --location 'https://chronicle.googleapis.com/mcp' \
   -d '{
     "method": "tools/call",
     "params": {
-      "name": "list_cases",
+      "name": "list_rules",
       "arguments": {
         "project_id": "<YOUR_PROJECT_ID>",
         "customer_id": "<YOUR_CUSTOMER_ID>",
@@ -167,7 +167,7 @@ def get_access_token():
 # 2. Configure Toolset
 toolset = McpToolset(
    connection_params=StreamableHTTPConnectionParams(
-       url="https://chronicle.googleapis.com/mcp",
+       url="https://chronicle.us.rep.googleapis.com/mcp",
        headers={
            "Authorization": f"Bearer {get_access_token()}",
            "Accept": "text/event-stream",

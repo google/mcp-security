@@ -63,6 +63,8 @@ Example .env file:
 CHRONICLE_PROJECT_ID=your-gcp-project-id
 CHRONICLE_CUSTOMER_ID=your-chronicle-customer-id
 CHRONICLE_REGION=us
+# Optional: Uncomment to use service account authentication
+# SECOPS_SA_PATH=/path/to/service-account-key.json
 ```
 
 ### Environment Variable Setup
@@ -74,6 +76,8 @@ Set up these environment variables in your system:
 export CHRONICLE_PROJECT_ID="your-google-cloud-project-id"
 export CHRONICLE_CUSTOMER_ID="your-chronicle-customer-id"
 export CHRONICLE_REGION="us"
+# Optional: Set this to use service account authentication
+# export SECOPS_SA_PATH="/path/to/service-account-key.json"
 ```
 
 **For Windows PowerShell:**
@@ -81,6 +85,8 @@ export CHRONICLE_REGION="us"
 $Env:CHRONICLE_PROJECT_ID = "your-google-cloud-project-id"
 $Env:CHRONICLE_CUSTOMER_ID = "your-chronicle-customer-id"
 $Env:CHRONICLE_REGION = "us"
+# Optional: Set this to use service account authentication
+# $Env:SECOPS_SA_PATH = "C:\path\to\service-account-key.json"
 ```
 
 The `CHRONICLE_REGION` can be one of:
@@ -89,6 +95,44 @@ The `CHRONICLE_REGION` can be one of:
 - `asia` - Asia-Pacific
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
+
+### Authentication
+
+The MCP server supports two authentication methods:
+
+#### 1. Application Default Credentials (ADC) - Default
+
+By default, the server uses Google Cloud Application Default
+Credentials. Authenticate using:
+
+```bash
+gcloud auth application-default login
+```
+
+This method is recommended for local development and interactive use.
+
+#### 2. Service Account Authentication - Optional
+
+For automated environments, CI/CD pipelines, or when ADC is not
+available, you can use service account authentication by setting the
+`SECOPS_SA_PATH` environment variable:
+
+**For macOS/Linux:**
+```bash
+export SECOPS_SA_PATH="/path/to/service-account-key.json"
+```
+
+**For Windows PowerShell:**
+```powershell
+$Env:SECOPS_SA_PATH = "C:\path\to\service-account-key.json"
+```
+
+The service account must have the appropriate Chronicle permissions
+(see Required Permissions section below).
+
+**Note:** If `SECOPS_SA_PATH` is set, it takes precedence over ADC.
+The server will automatically detect and use the service account for
+all API calls.
 
 ### Parameter-Based Authentication
 
