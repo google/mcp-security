@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('secops-mcp')
 
 # Constants
-USER_AGENT = 'secops-app/1.0'
+USER_AGENT = 'secops-app/0.5.2'
 
 # Default Chronicle configuration from environment variables
 DEFAULT_PROJECT_ID = os.environ.get('CHRONICLE_PROJECT_ID', '725716774503')
@@ -43,8 +43,8 @@ DEFAULT_REGION = os.environ.get('CHRONICLE_REGION', 'us')
 
 
 def get_chronicle_client(
-    project_id: Optional[str] = None, 
-    customer_id: Optional[str] = None, 
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
     region: Optional[str] = None
 ) -> Any:
     """Initialize and return a Chronicle client.
@@ -68,8 +68,12 @@ def get_chronicle_client(
             'as parameters or through environment variables '
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
+    service_account_path = os.getenv("SECOPS_SA_PATH")
+    if service_account_path:
+        client = SecOpsClient(service_account_path=service_account_path)
+    else:
+        client = SecOpsClient()
 
-    client = SecOpsClient()
     chronicle = client.chronicle(
         customer_id=customer_id, project_id=project_id, region=region
     )
@@ -91,4 +95,4 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main() 
+    main()

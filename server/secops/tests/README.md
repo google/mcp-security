@@ -47,11 +47,33 @@ Make sure to replace the placeholder values with your actual Chronicle credentia
 
 ## Authentication
 
-The tests use Google Application Default Credentials (ADC) for authentication. Make sure you have authenticated with:
+The tests support two authentication methods:
+
+### 1. Application Default Credentials (ADC) - Default
+
+Make sure you have authenticated with:
 
 ```bash
 gcloud auth application-default login
 ```
+
+### 2. Service Account Authentication - Optional
+
+Alternatively, you can use a service account by setting the 
+`SECOPS_SA_PATH` environment variable:
+
+**For macOS/Linux:**
+```bash
+export SECOPS_SA_PATH="/path/to/service-account-key.json"
+```
+
+**For Windows PowerShell:**
+```powershell
+$Env:SECOPS_SA_PATH = "C:\path\to\service-account-key.json"
+```
+
+If `SECOPS_SA_PATH` is set, the tests will use service account 
+authentication instead of ADC.
 
 ## Running the Tests
 
