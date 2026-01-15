@@ -40,7 +40,7 @@ Instruct the user to add the following under `mcpServers`:
 
 ```json
 "remote-mcp-secops": {
-  "httpUrl": "https://chronicle.googleapis.com/mcp",
+  "httpUrl": "https://chronicle.us.rep.googleapis.com/mcp",
   "authProviderType": "google_credentials",
   "oauth": {
     "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
