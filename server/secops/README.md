@@ -120,6 +120,23 @@ Chronicle Security Operations suite.
 - **`generate_feed_secret(feed_id, project_id=None, customer_id=None, region=None)`**
     - Creates a new authentication secret for feeds that support authentication (e.g., HTTP feeds with basic auth). This replaces any existing secret.
 
+### Investigation Management Tools
+
+- **`get_cases(case_ids, project_id=None, customer_id=None, region=None)`**
+    - Batch retrieve case details using the legacy batch API. Supports up to 1000 case IDs. Returns case details including priority, status, stage, and SOAR platform info.
+
+- **`list_investigations(page_size=50, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - List all investigations in Chronicle instance. Returns investigation status, verdict, and confidence. Supports pagination.
+
+- **`get_investigation(investigation_id, project_id=None, customer_id=None, region=None)`**
+    - Retrieve specific investigation by ID. Returns detailed investigation information including status and verdict.
+
+- **`trigger_investigation(alert_id, project_id=None, customer_id=None, region=None)`**
+    - Create new investigation for a specific alert. Returns created investigation details and trigger type.
+
+- **`fetch_associated_investigations(detection_type, alert_ids=None, case_ids=None, association_limit_per_detection=5, project_id=None, customer_id=None, region=None)`**
+    - Retrieve investigations associated with alerts or cases. Supports filtering by detection type (ALERT or CASE). Returns investigation associations with verdict information.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -136,7 +153,8 @@ The MCP server provides the following capabilities:
 10. **Data Table Management**: Create and manage structured data tables for detection rules
 11. **Reference List Management**: Create and manage reference lists for detection rules
 12. **Feed Management**: Create, update, enable, disable, and delete data feeds
-13. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
+13. **Investigation Management**: Manage cases and investigations, trigger investigations, and fetch associated investigations
+14. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
 
@@ -151,6 +169,7 @@ These tools focus on core security operations tasks:
 - **Entity Analysis**: Use `lookup_entity` to investigate IPs, domains, hashes, and other indicators
 - **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
 - **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
+- **Investigation Management**: Use `list_investigations`, `get_investigation`, `trigger_investigation`, `get_cases`, and `fetch_associated_investigations` to manage investigations and cases
 - **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools

@@ -344,6 +344,55 @@ The service account or user credentials need the following Chronicle roles:
       - Zero-day exploitation
       ```
 
+- **`get_cases(case_ids, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Batch retrieve case details using the legacy batch API. Supports up to 1000 case IDs. Returns case details including priority, status, stage, and SOAR platform info.
+    - **Parameters:**
+        - `case_ids` (required): List of case IDs to retrieve (max 1000).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing case details with priority, status, stage, and SOAR platform information.
+
+- **`list_investigations(page_size=50, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List all investigations in Chronicle instance. Returns investigation status, verdict, and confidence. Supports pagination.
+    - **Parameters:**
+        - `page_size` (optional): Number of investigations to return per page (default: 50).
+        - `page_token` (optional): Token for pagination from previous response.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing list of investigations with status, verdict, confidence, and pagination token.
+
+- **`get_investigation(investigation_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Retrieve specific investigation by ID. Returns detailed investigation information including status and verdict.
+    - **Parameters:**
+        - `investigation_id` (required): The unique identifier of the investigation to retrieve.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing detailed investigation information including display name, status, verdict, confidence, and timestamps.
+
+- **`trigger_investigation(alert_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create new investigation for a specific alert. Returns created investigation details and trigger type.
+    - **Parameters:**
+        - `alert_id` (required): The unique identifier of the alert to investigate.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing created investigation details including name, status, and trigger type.
+
+- **`fetch_associated_investigations(detection_type, alert_ids=None, case_ids=None, association_limit_per_detection=5, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Retrieve investigations associated with alerts or cases. Supports filtering by detection type (ALERT or CASE). Returns investigation associations with verdict information.
+    - **Parameters:**
+        - `detection_type` (required): Type of detection to query. Valid values: "ALERT", "CASE", "DETECTION_TYPE_ALERT", "DETECTION_TYPE_CASE".
+        - `alert_ids` (optional): List of alert IDs to query. Required if detection_type is ALERT.
+        - `case_ids` (optional): List of case IDs to query. Required if detection_type is CASE.
+        - `association_limit_per_detection` (optional): Maximum number of investigations to return per detection (default: 5).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing investigation associations grouped by detection ID, with verdict and confidence information.
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
