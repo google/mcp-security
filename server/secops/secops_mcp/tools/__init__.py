@@ -26,3 +26,4 @@ from .reference_list_management import *
 from .udm_search import *
 from .search import *
 from .feed_management import *
+from .watchlist_management import *
