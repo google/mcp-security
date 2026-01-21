@@ -19,7 +19,6 @@ import pytest
 
 from secops_mcp.tools.investigation_management import (
     fetch_associated_investigations,
-    get_cases,
     get_investigation,
     list_investigations,
     trigger_investigation,
@@ -84,44 +83,6 @@ class TestChronicleInvestigationsMCP:
                     assert isinstance(result, dict)
                     assert "error" not in result
                     assert "name" in result
-
-    @pytest.mark.asyncio
-    async def test_get_cases(
-        self, chronicle_config: Dict[str, str], chronicle_client
-    ) -> None:
-        """Test getting cases using alert case IDs.
-
-        Args:
-            chronicle_config: Dictionary with Chronicle configuration
-            chronicle_client: Chronicle client fixture
-        """
-        end_time = datetime.now(timezone.utc)
-        start_time = end_time - timedelta(days=30)
-
-        alerts = chronicle_client.get_alerts(
-            start_time=start_time,
-            end_time=end_time,
-            max_alerts=10,
-        )
-
-        alert_list = alerts.get("alerts", {}).get("alerts", [])
-        case_ids = [
-            alert.get("caseName")
-            for alert in alert_list
-            if alert.get("caseName")
-        ]
-
-        if case_ids:
-            result = await get_cases(
-                case_ids=case_ids[:5],
-                project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
-                customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
-                region=chronicle_config["CHRONICLE_REGION"],
-            )
-
-            assert isinstance(result, dict)
-            if "error" not in result:
-                assert hasattr(result, "cases")
 
     @pytest.mark.asyncio
     async def test_trigger_investigation(

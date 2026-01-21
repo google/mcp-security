@@ -344,15 +344,6 @@ The service account or user credentials need the following Chronicle roles:
       - Zero-day exploitation
       ```
 
-- **`get_cases(case_ids, project_id=None, customer_id=None, region=None)`**
-    - **Description:** Batch retrieve case details using the legacy batch API. Supports up to 1000 case IDs. Returns case details including priority, status, stage, and SOAR platform info.
-    - **Parameters:**
-        - `case_ids` (required): List of case IDs to retrieve (max 1000).
-        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
-        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
-        - `region` (optional): Chronicle region (defaults to environment config or 'us').
-    - **Returns:** Dictionary containing case details with priority, status, stage, and SOAR platform information.
-
 - **`list_investigations(page_size=50, page_token=None, project_id=None, customer_id=None, region=None)`**
     - **Description:** List all investigations in Chronicle instance. Returns investigation status, verdict, and confidence. Supports pagination.
     - **Parameters:**
