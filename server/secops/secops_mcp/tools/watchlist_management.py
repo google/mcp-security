@@ -345,7 +345,9 @@ async def get_watchlist(
     - Document watchlist contents for security reviews.
 
     Args:
-        watchlist_id (str): Unique identifier of the watchlist to retrieve.
+        watchlist_id (str): Watchlist ID only (e.g., "abc-123-def"), not
+            the full resource name. Extract from the "name" field returned
+            by list_watchlists or create_watchlist.
         project_id (Optional[str]): Google Cloud project ID. Defaults to
             environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to
@@ -358,9 +360,14 @@ async def get_watchlist(
             and entity information. Returns error dict if retrieval fails.
 
     Example Usage:
-        # Get watchlist details
+        # First, list watchlists to get the ID
+        watchlists = list_watchlists()
+        # Extract ID from the full name (last part after '/')
+        watchlist_id = watchlists["watchlists"][0]["name"].split("/")[-1]
+
+        # Get watchlist details using just the ID
         watchlist = get_watchlist(
-            watchlist_id="abc-123-def",
+            watchlist_id=watchlist_id,  # Just the ID, not full name
             project_id="my-project",
             customer_id="my-customer",
             region="us"
