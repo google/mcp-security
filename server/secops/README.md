@@ -120,6 +120,23 @@ Chronicle Security Operations suite.
 - **`generate_feed_secret(feed_id, project_id=None, customer_id=None, region=None)`**
     - Creates a new authentication secret for feeds that support authentication (e.g., HTTP feeds with basic auth). This replaces any existing secret.
 
+### Watchlist Management Tools
+
+- **`create_watchlist(name, display_name, multiplying_factor, description, project_id=None, customer_id=None, region=None)`**
+    - Creates a new watchlist to track high-risk entities and apply risk score multipliers for prioritizing investigations.
+
+- **`update_watchlist(watchlist_id, display_name=None, description=None, multiplying_factor=None, entity_population_mechanism=None, watchlist_user_preferences=None, project_id=None, customer_id=None, region=None)`**
+    - Updates an existing watchlist's configuration, risk multiplier, or user preferences like pinning.
+
+- **`delete_watchlist(watchlist_id, force=False, project_id=None, customer_id=None, region=None)`**
+    - Permanently removes a watchlist from Chronicle. Use with caution as this operation cannot be undone.
+
+- **`get_watchlist(watchlist_id, project_id=None, customer_id=None, region=None)`**
+    - Retrieves detailed information about a specific watchlist including configuration and entity membership.
+
+- **`list_watchlists(page_size=None, page_token=None, as_list=False, project_id=None, customer_id=None, region=None)`**
+    - Lists all watchlists in Chronicle with pagination support for reviewing configured watchlists.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -136,7 +153,8 @@ The MCP server provides the following capabilities:
 10. **Data Table Management**: Create and manage structured data tables for detection rules
 11. **Reference List Management**: Create and manage reference lists for detection rules
 12. **Feed Management**: Create, update, enable, disable, and delete data feeds
-13. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
+13. **Watchlist Management**: Create, update, delete, and list watchlists for entity risk scoring
+14. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
 
@@ -151,6 +169,7 @@ These tools focus on core security operations tasks:
 - **Entity Analysis**: Use `lookup_entity` to investigate IPs, domains, hashes, and other indicators
 - **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
 - **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
+- **Watchlist Management**: Use `create_watchlist`, `update_watchlist`, `list_watchlists`, `get_watchlist`, and `delete_watchlist` to manage entity watchlists with risk score multipliers for prioritizing high-risk entities
 - **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools

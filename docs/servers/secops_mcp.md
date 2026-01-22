@@ -344,6 +344,123 @@ The service account or user credentials need the following Chronicle roles:
       - Zero-day exploitation
       ```
 
+### Watchlist Management
+
+- **`create_watchlist(name, display_name, multiplying_factor, description, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Creates a new watchlist in Chronicle to track high-risk entities and apply risk score multipliers.
+    - **Parameters:**
+        - `name` (required): Unique identifier for the watchlist (e.g., "critical_threat_actors").
+        - `display_name` (required): Human-readable name shown in the UI.
+        - `multiplying_factor` (required): Risk score multiplier (e.g., 2.0 doubles the risk score).
+        - `description` (required): Purpose and context of the watchlist.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary with created watchlist details including ID and configuration.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/watchlists/abc-123-def",
+        "displayName": "Critical Threat Actors",
+        "description": "High-priority threat actors requiring immediate investigation",
+        "multiplyingFactor": 2.0,
+        "createTime": "2024-01-15T10:30:00Z",
+        "updateTime": "2024-01-15T10:30:00Z"
+      }
+      ```
+
+- **`update_watchlist(watchlist_id, display_name=None, description=None, multiplying_factor=None, entity_population_mechanism=None, watchlist_user_preferences=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Updates an existing watchlist's configuration, risk multiplier, or preferences.
+    - **Parameters:**
+        - `watchlist_id` (required): Watchlist ID only (e.g., "abc-123-def").
+        - `display_name` (optional): New display name for the watchlist.
+        - `description` (optional): New description for the watchlist.
+        - `multiplying_factor` (optional): New risk score multiplier.
+        - `entity_population_mechanism` (optional): Entity population configuration.
+        - `watchlist_user_preferences` (optional): User preferences like pinning.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary with updated watchlist details.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/watchlists/abc-123-def",
+        "displayName": "Updated Critical Threat Actors",
+        "description": "Increased multiplier due to active campaign",
+        "multiplyingFactor": 3.0,
+        "updateTime": "2024-01-15T14:22:00Z"
+      }
+      ```
+
+- **`delete_watchlist(watchlist_id, force=False, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Permanently deletes a watchlist from Chronicle. Use caution as this operation cannot be undone.
+    - **Parameters:**
+        - `watchlist_id` (required): Watchlist ID only (e.g., "abc-123-def").
+        - `force` (optional): Force deletion even if dependencies exist (default: False).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary confirming deletion or error details.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "watchlist_id": "abc-123-def",
+        "message": "Watchlist deleted successfully"
+      }
+      ```
+
+- **`get_watchlist(watchlist_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Retrieves detailed information about a specific watchlist including configuration and entity membership.
+    - **Parameters:**
+        - `watchlist_id` (required): Watchlist ID only (e.g., "abc-123-def").
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary with complete watchlist details.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/watchlists/abc-123-def",
+        "displayName": "Critical Threat Actors",
+        "description": "High-priority threat actors",
+        "multiplyingFactor": 2.0,
+        "createTime": "2024-01-15T10:30:00Z",
+        "updateTime": "2024-01-15T14:22:00Z",
+        "entityCount": 42
+      }
+      ```
+
+- **`list_watchlists(page_size=None, page_token=None, as_list=False, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Lists all watchlists in Chronicle with pagination support.
+    - **Parameters:**
+        - `page_size` (optional): Number of results per page for pagination.
+        - `page_token` (optional): Token for fetching the next page of results.
+        - `as_list` (optional): Return all results as a flat list (default: False).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary with watchlists array and pagination metadata.
+    - **Return Example:**
+      ```json
+      {
+        "watchlists": [
+          {
+            "name": "projects/123/locations/us/instances/456/watchlists/abc-123",
+            "displayName": "Critical Threat Actors",
+            "multiplyingFactor": 2.0
+          },
+          {
+            "name": "projects/123/locations/us/instances/456/watchlists/def-456",
+            "displayName": "Suspicious Domains",
+            "multiplyingFactor": 1.5
+          }
+        ],
+        "total_in_page": 2
+      }
+      ```
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
@@ -441,6 +558,68 @@ Their TTPs include:
 - Advanced persistent access into compromised networks
 
 The group continues to evolve tactics and primarily targets financial institutions, cryptocurrency exchanges, and organizations in sectors of strategic interest to North Korea.
+```
+
+### Example 5: Watchlist Management
+
+```
+User: Create a watchlist for critical APT threat actors with a 2.5x risk multiplier.
+
+AI uses: create_watchlist(
+  name="apt_threat_actors_2024",
+  display_name="APT Threat Actors 2024",
+  multiplying_factor=2.5,
+  description="High-priority APT groups actively targeting our industry"
+)
+
+AI: I've created the "APT Threat Actors 2024" watchlist with a 2.5x risk multiplier.
+Watchlist ID: abc-123-def
+
+Any entities added to this watchlist will have their risk scores multiplied by 2.5,
+helping prioritize alerts and investigations related to these threat actors.
+
+User: Show me all my watchlists.
+
+AI uses: list_watchlists(as_list=True)
+
+AI: You have 3 watchlists configured:
+
+1. APT Threat Actors 2024 (Risk: 2.5x)
+   - Created: 2024-01-15
+   - For tracking high-priority APT groups
+
+2. Suspicious Domains (Risk: 1.5x)
+   - Created: 2024-01-10
+   - Domains flagged by threat intelligence
+
+3. Legacy Monitoring (Risk: 1.2x)
+   - Created: 2023-12-01
+   - Deprecated systems requiring extra monitoring
+
+User: We have an active campaign. Increase the APT watchlist multiplier to 4.0.
+
+AI uses: update_watchlist(
+  watchlist_id="abc-123-def",
+  multiplying_factor=4.0,
+  description="Increased multiplier due to active campaign against our sector"
+)
+
+AI: Updated the APT Threat Actors 2024 watchlist:
+- Risk multiplier: 2.5x → 4.0x
+- Description updated to note the active campaign
+
+This will significantly elevate the priority of any events involving entities
+on this watchlist.
+
+User: The campaign has ended. We can remove the APT watchlist now.
+
+AI uses: delete_watchlist(
+  watchlist_id="abc-123-def"
+)
+
+AI: Successfully deleted the "APT Threat Actors 2024" watchlist.
+Entities previously on this watchlist will now use their base risk scores
+without the 4.0x multiplier.
 ```
 
 ## Additional Resources
