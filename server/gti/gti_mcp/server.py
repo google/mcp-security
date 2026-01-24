@@ -35,7 +35,9 @@ def _vt_client_factory(unused_ctx) -> vt.Client:
   api_key = os.getenv("VT_APIKEY")
   if not api_key:
     raise ValueError("VT_APIKEY environment variable is required")
-  return vt.Client(api_key)
+  # Disable SSL verification for Docker/corporate network environments
+  verify_ssl = os.getenv("VT_VERIFY_SSL", "true").lower() != "false"
+  return vt.Client(api_key, verify_ssl=verify_ssl)
 
 vt_client_factory = _vt_client_factory
 
