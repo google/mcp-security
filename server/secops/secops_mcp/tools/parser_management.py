@@ -55,12 +55,12 @@ async def create_parser(
     - Parse structured data from APIs or databases into security events.
 
     Args:
-        log_type (str): Chronicle log type identifier for this parser (e.g., "CUSTOM_APP", "WINDOWS_AD").
-        parser_code (str): Parser configuration code using Chronicle's parser DSL (typically using filters like mutate, grok, etc.).
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        validated_on_empty_logs (bool): Whether to validate the parser even on empty log samples. Defaults to True.
+        log_type: Chronicle log type identifier for this parser (e.g., "CUSTOM_APP", "WINDOWS_AD").
+        parser_code: Parser configuration code using Chronicle's parser DSL (typically using filters like mutate, grok, etc.).
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        validated_on_empty_logs: Whether to validate the parser even on empty log samples. Defaults to True.
 
     Returns:
         str: Success message with the created parser ID and details.
@@ -172,11 +172,11 @@ async def get_parser(
     - Understand the parsing logic for specific log types during investigations.
 
     Args:
-        log_type (str): Chronicle log type identifier for the parser.
-        parser_id (str): Unique identifier of the parser to retrieve.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        log_type: Chronicle log type identifier for the parser.
+        parser_id: Unique identifier of the parser to retrieve.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Formatted parser details including ID, state, and configuration code.
@@ -267,11 +267,11 @@ async def activate_parser(
     - Deploy parser changes as part of log ingestion pipeline updates.
 
     Args:
-        log_type (str): Chronicle log type identifier for the parser.
-        parser_id (str): Unique identifier of the parser to activate.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        log_type: Chronicle log type identifier for the parser.
+        parser_id: Unique identifier of the parser to activate.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message confirming parser activation.
@@ -347,11 +347,11 @@ async def deactivate_parser(
     not be searchable or usable for detection until a parser is reactivated.
 
     Args:
-        log_type (str): Chronicle log type identifier for the parser.
-        parser_id (str): Unique identifier of the parser to deactivate.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        log_type: Chronicle log type identifier for the parser.
+        parser_id: Unique identifier of the parser to deactivate.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message confirming parser deactivation.
@@ -431,14 +431,14 @@ async def run_parser_against_sample_logs(
     - Test with logs that might cause parsing failures to ensure robust error handling.
 
     Args:
-        log_type (str): Chronicle log type identifier for the parser.
-        parser_code (str): Parser configuration code to test.
-        sample_logs (List[str]): List of sample log entries to test against (max 1000 logs, 10MB per log, 50MB total).
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        parser_extension_code (Optional[str]): Additional parser extension code if needed.
-        statedump_allowed (bool): Whether to allow statedump filters in the parser. Defaults to False.
+        log_type: Chronicle log type identifier for the parser.
+        parser_code: Parser configuration code to test.
+        sample_logs: List of sample log entries to test against (max 1000 logs, 10MB per log, 50MB total).
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        parser_extension_code: Additional parser extension code if needed.
+        statedump_allowed: Whether to allow statedump filters in the parser. Defaults to False.
 
     Returns:
         str: Formatted results showing parsing outcomes for each sample log, including any UDM events

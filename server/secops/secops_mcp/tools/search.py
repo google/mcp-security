@@ -38,14 +38,14 @@ async def search_udm(
     """Search UDM events using UDM query in Chronicle.
 
     Args:
-        query (str): UDM query to search for events.
-        hours_back (int): How many hours back from the current time to search. Used if start_time is not provided.
-        start_time (Optional[str]): Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
-        end_time (Optional[str]): End time in ISO 8601 format. Defaults to current time if not provided.
-        max_events (Optional[int]): Maximum number of events to return.
-        project_id (Optional[str]): Google Cloud project ID.
-        customer_id (Optional[str]): Chronicle customer ID.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        query: UDM query to search for events.
+        hours_back: How many hours back from the current time to search. Used if start_time is not provided.
+        start_time: Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
+        end_time: End time in ISO 8601 format. Defaults to current time if not provided.
+        max_events: Maximum number of events to return.
+        project_id: Google Cloud project ID.
+        customer_id: Chronicle customer ID.
+        region: Chronicle region (e.g., "us", "europe").
 
     Returns:
         Dict containing the search results with events.

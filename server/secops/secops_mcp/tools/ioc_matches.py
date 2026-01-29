@@ -51,11 +51,11 @@ async def get_ioc_matches(
     - Supplement investigations by checking if involved entities match known IoCs curated by threat intelligence sources.
 
     Args:
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours back to look for IoC matches. Defaults to 24.
-        max_matches (int): Maximum number of IoC matches to return. Defaults to 20.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        hours_back: How many hours back to look for IoC matches. Defaults to 24.
+        max_matches: Maximum number of IoC matches to return. Defaults to 20.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         str: A formatted string summarizing the IoC matches found, including the IoC type,

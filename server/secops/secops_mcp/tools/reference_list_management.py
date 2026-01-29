@@ -57,13 +57,13 @@ async def create_reference_list(
     - REGEX: Regular expression patterns for flexible matching
 
     Args:
-        name (str): Unique name for the reference list (used to reference in detection rules).
-        description (str): Description of the reference list's purpose and contents.
-        entries (List[str]): List of values to include in the reference list.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        syntax_type (str): Type of matching to use. Valid values: "STRING", "CIDR", "REGEX". Defaults to "STRING".
+        name: Unique name for the reference list (used to reference in detection rules).
+        description: Description of the reference list's purpose and contents.
+        entries: List of values to include in the reference list.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        syntax_type: Type of matching to use. Valid values: "STRING", "CIDR", "REGEX". Defaults to "STRING".
 
     Returns:
         str: Success message with the created reference list details.
@@ -184,11 +184,11 @@ async def get_reference_list(
     - Generate reports on security reference data for operational documentation.
 
     Args:
-        name (str): Name of the reference list to retrieve.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        include_entries (bool): Whether to include the full list of entries. Defaults to True.
+        name: Name of the reference list to retrieve.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        include_entries: Whether to include the full list of entries. Defaults to True.
 
     Returns:
         str: Formatted reference list details including metadata and entries.
@@ -326,12 +326,12 @@ async def update_reference_list(
     - At least one of entries or description must be provided.
 
     Args:
-        name (str): Name of the existing reference list to update.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        entries (Optional[List[str]]): New list of entries to replace existing ones. If provided, completely replaces current entries.
-        description (Optional[str]): New description for the reference list.
+        name: Name of the existing reference list to update.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        entries: New list of entries to replace existing ones. If provided, completely replaces current entries.
+        description: New description for the reference list.
 
     Returns:
         str: Success message with details about the updated reference list.
