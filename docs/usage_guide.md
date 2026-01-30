@@ -96,9 +96,7 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
         "CHRONICLE_PROJECT_ID": "your-project-id",
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
         "CHRONICLE_REGION": "us"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "secops-soar": {
       "command": "uv",
@@ -113,9 +111,7 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
       "env": {
         "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
         "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "gti": {
       "command": "uv",
@@ -127,9 +123,7 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
       ],
       "env": {
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "scc-mcp": {
       "command": "uv",
@@ -139,9 +133,7 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
         "run",
         "scc_mcp.py"
       ],
-      "env": {},
-      "disabled": false,
-      "autoApprove": []
+      "env": {}
     }
   }
 }
@@ -206,8 +198,6 @@ $Env:SOAR_URL = "your-soar-url"
 $Env:SOAR_APP_KEY = "your-soar-app-key"
 $Env:VT_APIKEY = "your-vt-api-key"
 ```
-
-You can enable or disable individual servers by setting `"disabled": true` for specific servers.
 
 ## Usage Examples
 
