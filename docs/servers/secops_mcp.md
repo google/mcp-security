@@ -29,11 +29,7 @@ Add the following configuration to your MCP client's settings file:
         "CHRONICLE_PROJECT_ID": "your-gcp-project-id",
         "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
         "CHRONICLE_REGION": "us"
-      },
-      "disabled": false,
-      "autoApprove": []
-      "disabled": false,
-      "autoApprove": []
+      }
     }
 ```
 
