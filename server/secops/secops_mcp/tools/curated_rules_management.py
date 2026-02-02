@@ -72,6 +72,15 @@ async def list_curated_rules(
             - nextPageToken: Token for pagination (if more results)
             Returns error structure if the API call fails.
 
+    **Pagination Guidance for AI Agents:**
+        If the response contains a 'nextPageToken' field, there are more
+        results available. To retrieve all results, either:
+        1. Set `as_list=True` to automatically fetch all pages, or
+        2. Make subsequent calls with `page_token=<nextPageToken>` until
+           no nextPageToken is returned.
+        Use pagination when searching for specific rules across a large
+        dataset to ensure complete coverage.
+
     Next Steps (using MCP-enabled tools):
         - Review specific rule details using `get_curated_rule`.
         - Enable relevant rules via `update_curated_rule_set_deployment`.
@@ -396,6 +405,15 @@ async def list_curated_rule_sets(
             - nextPageToken: Token for pagination (if more results)
             Returns error structure if the API call fails.
 
+    **Pagination Guidance for AI Agents:**
+        If the response contains a 'nextPageToken' field, there are more
+        results available. To retrieve all results, either:
+        1. Set `as_list=True` to automatically fetch all pages, or
+        2. Make subsequent calls with `page_token=<nextPageToken>` until
+           no nextPageToken is returned.
+        Use pagination when searching for specific rule sets to ensure
+        complete coverage.
+
     Next Steps (using MCP-enabled tools):
         - Review specific rule set details using
             `get_curated_rule_set`.
@@ -547,6 +565,15 @@ async def list_curated_rule_set_deployments(
             Each deployment includes enabled status, precision level,
             and alerting configuration.
             Returns error structure if the API call fails.
+
+    **Pagination Guidance for AI Agents:**
+        If the response contains a 'nextPageToken' field, there are more
+        results available. To retrieve all results, either:
+        1. Set `as_list=True` to automatically fetch all pages, or
+        2. Make subsequent calls with `page_token=<nextPageToken>` until
+           no nextPageToken is returned.
+        Use pagination when searching for specific deployments to ensure
+        complete coverage of all rule set configurations.
 
     Next Steps (using MCP-enabled tools):
         - Update deployment settings using
