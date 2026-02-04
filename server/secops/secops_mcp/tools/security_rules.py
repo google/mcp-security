@@ -852,3 +852,427 @@ async def validate_rule(
     except Exception as e:
         logger.error(f"Error validating rule: {str(e)}", exc_info=True)
         return f"Error validating rule: {str(e)}"
+
+
+@server.tool()
+async def create_retrohunt(
+    rule_id: str,
+    start_time: str,
+    end_time: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Create a retrohunt to run detection rule against historical data.
+
+    Retrohunts enable threat hunting by running detection rules against
+    historical data in Chronicle SIEM. This is essential for identifying
+    past security incidents that match current detection logic or newly
+    discovered threat patterns.
+
+    **Workflow Integration:**
+    - Critical for threat hunting campaigns to find historical evidence.
+    - Use after creating or modifying rules to check past occurrences.
+    - Essential for incident scoping to identify earlier related activity.
+    - Enables proactive threat discovery using new intelligence.
+
+    **Use Cases:**
+    - "Run this rule against the last 7 days to find past matches"
+    - "Check if this attack pattern occurred before we detected it"
+    - "Hunt for historical evidence of this TTP in our environment"
+    - "Validate rule effectiveness against known past incidents"
+    - "Scope incident timeline by finding all historical occurrences"
+
+    **Retrohunt Characteristics:**
+    - Long-running operation (may take minutes to hours)
+    - Returns operation ID for tracking status
+    - Processes large volumes of historical data
+    - Results accessible via get_retrohunt tool
+    - Does not generate alerts, only detections
+
+    Args:
+        rule_id (str): Unique ID of rule to run against historical data.
+                      Example: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        start_time (str): Start of time range (ISO format or parseable).
+                         Example: "2024-01-01T00:00:00Z"
+        end_time (str): End of time range (ISO format or parseable).
+                       Example: "2024-01-08T00:00:00Z"
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer ID.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+
+    Returns:
+        Dict[str, Any]: Dictionary containing:
+                       - operation_id: Operation identifier for tracking
+                       - rule_id: Rule identifier used for retrohunt
+                       - start_time: Start of time range
+                       - end_time: End of time range
+                       - status: Creation status message
+                       Returns error dict if retrohunt creation fails.
+
+    Example Usage:
+        result = create_retrohunt(
+            rule_id="ru_661a3961-7370-4be7-abda-f233f7ff29ac",
+            start_time="2024-01-01T00:00:00Z",
+            end_time="2024-01-08T00:00:00Z",
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us"
+        )
+        # Access: result["operation_id"], result["status"]
+
+    Next Steps (using MCP-enabled tools):
+        - Check retrohunt status using `get_retrohunt` with operation ID.
+        - Review detections once complete using `get_rule_detections`.
+        - Analyze matched events for threat hunting insights.
+        - Correlate findings with other security data sources.
+        - Document findings in case management systems.
+    """
+    try:
+        from datetime import datetime, timezone
+
+        logger.info(
+            f"Creating retrohunt for rule {rule_id} "
+            f"from {start_time} to {end_time}"
+        )
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        # Parse time strings to datetime objects if needed
+        if isinstance(start_time, str):
+            start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+        else:
+            start_dt = start_time
+
+        if isinstance(end_time, str):
+            end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+        else:
+            end_dt = end_time
+
+        # Ensure timezone awareness
+        if start_dt.tzinfo is None:
+            start_dt = start_dt.replace(tzinfo=timezone.utc)
+        if end_dt.tzinfo is None:
+            end_dt = end_dt.replace(tzinfo=timezone.utc)
+
+        # Create retrohunt
+        retrohunt = chronicle.create_retrohunt(rule_id, start_dt, end_dt)
+
+        # Extract operation ID from response
+        operation_name = retrohunt.get("name", "")
+        operation_id = operation_name.split("/")[-1] if operation_name else ""
+
+        if not operation_id:
+            error_msg = (
+                "Failed to extract operation ID from retrohunt "
+                "response. Raw response available in error details."
+            )
+            logger.error(f"{error_msg}. Response: {retrohunt}")
+            return {
+                "error": error_msg,
+                "rule_id": rule_id,
+                "start_time": start_time,
+                "end_time": end_time,
+                "status": "failed",
+                "raw_response": retrohunt,
+            }
+
+        result = {
+            "operation_id": operation_id,
+            "operation_name": operation_name,
+            "rule_id": rule_id,
+            "start_time": start_time,
+            "end_time": end_time,
+            "status": "success",
+            "message": (
+                "Retrohunt created successfully. "
+                "Use get_retrohunt to check status."
+            ),
+            "note": (
+                "Retrohunts may take minutes to hours depending on "
+                "data volume."
+            ),
+        }
+
+        logger.info(
+            f"Successfully created retrohunt with operation_id: "
+            f"{operation_id}"
+        )
+        return result
+
+    except Exception as e:
+        logger.error(
+            f"Error creating retrohunt for rule {rule_id}: {str(e)}",
+            exc_info=True,
+        )
+        return {
+            "error": str(e),
+            "rule_id": rule_id,
+            "start_time": start_time,
+            "end_time": end_time,
+            "status": "failed",
+        }
+
+
+@server.tool()
+async def get_retrohunt(
+    rule_id: str,
+    operation_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Get status and results of a retrohunt operation.
+
+    Retrieves the current status, progress, and results of a previously
+    created retrohunt operation. Essential for tracking long-running
+    threat hunting operations and accessing historical detection results.
+
+    **Workflow Integration:**
+    - Monitor progress of threat hunting retrohunt operations.
+    - Retrieve results once retrohunt completes successfully.
+    - Check for errors during retrohunt execution.
+    - Track multiple retrohunts running in parallel.
+
+    **Use Cases:**
+    - "Check if my retrohunt finished running"
+    - "Get results from the retrohunt I started earlier"
+    - "Monitor progress of historical threat hunt"
+    - "Verify retrohunt completed without errors"
+    - "Retrieve detection count from retrohunt"
+
+    **Status Information:**
+    - Completion status (done/in_progress)
+    - Progress percentage if available
+    - Error details if operation failed
+    - Detection count and results when complete
+    - Execution time and metadata
+
+    Args:
+        rule_id (str): Rule ID used to create the retrohunt.
+                      Example: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        operation_id (str): Operation ID from create_retrohunt.
+                           Example: "operations/xxxxxxxx-xxxx-xxxx"
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer ID.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+
+    Returns:
+        Dict[str, Any]: Dictionary containing:
+                       - operation_id: Operation identifier
+                       - rule_id: Rule identifier
+                       - done: Boolean completion status
+                       - progress: Progress info if available
+                       - result: Results if complete
+                       - error: Error message if failed
+
+    Example Usage:
+        status = get_retrohunt(
+            rule_id="ru_661a3961-7370-4be7-abda-f233f7ff29ac",
+            operation_id="operations/12345",
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us"
+        )
+
+    Next Steps (using MCP-enabled tools):
+        - If complete, use `get_rule_detections` to review findings.
+        - Analyze detection results for threat hunting insights.
+        - If failed, check rule syntax with `validate_rule`.
+        - Create new retrohunt with adjusted parameters if needed.
+        - Document findings in investigation or case management.
+    """
+    try:
+        logger.info(
+            f"Getting retrohunt status for rule {rule_id}, "
+            f"operation {operation_id}"
+        )
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        # Get retrohunt status
+        retrohunt_status = chronicle.get_retrohunt(rule_id, operation_id)
+
+        # Extract key information from metadata
+        metadata = retrohunt_status.get("metadata", {})
+        is_complete = metadata.get("done", False)
+
+        result = {
+            "operation_id": operation_id,
+            "rule_id": rule_id,
+            "done": is_complete,
+            "status": metadata.get("status", {}),
+            "create_time": metadata.get("create_time", ""),
+        }
+
+        # Add progress information if available
+        if "progressPercentage" in metadata:
+            result["progress_percentage"] = metadata["progressPercentage"]
+
+        # Add error information if present
+        if "error" in metadata:
+            result["error"] = metadata["error"]
+
+        # Add result information if complete
+        if is_complete and "response" in retrohunt_status:
+            result["result"] = retrohunt_status["response"]
+
+        # Include full raw response for debugging
+        result["raw_response"] = retrohunt_status
+
+        logger.info(
+            f"Retrohunt status retrieved. Complete: {is_complete}, "
+            f"Status: {result.get('status')}"
+        )
+        return result
+
+    except Exception as e:
+        logger.error(
+            f"Error getting retrohunt status for rule {rule_id}, "
+            f"operation {operation_id}: {str(e)}",
+            exc_info=True,
+        )
+        return {
+            "error": str(e),
+            "operation_id": operation_id,
+            "rule_id": rule_id,
+            "done": False,
+        }
+
+
+@server.tool()
+async def search_rule_alerts(
+    start_time: str,
+    end_time: str,
+    page_size: Optional[int] = 10,
+    page_token: Optional[str] = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Search for alerts generated by detection rules across time range.
+
+    Retrieves alerts from all detection rules within specified time window.
+    Returns nested structure with alerts grouped by rule, including event
+    samples and metadata. Essential for alert monitoring and analysis.
+
+    **Workflow Integration:**
+    - Monitor alert activity across all detection rules.
+    - Identify high-noise rules requiring tuning.
+    - Track alert volume trends over time.
+    - Bulk export alerts for analysis or reporting.
+    - Correlate alerts with external security events.
+
+    **Use Cases:**
+    - "Show me all rule alerts from the past 24 hours"
+    - "Which rules generated the most alerts this week?"
+    - "Export all alerts for compliance reporting"
+    - "Find all alerts during incident timeframe"
+    - "Identify rules with high false positive rates"
+
+    **Response Structure:**
+    - Nested structure: ruleAlerts -> alerts
+    - Each ruleAlert contains rule metadata and alert list
+    - Alerts include detection time, event samples, metadata
+    - Pagination support for large result sets
+    - tooManyAlerts flag indicates result truncation
+
+    Args:
+        start_time (str): Start of time range (ISO format).
+                         Example: "2024-01-01T00:00:00Z"
+        end_time (str): End of time range (ISO format).
+                       Example: "2024-01-02T00:00:00Z"
+        page_size (Optional[int]): Maximum alerts per page. Default 10.
+        page_token (Optional[str]): Token for pagination.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer ID.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+
+    Returns:
+        Dict[str, Any]: Dictionary containing:
+                       - ruleAlerts: List of rule alert groups
+                       - tooManyAlerts: Boolean truncation flag
+                       - nextPageToken: Token for next page if available
+                       Returns error dict if API call fails.
+
+    Example Usage:
+        alerts = search_rule_alerts(
+            start_time="2024-01-01T00:00:00Z",
+            end_time="2024-01-02T00:00:00Z",
+            page_size=50,
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us"
+        )
+
+        # Process nested structure
+        for rule_alert in alerts.get("ruleAlerts", []):
+            rule_name = rule_alert["ruleMetadata"]["properties"]["name"]
+            alert_list = rule_alert["alerts"]
+            print(f"Rule: {rule_name}, Alerts: {len(alert_list)}")
+
+    Next Steps (using MCP-enabled tools):
+        - Extract rule IDs and use `get_detection_rule` for details.
+        - Analyze high-volume rules for tuning opportunities.
+        - Use `get_rule_detections` for detailed detection history.
+        - Create exclusions with `create_rule_exclusion` for FPs.
+        - Correlate alerts with other security tool findings.
+        - Export results for reporting or SIEM integration.
+    """
+    try:
+        from datetime import datetime, timezone
+
+        logger.info(f"Searching rule alerts from {start_time} to {end_time}")
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        # Parse time strings to datetime objects
+        if isinstance(start_time, str):
+            start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+        else:
+            start_dt = start_time
+
+        if isinstance(end_time, str):
+            end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+        else:
+            end_dt = end_time
+
+        # Ensure timezone awareness
+        if start_dt.tzinfo is None:
+            start_dt = start_dt.replace(tzinfo=timezone.utc)
+        if end_dt.tzinfo is None:
+            end_dt = end_dt.replace(tzinfo=timezone.utc)
+
+        # Search for rule alerts
+        alerts_response = chronicle.search_rule_alerts(
+            start_time=start_dt,
+            end_time=end_dt,
+            page_size=page_size,
+            page_token=page_token,
+        )
+
+        # Check for too many alerts flag
+        too_many = alerts_response.get("tooManyAlerts", False)
+        if too_many:
+            logger.warning(
+                "Search returned tooManyAlerts=True. "
+                "Consider narrowing time range."
+            )
+
+        # Log summary
+        rule_alerts = alerts_response.get("ruleAlerts", [])
+        total_alerts = sum(len(ra.get("alerts", [])) for ra in rule_alerts)
+        logger.info(
+            f"Found {len(rule_alerts)} rules with {total_alerts} "
+            f"total alerts"
+        )
+
+        return alerts_response
+
+    except Exception as e:
+        logger.error(f"Error searching rule alerts: {str(e)}", exc_info=True)
+        return {
+            "error": str(e),
+            "ruleAlerts": [],
+            "tooManyAlerts": False,
+        }
