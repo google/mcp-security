@@ -25,9 +25,7 @@ Add the following configuration to your MCP client's settings file:
       ],
       "env": {
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     }
 ```
 
