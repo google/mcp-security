@@ -65,7 +65,7 @@ You will be prompted for environment variables for the MCP configuration:
 3. `REGION` (Your Chronicle Region, e.g., `us`, `europe-west1`)
 4. `SERVER_URL` (e.g. https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp, https://chronicle.us.rep.googleapis.com/mcp, etc.)
 
-> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env` and can be referenced by skills.
+> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env` and can be referenced by skills. Also, you can change the values in this file if needed.
 
 ## Available Skills
 
