@@ -27,3 +27,4 @@ from .udm_search import *
 from .search import *
 from .feed_management import *
 from .watchlist_management import *
+from .curated_rules_management import *
