@@ -662,6 +662,131 @@ Their TTPs include:
 The group continues to evolve tactics and primarily targets financial institutions, cryptocurrency exchanges, and organizations in sectors of strategic interest to North Korea.
 ```
 
+### Example 5: Curated Rules Management Workflow
+
+```
+User: What pre-built detection rules does Chronicle offer for Azure security monitoring?
+
+AI uses: list_curated_rule_sets(as_list=True)
+
+AI: I found several curated rule sets for Azure security monitoring:
+
+1. "Azure - Network" - Detects network-based threats in Azure environments
+2. "Azure - Authentication" - Monitors suspicious authentication patterns
+3. "Azure - Storage" - Detects unusual storage access patterns
+
+Would you like to enable any of these?
+
+User: Yes, enable the Azure Network rule set with precise detection mode and alerting turned on.
+
+AI uses: list_curated_rule_sets() to get rule set details
+AI extracts category_id and rule_set_id from the rule set information
+
+AI uses: update_curated_rule_set_deployment(
+  category_id="110fa43d-7165-2355-1985-a63b7cdf90e8",
+  rule_set_id="00ad672e-ebb3-0dd1-2a4d-99bd7c5e5f93",
+  precision="precise",
+  enabled=True,
+  alerting=True
+)
+
+AI: Successfully enabled the "Azure - Network" rule set with:
+- Precision: Precise (lower false positives, better for production alerting)
+- Enabled: Yes
+- Alerting: Yes
+
+The rule set is now actively monitoring your Azure network traffic.
+
+User: Can you show me what detections this rule set has generated in the last 7 days?
+
+AI uses: get_curated_rule_set(rule_set_id="00ad672e-ebb3-0dd1-2a4d-99bd7c5e5f93")
+AI gets the rule IDs from the rule set
+
+AI uses: search_curated_detections(
+  rule_id="ur_azure_network_suspicious_traffic",
+  start_time="2025-01-20T00:00:00Z",
+  end_time="2025-01-27T23:59:59Z"
+)
+
+AI: The Azure Network rule set generated 3 detections in the last 7 days:
+
+1. Suspicious outbound connection from Azure VM to known C2 server
+   Detection Time: 2025-01-25T14:23:45Z
+   Affected Asset: azure-vm-prod-01
+
+2. Unusual data transfer volume to external Azure Storage
+   Detection Time: 2025-01-24T09:15:22Z
+   Affected Asset: azure-app-service-02
+
+3. Port scanning activity from Azure container instance
+   Detection Time: 2025-01-22T16:48:31Z
+   Affected Asset: azure-container-instance-03
+
+Would you like me to investigate any of these detections further?
+```
+
+### Example 6: Watchlist Management
+
+```
+User: Create a watchlist for critical APT threat actors with a 2.5x risk multiplier.
+
+AI uses: create_watchlist(
+  name="apt_threat_actors_2024",
+  display_name="APT Threat Actors 2024",
+  multiplying_factor=2.5,
+  description="High-priority APT groups actively targeting our industry"
+)
+
+AI: I've created the "APT Threat Actors 2024" watchlist with a 2.5x risk multiplier.
+Watchlist ID: abc-123-def
+
+Any entities added to this watchlist will have their risk scores multiplied by 2.5,
+helping prioritize alerts and investigations related to these threat actors.
+
+User: Show me all my watchlists.
+
+AI uses: list_watchlists(as_list=True)
+
+AI: You have 3 watchlists configured:
+
+1. APT Threat Actors 2024 (Risk: 2.5x)
+   - Created: 2024-01-15
+   - For tracking high-priority APT groups
+
+2. Suspicious Domains (Risk: 1.5x)
+   - Created: 2024-01-10
+   - Domains flagged by threat intelligence
+
+3. Legacy Monitoring (Risk: 1.2x)
+   - Created: 2023-12-01
+   - Deprecated systems requiring extra monitoring
+
+User: We have an active campaign. Increase the APT watchlist multiplier to 4.0.
+
+AI uses: update_watchlist(
+  watchlist_id="abc-123-def",
+  multiplying_factor=4.0,
+  description="Increased multiplier due to active campaign against our sector"
+)
+
+AI: Updated the APT Threat Actors 2024 watchlist:
+- Risk multiplier: 2.5x → 4.0x
+- Description updated to note the active campaign
+
+This will significantly elevate the priority of any events involving entities
+on this watchlist.
+
+User: The campaign has ended. We can remove the APT watchlist now.
+
+AI uses: delete_watchlist(
+  watchlist_id="abc-123-def"
+)
+
+AI: Successfully deleted the "APT Threat Actors 2024" watchlist.
+Entities previously on this watchlist will now use their base risk scores
+without the 4.0x multiplier.
+```
+
 ## Additional Resources
 
 - [Chronicle API Documentation](https://cloud.google.com/chronicle/docs/reference/rest)
