@@ -56,14 +56,11 @@ To install this extension in your Gemini CLI environment:
 
 You will be prompted for two environment variables for the MCP configuration:
 
-1. `PROJECT_ID`
-2. `SERVER_URL`
+1. `PROJECT_ID` (GCP Project ID on your SecOps tenant's /settings/profile page)
+2. `SERVER_URL` (e.g. https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp, https://chronicle.us.rep.googleapis.com/mcp, etc.)
 
 ## Available Skills
 
-### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
-*   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/config.json`).
 
 ### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
