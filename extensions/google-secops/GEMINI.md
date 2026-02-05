@@ -34,7 +34,8 @@ The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https:
         "previewFeatures": true
       },
       "experimental": {
-        "skills": true
+        "skills": true,
+        "extensionConfig": true
       }
     }
     ```
@@ -54,27 +55,36 @@ To install this extension in your Gemini CLI environment:
     gemini extensions install ./extensions/google-secops
     ```
 
-You will be prompted for two environment variables for the MCP configuration:
+You will be prompted for environment variables for the MCP configuration:
 
 1. `PROJECT_ID` (GCP Project ID on your SecOps tenant's /settings/profile page)
-2. `SERVER_URL` (e.g. https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp, https://chronicle.us.rep.googleapis.com/mcp, etc.)
+2. `CUSTOMER_ID` (Your Chronicle Customer UUID)
+3. `REGION` (Your Chronicle Region, e.g., `us`, `europe-west1`)
+4. `SERVER_URL` (e.g. https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp, https://chronicle.us.rep.googleapis.com/mcp, etc.)
+
+> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env` and can be referenced by skills.
+
+When using the secops-hosted-mcp MCP Server, use these parameters from the .env for EVERY request:
+Customer ID: ${CUSTOMER_ID}
+Region: ${REGION}
+Project ID: ${PROJECT_ID}
 
 ## Available Skills
 
 
-### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
+### 1. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
 *   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/antigravity/mcp_config.json`).
 
-### 3. Alert Triage (`secops-triage`)
+### 2. Alert Triage (`secops-triage`)
 *   **Trigger**: "Triage alert [ID]", "Analyze case [ID]".
 *   **Function**: Orchestrates a Tier 1 triage workflow by following the `triage_alerts.md` runbook. It checks for duplicates, enriches entities, and provides a classification recommendation (FP/TP).
 
-### 4. Investigation (`secops-investigate`)
+### 3. Investigation (`secops-investigate`)
 *   **Trigger**: "Investigate case [ID]", "Deep dive on [Entity]".
 *   **Function**: Guides deep-dive investigations using specialized runbooks (e.g., Lateral Movement, Malware).
 
-### 5. Threat Hunting (`secops-hunt`)
+### 4. Threat Hunting (`secops-hunt`)
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 

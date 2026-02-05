@@ -34,7 +34,8 @@ The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https:
         "previewFeatures": true
       },
       "experimental": {
-        "skills": true
+        "skills": true,
+        "extensionConfig": true
       }
     }
     ```
@@ -54,30 +55,31 @@ To install this extension in your Gemini CLI environment:
     gemini extensions install ./extensions/google-secops
     ```
 
-You will be prompted for two environment variables for the MCP configuration:
+You will be prompted for environment variables for the MCP configuration:
 
-1. `PROJECT_ID`
-2. `SERVER_URL`
+1. `PROJECT_ID` (GCP Project ID on your SecOps tenant's /settings/profile page)
+2. `CUSTOMER_ID` (Your Chronicle Customer UUID)
+3. `REGION` (Your Chronicle Region, e.g., `us`, `europe-west1`)
+4. `SERVER_URL` (e.g. https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp, https://chronicle.us.rep.googleapis.com/mcp, etc.)
+
+> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env` and can be referenced by skills.
 
 ## Available Skills
 
-### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
-*   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/config.json`).
 
-### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
+### 1. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
 *   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/antigravity/mcp_config.json`).
 
-### 3. Alert Triage (`secops-triage`)
+### 2. Alert Triage (`secops-triage`)
 *   **Trigger**: "Triage alert [ID]", "Analyze case [ID]".
 *   **Function**: Orchestrates a Tier 1 triage workflow by following the `triage_alerts.md` runbook. It checks for duplicates, enriches entities, and provides a classification recommendation (FP/TP).
 
-### 4. Investigation (`secops-investigate`)
+### 3. Investigation (`secops-investigate`)
 *   **Trigger**: "Investigate case [ID]", "Deep dive on [Entity]".
 *   **Function**: Guides deep-dive investigations using specialized runbooks (e.g., Lateral Movement, Malware).
 
-### 5. Threat Hunting (`secops-hunt`)
+### 4. Threat Hunting (`secops-hunt`)
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 
@@ -94,9 +96,10 @@ The skills employ an **Adaptive Execution** strategy to ensure robustness:
 
 1.  **Check Environment**: The skill first identifies which tools are available in the current workspace.
 2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
-3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
+3.  **Fallback to Local**: If remote tools are unavailable, the skill attempts to use **Local Python Tools**.
+    > **Note**: Local tools are not included in this extension release. To use them, you must clone the [Google SecOps MCP Repository](https://github.com/google/mcp-security) and configure the local server separately.
 
-For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
+For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../extensions/google-secops/TOOL_MAPPING.md).
 
 
 ## Cross-Compatibility
@@ -107,14 +110,11 @@ These skills are designed to be compatible with **Claude Code** and other AI age
 *   `personas`: detailed which security personas (e.g., `threat_hunter`) are best suited for the task.
 
 
+## Known Issues
+* If the `SERVER_URL` requires regionalization (i.e. LEP vs REP vs MREP), it can be very difficult for the user to know what value to use.
+
 ## References
 * [Agent Skills Specification](https://agentskills.io/specification)
 * [Gemini CLI Documentation](https://geminicli.com)
 * [Gemini CLI Preview Features](https://geminicli.com/docs/settings/general#previewfeatures)
 * [Antigravity Skills](https://antigravity.google/docs/skills)
-
-
-
-
-
-
