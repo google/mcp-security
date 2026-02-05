@@ -1,7 +1,7 @@
 {
     "mcpServers": {
         "remote-secops-investigate": {
-            "serverUrl": "{{ server_url | default('https://staging-chronicle.sandbox.googleapis.com/mcp') }}",
+            "serverUrl": "{{ server_url | default('https://chronicle.us.googleapis.com/mcp') }}",
             "headers": {
                 "Content-Type": "application/json",
                 "x-goog-user-project": "{{ project_id }}",
@@ -41,7 +41,7 @@
             ]
         },
         "remote-secops-admin": {
-            "serverUrl": "{{ server_url | default('https://staging-chronicle.sandbox.googleapis.com/mcp') }}",
+            "serverUrl": "{{ server_url | default('https://chronicle.us.googleapis.com/mcp') }}",
             "headers": {
                 "Content-Type": "application/json",
                 "x-goog-user-project": "{{ project_id }}",
