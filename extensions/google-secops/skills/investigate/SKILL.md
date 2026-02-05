@@ -1,7 +1,7 @@
 ---
 name: secops-investigate
 description: Expert guidance for deep security investigations. Use this when the user asks to "investigate" a case, entity, or incident.
-slash_command: /security:investigate
+slash_command: /secops:investigate
 category: security_operations
 personas:
   - incident_responder

@@ -1,0 +1,1 @@
+prompt = """Run the secops-investigate skill on case `{{args}}`."""

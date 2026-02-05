@@ -1,7 +1,7 @@
 ---
 name: secops-hunt
 description: Expert guidance for proactive threat hunting. Use this when the user asks to "hunt" for threads, IOCs, or specific TTPs.
-slash_command: /security:hunt
+slash_command: /secops:hunt
 category: security_operations
 personas:
   - threat_hunter

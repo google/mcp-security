@@ -1,7 +1,7 @@
 ---
 name: secops-triage
 description: Expert guidance for security alert triage. Use this when the user asks to "triage" an alert or case.
-slash_command: /security:triage
+slash_command: /secops:triage
 category: security_operations
 personas:
   - tier1_soc_analyst

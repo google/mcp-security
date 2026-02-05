@@ -86,6 +86,19 @@ You will be prompted for environment variables for the MCP configuration:
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 
+### 5. Cases (`secops-cases`)
+*   **Trigger**: "List cases", "Show recent cases", "/secops:cases".
+*   **Function**: Lists recent SOAR cases to verify connectivity and view case status.
+
+## Custom Commands
+
+You can use the following slash commands as shortcuts for common tasks:
+
+*   `/secops:triage <ALERT_ID>`: Quickly start triaging an alert.
+*   `/secops:investigate <CASE_ID>`: Start an investigation.
+*   `/secops:hunt <THREAT>`: Start a threat hunt.
+*   `/secops:cases`: List recent cases.
+
 ## How it Works
 
 These skills act as **Driver Agents** that:
