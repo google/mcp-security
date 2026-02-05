@@ -14,7 +14,7 @@ jobs:
       - name: Create Extension Artifact
         run: |
           cd extensions/google-secops
-          zip -r ../../google-secops.zip .
+          zip -r ../../google-secops.zip . -x "TOOL_MAPPING.md"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

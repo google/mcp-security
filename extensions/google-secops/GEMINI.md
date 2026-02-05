@@ -94,9 +94,10 @@ The skills employ an **Adaptive Execution** strategy to ensure robustness:
 
 1.  **Check Environment**: The skill first identifies which tools are available in the current workspace.
 2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
-3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
+3.  **Fallback to Local**: If remote tools are unavailable, the skill attempts to use **Local Python Tools**.
+    > **Note**: Local tools are not included in this extension release. To use them, you must clone the [Google SecOps MCP Repository](https://github.com/google/mcp-security) and configure the local server separately.
 
-For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
+For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](https://github.com/google/mcp-security/blob/main/extensions/google-secops/TOOL_MAPPING.md).
 
 
 ## Cross-Compatibility
