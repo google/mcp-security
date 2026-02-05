@@ -50,6 +50,11 @@
       "headers": {
         "x-goog-user-project": "${PROJECT_ID}"
       },
+      "env": {
+        "PROJECT_ID": "${PROJECT_ID}",
+        "CUSTOMER_ID": "${CUSTOMER_ID}",
+        "REGION": "${REGION}"
+      },
       "disabledTools": [
         "list_log_types",
         "list_parsers",
