@@ -17,8 +17,8 @@
     },
     {
       "name": "SERVER_URL",
-      "defaultValue": "https://staging-chronicle.sandbox.googleapis.com/mcp",
-      "description": "The URL of the remote MCP server.",
+      "defaultValue": "https://chronicle.us.rep.googleapis.com/mcp",
+      "description": "The URL of the remote MCP server See https://docs.cloud.google.com/chronicle/docs/secops/use-google-secops-mcp.",
       "envVar": "SERVER_URL"
     }
   ],
