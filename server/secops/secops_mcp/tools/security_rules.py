@@ -1144,8 +1144,7 @@ async def get_retrohunt(
 async def search_rule_alerts(
     start_time: str,
     end_time: str,
-    page_size: Optional[int] = 10,
-    page_token: Optional[str] = None,
+    max_alerts: Optional[int] = 10,
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
@@ -1174,7 +1173,6 @@ async def search_rule_alerts(
     - Nested structure: ruleAlerts -> alerts
     - Each ruleAlert contains rule metadata and alert list
     - Alerts include detection time, event samples, metadata
-    - Pagination support for large result sets
     - tooManyAlerts flag indicates result truncation
 
     Args:
@@ -1182,8 +1180,7 @@ async def search_rule_alerts(
                          Example: "2024-01-01T00:00:00Z"
         end_time (str): End of time range (ISO format).
                        Example: "2024-01-02T00:00:00Z"
-        page_size (Optional[int]): Maximum alerts per page. Default 10.
-        page_token (Optional[str]): Token for pagination.
+        max_alerts (Optional[int]): Maximum alerts to return. Default 10.
         project_id (Optional[str]): Google Cloud project ID.
         customer_id (Optional[str]): Chronicle customer ID.
         region (Optional[str]): Chronicle region (e.g., "us", "europe").
@@ -1192,14 +1189,13 @@ async def search_rule_alerts(
         Dict[str, Any]: Dictionary containing:
                        - ruleAlerts: List of rule alert groups
                        - tooManyAlerts: Boolean truncation flag
-                       - nextPageToken: Token for next page if available
                        Returns error dict if API call fails.
 
     Example Usage:
         alerts = search_rule_alerts(
             start_time="2024-01-01T00:00:00Z",
             end_time="2024-01-02T00:00:00Z",
-            page_size=50,
+            max_alerts=50,
             project_id="my-project",
             customer_id="my-customer",
             region="us"
@@ -1247,8 +1243,7 @@ async def search_rule_alerts(
         alerts_response = chronicle.search_rule_alerts(
             start_time=start_dt,
             end_time=end_dt,
-            page_size=page_size,
-            page_token=page_token,
+            page_size=max_alerts,
         )
 
         # Check for too many alerts flag

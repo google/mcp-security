@@ -39,8 +39,6 @@ class TestAdvancedSecurityRulesMCP:
         Args:
             chronicle_config: Dictionary with Chronicle configuration
         """
-        print("\n=== Step 1: Listing security rules ===")
-
         # List rules to get a valid rule_id
         rules_response = await list_security_rules(
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -69,8 +67,6 @@ class TestAdvancedSecurityRulesMCP:
             pytest.skip("Could not extract rule_id from rules response")
 
         print(f"Using rule_id: {rule_id}")
-
-        print("\n=== Step 2: Creating retrohunt ===")
 
         # Define time range for retrohunt
         # Use a range ending a few hours ago to avoid data availability issues
@@ -115,10 +111,6 @@ class TestAdvancedSecurityRulesMCP:
         assert len(create_result["operation_id"]) > 0
 
         operation_id = create_result["operation_id"]
-        print(f"Created retrohunt with operation_id: {operation_id}")
-        print(f"Operation name: {create_result.get('operation_name', 'N/A')}")
-
-        print("\n=== Step 3: Getting retrohunt status ===")
 
         # Get retrohunt status
         status_result = await get_retrohunt(
@@ -144,32 +136,6 @@ class TestAdvancedSecurityRulesMCP:
         assert status_result["operation_id"] == operation_id
         assert status_result["rule_id"] == rule_id
 
-        # Print status details
-        print(
-            f"Retrohunt status: "
-            f"{'Complete' if status_result['done'] else 'In Progress'}"
-        )
-
-        if "status" in status_result:
-            print(f"Status details: {status_result['status']}")
-
-        if "create_time" in status_result:
-            print(f"Create time: {status_result['create_time']}")
-
-        if "progress_percentage" in status_result:
-            print(f"Progress: {status_result['progress_percentage']}%")
-
-        # Check for errors or results
-        if "error" in status_result:
-            print(f"Retrohunt error: {status_result['error']}")
-
-        # If done, may have result
-        if status_result["done"]:
-            if "result" in status_result:
-                print("Retrohunt completed successfully with results")
-            elif "error" not in status_result:
-                print("Retrohunt completed successfully")
-
     @pytest.mark.asyncio
     async def test_search_rule_alerts(
         self, chronicle_config: Dict[str, str]
@@ -190,7 +156,7 @@ class TestAdvancedSecurityRulesMCP:
         result = await search_rule_alerts(
             start_time=start_iso,
             end_time=end_iso,
-            page_size=10,
+            max_alerts=10,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
             customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
             region=chronicle_config["CHRONICLE_REGION"],
@@ -224,15 +190,15 @@ class TestAdvancedSecurityRulesMCP:
                 assert isinstance(first_rule_alert["alerts"], list)
 
     @pytest.mark.asyncio
-    async def test_search_rule_alerts_pagination(
+    async def test_search_rule_alerts_with_max_alerts(
         self, chronicle_config: Dict[str, str]
     ) -> None:
-        """Test searching rule alerts with pagination.
+        """Test searching rule alerts with custom max_alerts limit.
 
         Args:
             chronicle_config: Dictionary with Chronicle configuration
         """
-        # Search for alerts in the last 48 hours with small page size
+        # Search for alerts in the last 48 hours with small limit
         end_time = datetime.now(timezone.utc)
         start_time = end_time - timedelta(hours=48)
 
@@ -243,7 +209,7 @@ class TestAdvancedSecurityRulesMCP:
         result = await search_rule_alerts(
             start_time=start_iso,
             end_time=end_iso,
-            page_size=5,
+            max_alerts=5,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
             customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
             region=chronicle_config["CHRONICLE_REGION"],
@@ -255,9 +221,7 @@ class TestAdvancedSecurityRulesMCP:
         # Should have ruleAlerts key or error key
         assert "ruleAlerts" in result or "error" in result
 
-        # Check for nextPageToken if more results available
-        if "ruleAlerts" in result and len(result["ruleAlerts"]) > 0:
-            # May have nextPageToken if more results available
-            if "nextPageToken" in result:
-                assert isinstance(result["nextPageToken"], str)
-                assert len(result["nextPageToken"]) > 0
+        # Should have tooManyAlerts flag
+        if "ruleAlerts" in result:
+            assert "tooManyAlerts" in result
+            assert isinstance(result["tooManyAlerts"], bool)
