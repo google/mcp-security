@@ -1,0 +1,22 @@
+name: Release Google SecOps Extension
+
+on:
+  push:
+    tags:
+      - 'google-secops-v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Extension Artifact
+        run: |
+          cd extensions/google-secops
+          zip -r ../../google-secops.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: google-secops.zip

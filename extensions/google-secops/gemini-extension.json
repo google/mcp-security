@@ -33,7 +33,16 @@
       },
       "headers": {
         "x-goog-user-project": "${PROJECT_ID}"
-      }
+      },
+      "disabledTools": [
+        "list_log_types",
+        "list_parsers",
+        "list_integrations",
+        "list_integration_actions",
+        "execute_manual_action",
+        "create_reference_list",
+        "get_reference_list"
+      ]
     }
   }
 }
