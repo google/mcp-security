@@ -22,7 +22,10 @@ The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https:
     npm install -g @google/gemini-cli@preview
     ```
 
-2.  **Enable Skills**: Ensure your `~/.gemini/settings.json` has `experimental.skills` enabled:
+
+2.  **GUI Login Requirement**: You MUST have logged into the Google SecOps GUI at least once before using the API/MCP server.
+
+3.  **Enable Skills**: Ensure your `~/.gemini/settings.json` has `experimental.skills` enabled:
     ```json
     {
       "security": {
