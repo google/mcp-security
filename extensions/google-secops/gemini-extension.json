@@ -11,18 +11,21 @@
   "settings": [
     {
       "name": "PROJECT_ID",
+      "defaultValue": "secops-demo-env",
       "description": "Your Google Cloud Project ID (from /settings/profile).",
       "envVar": "PROJECT_ID",
       "sensitive": false
     },
     {
       "name": "CUSTOMER_ID",
+      "defaultValue": "a13f6726-efed-452e-9008-8fe0d3cb0f75",
       "description": "Your Chronicle Customer UUID (from /settings/profile).",
       "envVar": "CUSTOMER_ID",
       "sensitive": false
     },
     {
       "name": "REGION",
+      "defaultValue": "us",
       "description": "Your Chronicle Region (e.g. 'us', 'europe-west1').",
       "envVar": "REGION",
       "sensitive": false
