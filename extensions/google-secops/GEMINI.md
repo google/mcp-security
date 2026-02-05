@@ -105,6 +105,9 @@ These skills are designed to be compatible with **Claude Code** and other AI age
 *   `personas`: detailed which security personas (e.g., `threat_hunter`) are best suited for the task.
 
 
+## Known Issues
+* If the `SERVER_URL` requires regionalization (i.e. LEP vs REP vs MREP), it can be very difficult for the user to know what value to use.
+
 ## References
 * [Agent Skills Specification](https://agentskills.io/specification)
 * [Gemini CLI Documentation](https://geminicli.com)
