@@ -60,11 +60,11 @@ async def lookup_entity(
     - Prevalence information (if available).
 
     Args:
-        entity_value (str): Value to look up (e.g., IP address, domain name, file hash, username).
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours of historical data to consider for the summary. Defaults to 24.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        entity_value: Value to look up (e.g., IP address, domain name, file hash, username).
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        hours_back: How many hours of historical data to consider for the summary. Defaults to 24.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         str: A formatted string summarizing the entity information found in Chronicle within the specified time window,
