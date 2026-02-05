@@ -29,12 +29,7 @@ Add the following configuration to your MCP client's settings file:
       "env": {
         "SOAR_URL": "https://your-soar-instance.example.com",
         "SOAR_APP_KEY": "your-soar-api-key"
-      },
-      "disabled": false,
-      "autoApprove": []
-          },
-      "disabled": false,
-      "autoApprove": []
+      }
     }
 ```
 
