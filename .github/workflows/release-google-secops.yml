@@ -17,6 +17,8 @@ jobs:
         run: |
           cd extensions
           zip -r ../google-secops.zip google-secops -x "google-secops/TOOL_MAPPING.md"
+          # Verify zip content
+          unzip -l ../google-secops.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
