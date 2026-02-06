@@ -134,8 +134,28 @@ These skills are designed to be compatible with **Claude Code** and other AI age
 ## Known Issues
 * If the `SERVER_URL` requires regionalization (i.e. LEP vs REP vs MREP), it can be very difficult for the user to know what value to use.
 
+Documentation says:
+> Server URL or Endpoint: Select the regional endpoint and add /mcp at the end. For example, https://chronicle.us.rep.googleapis.com/mcp
+
+Known-good values for Regional Endpoints (REP):
+* https://chronicle.us-east1.rep.googleapis.com/mcp
+* https://chronicle.africa-south1.rep.googleapis.com/mcp
+* https://chronicle.asia-northeast1.rep.googleapis.com/mcp
+* https://chronicle.me-central1.rep.googleapis.com/mcp
+* https://chronicle.europe-west1.rep.googleapis.com/mcp
+* https://chronicle.northamerica-northeast2.rep.googleapis.com/mcp
+* https://chronicle.southamerica-east1.rep.googleapis.com/mcp
+* https://chronicle.europe-west2.rep.googleapis.com/mcp
+* ...
+
+Known-good values for Multi-Regional Endpoints (MREP):
+* https://chronicle.us.rep.googleapis.com/mcp
+
+
 ## References
 * [Agent Skills Specification](https://agentskills.io/specification)
 * [Gemini CLI Documentation](https://geminicli.com)
 * [Gemini CLI Preview Features](https://geminicli.com/docs/settings/general#previewfeatures)
 * [Antigravity Skills](https://antigravity.google/docs/skills)
+* [Use the Google SecOps MCP server](https://docs.cloud.google.com/chronicle/docs/secops/use-google-secops-mcp)
+* [Chronicle API - Regional service endpoint](https://docs.cloud.google.com/chronicle/docs/reference/rest?rep_location=us)
