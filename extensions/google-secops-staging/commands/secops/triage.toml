@@ -1,0 +1,1 @@
+prompt = """Run the secops-triage skill on alert `{{args}}`."""

@@ -1,0 +1,75 @@
+{
+    "mcpServers": {
+        "remote-secops-investigate": {
+            "serverUrl": "{{ server_url | default('https://chronicle.us.googleapis.com/mcp') }}",
+            "headers": {
+                "Content-Type": "application/json",
+                "x-goog-user-project": "{{ project_id }}",
+                "Authorization": "Bearer {{ auth_token }}"
+            },
+            "disabled": false,
+            "disabledTools": [
+                "list_feeds",
+                "get_feed",
+                "create_feed",
+                "update_feed",
+                "enable_feed",
+                "disable_feed",
+                "delete_feed",
+                "generate_feed_secret",
+                "list_parsers",
+                "get_parser",
+                "run_parser",
+                "create_parser",
+                "activate_parser",
+                "deactivate_parser",
+                "import_logs",
+                "list_log_types",
+                "list_data_tables",
+                "create_data_table",
+                "list_data_table_rows",
+                "add_rows_to_data_table",
+                "delete_data_table_row",
+                "create_reference_list",
+                "get_reference_list",
+                "update_reference_list",
+                "list_playbooks",
+                "list_playbook_instances",
+                "create_rule",
+                "validate_rule",
+                "list_rule_errors"
+            ]
+        },
+        "remote-secops-admin": {
+            "serverUrl": "{{ server_url | default('https://chronicle.us.googleapis.com/mcp') }}",
+            "headers": {
+                "Content-Type": "application/json",
+                "x-goog-user-project": "{{ project_id }}",
+                "Authorization": "Bearer {{ auth_token }}"
+            },
+            "disabled": true,
+            "disabledTools": [
+                "list_cases",
+                "get_case",
+                "update_case",
+                "create_case_comment",
+                "list_case_comments",
+                "execute_bulk_close_case",
+                "execute_manual_action",
+                "list_security_alerts",
+                "get_security_alert",
+                "update_security_alert",
+                "list_case_alerts",
+                "get_case_alert",
+                "update_case_alert",
+                "search_entity",
+                "summarize_entity",
+                "get_involved_entity",
+                "list_involved_entities",
+                "list_connector_events",
+                "get_connector_event",
+                "get_ioc_match"
+            ]
+        }
+    }
+}

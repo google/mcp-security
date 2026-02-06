@@ -138,6 +138,7 @@ env.bak/
 venv.bak/
 .gemini
 extensions/google-secops/skills/setup-antigravity/.env
+extensions/google-secops-staging/.env
 
 # Spyder project settings
 .spyderproject

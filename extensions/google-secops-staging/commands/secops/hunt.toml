@@ -1,0 +1,1 @@
+prompt = """Run the secops-hunt skill for `{{args}}`."""
