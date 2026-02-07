@@ -146,6 +146,23 @@ Chronicle Security Operations suite.
 - **`update_curated_rule_set_deployment(category_id, rule_set_id, precision, enabled, alerting, project_id=None, customer_id=None, region=None)`**
     - Update deployment configuration for a curated rule set. Enables/disables rule sets, configures precision level (broad or precise), and controls alerting settings.
 
+### Watchlist Management Tools
+
+- **`create_watchlist(name, display_name, multiplying_factor, description, project_id=None, customer_id=None, region=None)`**
+    - Creates a new watchlist to track high-risk entities and apply risk score multipliers for prioritizing investigations.
+
+- **`update_watchlist(watchlist_id, display_name=None, description=None, multiplying_factor=None, entity_population_mechanism=None, watchlist_user_preferences=None, project_id=None, customer_id=None, region=None)`**
+    - Updates an existing watchlist's configuration, risk multiplier, or user preferences like pinning.
+
+- **`delete_watchlist(watchlist_id, force=False, project_id=None, customer_id=None, region=None)`**
+    - Permanently removes a watchlist from Chronicle. Use with caution as this operation cannot be undone.
+
+- **`get_watchlist(watchlist_id, project_id=None, customer_id=None, region=None)`**
+    - Retrieves detailed information about a specific watchlist including configuration and entity membership.
+
+- **`list_watchlists(page_size=None, page_token=None, as_list=False, project_id=None, customer_id=None, region=None)`**
+    - Lists all watchlists in Chronicle with pagination support for reviewing configured watchlists.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -163,7 +180,8 @@ The MCP server provides the following capabilities:
 11. **Reference List Management**: Create and manage reference lists for detection rules
 12. **Feed Management**: Create, update, enable, disable, and delete data feeds
 13. **Curated Rules Management**: Discover, retrieve, and manage Google-curated detection content and rule set deployments
-14. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
+14. **Watchlist Management**: Create, update, delete, and list watchlists for entity risk scoring
+15. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
 
@@ -179,6 +197,7 @@ These tools focus on core security operations tasks:
 - **Rule Management**: Use `list_security_rules` and `search_security_rules` to manage detection rules
 - **Threat Intelligence**: Use `get_ioc_matches` and `get_threat_intel` for IOC analysis and AI-powered insights
 - **Curated Rules Management**: Use curated rules management tools to discover, enable, and configure Google-maintained detection content
+- **Watchlist Management**: Use `create_watchlist`, `update_watchlist`, `list_watchlists`, `get_watchlist`, and `delete_watchlist` to manage entity watchlists with risk score multipliers for prioritizing high-risk entities
 - **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools
