@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 
 from google.api_core import exceptions as google_exceptions
 from google.cloud import asset_v1
-from google.cloud import securitycenter
+from google.cloud import securitycenter_v2
 from google.protobuf import json_format 
 from mcp.server.fastmcp import FastMCP
 
@@ -41,7 +41,7 @@ logging.getLogger().addHandler(handler)
 # Ensure ADC are configured in the environment where the server runs
 # (e.g., by running `gcloud auth application-default login`).
 try:
-    scc_client = securitycenter.SecurityCenterClient()
+    scc_client = securitycenter_v2.SecurityCenterClient()
     logger.info("Successfully initialized Google Cloud Security Center Client.")
 except Exception as e:
     logger.error(f"Failed to initialize Security Center Client: {e}", exc_info=True)
