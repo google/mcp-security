@@ -15,7 +15,7 @@
 
 ENV_SOAR_URL = "SOAR_URL"
 ENV_SOAR_APP_KEY = "SOAR_APP_KEY"
-
+ENV_SOAR_SSL_VERIFY = "SOAR_SSL_VERIFY"
 
 class Endpoints:
     """Endpoints for SOAR."""
@@ -40,3 +40,4 @@ class Endpoints:
     LIST_INVOLVED_EVENTS_BY_ALERT = (
         "/api/1p/external/v1.0/cases/{CASE_ID}/alerts/{ALERT_ID}/involvedEvents"
     )
+    
