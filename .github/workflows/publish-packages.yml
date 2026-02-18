@@ -88,7 +88,7 @@ jobs:
             
             # Release event - check if this package matches the release tag
             if [ "${{ github.event_name }}" == "release" ]; then
-              TAG_NAME="${{ github.event.release.tag_name }}"
+              TAG_NAME="${GITHUB_EVENT_RELEASE_TAG_NAME}"
               
               # Check if this release tag is for this package
               if [[ $TAG_NAME =~ ^${package_path}-v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
@@ -117,7 +117,7 @@ jobs:
             # Manual workflow dispatch - check if this package is in the requested tags
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
               # Comma-separated list of tags
-              IFS=',' read -ra TAG_LIST <<< "${{ github.event.inputs.tags }}"
+              IFS=',' read -ra TAG_LIST <<< "${GITHUB_EVENT_INPUTS_TAGS}"
               
               for TAG in "${TAG_LIST[@]}"; do
                 # Remove any whitespace
@@ -177,6 +177,9 @@ jobs:
           check_version_change "scc" "scc_changed" "scc_name" "scc_current_ver" "scc_pub_status" "scc_status"
           check_version_change "secops" "secops_changed" "secops_name" "secops_current_ver" "secops_pub_status" "secops_status"
           check_version_change "secops-soar" "soar_changed" "soar_name" "soar_current_ver" "soar_pub_status" "soar_status"
+        env:
+          GITHUB_EVENT_RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+          GITHUB_EVENT_INPUTS_TAGS: ${{ github.event.inputs.tags }}
 
   display_summary:
     needs: detect_changes
@@ -195,13 +198,13 @@ jobs:
           
           # Display trigger information
           if [ "${{ github.event_name }}" == "release" ]; then
-            echo "::notice title=Trigger::Release triggered with tag ${{ github.event.release.tag_name }}"
+            echo "::notice title=Trigger::Release triggered with tag ${GITHUB_EVENT_RELEASE_TAG_NAME}"
             echo "### Publishing triggered by GitHub Release" >> $GITHUB_STEP_SUMMARY
-            echo "* Release tag: \`${{ github.event.release.tag_name }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "* Release tag: \`${GITHUB_EVENT_RELEASE_TAG_NAME}\`" >> $GITHUB_STEP_SUMMARY
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "::notice title=Trigger::Manual trigger with tags: ${{ github.event.inputs.tags }}"
+            echo "::notice title=Trigger::Manual trigger with tags: ${GITHUB_EVENT_INPUTS_TAGS}"
             echo "### 🔖 Publishing triggered manually with tags" >> $GITHUB_STEP_SUMMARY
-            echo "* Tags: \`${{ github.event.inputs.tags }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "* Tags: \`${GITHUB_EVENT_INPUTS_TAGS}\`" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "## Package Changes Summary" >> $GITHUB_STEP_SUMMARY
@@ -212,46 +215,46 @@ jobs:
           summary=""
           
           # GTI
-          if [ "${{ needs.detect_changes.outputs.gti_changed }}" == "true" ]; then
-            echo "::notice title=Package Change::GTI ${{ needs.detect_changes.outputs.gti_status }}"
-            summary="$summary\n- GTI: ${{ needs.detect_changes.outputs.gti_status }}"
-            echo "| GTI | Will publish | ${{ needs.detect_changes.outputs.gti_current_ver }} | ${{ needs.detect_changes.outputs.gti_pub_status }} |" >> $GITHUB_STEP_SUMMARY
-            echo "GTI: Will publish v${{ needs.detect_changes.outputs.gti_current_ver }}"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED}" == "true" ]; then
+            echo "::notice title=Package Change::GTI ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_STATUS}"
+            summary="$summary\n- GTI: ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_STATUS}"
+            echo "| GTI | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
+            echo "GTI: Will publish v${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER}"
           else
-            echo "| GTI | No publication | ${{ needs.detect_changes.outputs.gti_current_ver }} | ${{ needs.detect_changes.outputs.gti_pub_status }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| GTI | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
             echo "GTI: No publication needed"
           fi
           
           # SCC
-          if [ "${{ needs.detect_changes.outputs.scc_changed }}" == "true" ]; then
-            echo "::notice title=Package Change::SCC ${{ needs.detect_changes.outputs.scc_status }}"
-            summary="$summary\n- SCC: ${{ needs.detect_changes.outputs.scc_status }}"
-            echo "| SCC | Will publish | ${{ needs.detect_changes.outputs.scc_current_ver }} | ${{ needs.detect_changes.outputs.scc_pub_status }} |" >> $GITHUB_STEP_SUMMARY
-            echo "SCC: Will publish v${{ needs.detect_changes.outputs.scc_current_ver }}"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED}" == "true" ]; then
+            echo "::notice title=Package Change::SCC ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_STATUS}"
+            summary="$summary\n- SCC: ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_STATUS}"
+            echo "| SCC | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
+            echo "SCC: Will publish v${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER}"
           else
-            echo "| SCC | No publication | ${{ needs.detect_changes.outputs.scc_current_ver }} | ${{ needs.detect_changes.outputs.scc_pub_status }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| SCC | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
             echo "SCC: No publication needed"
           fi
           
           # SecOps
-          if [ "${{ needs.detect_changes.outputs.secops_changed }}" == "true" ]; then
-            echo "::notice title=Package Change::SecOps ${{ needs.detect_changes.outputs.secops_status }}"
-            summary="$summary\n- SecOps: ${{ needs.detect_changes.outputs.secops_status }}"
-            echo "| SecOps | Will publish | ${{ needs.detect_changes.outputs.secops_current_ver }} | ${{ needs.detect_changes.outputs.secops_pub_status }} |" >> $GITHUB_STEP_SUMMARY
-            echo "SecOps: Will publish v${{ needs.detect_changes.outputs.secops_current_ver }}"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED}" == "true" ]; then
+            echo "::notice title=Package Change::SecOps ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_STATUS}"
+            summary="$summary\n- SecOps: ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_STATUS}"
+            echo "| SecOps | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
+            echo "SecOps: Will publish v${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER}"
           else
-            echo "| SecOps | No publication | ${{ needs.detect_changes.outputs.secops_current_ver }} | ${{ needs.detect_changes.outputs.secops_pub_status }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| SecOps | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
             echo "SecOps: No publication needed"
           fi
           
           # SecOps SOAR
-          if [ "${{ needs.detect_changes.outputs.soar_changed }}" == "true" ]; then
-            echo "::notice title=Package Change::SecOps SOAR ${{ needs.detect_changes.outputs.soar_status }}"
-            summary="$summary\n- SecOps SOAR: ${{ needs.detect_changes.outputs.soar_status }}"
-            echo "| SecOps SOAR | Will publish | ${{ needs.detect_changes.outputs.soar_current_ver }} | ${{ needs.detect_changes.outputs.soar_pub_status }} |" >> $GITHUB_STEP_SUMMARY
-            echo "SecOps SOAR: Will publish v${{ needs.detect_changes.outputs.soar_current_ver }}"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED}" == "true" ]; then
+            echo "::notice title=Package Change::SecOps SOAR ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_STATUS}"
+            summary="$summary\n- SecOps SOAR: ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_STATUS}"
+            echo "| SecOps SOAR | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
+            echo "SecOps SOAR: Will publish v${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER}"
           else
-            echo "| SecOps SOAR | No publication | ${{ needs.detect_changes.outputs.soar_current_ver }} | ${{ needs.detect_changes.outputs.soar_pub_status }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| SecOps SOAR | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_PUB_STATUS} |" >> $GITHUB_STEP_SUMMARY
             echo "SecOps SOAR: No publication needed"
           fi
           
@@ -270,13 +273,13 @@ jobs:
           # Add trigger information to artifact
           if [ "${{ github.event_name }}" == "release" ]; then
             echo "## Release Trigger" >> package_changes.md
-            echo "* Release tag: \`${{ github.event.release.tag_name }}\`" >> package_changes.md
-            echo "* Release title: ${{ github.event.release.name }}" >> package_changes.md
-            echo "* Created by: ${{ github.event.release.author.login }}" >> package_changes.md
+            echo "* Release tag: \`${GITHUB_EVENT_RELEASE_TAG_NAME}\`" >> package_changes.md
+            echo "* Release title: ${GITHUB_EVENT_RELEASE_NAME}" >> package_changes.md
+            echo "* Created by: ${GITHUB_EVENT_RELEASE_AUTHOR_LOGIN}" >> package_changes.md
             echo "" >> package_changes.md
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "## Manual Trigger with Tags" >> package_changes.md
-            echo "* Tags: \`${{ github.event.inputs.tags }}\`" >> package_changes.md
+            echo "* Tags: \`${GITHUB_EVENT_INPUTS_TAGS}\`" >> package_changes.md
             echo "" >> package_changes.md
           fi
           
@@ -284,33 +287,54 @@ jobs:
           echo "| Package | Status | Current Version | Publication Status |" >> package_changes.md
           echo "|---------|--------|-----------------|-------------------|" >> package_changes.md
           
-          if [ "${{ needs.detect_changes.outputs.gti_changed }}" == "true" ]; then
-            echo "| GTI | Will publish | ${{ needs.detect_changes.outputs.gti_current_ver }} | ${{ needs.detect_changes.outputs.gti_pub_status }} |" >> package_changes.md
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED}" == "true" ]; then
+            echo "| GTI | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_PUB_STATUS} |" >> package_changes.md
           else
-            echo "| GTI | No publication | ${{ needs.detect_changes.outputs.gti_current_ver }} | ${{ needs.detect_changes.outputs.gti_pub_status }} |" >> package_changes.md
+            echo "| GTI | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_PUB_STATUS} |" >> package_changes.md
           fi
           
-          if [ "${{ needs.detect_changes.outputs.scc_changed }}" == "true" ]; then
-            echo "| SCC | Will publish | ${{ needs.detect_changes.outputs.scc_current_ver }} | ${{ needs.detect_changes.outputs.scc_pub_status }} |" >> package_changes.md
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED}" == "true" ]; then
+            echo "| SCC | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_PUB_STATUS} |" >> package_changes.md
           else
-            echo "| SCC | No publication | ${{ needs.detect_changes.outputs.scc_current_ver }} | ${{ needs.detect_changes.outputs.scc_pub_status }} |" >> package_changes.md
+            echo "| SCC | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_PUB_STATUS} |" >> package_changes.md
           fi
           
-          if [ "${{ needs.detect_changes.outputs.secops_changed }}" == "true" ]; then
-            echo "| SecOps | Will publish | ${{ needs.detect_changes.outputs.secops_current_ver }} | ${{ needs.detect_changes.outputs.secops_pub_status }} |" >> package_changes.md
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED}" == "true" ]; then
+            echo "| SecOps | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_PUB_STATUS} |" >> package_changes.md
           else
-            echo "| SecOps | No publication | ${{ needs.detect_changes.outputs.secops_current_ver }} | ${{ needs.detect_changes.outputs.secops_pub_status }} |" >> package_changes.md
+            echo "| SecOps | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_PUB_STATUS} |" >> package_changes.md
           fi
           
-          if [ "${{ needs.detect_changes.outputs.soar_changed }}" == "true" ]; then
-            echo "| SecOps SOAR | Will publish | ${{ needs.detect_changes.outputs.soar_current_ver }} | ${{ needs.detect_changes.outputs.soar_pub_status }} |" >> package_changes.md
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED}" == "true" ]; then
+            echo "| SecOps SOAR | Will publish | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_PUB_STATUS} |" >> package_changes.md
           else
-            echo "| SecOps SOAR | No publication | ${{ needs.detect_changes.outputs.soar_current_ver }} | ${{ needs.detect_changes.outputs.soar_pub_status }} |" >> package_changes.md
+            echo "| SecOps SOAR | No publication | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER} | ${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_PUB_STATUS} |" >> package_changes.md
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Please review and approve this publication request" >> $GITHUB_STEP_SUMMARY
           echo "_Packages will be published to PyPI_" >> $GITHUB_STEP_SUMMARY
+        env:
+          GITHUB_EVENT_RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+          GITHUB_EVENT_INPUTS_TAGS: ${{ github.event.inputs.tags }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED: ${{ needs.detect_changes.outputs.gti_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_STATUS: ${{ needs.detect_changes.outputs.gti_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER: ${{ needs.detect_changes.outputs.gti_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_PUB_STATUS: ${{ needs.detect_changes.outputs.gti_pub_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED: ${{ needs.detect_changes.outputs.scc_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_STATUS: ${{ needs.detect_changes.outputs.scc_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER: ${{ needs.detect_changes.outputs.scc_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_PUB_STATUS: ${{ needs.detect_changes.outputs.scc_pub_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED: ${{ needs.detect_changes.outputs.secops_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_STATUS: ${{ needs.detect_changes.outputs.secops_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER: ${{ needs.detect_changes.outputs.secops_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_PUB_STATUS: ${{ needs.detect_changes.outputs.secops_pub_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED: ${{ needs.detect_changes.outputs.soar_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_STATUS: ${{ needs.detect_changes.outputs.soar_status }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER: ${{ needs.detect_changes.outputs.soar_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_PUB_STATUS: ${{ needs.detect_changes.outputs.soar_pub_status }}
+          GITHUB_EVENT_RELEASE_NAME: ${{ github.event.release.name }}
+          GITHUB_EVENT_RELEASE_AUTHOR_LOGIN: ${{ github.event.release.author.login }}
       
   request_approval:
     needs: [detect_changes, display_summary]
@@ -355,20 +379,20 @@ jobs:
           echo "# Packages Approved for Publication" >> $GITHUB_STEP_SUMMARY
           
           # Add each package to the summary
-          if [ "${{ needs.detect_changes.outputs.gti_changed }}" == "true" ]; then
-            echo "- **${{ needs.detect_changes.outputs.gti_name }}** (${{ needs.detect_changes.outputs.gti_current_ver }})" >> $GITHUB_STEP_SUMMARY
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED}" == "true" ]; then
+            echo "- **${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_NAME}** (${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER})" >> $GITHUB_STEP_SUMMARY
           fi
           
-          if [ "${{ needs.detect_changes.outputs.scc_changed }}" == "true" ]; then
-            echo "- **${{ needs.detect_changes.outputs.scc_name }}** (${{ needs.detect_changes.outputs.scc_current_ver }})" >> $GITHUB_STEP_SUMMARY
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED}" == "true" ]; then
+            echo "- **${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_NAME}** (${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER})" >> $GITHUB_STEP_SUMMARY
           fi
           
-          if [ "${{ needs.detect_changes.outputs.secops_changed }}" == "true" ]; then
-            echo "- **${{ needs.detect_changes.outputs.secops_name }}** (${{ needs.detect_changes.outputs.secops_current_ver }})" >> $GITHUB_STEP_SUMMARY
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED}" == "true" ]; then
+            echo "- **${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_NAME}** (${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER})" >> $GITHUB_STEP_SUMMARY
           fi
           
-          if [ "${{ needs.detect_changes.outputs.soar_changed }}" == "true" ]; then
-            echo "- **${{ needs.detect_changes.outputs.soar_name }}** (${{ needs.detect_changes.outputs.soar_current_ver }})" >> $GITHUB_STEP_SUMMARY
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED}" == "true" ]; then
+            echo "- **${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_NAME}** (${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER})" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -376,21 +400,34 @@ jobs:
           
           # Also display as GitHub notices
           echo "::notice title=Packages Approved for Publication::The following packages will be published:"
-          if [ "${{ needs.detect_changes.outputs.gti_changed }}" == "true" ]; then
-            echo "::notice::${{ needs.detect_changes.outputs.gti_name }} (${{ needs.detect_changes.outputs.gti_current_ver }})"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED}" == "true" ]; then
+            echo "::notice::${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_NAME} (${NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER})"
           fi
           
-          if [ "${{ needs.detect_changes.outputs.scc_changed }}" == "true" ]; then
-            echo "::notice::${{ needs.detect_changes.outputs.scc_name }} (${{ needs.detect_changes.outputs.scc_current_ver }})"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED}" == "true" ]; then
+            echo "::notice::${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_NAME} (${NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER})"
           fi
           
-          if [ "${{ needs.detect_changes.outputs.secops_changed }}" == "true" ]; then
-            echo "::notice::${{ needs.detect_changes.outputs.secops_name }} (${{ needs.detect_changes.outputs.secops_current_ver }})"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED}" == "true" ]; then
+            echo "::notice::${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_NAME} (${NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER})"
           fi
           
-          if [ "${{ needs.detect_changes.outputs.soar_changed }}" == "true" ]; then
-            echo "::notice::${{ needs.detect_changes.outputs.soar_name }} (${{ needs.detect_changes.outputs.soar_current_ver }})"
+          if [ "${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED}" == "true" ]; then
+            echo "::notice::${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_NAME} (${NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER})"
           fi
+        env:
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CHANGED: ${{ needs.detect_changes.outputs.gti_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_NAME: ${{ needs.detect_changes.outputs.gti_name }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_GTI_CURRENT_VER: ${{ needs.detect_changes.outputs.gti_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CHANGED: ${{ needs.detect_changes.outputs.scc_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_NAME: ${{ needs.detect_changes.outputs.scc_name }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SCC_CURRENT_VER: ${{ needs.detect_changes.outputs.scc_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CHANGED: ${{ needs.detect_changes.outputs.secops_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_NAME: ${{ needs.detect_changes.outputs.secops_name }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SECOPS_CURRENT_VER: ${{ needs.detect_changes.outputs.secops_current_ver }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CHANGED: ${{ needs.detect_changes.outputs.soar_changed }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_NAME: ${{ needs.detect_changes.outputs.soar_name }}
+          NEEDS_DETECT_CHANGES_OUTPUTS_SOAR_CURRENT_VER: ${{ needs.detect_changes.outputs.soar_current_ver }}
       
       - name: Update deployment status
         if: always()
