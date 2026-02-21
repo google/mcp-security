@@ -367,6 +367,29 @@ Check your PATH(s):
 
 ```python --version || python3 --version```
 
+#### SecOps SOAR: SSL Certificate Verification Error
+
+If the SOAR MCP server fails to start with an error about SSL certificate verification
+(or the generic "Failed to fetch valid scopes from SOAR"), this is typically caused by
+Python not having access to the correct CA certificates. This is especially common on
+**macOS**.
+
+**Fix for macOS** — run the `Install Certificates.command` script bundled with your
+Python installation (replace `3.12` with your actual Python minor version):
+
+```bash
+/Applications/Python\ 3.12/Install\ Certificates.command
+```
+
+**Fix for all platforms:**
+
+```bash
+pip install --upgrade certifi
+```
+
+Then restart the MCP server. See the [SOAR server README](server/secops-soar/README.md#troubleshooting)
+for more details.
+
 
 
 ### Installing in Claude Desktop
