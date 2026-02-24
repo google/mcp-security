@@ -23,6 +23,7 @@ from typing import Dict
 import vt
 
 from mcp.server.fastmcp import FastMCP, Context
+from mcp.server.transport_security import TransportSecuritySettings
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -90,7 +91,11 @@ async def vt_client(ctx: Context) -> AsyncIterator[vt.Client]:
 server = FastMCP(
     "Google Threat Intelligence MCP server",
     dependencies=["vt-py"],
-    stateless_http=stateless)
+    stateless_http=stateless,
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=False,
+    ),
+)
 
 # Load tools.
 from gti_mcp.tools import *
