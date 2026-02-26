@@ -8,7 +8,7 @@ This repository contains Model Context Protocol (MCP) servers that enable MCP cl
 4. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
 5. **Security Command Center (SCC)** - For cloud security and risk management
 
-For the new **Remote MCP Server**, please see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559) and the [setup guide](docs/remote_server.md).
+For the new **Remote MCP Server**, please see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559), the [setup guide](docs/remote_server.md), and the [Antigravity setup guide](docs/remote_mcp_antigravity_setup.md).
 
 Each server can be enabled and run separately, allowing flexibility for environments that don't require all capabilities.
 
