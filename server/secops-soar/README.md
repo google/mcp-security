@@ -124,6 +124,69 @@ $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 -   Python 3.11+
 -   SOAR URL and AppKey
 
+## Troubleshooting
+
+### SSL Certificate Verification Error
+
+If you see an error like:
+
+```
+SSL certificate verification failed when connecting to SOAR.
+```
+
+or the older generic message:
+
+```
+Failed to fetch valid scopes from SOAR
+```
+
+This is typically caused by Python not having access to the correct CA (Certificate Authority) certificates. This is especially common on **macOS**.
+
+**Fix for macOS:**
+
+Run the `Install Certificates.command` script that ships with your Python installation. Replace `3.12` with your actual Python minor version:
+
+```bash
+/Applications/Python\ 3.12/Install\ Certificates.command
+```
+
+This installs the [`certifi`](https://pypi.org/project/certifi/) CA bundle, which Python needs for SSL/TLS verification.
+
+**Fix for all platforms:**
+
+```bash
+pip install --upgrade certifi
+```
+
+Then restart the MCP server.
+
+For further details, see the [usage guide](https://google.github.io/mcp-security/usage_guide.html#mcp-server-configuration-reference).
+
+### Connection Error
+
+If you see:
+
+```
+Failed to connect to SOAR at '<your-url>'.
+```
+
+Verify that:
+1. The `SOAR_URL` environment variable is set correctly (e.g., `https://yours-here.siemplify-soar.com:443`).
+2. The SOAR server is reachable from your network.
+3. Any required VPN or proxy is active.
+
+### Invalid Credentials
+
+If you see:
+
+```
+Failed to fetch valid scopes from SOAR.
+```
+
+Verify that:
+1. `SOAR_URL` is set and correct.
+2. `SOAR_APP_KEY` is set and valid.
+
 ## License
 
 Apache 2.0

@@ -17,6 +17,7 @@ import asyncio
 import importlib
 from pathlib import Path
 from secops_soar_mcp import bindings
+from secops_soar_mcp.http_client import SoarSSLError, SoarConnectionError
 from mcp.server.fastmcp import FastMCP
 from logger_utils import get_logger, setup_logging
 from secops_soar_mcp.case_management import (
@@ -165,6 +166,10 @@ async def main():
         await bindings.bind()
         register_tools(args.integrations)
         await mcp.run_stdio_async()
+    except SoarSSLError as e:
+        logger.error("\n%s", e)
+    except SoarConnectionError as e:
+        logger.error("\n%s", e)
     except Exception as e:
         logger.error("Error: %s", e)
     finally:
