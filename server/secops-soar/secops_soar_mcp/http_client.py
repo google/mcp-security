@@ -25,10 +25,11 @@ logger = get_logger(__name__)
 class HttpClient:
     """HTTP client for making requests to the SecOps SOAR API."""
 
-    def __init__(self, base_url: str, app_key: str):
+    def __init__(self, base_url: str, app_key: str, ssl_verify: bool = True):
         self.base_url = base_url
         self.app_key = app_key
         self._session = None
+        self.ssl_verify = ssl_verify
 
     def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None:
@@ -58,7 +59,7 @@ class HttpClient:
         headers = await self._get_headers()
         try:
             async with self._get_session().get(
-                self.base_url + endpoint, params=params, headers=headers
+                self.base_url + endpoint, params=params, headers=headers, ssl=self.ssl_verify
             ) as response:
                 response.raise_for_status()  # Raise an exception for 4xx/5xx responses
                 return await response.json()
@@ -87,7 +88,7 @@ class HttpClient:
         headers = await self._get_headers()
         try:
             async with self._get_session().post(
-                self.base_url + endpoint, json=req, params=params, headers=headers
+                self.base_url + endpoint, json=req, params=params, headers=headers, ssl=self.ssl_verify
             ) as response:
                 response.raise_for_status()
                 data = await response.content.read()
@@ -118,7 +119,7 @@ class HttpClient:
         headers = await self._get_headers()
         try:
             async with self._get_session().patch(
-                self.base_url + endpoint, json=req, params=params, headers=headers
+                self.base_url + endpoint, json=req, params=params, headers=headers, ssl=self.ssl_verify
             ) as response:
                 response.raise_for_status()
                 return await response.json()
@@ -129,4 +130,5 @@ class HttpClient:
         return None
 
     async def close(self):
-        await self._get_session().close()
+        if self._session:
+            await self._get_session().close()

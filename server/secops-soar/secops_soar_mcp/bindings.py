@@ -41,12 +41,20 @@ async def _get_valid_scopes():
 async def bind():
     """Binds global variables."""
     global http_client, valid_scopes
+    
+    # Parse SSL_VERIFY from env, default to True if not set
+    ssl_verify_raw = os.getenv(consts.ENV_SOAR_SSL_VERIFY, "true").lower()
+    ssl_verify = ssl_verify_raw == "true"
+
     http_client = HttpClient(
-        os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
+        os.getenv(consts.ENV_SOAR_URL),
+        os.getenv(consts.ENV_SOAR_APP_KEY),
+        ssl_verify
     )
     valid_scopes = await _get_valid_scopes()
 
 
 async def cleanup():
     """Cleans up global variables."""
-    await http_client.close()
+    if http_client:
+        await http_client.close()
