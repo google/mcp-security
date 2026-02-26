@@ -1,0 +1,1090 @@
+description = "Implement slash commands to call Google Threat Intelligence MCP Tools"
+prompt = """
+You are implementing /slash-commands to call the available Google Threat Intelligence MCP Tools
+"""
+
+# GTI search_threats
+[[subCommands]]
+name = "search-threats"
+description = "Search for threats in Google Threat Intelligence platform (threat actors, malware families, campaigns, reports, vulnerabilities)"
+prompt = """
+{% if help %}
+Usage: /gti search-threats [OPTIONS]
+
+Search threats in the Google Threat Intelligence platform.
+
+Threats are modeled as collections. This command provides a unified search across
+all threat types with optional filtering by collection type for more precise results.
+
+Options:
+  --query            Search query to find threats [REQUIRED]
+  --collection-type  Filter by threat type (optional)
+  --limit           Maximum number of threats to return (default: 5)
+  --order-by        Sort order (default: "relevance-")
+  --help            Show this help message
+
+Collection Types:
+  threat-actor      Search for specific actors, groups, or APTs
+  malware-family    Search for malware, trojans, viruses, ransomware families
+  software-toolkit  Search for legitimate tools often used with malware
+  campaign          Search for specific attack campaigns
+  report            Search for analysis reports
+  vulnerability     Search for specific CVEs or vulnerabilities
+  collection        Generic collections (use if no other type fits)
+
+Order By Options:
+  relevance+ / relevance-     Sort by relevance (ascending/descending)
+  creation_date+ / creation_date-  Sort by creation date
+
+Examples:
+  /gti search-threats --query="APT41"                    # Search all threat types
+  /gti search-threats --query="ransomware" --collection-type="malware-family"
+  /gti search-threats --query="Log4j" --collection-type="vulnerability" --limit=10
+  /gti search-threats --query="Cobalt Strike" --collection-type="software-toolkit"
+  /gti search-threats --query="NotPetya" --order-by="creation_date-"
+
+The response includes:
+- Full collection objects with detailed threat information
+- Threat actor details, TTPs, and associations
+- Malware family characteristics and indicators
+- Campaign timelines and targets
+- Vulnerability details and exploitation information
+
+Use Cases:
+- Research specific threat actors or groups
+- Find information about malware families
+- Investigate attack campaigns
+- Get context on vulnerabilities
+- Discover related threats and associations
+
+Next Steps:
+- Use /gti get-collection --id=ID for detailed collection information
+- Use /gti collection-timeline --id=ID for threat actor/campaign timelines
+- Use /gti collection-mitre --id=ID for MITRE ATT&CK mappings
+{% else %}
+Call the search_threats tool with: `search_threats(query={{query}}, collection_type={{collection-type}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find threats"
+  [[subCommands.args]]
+  name = "collection-type"
+  required = false
+  description = "Filter by threat type (threat-actor, malware-family, software-toolkit, campaign, report, vulnerability, collection)"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "5"
+  description = "Maximum number of threats to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "relevance-"
+  description = "Order results by relevance or creation_date (+ for ascending, - for descending)"
+
+# GTI search_campaigns
+[[subCommands]]
+name = "search-campaigns"
+description = "Search threat campaigns in Google Threat Intelligence platform"
+prompt = """
+{% if help %}
+Usage: /gti search-campaigns [OPTIONS]
+
+Search threat campaigns in the Google Threat Intelligence platform.
+
+Campaigns are modeled as collections representing coordinated attack activities
+by threat actors targeting specific organizations, industries, or regions.
+
+Options:
+  --query      Search query to find campaigns [REQUIRED]
+  --limit      Maximum number of campaigns to return (default: 10)
+  --order-by   Sort order (default: "relevance-")
+  --help       Show this help message
+
+Examples:
+  /gti search-campaigns --query="SolarWinds"           # Search for SolarWinds campaign
+  /gti search-campaigns --query="healthcare" --limit=20    # Campaigns targeting healthcare
+  /gti search-campaigns --query="APT1" --order-by="creation_date-"
+  /gti search-campaigns --query="ransomware 2023"     # Recent ransomware campaigns
+
+Use Cases:
+- Research major attack campaigns
+- Find campaigns targeting specific industries
+- Investigate coordinated threat actor activities
+- Analyze campaign TTPs and indicators
+
+Next Steps:
+- Use /gti get-collection --id=ID for detailed campaign information
+- Use /gti collection-timeline --id=ID for campaign timeline events
+- Use /gti collection-relations --id=ID to find related entities
+{% else %}
+Call the search_campaigns tool with: `search_campaigns(query={{query}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find campaigns"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of campaigns to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "relevance-"
+  description = "Order results by relevance or creation_date"
+
+# GTI search_threat_actors
+[[subCommands]]
+name = "search-actors"
+description = "Search threat actors in Google Threat Intelligence platform"
+prompt = """
+{% if help %}
+Usage: /gti search-actors [OPTIONS]
+
+Search threat actors in the Google Threat Intelligence platform.
+
+Threat actors are modeled as collections representing individuals, groups,
+or organizations conducting malicious cyber activities.
+
+Options:
+  --query      Search query to find threat actors [REQUIRED]
+  --limit      Maximum number of actors to return (default: 10)
+  --order-by   Sort order (default: "relevance-")
+  --help       Show this help message
+
+Examples:
+  /gti search-actors --query="APT28"                  # Search for specific APT group
+  /gti search-actors --query="Lazarus Group"          # Search by group name
+  /gti search-actors --query="ransomware" --limit=15  # Actors involved in ransomware
+  /gti search-actors --query="nation-state China"     # Chinese nation-state actors
+
+Use Cases:
+- Research specific APT groups or threat actors
+- Find actors associated with particular malware families
+- Investigate nation-state threat groups
+- Analyze actor TTPs and capabilities
+
+Next Steps:
+- Use /gti get-collection --id=ID for detailed actor profile
+- Use /gti collection-timeline --id=ID for actor activity timeline
+- Use /gti collection-mitre --id=ID for actor's MITRE ATT&CK techniques
+{% else %}
+Call the search_threat_actors tool with: `search_threat_actors(query={{query}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find threat actors"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of actors to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "relevance-"
+  description = "Order results by relevance or creation_date"
+
+# GTI search_malware_families
+[[subCommands]]
+name = "search-malware"
+description = "Search malware families in Google Threat Intelligence platform"
+prompt = """
+{% if help %}
+Usage: /gti search-malware [OPTIONS]
+
+Search malware families in the Google Threat Intelligence platform.
+
+Malware families are modeled as collections representing related malicious
+software variants sharing common characteristics, code, or functionality.
+
+Options:
+  --query      Search query to find malware families [REQUIRED]
+  --limit      Maximum number of families to return (default: 10)
+  --order-by   Sort order (default: "relevance-")
+  --help       Show this help message
+
+Examples:
+  /gti search-malware --query="Emotet"                # Search for specific malware
+  /gti search-malware --query="banking trojan"        # Search by malware type
+  /gti search-malware --query="Cobalt Strike" --limit=5    # Limit results
+  /gti search-malware --query="ransomware 2024" --order-by="creation_date-"
+
+Malware Categories:
+- Trojans, viruses, worms
+- Ransomware families
+- Banking malware
+- RATs (Remote Access Trojans)
+- Botnets and bot malware
+- Crypto miners
+- Loaders and droppers
+
+Use Cases:
+- Research specific malware families
+- Find variants of known malware
+- Investigate malware used in campaigns
+- Analyze malware capabilities and indicators
+
+Next Steps:
+- Use /gti get-collection --id=ID for detailed malware analysis
+- Use /gti collection-relations --id=ID to find associated files/IOCs
+- Use /gti file-report --hash=HASH for specific malware samples
+{% else %}
+Call the search_malware_families tool with: `search_malware_families(query={{query}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find malware families"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of families to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "relevance-"
+  description = "Order results by relevance or creation_date"
+
+# GTI search_vulnerabilities
+[[subCommands]]
+name = "search-vulns"
+description = "Search vulnerabilities (CVEs) in Google Threat Intelligence platform"
+prompt = """
+{% if help %}
+Usage: /gti search-vulns [OPTIONS]
+
+Search vulnerabilities (CVEs) in the Google Threat Intelligence platform.
+
+Vulnerabilities are modeled as collections containing detailed information
+about security flaws, their exploitation, and associated threats.
+
+Options:
+  --query      Search query to find vulnerabilities [REQUIRED]
+  --limit      Maximum number of vulnerabilities to return (default: 10)
+  --order-by   Sort order (default: "relevance-")
+  --help       Show this help message
+
+Examples:
+  /gti search-vulns --query="CVE-2023-44487"          # Search specific CVE
+  /gti search-vulns --query="Log4j"                   # Search by vulnerability name
+  /gti search-vulns --query="Apache" --limit=20       # Apache vulnerabilities
+  /gti search-vulns --query="critical RCE" --order-by="relevance-"
+  /gti search-vulns --query="Microsoft Exchange"      # Exchange vulnerabilities
+
+Search Tips:
+- Use CVE identifiers (CVE-YYYY-NNNNN)
+- Search by product or vendor names
+- Include vulnerability types (RCE, SQLi, XSS, etc.)
+- Use severity terms (critical, high, medium, low)
+- Search by exploitation status (exploited, poc)
+
+Use Cases:
+- Research specific CVE details and impact
+- Find vulnerabilities affecting particular products
+- Investigate exploited vulnerabilities
+- Track vulnerability disclosure timelines
+- Analyze vulnerability exploitation trends
+
+Next Steps:
+- Use /gti get-collection --id=ID for detailed vulnerability information
+- Use /gti collection-relations --id=ID to find exploitation tools/campaigns
+- Use /gti search-iocs to find related indicators
+{% else %}
+Call the search_vulnerabilities tool with: `search_vulnerabilities(query={{query}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find vulnerabilities"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of vulnerabilities to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "relevance-"
+  description = "Order results by relevance or creation_date"
+
+# GTI get_file_report
+[[subCommands]]
+name = "file-report"
+description = "Get comprehensive file analysis report using MD5/SHA-1/SHA-256 hash"
+prompt = """
+{% if help %}
+Usage: /gti file-report [OPTIONS]
+
+Get comprehensive file analysis report using file hash.
+
+Returns concise summary of key threat details including detection statistics,
+threat classification, and important indicators from VirusTotal analysis.
+
+Options:
+  --hash    MD5, SHA-1, or SHA-256 hash of the file [REQUIRED]
+  --help    Show this help message
+
+Examples:
+  /gti file-report --hash="8ab2cfcd123456789abcdef"           # MD5 hash
+  /gti file-report --hash="e4d909c290d0fb1ca068ffaddf22cbd0"  # SHA-1 hash  
+  /gti file-report --hash="a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"  # SHA-256
+
+Hash Formats Supported:
+- MD5: 32 hexadecimal characters
+- SHA-1: 40 hexadecimal characters  
+- SHA-256: 64 hexadecimal characters
+
+The response includes:
+- Detection statistics from multiple AV engines
+- File metadata (size, type, names)
+- Threat classification and malware family
+- Behavioral analysis results
+- File reputation and prevalence
+- Submission and analysis timestamps
+- Related campaigns and threat actors (if applicable)
+
+Use Cases:
+- Analyze suspicious files found in investigations
+- Verify file reputation before execution
+- Research malware samples and variants
+- Investigate files flagged by security tools
+- Validate file safety for incident response
+
+Next Steps:
+- Use /gti file-behavior --hash=HASH for detailed behavioral analysis
+- Use /gti file-relations --hash=HASH to find related entities
+- Use /gti search-threats with malware family names found in report
+{% else %}
+Call the get_file_report tool with: `get_file_report(hash={{hash}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "hash"
+  required = true
+  description = "MD5, SHA-1, or SHA-256 hash of the file to analyze"
+
+# GTI get_domain_report
+[[subCommands]]
+name = "domain-report"
+description = "Get comprehensive domain analysis report from Google Threat Intelligence"
+prompt = """
+{% if help %}
+Usage: /gti domain-report [OPTIONS]
+
+Get comprehensive domain analysis report from Google Threat Intelligence.
+
+Provides detailed analysis of domain reputation, threat associations,
+and security-relevant information from VirusTotal's extensive database.
+
+Options:
+  --domain  Domain name to analyze [REQUIRED]
+  --help    Show this help message
+
+Examples:
+  /gti domain-report --domain="malicious.example.com"    # Analyze specific domain
+  /gti domain-report --domain="google.com"               # Analyze legitimate domain
+  /gti domain-report --domain="phishing-site.net"        # Check suspicious domain
+
+Domain Format:
+- Provide domain name only (no protocol/scheme)
+- Examples: example.com, subdomain.example.org, malware.net
+- Do not include: http://, https://, www. (unless part of subdomain)
+
+The response includes:
+- Domain reputation and threat classification
+- DNS resolution information
+- WHOIS registration details
+- Associated malware and campaigns
+- Detection statistics from security vendors
+- Domain creation and modification dates
+- Related domains and subdomains
+- Certificate and hosting information
+
+Use Cases:
+- Investigate suspicious domains found in logs or alerts
+- Validate domain reputation before allowing access
+- Research domains associated with phishing campaigns
+- Analyze C2 infrastructure used by malware
+- Check domains flagged by security monitoring tools
+
+Next Steps:
+- Use /gti domain-relations --domain=DOMAIN to find related entities
+- Use /gti search-threats to research associated campaigns
+- Use /gti url-report for specific URLs on the domain
+{% else %}
+Call the get_domain_report tool with: `get_domain_report(domain={{domain}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "domain"
+  required = true
+  description = "Domain name to analyze"
+
+# GTI get_ip_address_report
+[[subCommands]]
+name = "ip-report"
+description = "Get comprehensive IP address analysis report (IPv4/IPv6) from Google Threat Intelligence"
+prompt = """
+{% if help %}
+Usage: /gti ip-report [OPTIONS]
+
+Get comprehensive IP address analysis report from Google Threat Intelligence.
+
+Provides detailed analysis of IP reputation, threat associations, geolocation,
+and security-relevant information from VirusTotal's database.
+
+Options:
+  --ip-address  IP address to analyze (IPv4 or IPv6) [REQUIRED]
+  --help        Show this help message
+
+Examples:
+  /gti ip-report --ip-address="192.168.1.100"          # IPv4 address
+  /gti ip-report --ip-address="203.0.113.42"           # Public IPv4
+  /gti ip-report --ip-address="2001:db8::1"            # IPv6 address
+  /gti ip-report --ip-address="8.8.8.8"                # Well-known IP
+
+Supported Formats:
+- IPv4: Standard dotted decimal notation (192.168.1.1)
+- IPv6: Standard colon notation (2001:db8::1)
+- Both private and public IP addresses
+
+The response includes:
+- IP reputation and threat classification
+- Geolocation information (country, city, ASN)
+- Associated malware and threat campaigns
+- Hosting provider and network information
+- Detection statistics from security vendors
+- Historical analysis and first/last seen dates
+- Related domains and URLs hosted on the IP
+- Port scan and service information
+
+Use Cases:
+- Investigate suspicious IP addresses from network logs
+- Validate IP reputation for firewall rules
+- Research command and control servers
+- Analyze IP addresses flagged in security alerts
+- Check hosting infrastructure for malicious domains
+
+Next Steps:
+- Use /gti ip-relations --ip-address=IP to find related entities
+- Use /gti search-threats to research associated campaigns
+- Use /gti domain-report for domains hosted on the IP
+{% else %}
+Call the get_ip_address_report tool with: `get_ip_address_report(ip_address={{ip-address}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "ip-address"
+  required = true
+  description = "IP address to analyze (IPv4 or IPv6)"
+
+# GTI get_url_report
+[[subCommands]]
+name = "url-report"
+description = "Get comprehensive URL analysis report from Google Threat Intelligence"
+prompt = """
+{% if help %}
+Usage: /gti url-report [OPTIONS]
+
+Get comprehensive URL analysis report from Google Threat Intelligence.
+
+Provides detailed analysis of URL reputation, threat associations, content analysis,
+and security-relevant information from VirusTotal's scanning engines.
+
+Options:
+  --url   URL to analyze [REQUIRED]
+  --help  Show this help message
+
+Examples:
+  /gti url-report --url="https://malicious.example.com/payload.exe"
+  /gti url-report --url="http://phishing-site.net/login.php"
+  /gti url-report --url="https://cdn.example.org/suspicious-file.zip"
+
+URL Format:
+- Include full URL with protocol (http:// or https://)
+- Examples: https://example.com/path, http://malware.net/download
+- URL encoding will be handled automatically
+
+The response includes:
+- URL reputation and threat classification
+- Content analysis and file downloads
+- Detection statistics from security vendors
+- Screenshots and visual analysis
+- Redirect chain information
+- Associated malware and campaigns
+- Domain and IP hosting information
+- HTTP response details and headers
+
+Use Cases:
+- Investigate suspicious URLs from email or web logs
+- Validate URL safety before user access
+- Research phishing and malware distribution sites
+- Analyze URLs flagged by security monitoring
+- Check download links for malicious content
+
+Next Steps:
+- Use /gti url-relations --url=URL to find related entities
+- Use /gti domain-report --domain=DOMAIN for the hosting domain
+- Use /gti file-report --hash=HASH for downloaded files
+{% else %}
+Call the get_url_report tool with: `get_url_report(url={{url}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "url"
+  required = true
+  description = "URL to analyze"
+
+# GTI get_collection_report
+[[subCommands]]
+name = "get-collection"
+description = "Get detailed information about a specific threat collection by ID"
+prompt = """
+{% if help %}
+Usage: /gti get-collection [OPTIONS]
+
+Get detailed information about a specific threat collection by ID.
+
+At Google Threat Intelligence, threats are modeled as 'collections' with different
+types like malware-family, threat-actor, campaign, report, or vulnerability.
+
+Options:
+  --id    Google Threat Intelligence collection identifier [REQUIRED]
+  --help  Show this help message
+
+Examples:
+  /gti get-collection --id="f2ca1bb6c7e907d06dafe4687f"      # Get collection details
+  /gti get-collection --id="threat-actor-apt41"              # Threat actor collection
+  /gti get-collection --id="malware-emotet-2024"             # Malware family collection
+
+Collection Types:
+- malware-family: Malware families and variants
+- threat-actor: APT groups and threat actors  
+- campaign: Attack campaigns and operations
+- report: Threat intelligence reports
+- vulnerability: CVE and vulnerability information
+- collection: Generic threat collections
+
+The response includes:
+- Collection metadata and classification
+- Detailed threat information and context
+- Associated indicators of compromise (IOCs)
+- Attribution and actor information
+- Timeline of threat activity
+- MITRE ATT&CK technique mappings
+- Related collections and entities
+
+Use Cases:
+- Get comprehensive details about a specific threat
+- Research threat actor profiles and capabilities
+- Investigate malware family characteristics
+- Analyze campaign scope and targets
+- Review vulnerability exploitation details
+
+Next Steps:
+- Use /gti collection-timeline --id=ID for activity timeline
+- Use /gti collection-mitre --id=ID for MITRE ATT&CK mappings
+- Use /gti collection-relations --id=ID to find related entities
+{% else %}
+Call the get_collection_report tool with: `get_collection_report(id={{id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "id"
+  required = true
+  description = "Google Threat Intelligence collection identifier"
+
+# GTI search_iocs
+[[subCommands]]
+name = "search-iocs"
+description = "Search Indicators of Compromise (IOC) in Google Threat Intelligence platform"
+prompt = """
+{% if help %}
+Usage: /gti search-iocs [OPTIONS]
+
+Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform.
+
+Search for different IOC types using entity modifiers with support for various
+search parameters and ordering options.
+
+Options:
+  --query      Search query to find IOCs [REQUIRED]
+  --limit      Maximum number of IOCs to return (default: 10)
+  --order-by   Sort order (default: "last_submission_date-")
+  --help       Show this help message
+
+Entity Types and Supported Orders:
+  file:    first_submission_date, last_submission_date, positives, times_submitted, size
+  url:     first_submission_date, last_submission_date, positives, times_submitted, status  
+  domain:  creation_date, last_modification_date, last_update_date, positives
+  ip:      ip, last_modification_date, positives
+
+Search Modifiers:
+Use entity: prefix to specify IOC type:
+  entity:file       Search files only
+  entity:url        Search URLs only
+  entity:domain     Search domains only
+  entity:ip         Search IP addresses only
+
+Integer Modifiers (for numeric fields):
+  p:60+    Greater than 60 (positives > 60)
+  p:60-    Less than 60 (positives < 60)  
+  p:60     Equal to 60 (positives = 60)
+
+Examples:
+  /gti search-iocs --query="malware.exe"                    # Search all IOC types
+  /gti search-iocs --query="entity:file p:5+"               # Files with >5 detections
+  /gti search-iocs --query="entity:domain creation_date:2024-01-01+"  # Recent domains
+  /gti search-iocs --query="entity:ip 192.168" --limit=20   # IP addresses matching pattern
+  /gti search-iocs --query="phishing" --order-by="positives-"
+
+Advanced Search Examples:
+  /gti search-iocs --query="entity:file type:pdf p:10+"     # Malicious PDFs
+  /gti search-iocs --query="entity:url status:malicious"    # Malicious URLs
+  /gti search-iocs --query="entity:domain registrar:namecheap"  # Domains by registrar
+
+Use Cases:
+- Find malicious files by name or characteristics
+- Search for suspicious domains and URLs
+- Investigate IP addresses with threat associations
+- Discover IOCs related to specific campaigns
+- Research indicators by detection statistics
+
+Next Steps:
+- Use /gti file-report --hash=HASH for detailed file analysis
+- Use /gti domain-report --domain=DOMAIN for domain details
+- Use /gti ip-report --ip-address=IP for IP analysis
+- Use /gti url-report --url=URL for URL investigation
+{% else %}
+Call the search_iocs tool with: `search_iocs(query={{query}}, limit={{limit}}, order_by={{order-by}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Search query to find IOCs"
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of IOCs to return"
+  [[subCommands.args]]
+  name = "order-by"
+  required = false
+  default = "last_submission_date-"
+  description = "Order results (see help for entity-specific options)"
+
+# GTI collection timeline events
+[[subCommands]]
+name = "collection-timeline"
+description = "Retrieve timeline events for a threat collection (campaigns/threat actors) with curated analyst information"
+prompt = """
+{% if help %}
+Usage: /gti collection-timeline [OPTIONS]
+
+Retrieve timeline events for a threat collection with curated analyst information.
+
+This provides super valuable curated information produced by security analysts
+at Google Threat Intelligence, particularly useful for campaigns and threat actors.
+
+Options:
+  --id    Collection identifier [REQUIRED]
+  --help  Show this help message
+
+Examples:
+  /gti collection-timeline --id="threat-actor-apt41"        # APT41 timeline
+  /gti collection-timeline --id="campaign-solarwinds"      # Campaign timeline
+  /gti collection-timeline --id="malware-emotet-2024"      # Malware timeline
+
+Common Display Grouping:
+Events are typically grouped by the "event_category" field for better organization:
+- Initial Access
+- Persistence
+- Defense Evasion
+- Credential Access
+- Discovery
+- Lateral Movement
+- Collection
+- Exfiltration
+- Impact
+
+The response includes:
+- Chronological timeline of threat activities
+- Curated analyst insights and context
+- Event categories mapped to MITRE ATT&CK
+- Attribution details and evidence
+- Campaign phases and evolution
+- Technical indicators and TTPs
+- Victim information and targeting
+
+Use Cases:
+- Research threat actor activity patterns
+- Understand campaign progression and phases
+- Analyze threat evolution over time
+- Investigate attack methodologies
+- Plan defense strategies based on historical patterns
+
+Next Steps:
+- Use /gti collection-mitre --id=ID for MITRE ATT&CK technique details
+- Use /gti collection-relations --id=ID to find associated IOCs
+- Use /gti search-threats to find related threat collections
+{% else %}
+Call the get_collection_timeline_events tool with: `get_collection_timeline_events(id={{id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "id"
+  required = true
+  description = "Collection identifier"
+
+# GTI collection MITRE tree
+[[subCommands]]  
+name = "collection-mitre"
+description = "Retrieve MITRE ATT&CK tactics and techniques associated with a threat collection"
+prompt = """
+{% if help %}
+Usage: /gti collection-mitre [OPTIONS]
+
+Retrieve MITRE ATT&CK tactics and techniques associated with a threat collection.
+
+Returns the tactics and techniques that security analysts have mapped to
+specific threat actors, malware families, or campaigns.
+
+Options:
+  --id    Collection identifier [REQUIRED]
+  --help  Show this help message
+
+Examples:
+  /gti collection-mitre --id="threat-actor-apt28"           # APT28 MITRE mappings
+  /gti collection-mitre --id="malware-cobalt-strike"       # Cobalt Strike techniques
+  /gti collection-mitre --id="campaign-petya-2017"         # NotPetya campaign TTPs
+
+The response includes:
+- MITRE ATT&CK tactics (TA####) with descriptions
+- Specific techniques (T####) and sub-techniques (T####.###)
+- Technique descriptions and context
+- Relationship between tactics and techniques
+- Evidence and examples of technique usage
+
+MITRE ATT&CK Tactic Categories:
+- TA0001: Initial Access
+- TA0002: Execution  
+- TA0003: Persistence
+- TA0004: Privilege Escalation
+- TA0005: Defense Evasion
+- TA0006: Credential Access
+- TA0007: Discovery
+- TA0008: Lateral Movement
+- TA0009: Collection
+- TA0010: Exfiltration
+- TA0011: Command and Control
+- TA0040: Impact
+
+Use Cases:
+- Map threat actor capabilities to MITRE framework
+- Understand attack patterns and methodologies
+- Plan defensive strategies and controls
+- Assess organizational security gaps
+- Research threat behavior patterns
+
+Next Steps:
+- Use /gti collection-timeline --id=ID for detailed activity timeline
+- Use /gti search-threats --query="T####" to find other threats using same techniques
+- Use threat intelligence to enhance detection rules and monitoring
+{% else %}
+Call the get_collection_mitre_tree tool with: `get_collection_mitre_tree(id={{id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "id"
+  required = true
+  description = "Collection identifier"
+
+# GTI list threat profiles
+[[subCommands]]
+name = "list-profiles"
+description = "List your threat profiles that filter Google TI intelligence for organization-specific threats"
+prompt = """
+{% if help %}
+Usage: /gti list-profiles [OPTIONS]
+
+List your threat profiles at Google Threat Intelligence.
+
+Threat Profiles filter all of Google TI's threat intelligence so you can focus
+only on the threats that matter most to your organization based on industries,
+regions, and other criteria.
+
+Options:
+  --limit  Maximum number of profiles to return (default: 10)
+  --help   Show this help message
+
+Examples:
+  /gti list-profiles                    # List all threat profiles
+  /gti list-profiles --limit=20         # List up to 20 profiles
+
+Threat Profile Benefits:
+- Apply top-level filters for Target Industries and Target Regions
+- Get more focused view of relevant threats
+- Receive personalized threat intelligence recommendations
+- Filter out noise from irrelevant geographic or industry threats
+
+Profile Information Includes:
+- Profile name and description
+- Configured interests (industries, regions, actor motivations)
+- Enable/disable status for ML recommendations
+- Creation and modification dates
+- Associated threat count estimates
+
+Use Cases:
+- Review configured organizational threat filters
+- Identify most relevant threat profiles for current investigations
+- Find profiles matching specific industry or geographic focus
+- Validate threat intelligence filtering settings
+
+Next Steps:
+- Use /gti get-profile --profile-id=ID for detailed profile information
+- Use /gti profile-recommendations --profile-id=ID to see relevant threats
+- Use /gti profile-timeline --profile-id=ID for association timeline
+
+Important Note:
+When searching for threats, check threat profiles first before performing
+general searches. Profile recommendations are more relevant to your organization
+than generic search results.
+{% else %}
+Call the list_threat_profiles tool with: `list_threat_profiles(limit={{limit}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "limit"
+  required = false
+  default = "10"
+  description = "Maximum number of profiles to return"
+
+# GTI get threat profile
+[[subCommands]]
+name = "get-profile"
+description = "Get detailed information about a specific threat profile"
+prompt = """
+{% if help %}
+Usage: /gti get-profile [OPTIONS]
+
+Get detailed information about a specific threat profile.
+
+Retrieves comprehensive configuration and settings for a threat profile,
+including interests, targeting criteria, and recommendation settings.
+
+Options:
+  --profile-id  Threat Profile identifier [REQUIRED]
+  --help        Show this help message
+
+Examples:
+  /gti get-profile --profile-id="profile-healthcare-na"     # Healthcare North America profile
+  /gti get-profile --profile-id="profile-financial-global" # Financial services profile
+
+Profile Information Includes:
+- Profile name, description, and metadata
+- Creation and last modification dates
+- Recommendation settings (ML-enabled or manual)
+- Configured interests and filtering criteria:
+  * Target Industries (healthcare, financial, government, etc.)
+  * Target Regions (ISO-3166 country codes)
+  * Source Regions (threat actor origins)
+  * Malware Roles (banking, ransomware, espionage, etc.)
+  * Actor Motivations (financial, espionage, hacktivism, etc.)
+
+Interest Categories:
+- INTEREST_TYPE_TARGETED_INDUSTRY: Industries frequently targeted
+- INTEREST_TYPE_TARGETED_REGION: Geographic regions of interest
+- INTEREST_TYPE_SOURCE_REGION: Threat actor source regions
+- INTEREST_TYPE_MALWARE_ROLE: Types of malware functionality
+- INTEREST_TYPE_ACTOR_MOTIVATION: Threat actor motivations
+
+Use Cases:
+- Review threat profile configuration and scope
+- Understand filtering criteria for threat intelligence
+- Validate profile settings match organizational needs
+- Audit threat intelligence personalization settings
+
+Next Steps:
+- Use /gti profile-recommendations --profile-id=ID to see relevant threats
+- Use /gti profile-timeline --profile-id=ID for threat associations
+- Use /gti search-threats with profile-specific criteria
+{% else %}
+Call the get_threat_profile tool with: `get_threat_profile(profile_id={{profile-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "profile-id"
+  required = true
+  description = "Threat Profile identifier"
+
+# GTI search digital threat monitoring
+[[subCommands]]
+name = "search-darkweb"
+description = "Search Digital Threat Monitoring (DTM) for darkweb content using Lucene syntax"
+prompt = """
+{% if help %}
+Usage: /gti search-darkweb [OPTIONS]
+
+Search Digital Threat Monitoring (DTM) using Lucene syntax.
+
+Search darkweb forums, paste sites, Telegram channels, compromised data,
+and other underground sources for threats targeting your organization.
+
+Options:
+  --query      Lucene-like query string [REQUIRED]
+  --size       Number of results per page (0-25, default: 10)
+  --since      Timestamp to search from (optional)
+  --until      Timestamp to search until (optional)
+  --doc-type   Document type filter (optional)
+  --help       Show this help message
+
+Document Types (doc_type):
+  web_content_publish    General website content
+  document              Office documents and PDFs
+  domain_discovery      Newly discovered domain names
+  email                 Malicious emails
+  forum_post            Darkweb forum posts
+  message               Chat messages (Telegram, etc.)
+  paste                 Paste site content (Pastebin, etc.)
+  shop_listing          Items for sale on dark web
+
+Threat Types (threat_type):
+  information-security/apt                      Advanced Persistent Threat
+  information-security/botnet                   Botnet infrastructure
+  information-security/compromised              Compromised infrastructure
+  information-security/doxing                   Personal information disclosure
+  information-security/exploit                  Exploits and vulnerabilities
+  information-security/information-leak         Information leaks
+  information-security/malware                  Malware samples and families
+  information-security/phishing                Phishing campaigns
+  information-security/ransomware              Ransomware activities
+  information-security/ransomware-victim-listing  Ransomware victim data
+
+Searchable Fields:
+  author.identity.name    Forum post author handle
+  subject                 Subject line of forum post
+  body                    Body text of content
+  inet_location.url       URL where content was found
+  language               Content language
+  title                  Web page title
+  channel.name           Telegram channel name
+  domain                 DNS domain name
+  cve                    CVE entry by ID
+
+Examples:
+  /gti search-darkweb --query="your-company-name"
+  /gti search-darkweb --query="domain:yourcompany.com" --doc-type="forum_post"
+  /gti search-darkweb --query="CVE-2023-44487" --size=20
+  /gti search-darkweb --query="author.identity.name:cybercriminal" --doc-type="message"
+
+Advanced Examples:
+  # Search for company mentions in ransomware forums
+  /gti search-darkweb --query="body:(CompanyName AND ransomware)" --doc-type="forum_post"
+  
+  # Find credential leaks
+  /gti search-darkweb --query="@yourcompany.com" --doc-type="paste"
+  
+  # Monitor threat actor communications
+  /gti search-darkweb --query="channel.name:apt-group" --doc-type="message"
+
+Use Cases:
+- Monitor mentions of your organization on dark web
+- Track credential leaks and data breaches
+- Research threat actor communications
+- Find stolen corporate data and documents
+- Monitor ransomware victim listings
+- Track vulnerability discussions and exploits
+
+Note: Search requests are limited to 60 seconds duration.
+{% else %}
+Call the search_digital_threat_monitoring tool with: `search_digital_threat_monitoring(query={{query}}, size={{size}}, since={{since}}, until={{until}}, doc_type={{doc-type}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Lucene-like query string for document search"
+  [[subCommands.args]]
+  name = "size"
+  required = false
+  default = "10"
+  description = "Number of results per page (0-25)"
+  [[subCommands.args]]
+  name = "since"
+  required = false
+  description = "Timestamp to search for documents since"
+  [[subCommands.args]]
+  name = "until"
+  required = false
+  description = "Timestamp to search for documents until"
+  [[subCommands.args]]
+  name = "doc-type"
+  required = false
+  description = "Document type filter (forum_post, message, paste, etc.)"
+
+# GTI help
+[[subCommands]]
+name = "help"
+description = "Show available GTI subcommands and their descriptions"
+prompt = """
+{% if help %}
+Usage: /gti help
+
+Show available GTI subcommands organized by category.
+
+THREAT SEARCH COMMANDS:
+  search-threats    Search all threat types (actors, malware, campaigns, reports, vulnerabilities)
+  search-campaigns  Search threat campaigns and coordinated attacks
+  search-actors     Search threat actors and APT groups
+  search-malware    Search malware families and variants
+  search-vulns      Search vulnerabilities and CVEs
+
+IOC ANALYSIS COMMANDS:
+  file-report       Analyze files by hash (MD5/SHA-1/SHA-256)
+  domain-report     Analyze domain reputation and threat associations
+  ip-report         Analyze IP addresses (IPv4/IPv6) for threats
+  url-report        Analyze URL reputation and content safety
+  search-iocs       Search indicators of compromise (files, domains, IPs, URLs)
+
+COLLECTION MANAGEMENT:
+  get-collection       Get detailed information about threat collections
+  collection-timeline  Get timeline events for threat actors and campaigns
+  collection-mitre     Get MITRE ATT&CK technique mappings
+
+THREAT PROFILES:
+  list-profiles     List organization-specific threat profiles
+  get-profile       Get detailed threat profile configuration
+
+DARK WEB MONITORING:
+  search-darkweb    Search Digital Threat Monitoring for underground activity
+
+GETTING DETAILED HELP:
+  /gti COMMAND --help    Show detailed help for any specific command
+
+Examples:
+  /gti search-threats --help    # Detailed help for threat search
+  /gti file-report --help       # Detailed help for file analysis
+  /gti search-darkweb --help    # Detailed help for dark web monitoring
+
+Use Cases:
+- Research threat actors, malware families, and attack campaigns
+- Analyze suspicious files, domains, IPs, and URLs
+- Monitor dark web for mentions of your organization
+- Get threat intelligence tailored to your industry and region
+- Map threats to MITRE ATT&CK framework for defense planning
+{% else %}
+# Help command doesn't call any MCP tools - it just displays command information
+{% endif %}
+"""
