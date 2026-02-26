@@ -131,7 +131,7 @@ Here's how to fix this vulnerability:
    - Click on "Permissions" tab
    - Remove entries with "allUsers" or "allAuthenticatedUsers"
    - Alternatively, use the gcloud command:
-     `gsutil iam ch -d allUsers:objectViewer gs://sensitive-data-bucket`
+     `gcloud storage buckets remove-iam-policy-binding gs://sensitive-data-bucket --member=allUsers --role=objectViewer`
 
 2. Consider using IAM Conditions to restrict access based on:
    - IP ranges
