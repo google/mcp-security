@@ -68,20 +68,20 @@ async def export_udm_search_csv(
     - metadata.product_name: Source product generating the event
 
     Args:
-        query (str): UDM query to search for events. Use Chronicle query syntax.
+        query: UDM query to search for events. Use Chronicle query syntax.
                     Examples:
                     - 'metadata.event_type = "USER_LOGIN"'
                     - 'principal.ip = "192.168.1.100"'
                     - 'target.hostname = "server1" AND metadata.event_type = "FILE_MODIFICATION"'
-        fields (List[str]): List of UDM fields to include in the CSV export.
+        fields: List of UDM fields to include in the CSV export.
                            Each field will become a column in the output.
-        hours_back (int): How many hours back from the current time to search. Used if start_time is not provided.
-        start_time (Optional[str]): Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
-        end_time (Optional[str]): End time in ISO 8601 format. Defaults to current time if not provided.
-        case_insensitive (bool): Whether to perform case-insensitive search. Defaults to True.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        hours_back: How many hours back from the current time to search. Used if start_time is not provided.
+        start_time: Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
+        end_time: End time in ISO 8601 format. Defaults to current time if not provided.
+        case_insensitive: Whether to perform case-insensitive search. Defaults to True.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         str: CSV formatted string with header row and data rows. Empty result returns header row only.
@@ -235,13 +235,13 @@ async def find_udm_field_values(
     - Event type discovery: "USER_" to find all user-related event types
 
     Args:
-        query (str): The partial UDM field value to search for. Supports prefix, suffix,
+        query: The partial UDM field value to search for. Supports prefix, suffix,
                     or substring matching depending on Chronicle's implementation.
-        page_size (Optional[int]): Maximum number of matching values to return.
+        page_size: Maximum number of matching values to return.
                                   If not specified, uses Chronicle's default limit.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: A dictionary containing:

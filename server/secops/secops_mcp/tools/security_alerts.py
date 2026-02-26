@@ -52,13 +52,13 @@ async def get_security_alerts(
     - Check for SIEM alerts that might not have corresponding cases yet in other systems.
 
     Args:
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours to look back for alerts. Defaults to 24.
-        max_alerts (int): Maximum number of alerts to return. Defaults to 10.
-        status_filter (str): Query string to filter alerts by status (e.g., 'feedback_summary.status != "CLOSED"').
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        hours_back: How many hours to look back for alerts. Defaults to 24.
+        max_alerts: Maximum number of alerts to return. Defaults to 10.
+        status_filter: Query string to filter alerts by status (e.g., 'feedback_summary.status != "CLOSED"').
                              Defaults to excluding closed alerts.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         str: A formatted string summarizing the retrieved security alerts, including rule name,
@@ -176,11 +176,11 @@ async def get_security_alert_by_id(
     - May need to get this so you know which Alert to update
 
     Args:
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
-        alert_id (Optional[str]): The unique identifier of the alert to retrieve.
-        include_detections (bool): Whether to include detection details in the response. Defaults to True.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        alert_id: The unique identifier of the alert to retrieve.
+        include_detections: Whether to include detection details in the response. Defaults to True.
 
     Returns:
         str: A formatted string summarizing the retrieved security alerts, including rule name,
@@ -240,36 +240,36 @@ Modifies specific fields of an existing security alert within Chronicle based on
 -   Update an alert's confidence score or risk score based on corroborating evidence or lack thereof.
 
 Args:
-    alert_id (str): The unique ID of the Chronicle security alert to update. This is a required identifier.
-    project_id (Optional[str]): Google Cloud project ID associated with the Chronicle instance. Defaults to environment configuration if not provided.
-    customer_id (Optional[str]): The Chronicle customer ID. Defaults to environment configuration if not provided.
-    region (Optional[str]): The Google Cloud region where the Chronicle instance is hosted (e.g., "us", "europe"). Defaults to environment configuration if not provided.
-    reason: Reason for closing an alert. Valid values:
-        - "REASON_UNSPECIFIED"
-        - "REASON_NOT_MALICIOUS"
-        - "REASON_MALICIOUS"
-        - "REASON_MAINTENANCE"
-    priority: Alert priority. Valid values:
-        - "PRIORITY_UNSPECIFIED"
-        - "PRIORITY_INFO"
-        - "PRIORITY_LOW"
-        - "PRIORITY_MEDIUM"
-        - "PRIORITY_HIGH"
-        - "PRIORITY_CRITICAL"
-    status: Alert status. Valid values:
-        - "STATUS_UNSPECIFIED"
-        - "NEW"
-        - "REVIEWED"
-        - "CLOSED"
-        - "OPEN"
-    verdict: Verdict on the alert. Valid values:
-        - "VERDICT_UNSPECIFIED"
-        - "TRUE_POSITIVE"
-        - "FALSE_POSITIVE"
-    risk_score: Risk score [0-100] of the alert
-    severity: Severity score [0-100] of the alert
-    comment: Analyst comment (empty string is valid to clear)
-    root_cause: Alert root cause (empty string is valid to clear)
+        alert_id: The unique ID of the Chronicle security alert to update. This is a required identifier.
+        project_id: Google Cloud project ID associated with the Chronicle instance. Defaults to environment configuration if not provided.
+        customer_id: The Chronicle customer ID. Defaults to environment configuration if not provided.
+        region: The Google Cloud region where the Chronicle instance is hosted (e.g., "us", "europe"). Defaults to environment configuration if not provided.
+        reason: Reason for closing an alert. Valid values:
+            - "REASON_UNSPECIFIED"
+            - "REASON_NOT_MALICIOUS"
+            - "REASON_MALICIOUS"
+            - "REASON_MAINTENANCE"
+        priority: Alert priority. Valid values:
+            - "PRIORITY_UNSPECIFIED"
+            - "PRIORITY_INFO"
+            - "PRIORITY_LOW"
+            - "PRIORITY_MEDIUM"
+            - "PRIORITY_HIGH"
+            - "PRIORITY_CRITICAL"
+        status: Alert status. Valid values:
+            - "STATUS_UNSPECIFIED"
+            - "NEW"
+            - "REVIEWED"
+            - "CLOSED"
+            - "OPEN"
+        verdict: Verdict on the alert. Valid values:
+            - "VERDICT_UNSPECIFIED"
+            - "TRUE_POSITIVE"
+            - "FALSE_POSITIVE"
+        risk_score: Risk score [0-100] of the alert
+        severity: Severity score [0-100] of the alert
+        comment: Analyst comment (empty string is valid to clear)
+        root_cause: Alert root cause (empty string is valid to clear)
 
 Returns:
     str: A confirmation message indicating whether the alert was updated successfully, potentially including a summary of the changes or the updated alert ID. Returns an error message if the update fails.
