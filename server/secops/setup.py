@@ -19,7 +19,7 @@ setup = setuptools.setup
 
 setup(
     name="google-secops-mcp",
-    version="0.5.2",
+    version="0.6.0",
     py_modules=["secops_mcp", "main"],  # Include both modules
     install_requires=[
         "fastmcp",
