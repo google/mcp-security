@@ -123,6 +123,27 @@ The server supports two authentication methods:
 
 These tools are always available.
 
+- **`create_case(name, priority=None, description=None, environment=None)`**
+    - **Description:** Creates a new manual case in the SOAR platform for tracking a security incident or investigation.
+    - **Parameters:**
+        - `name` (required): The name or title of the case.
+        - `priority` (optional): The priority level (e.g., "PriorityInfo", "PriorityLow", "PriorityMedium", "PriorityHigh", "PriorityCritical").
+        - `description` (optional): A description providing context about the security incident.
+        - `environment` (optional): The environment for the case.
+    - **Returns:** The newly created case details including its assigned ID.
+    - **Return Example:**
+      ```json
+      {
+        "id": 12350,
+        "identifier": "SEC-12350",
+        "name": "Suspicious Login Attempts from External IP",
+        "description": "Multiple failed login attempts detected from IP 203.0.113.50",
+        "priority": "PriorityHigh",
+        "status": "New",
+        "creationTime": "2023-09-15T16:00:00Z"
+      }
+      ```
+
 - **`list_cases()`**
     - **Description:** Lists available cases in the SOAR platform.
     - **Returns:** A list of cases with basic information like ID, name, status, and priority.
@@ -267,6 +288,108 @@ These tools are always available.
         "previous_priority": "PriorityMedium",
         "new_priority": "PriorityHigh",
         "timestamp": "2023-09-15T14:30:22Z"
+      }
+      ```
+
+- **`update_case_description(case_id, description)`**
+    - **Description:** Updates the description of a specific case. This replaces the existing description entirely.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `description` (required): The new description text for the case.
+    - **Returns:** Confirmation of the description update.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "description": "Confirmed phishing campaign targeting finance department. Three users clicked malicious links.",
+        "timestamp": "2023-09-15T15:45:30Z"
+      }
+      ```
+
+- **`close_case(case_id, root_cause, comment, reason, tags=None)`**
+    - **Description:** Closes a specific case by setting its root cause, close reason, and a closing comment. Marks the end of the investigation lifecycle.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `root_cause` (required): The determined root cause of the incident.
+        - `comment` (required): A comment explaining the closure decision.
+        - `reason` (required): The close reason category. Must be one of: "Malicious", "NotMalicious", "Maintenance", "Inconclusive".
+        - `tags` (optional): Comma-separated tags to apply to the case when closing.
+    - **Returns:** Confirmation of the case closure.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "status": "Closed",
+        "reason": "Malicious",
+        "root_cause": "Phishing email with credential harvester",
+        "timestamp": "2023-09-15T16:00:00Z"
+      }
+      ```
+
+- **`assign_case(case_id, user)`**
+    - **Description:** Assigns a specific analyst or responder to a specific case, establishing ownership for the investigation.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `user` (required): The username or email of the user to assign.
+    - **Returns:** Confirmation of the assignment.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "assigned_user": "john.analyst@example.com",
+        "timestamp": "2023-09-15T14:35:00Z"
+      }
+      ```
+
+- **`change_case_stage(case_id, stage)`**
+    - **Description:** Updates the workflow stage of a specific case to reflect its current position in the incident response lifecycle. Stages are configurable per SOAR deployment.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `stage` (required): The new stage name (e.g., "Triage", "Investigation", "Containment", "Remediation").
+    - **Returns:** Confirmation of the stage change.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "stage": "Investigation",
+        "timestamp": "2023-09-15T14:40:00Z"
+      }
+      ```
+
+- **`add_case_tag(case_id, tag)`**
+    - **Description:** Adds a descriptive tag to a specific case for categorization, filtering, and reporting purposes.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `tag` (required): The tag to add (e.g., "phishing", "ransomware").
+    - **Returns:** Confirmation of the tag addition.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "tag": "phishing",
+        "timestamp": "2023-09-15T14:45:00Z"
+      }
+      ```
+
+- **`remove_case_tag(case_id, tag)`**
+    - **Description:** Removes a previously applied tag from a specific case.
+    - **Parameters:**
+        - `case_id` (required): The ID of the case.
+        - `tag` (required): The tag to remove.
+    - **Returns:** Confirmation of the tag removal.
+    - **Return Example:**
+      ```json
+      {
+        "success": true,
+        "case_id": 12345,
+        "tag": "false-positive",
+        "removed": true,
+        "timestamp": "2023-09-15T14:50:00Z"
       }
       ```
 
