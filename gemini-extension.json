@@ -2,12 +2,13 @@
   "name": "google-secops",
   "description": "Essential Security Operations skills for Triage, Investigation, and Hunting.",
   "version": "1.0.0",
+  "contextFileName": "extensions/google-secops/GEMINI.md",
   "skills": [
-    "skills/setup-gemini-cli",
-    "skills/setup-antigravity",
-    "skills/triage",
-    "skills/investigate",
-    "skills/hunt"
+    "extensions/google-secops/skills/setup-gemini-cli",
+    "extensions/google-secops/skills/setup-antigravity",
+    "extensions/google-secops/skills/triage",
+    "extensions/google-secops/skills/investigate",
+    "extensions/google-secops/skills/hunt"
   ],
   "settings": [
     {
