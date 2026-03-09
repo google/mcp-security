@@ -22,6 +22,7 @@ from .ioc_matches import *
 from .log_ingestion import *
 from .parser_management import *
 from .reference_list_management import *
+from .rule_exclusions import *
 from .search import *
 from .security_alerts import *
 from .security_events import *
