@@ -528,6 +528,148 @@ The service account or user credentials need the following Chronicle roles:
         - **broad**: More detections, potentially higher false positive rate. Better for comprehensive threat hunting.
         - **precise**: Fewer detections, lower false positive rate. Better for production alerting.
 
+### Rule Exclusions Management
+
+- **`create_rule_exclusion(display_name, refinement_type, query, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create a new rule exclusion in Chronicle SIEM to filter out false positives or exclude specific events from triggering detections. Rule exclusions use UDM query syntax to define which events should be excluded from detection rules.
+    - **Parameters:**
+        - `display_name` (required): User-friendly name for the exclusion.
+        - `refinement_type` (required): Type of exclusion refinement. Use "DETECTION_EXCLUSION" for detection exclusions.
+        - `query` (required): UDM query defining which events to exclude (e.g., '(domain = "google.com")' or '(ip = "8.8.8.8")').
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing the created exclusion details including name, display_name, and query.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/findingsRefinements/excl-abc-123",
+        "displayName": "Exclude Google Domain",
+        "refinementType": "DETECTION_EXCLUSION",
+        "query": "(domain = \"google.com\")",
+        "createTime": "2024-01-15T10:30:00Z",
+        "updateTime": "2024-01-15T10:30:00Z"
+      }
+      ```
+
+- **`get_rule_exclusion(exclusion_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get detailed information about a specific rule exclusion by its ID, including display name, query, refinement type, and deployment status.
+    - **Parameters:**
+        - `exclusion_id` (required): Exclusion ID only (e.g., "excl-abc-123"), not the full resource name.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Complete exclusion details including query, refinement_type, and deployment configuration.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/findingsRefinements/excl-abc-123",
+        "displayName": "Exclude Google Domain",
+        "refinementType": "DETECTION_EXCLUSION",
+        "query": "(domain = \"google.com\")",
+        "createTime": "2024-01-15T10:30:00Z",
+        "updateTime": "2024-01-15T10:30:00Z"
+      }
+      ```
+
+- **`list_rule_exclusions(page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List all rule exclusions configured in Chronicle SIEM with pagination support for reviewing and managing exclusions.
+    - **Parameters:**
+        - `page_size` (optional): Maximum number of exclusions to return per page.
+        - `page_token` (optional): Token for retrieving next page of results.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing exclusion data with pagination metadata.
+    - **Return Example:**
+      ```json
+      {
+        "findingsRefinements": [
+          {
+            "name": "projects/123/.../findingsRefinements/excl-abc-123",
+            "displayName": "Exclude Google Domain",
+            "refinementType": "DETECTION_EXCLUSION",
+            "query": "(domain = \"google.com\")"
+          },
+          {
+            "name": "projects/123/.../findingsRefinements/excl-def-456",
+            "displayName": "Exclude Scanner IP",
+            "refinementType": "DETECTION_EXCLUSION",
+            "query": "(ip = \"192.168.1.100\")"
+          }
+        ],
+        "nextPageToken": "token-for-next-page",
+        "total_in_page": 2
+      }
+      ```
+
+- **`patch_rule_exclusion(exclusion_id, display_name=None, query=None, update_mask=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update an existing rule exclusion's properties including display name and query. Supports partial updates via update_mask to modify only specific fields.
+    - **Parameters:**
+        - `exclusion_id` (required): Unique identifier of the exclusion to update.
+        - `display_name` (optional): New display name for the exclusion.
+        - `query` (optional): New UDM query defining which events to exclude.
+        - `update_mask` (optional): Comma-separated list of fields to update (e.g., "display_name,query").
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing the updated exclusion details.
+    - **Return Example:**
+      ```json
+      {
+        "name": "projects/123/locations/us/instances/456/findingsRefinements/excl-abc-123",
+        "displayName": "Updated Exclusion Name",
+        "refinementType": "DETECTION_EXCLUSION",
+        "query": "(domain = \"example.com\")",
+        "updateTime": "2024-01-15T14:30:00Z"
+      }
+      ```
+
+- **`update_rule_exclusion_deployment(exclusion_id, enabled, archived, detection_exclusion_application, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Manage deployment settings for a rule exclusion including enable/disable status, archive status, and which rules or rule sets the exclusion should be applied to.
+    - **Parameters:**
+        - `exclusion_id` (required): Unique identifier of the exclusion.
+        - `enabled` (required): Whether the exclusion should be active.
+        - `archived` (required): Whether the exclusion should be archived.
+        - `detection_exclusion_application` (required): Configuration specifying which rules/rule sets to apply exclusion to. Example: `{"curatedRules": [], "curatedRuleSets": [], "rules": ["rule_123"]}`.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing the updated deployment configuration.
+    - **Return Example:**
+      ```json
+      {
+        "enabled": true,
+        "archived": false,
+        "detectionExclusionApplication": {
+          "curatedRules": [],
+          "curatedRuleSets": [],
+          "rules": ["rule_123", "rule_456"]
+        }
+      }
+      ```
+
+- **`compute_rule_exclusion_activity(exclusion_id, start_time, end_time, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Calculate activity statistics for a rule exclusion showing how many events were excluded during the specified time period. Helps measure exclusion effectiveness and impact.
+    - **Parameters:**
+        - `exclusion_id` (required): Unique identifier of the exclusion.
+        - `start_time` (required): Start of time period for activity calculation (timezone-aware datetime object).
+        - `end_time` (required): End of time period for activity calculation (timezone-aware datetime object).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing activity statistics including count of excluded events.
+    - **Return Example:**
+      ```json
+      {
+        "count": 1247,
+        "timeRange": {
+          "startTime": "2024-01-01T00:00:00Z",
+          "endTime": "2024-01-07T23:59:59Z"
+        }
+      }
+      ```
+
 ### Watchlist Management
 
 - **`create_watchlist(name, display_name, multiplying_factor, description, project_id=None, customer_id=None, region=None)`**
