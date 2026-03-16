@@ -14,12 +14,44 @@
 """HTTP client for making requests to the SecOps SOAR API."""
 
 import json
+import ssl
 from typing import Any, Dict
 
 import aiohttp
 from logger_utils import get_logger
+from secops_soar_mcp.utils import consts
 
 logger = get_logger(__name__)
+
+
+class SoarSSLError(Exception):
+    """Raised when an SSL certificate error occurs connecting to SOAR."""
+
+
+class SoarConnectionError(Exception):
+    """Raised when a connection to the SOAR server cannot be established."""
+
+
+def _is_cert_verify_error(error: BaseException) -> bool:
+    """Check if an error is caused by SSL certificate verification failure.
+
+    Inspects the error message, its chain of causes (__cause__), and
+    type to determine if the root cause is a certificate verification
+    failure.
+    """
+    # Walk the cause chain to find CERTIFICATE_VERIFY_FAILED anywhere
+    current = error
+    while current is not None:
+        error_str = str(current).lower()
+        if (
+            "certificate_verify_failed" in error_str
+            or "certificate verify failed" in error_str
+        ):
+            return True
+        if isinstance(current, ssl.SSLCertVerificationError):
+            return True
+        current = getattr(current, "__cause__", None)
+    return False
 
 
 class HttpClient:
@@ -41,6 +73,51 @@ class HttpClient:
             headers["AppKey"] = self.app_key
         return headers
 
+    def _handle_ssl_error(self, error: Exception) -> None:
+        """Check for SSL errors and raise descriptive exceptions.
+
+        Args:
+            error: The exception to inspect.
+
+        Raises:
+            SoarSSLError: If the error is an SSL certificate verification issue.
+            SoarConnectionError: If the error is a non-SSL connection issue.
+        """
+        if isinstance(error, aiohttp.ClientConnectorSSLError):
+            if _is_cert_verify_error(error):
+                logger.error(
+                    "SSL certificate verification failed: %s", error
+                )
+                raise SoarSSLError(
+                    consts.SSL_CERTIFI_ERROR_MESSAGE
+                ) from error
+            else:
+                logger.error("SSL/TLS error: %s", error)
+                raise SoarSSLError(
+                    consts.SSL_GENERIC_ERROR_MESSAGE.format(error=error)
+                ) from error
+
+        if isinstance(error, aiohttp.ClientConnectorError):
+            logger.error("Connection error: %s", error)
+            raise SoarConnectionError(
+                consts.CONNECTION_ERROR_MESSAGE.format(url=self.base_url)
+            ) from error
+
+        # Also catch raw ssl.SSLError that may not be wrapped by aiohttp
+        if isinstance(error, ssl.SSLError):
+            if _is_cert_verify_error(error):
+                logger.error(
+                    "SSL certificate verification failed: %s", error
+                )
+                raise SoarSSLError(
+                    consts.SSL_CERTIFI_ERROR_MESSAGE
+                ) from error
+            else:
+                logger.error("SSL/TLS error: %s", error)
+                raise SoarSSLError(
+                    consts.SSL_GENERIC_ERROR_MESSAGE.format(error=error)
+                ) from error
+
     async def get(
         self,
         endpoint: str,
@@ -54,6 +131,10 @@ class HttpClient:
 
         Returns:
             The response as a JSON object, or None if an error occurred.
+
+        Raises:
+            SoarSSLError: If an SSL certificate verification error occurs.
+            SoarConnectionError: If the SOAR server cannot be reached.
         """
         headers = await self._get_headers()
         try:
@@ -65,6 +146,7 @@ class HttpClient:
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self._handle_ssl_error(e)
             logger.debug("An error occurred: %s", e)
         return None
 
@@ -83,6 +165,10 @@ class HttpClient:
 
         Returns:
             The response as a JSON object, or None if an error occurred.
+
+        Raises:
+            SoarSSLError: If an SSL certificate verification error occurs.
+            SoarConnectionError: If the SOAR server cannot be reached.
         """
         headers = await self._get_headers()
         try:
@@ -96,6 +182,7 @@ class HttpClient:
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self._handle_ssl_error(e)
             logger.debug("An error occurred: %s", e)
         return None
 
@@ -114,6 +201,10 @@ class HttpClient:
 
         Returns:
             The response as a JSON object, or None if an error occurred.
+
+        Raises:
+            SoarSSLError: If an SSL certificate verification error occurs.
+            SoarConnectionError: If the SOAR server cannot be reached.
         """
         headers = await self._get_headers()
         try:
@@ -125,6 +216,7 @@ class HttpClient:
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self._handle_ssl_error(e)
             logger.debug("An error occurred: %s", e)
         return None
 

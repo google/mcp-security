@@ -13,8 +13,53 @@
 # limitations under the License.
 """Constants used in the SOAR integration."""
 
+import platform
+import sys
+
 ENV_SOAR_URL = "SOAR_URL"
 ENV_SOAR_APP_KEY = "SOAR_APP_KEY"
+
+# Python version info for certifi fix instructions
+_PYTHON_MINOR = f"{sys.version_info.major}.{sys.version_info.minor}"
+
+SSL_CERTIFI_ERROR_MESSAGE = (
+    "SSL certificate verification failed when connecting to SOAR.\n"
+    "This is commonly caused by missing or outdated CA certificates in your "
+    "Python installation.\n\n"
+    "To fix this issue:\n"
+    + (
+        f"  macOS:  Run: /Applications/Python\\ {_PYTHON_MINOR}/Install\\ Certificates.command\n"
+        if platform.system() == "Darwin"
+        else ""
+    )
+    + "  All platforms: pip install --upgrade certifi\n"
+    "  Then restart the MCP server.\n\n"
+    "For more details, see: "
+    "https://google.github.io/mcp-security/usage_guide.html"
+    "#mcp-server-configuration-reference"
+)
+
+SSL_GENERIC_ERROR_MESSAGE = (
+    "An SSL/TLS error occurred when connecting to SOAR: {error}\n"
+    "Please verify that your SOAR_URL is correct and the server's "
+    "SSL certificate is valid."
+)
+
+CONNECTION_ERROR_MESSAGE = (
+    "Failed to connect to SOAR at '{url}'.\n"
+    "Please verify that:\n"
+    "  1. The SOAR_URL environment variable is set correctly.\n"
+    "  2. The SOAR server is reachable from your network.\n"
+    "  3. Any required VPN or proxy is active."
+)
+
+CREDENTIALS_ERROR_MESSAGE = (
+    "Failed to fetch valid scopes from SOAR.\n"
+    "Please make sure you have configured the right SOAR credentials:\n"
+    "  1. SOAR_URL is set and correct.\n"
+    "  2. SOAR_APP_KEY is set and valid.\n"
+    "Shutting down..."
+)
 
 
 class Endpoints:

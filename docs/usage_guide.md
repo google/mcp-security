@@ -244,3 +244,25 @@ If you encounter issues with the MCP servers:
 3. **Check server logs**: Look for error messages in the server output
 4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
 5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
+
+### SecOps SOAR: SSL Certificate Verification Error
+
+If the SOAR MCP server fails to start with an error mentioning **SSL certificate verification failed**, this typically means Python cannot find the correct CA (Certificate Authority) certificates. This is a common issue on **macOS**.
+
+**Fix for macOS:**
+
+Run the `Install Certificates.command` script that ships with Python. Replace `3.12` with your installed Python minor version:
+
+```bash
+/Applications/Python\ 3.12/Install\ Certificates.command
+```
+
+**Fix for all platforms:**
+
+```bash
+pip install --upgrade certifi
+```
+
+Then restart the MCP server.
+
+> **Note:** The SOAR MCP server now detects this specific issue and prints an actionable error message with fix instructions. If you still see the generic "Failed to fetch valid scopes from SOAR" message, make sure you are running the latest version of the server.
