@@ -14,11 +14,15 @@
 
 import markdown
 import datetime
+import mimetypes
 from google.cloud import storage
 from google.genai import types
 from google.adk.tools.tool_context import ToolContext
 import os
 import logging
+
+# Add text/markdown mimetype for .md files
+mimetypes.add_type("text/markdown", ".md")
 
 async def store_file(tool_context:ToolContext,**kwargs)->dict:
    """
@@ -36,13 +40,22 @@ async def store_file(tool_context:ToolContext,**kwargs)->dict:
    message - message
 
    """
-   html_output = markdown.markdown(kwargs["markdown_text"], extensions=['extra'])
+   markdown_text = kwargs["markdown_text"]
+   html_output = markdown.markdown(markdown_text, extensions=['extra'])
    file_name=kwargs["file_name"]
    html_file_name=file_name+".html"
+   md_file_name=file_name+".md"
    # write to the disk and then save into the artifact service
    # writing to disk is totally optional
    with open(f"{os.environ.get('LOCAL_DIR_FOR_FILES','/tmp')}/{file_name}.html", "w", encoding="utf-8") as f:
         f.write(html_output)
+   
+   # Save the markdown as an artifact
+   md_artifact = types.Part.from_bytes(
+        data=markdown_text.encode('utf-8'),
+        mime_type="text/markdown"
+    )
+   md_version = await tool_context.save_artifact(filename=f"user:{md_file_name}", artifact=md_artifact)
 
    file_artifact = types.Part.from_bytes( # from_text is available but does not work with GCS.
         data=html_output.encode('utf-8'),
@@ -53,7 +66,7 @@ async def store_file(tool_context:ToolContext,**kwargs)->dict:
    print(f"Successfully saved file artifact '{filename}' as version {version}.")
    return{
       "result":"success",
-      "message":f"file {file_name} written to file {html_file_name}"
+      "message":f"file {file_name} written to file {html_file_name} and {md_file_name}"
    } 
 
 async def list_files(tool_context:ToolContext,**kwargs)->dict:
