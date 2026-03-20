@@ -19,7 +19,8 @@ dependencies = [
     "secops>=0.35.1",
     "google-auth>=2.48.0",
     "google-auth-httplib2>=0.3.0",
-    "google-api-python-client>=2.190.0"
+    "google-api-python-client>=2.190.0",
+    "google-cloud-secret-manager>=2.16.0"
 ]
 
 [project.urls]

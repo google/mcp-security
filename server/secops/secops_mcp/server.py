@@ -68,7 +68,33 @@ def get_chronicle_client(
             'as parameters or through environment variables '
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
+
     service_account_path = os.getenv("SECOPS_SA_PATH")
+    service_account_secret = os.getenv("CHRONICLE_SERVICE_ACCOUNT_SECRET")
+
+    if service_account_secret:
+        try:
+            import tempfile
+            from google.cloud import secretmanager
+
+            logger.info(f"Fetching service account from Secret Manager: {service_account_secret}")
+            sm_client = secretmanager.SecretManagerServiceClient()
+            response = sm_client.access_secret_version(
+                request={"name": service_account_secret}
+            )
+            secret_payload = response.payload.data.decode("UTF-8")
+
+            # Write to a secure temporary file
+            fd, temp_path = tempfile.mkstemp(prefix="secops_sa_", suffix=".json")
+            with os.fdopen(fd, 'w') as f:
+                f.write(secret_payload)
+            
+            service_account_path = temp_path
+            logger.info(f"Loaded service account from Secret Manager to temporary file")
+        except Exception as e:
+            logger.error(f"Failed to load service account from Secret Manager: {e}")
+            # Fall back to checking if SECOPS_SA_PATH was set anyway
+
     if service_account_path:
         client = SecOpsClient(service_account_path=service_account_path)
     else:

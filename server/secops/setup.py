@@ -24,6 +24,7 @@ setup(
     install_requires=[
         "fastmcp",
         "secops",
+        "google-cloud-secret-manager>=2.16.0",
     ],
     entry_points={
         "console_scripts": [
