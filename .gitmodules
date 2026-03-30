@@ -1,0 +1,3 @@
+[submodule "external/agentic_soc_gemini_enterprise"]
+	path = external/agentic_soc_gemini_enterprise
+	url = https://github.com/dandye/agentic_soc_gemini_enterprise.git
