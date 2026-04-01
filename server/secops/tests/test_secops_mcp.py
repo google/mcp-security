@@ -36,6 +36,7 @@ from secops_mcp.tools.security_rules import list_security_rules, get_rule_detect
 from secops_mcp.tools.ioc_matches import get_ioc_matches
 from secops_mcp.tools.threat_intel import get_threat_intel
 from secops_mcp.tools.search import search_udm
+from secops_mcp.tools.stats import get_stats
 from secops_mcp.tools.udm_search import (
     export_udm_search_csv,
     find_udm_field_values,
@@ -800,6 +801,74 @@ class TestChronicleSecOpsMCP:
             if result["fieldValues"]:
                 first_value = result["fieldValues"][0]
                 assert isinstance(first_value, dict)
+
+    @pytest.mark.asyncio
+    async def test_get_stats_basic(self, chronicle_config: Dict[str, str]) -> None:
+        """Test that get_stats returns a structured aggregation result from Chronicle.
+
+        Runs a stats count by event type over the last 24 hours. We cannot assert
+        specific row values (data varies per environment), but we verify the response
+        contract: correct keys, typed values, no error field, and row/total_rows
+        consistency.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        result = await get_stats(
+            query="| stats count() as event_count by metadata.event_type",
+            hours_back=24,
+            max_values=20,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        assert "error" not in result, f"get_stats returned an error: {result.get('error')}"
+        assert "columns" in result
+        assert "rows" in result
+        assert "total_rows" in result
+        assert isinstance(result["columns"], list)
+        assert isinstance(result["rows"], list)
+        assert isinstance(result["total_rows"], int)
+        # Row list length must match total_rows — the secops-wrapper contract
+        assert result["total_rows"] == len(result["rows"])
+
+        if result["rows"]:
+            sample_row = result["rows"][0]
+            assert isinstance(sample_row, dict)
+            for col in result["columns"]:
+                assert col in sample_row, f"Column '{col}' missing from row: {sample_row}"
+
+    @pytest.mark.asyncio
+    async def test_get_stats_count_values_are_numeric(
+        self, chronicle_config: Dict[str, str]
+    ) -> None:
+        """Verify count() values are returned as int/float, not strings.
+
+        The Chronicle API returns int64Val inside a JSON string. The secops-wrapper
+        must cast it to int. If this casting breaks, downstream consumers (sorting,
+        thresholding, alerting logic) will silently produce wrong results.
+
+        Args:
+            chronicle_config: Dictionary with Chronicle configuration
+        """
+        result = await get_stats(
+            query="| stats count() as total by metadata.event_type",
+            hours_back=24,
+            max_values=5,
+            project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
+            customer_id=chronicle_config["CHRONICLE_CUSTOMER_ID"],
+            region=chronicle_config["CHRONICLE_REGION"],
+        )
+
+        assert "error" not in result, f"get_stats returned an error: {result.get('error')}"
+
+        for row in result["rows"]:
+            count_value = row.get("total")
+            if count_value is not None:
+                assert isinstance(count_value, (int, float)), (
+                    f"Expected numeric count, got {type(count_value).__name__}: {count_value!r}"
+                )
 
     @pytest.mark.asyncio
     async def test_service_account_authentication(
