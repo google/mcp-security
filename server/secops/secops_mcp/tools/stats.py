@@ -36,61 +36,99 @@ async def get_stats(
     customer_id: str = None,
     region: str = None,
 ) -> Dict[str, Any]:
-    """Run a stats/aggregation query against Chronicle UDM events.
+    """Run a YARA-L 2.0 stats/aggregation query against Chronicle UDM events.
 
-    Executes a Chronicle UDM query containing a `| stats` pipeline operator and
-    returns aggregated results as structured columns and rows. Stats queries are
+    Executes a Chronicle UDM query using YARA-L 2.0 match and outcome sections,
+    returning aggregated results as structured columns and rows. Stats queries are
     significantly faster than full event fetches because they return summary data
     only — ideal for long-tail analysis, frequency counts, top-N rankings, and
     time-bucketed roll-ups.
+
+    Note: Statistical query results are available two hours after ingestion.
 
     **When to use get_stats vs search_udm:**
     - Use `get_stats` when you need counts, aggregations, or summaries (e.g., top
       source IPs, event frequency by user, distinct process names per host).
     - Use `search_udm` when you need the raw event details themselves.
 
-    **Stats Query Syntax:**
-    Stats queries use the standard UDM filter syntax followed by a `| stats`
-    pipeline. The stats operator supports:
-    - `count()` — total number of matching events
-    - `count_distinct(field)` — unique values of a field
-    - `min(field)`, `max(field)`, `sum(field)`, `avg(field)` — numeric aggregates
-    - `array_distinct(field)` — collect unique values into a list
-    - `by field1, field2` — group results by one or more fields
-    - `| sort column desc` — sort results
-    - `| head N` — limit to top N rows
+    **YARA-L 2.0 Query Structure:**
+    A stats query is composed of the following sections in order:
+
+    1. **Filtering statement** (required): UDM conditions to filter events.
+    2. **match** (optional): Fields to group by, with optional time granularity.
+       Syntax: ``match:\\n  field1, field2 [by|over every] [N] [time_unit]``
+    3. **outcome** (required): Aggregate expressions assigned to ``$variables``.
+       Syntax: ``outcome:\\n  $alias = function(field)``
+    4. **order** (optional): Sort direction — ``asc`` (default) or ``desc``.
+       Syntax: ``order:\\n  $alias desc``
+    5. **limit** (optional): Maximum rows returned.
+       Syntax: ``limit:\\n  20``
+
+    **Supported Aggregate Functions:**
+    - ``array(field)`` — all values as a list (truncated to 25 random elements)
+    - ``array_distinct(field)`` — distinct values as a list (max 25 elements)
+    - ``avg(numericField)`` — average, ignoring NULLs
+    - ``count(field)`` — number of rows in the group
+    - ``count_distinct(field)`` — number of distinct values in the group
+    - ``earliest(timestamp)`` — earliest timestamp with microsecond resolution
+    - ``latest(timestamp)`` — latest timestamp with microsecond resolution
+    - ``max(numericField)`` — maximum value in the group
+    - ``min(numericField)`` — minimum value in the group
+    - ``stddev(numericField)`` — standard deviation
+    - ``sum(numericField)`` — sum, ignoring NULLs
+
+    **Time Granularity (match section):**
+    Group by time using ``by`` or ``over every`` with: ``minute``/``m``,
+    ``hour``/``h``, ``day``/``d``, ``week``/``w``, ``month``/``mo``.
+    Both keywords are functionally equivalent.
 
     **Example Queries:**
     ```
-    # Top 10 source IPs by login failure count
-    metadata.event_type = "USER_LOGIN" AND security_result.action = "BLOCK"
-    | stats count() as failures by principal.ip
-    | sort failures desc
-    | head 10
+    # Count of successful user logins grouped by date
+    metadata.event_type = "USER_LOGIN"
+    $security_result = security_result.action
+    $security_result = "ALLOW"
+    $date = timestamp.get_date(metadata.event_timestamp.seconds, "America/Los_Angeles")
+    match:
+        $security_result, $date
+    outcome:
+        $event_count = count(metadata.id)
 
-    # Unique users per hostname over the window
-    | stats count_distinct(principal.user.userid) as unique_users by target.hostname
+    # Top 20 IPs by unique user count (OKTA logs)
+    metadata.log_type = "OKTA"
+    match:
+        principal.ip
+    outcome:
+        $user_count_by_ip = count(principal.user.userid)
+    order:
+        $user_count_by_ip desc
+    limit:
+        20
 
-    # Process execution frequency (LOLBin hunting)
-    metadata.event_type = "PROCESS_LAUNCH"
-    | stats count() as launches, array_distinct(principal.hostname) as hosts
-      by target.process.file.full_path
-    | sort launches desc
+    # Event volume per hostname bucketed by day
+    $hostname = target.hostname
+    match:
+        $hostname over every day
+    outcome:
+        $events_count = count($hostname)
 
-    # Event volume bucketed by type
-    | stats count() as total by metadata.event_type | sort total desc
+    # Total bytes sent per source IP
+    target.ip != ""
+    match:
+        principal.ip
+    outcome:
+        $sent_bytes = sum(network.sent_bytes)
     ```
 
     **Workflow Integration:**
     - Use to triage alerts by frequency before deep-diving into raw events.
-    - Identify rare/anomalous values (long-tail) — low-count rows in `count() by field`.
+    - Identify rare/anomalous values (long-tail) — low-count rows in ``count()``.
     - Scope the blast radius of an incident (how many hosts? how many users?).
-    - Feed results into `search_udm` with specific values to get the full event context.
+    - Feed results into ``search_udm`` with specific field values for full event context.
 
     Args:
-        query (str): UDM query with a `| stats` operator. Filter predicates before
-                    the pipe are optional — an empty filter returns stats over all
-                    events in the time window.
+        query (str): YARA-L 2.0 query with a filtering statement and outcome section.
+                    The match section is optional; outcome is required for aggregation.
         hours_back (int): Hours to look back from now when start_time is not given.
                          Defaults to 24.
         start_time (Optional[str]): Start of time range in ISO 8601 format
@@ -110,7 +148,7 @@ async def get_stats(
 
     Returns:
         Dict[str, Any]: A dictionary with:
-            - "columns" (List[str]): Ordered list of column names from the stats query.
+            - "columns" (List[str]): Ordered list of column names from the outcome section.
             - "rows" (List[Dict]): Each row is a dict mapping column name to its value.
               Values are typed: int, float, str, datetime, list, or None.
             - "total_rows" (int): Number of rows returned.
@@ -118,20 +156,20 @@ async def get_stats(
 
     Example Output:
         {
-            "columns": ["principal.ip", "failures"],
+            "columns": ["principal.ip", "$user_count_by_ip"],
             "rows": [
-                {"principal.ip": "10.1.2.3", "failures": 412},
-                {"principal.ip": "192.168.0.55", "failures": 87}
+                {"principal.ip": "10.1.2.3", "$user_count_by_ip": 412},
+                {"principal.ip": "192.168.0.55", "$user_count_by_ip": 87}
             ],
             "total_rows": 2
         }
 
     Next Steps (using MCP-enabled tools):
-        - Pivot on high-count rows by passing specific values to `search_udm` for
+        - Pivot on high-count rows by passing specific values to ``search_udm`` for
           full event context.
-        - Use `lookup_entity` on suspicious IPs or hostnames surfaced by stats.
+        - Use ``lookup_entity`` on suspicious IPs or hostnames surfaced by stats.
         - Build detection rules targeting aggregation patterns identified here.
-        - Export raw matching events with `export_udm_search_csv` for the top offenders.
+        - Export raw matching events with ``export_udm_search_csv`` for top offenders.
     """
     try:
         try:
