@@ -259,8 +259,15 @@ async def analyse_file(file_path: str, ctx: Context):
   Returns:
     The analysis report.
   """
+  import os
+  resolved = os.path.realpath(os.path.abspath(file_path))
+  allowed_dir = os.path.realpath("/tmp/gti-uploads")
+  if not resolved.startswith(allowed_dir + os.sep):
+      raise ValueError(
+          f"Access denied: file_path must be within {allowed_dir}"
+      )
   async with vt_client(ctx) as client:
-    with open(file_path, "rb") as f:    
+    with open(resolved, "rb") as f:
       analysis = await client.scan_file_async(file=f)
       logging.info(f"File {file_path} uploaded.")
 
