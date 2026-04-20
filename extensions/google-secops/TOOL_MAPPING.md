@@ -14,7 +14,11 @@ When executing a skill, the agent should first check which tools are available i
 | | Get Case Details | `get_case` | `get_case_full_details` | Local `get_case_full_details` aggregates alerts/comments. Remote `get_case` fetches the case object; use `expand='tasks,tags,products'` or call `list_case_alerts`/`list_case_comments` for full context. |
 | | Comment on Case | `create_case_comment` | `post_case_comment` | |
 | | Update Case | `update_case` | `change_case_priority` | Remote tool is general (priority, status, assignee). Local tool is specific to priority. |
-| | Close Case | `execute_bulk_close_case` | *(No local tool)* | Only remote tool can close cases. |
+| | Close Case | `execute_bulk_close_case` | `close_case` | Remote uses bulk endpoint; local closes a single case. |
+| | Assign Case | *(No direct equivalent)* | `assign_case` | Local tool assigns a user to a case. |
+| | Change Case Stage | *(No direct equivalent)* | `change_case_stage` | Local tool updates the workflow stage of a case. |
+| | Add Case Tag | *(No direct equivalent)* | `add_case_tag` | Local tool adds a tag to a case. |
+| | Remove Case Tag | *(No direct equivalent)* | `remove_case_tag` | Local tool removes a tag from a case. |
 | **Alerts (SOAR)** | List Alerts for Case | `list_case_alerts` | `list_alerts_by_case` | |
 | | List Events for Alert | `list_connector_events` | `list_events_by_alert` | Remote tool lists "connector events". |
 | | List Alert Groups | *(No direct equivalent)* | `list_alert_group_identifiers_by_case` | Remote `list_case_alerts` returns alert objects which may contain grouping info. |
