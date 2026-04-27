@@ -239,6 +239,104 @@ async def get_parser(
         return f'Error getting parser {parser_id} for log type {log_type}: {str(e)}'
 
 @server.tool()
+async def list_parsers(
+    log_type: str = "-",
+    page_size: Optional[int] = None,
+    page_token: Optional[str] = None,
+    filter: Optional[str] = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> str:
+    """List parsers in Chronicle, optionally filtered by log type.
+
+    Enumerates parsers deployed in the Chronicle tenant without needing a parser ID
+    up front. Returns both Google-prebuilt and customer-created parsers. Use this as
+    the discovery entry point before calling `get_parser` for full parser details.
+
+    **Workflow Integration:**
+    - Use to discover what parsers exist for a given log type (or all log types).
+    - Essential first step when auditing parser coverage across a tenant.
+    - Helps identify custom parsers for review, update, or deactivation.
+
+    **Use Cases:**
+    - Enumerate every parser in the tenant (`log_type="-"`) for audit or inventory.
+    - Find all parsers for a specific log type before choosing one to inspect.
+    - Filter to active or custom parsers via the `filter` parameter.
+    - Surface parser IDs so they can be passed to `get_parser`, `activate_parser`, etc.
+
+    Args:
+        log_type (str): Chronicle log type identifier. Use "-" (default) to list
+            parsers across all log types.
+        page_size (Optional[int]): Maximum parsers to return per page. When None
+            (default), auto-paginates and returns all parsers.
+        page_token (Optional[str]): Pagination token from a prior call.
+        filter (Optional[str]): Optional Chronicle filter expression
+            (e.g., 'STATE="ACTIVE"', 'TYPE="CUSTOM"').
+        project_id (Optional[str]): Google Cloud project ID. Defaults to the
+            CHRONICLE_PROJECT_ID environment variable — omit unless overriding.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to the
+            CHRONICLE_CUSTOMER_ID environment variable — omit unless overriding.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+            Defaults to the CHRONICLE_REGION environment variable — omit unless
+            overriding.
+
+    Returns:
+        str: Formatted list of parsers with ID, log type, state, and creation time.
+             Returns error message if retrieval fails.
+
+    Example Usage:
+        # List all parsers in the tenant (uses env-var credentials)
+        list_parsers()
+
+        # Narrow to a single log type
+        list_parsers(log_type="OKTA")
+
+        # List only active parsers
+        list_parsers(filter='STATE="ACTIVE"')
+
+    Next Steps (using MCP-enabled tools):
+        - Pass a parser ID to `get_parser` to inspect its configuration.
+        - Use `activate_parser` / `deactivate_parser` to manage parser lifecycle.
+    """
+    try:
+        logger.info(f'Listing parsers for log type: {log_type}')
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        parsers = chronicle.list_parsers(
+            log_type=log_type,
+            page_size=page_size,
+            page_token=page_token,
+            filter=filter,
+            as_list=True,
+        )
+
+        if not parsers:
+            return f'No parsers found for log type: {log_type}'
+
+        result = f'Found {len(parsers)} parser(s) for log type: {log_type}\n\n'
+        for parser in parsers:
+            name = parser.get("name", "")
+            parser_id = name.split("/")[-1] if name else "Unknown"
+            # Extract the per-parser log type from the resource name when listing across all types
+            parser_log_type = log_type
+            if "/logTypes/" in name:
+                parser_log_type = name.split("/logTypes/")[-1].split("/")[0]
+
+            result += f'Parser ID: {parser_id}\n'
+            result += f'Log Type: {parser_log_type}\n'
+            result += f'State: {parser.get("state", "Unknown")}\n'
+            result += f'Type: {parser.get("type", "Unknown")}\n'
+            result += f'Created: {parser.get("createTime", "Unknown")}\n\n'
+
+        return result
+
+    except Exception as e:
+        logger.error(f'Error listing parsers for log type {log_type}: {str(e)}', exc_info=True)
+        return f'Error listing parsers for log type {log_type}: {str(e)}'
+
+@server.tool()
 async def activate_parser(
     log_type: str,
     parser_id: str,
