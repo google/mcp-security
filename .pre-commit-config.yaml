@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 'v0.15.12'
+    hooks:
+      - id: ruff
+        name: ruff
+        description: Run ruff linter (replaces isort, bandit, flake8)
+        args: ['--fix']
+
+  - repo: https://github.com/google/pyink
+    rev: '25.12.0'
+    hooks:
+      - id: pyink
+        name: pyink
+        description: Format Python code with pyink (Google Python Style Guide)
+        language_version: python3.12
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: mixed-line-ending
+        name: Fix mixed line endings
