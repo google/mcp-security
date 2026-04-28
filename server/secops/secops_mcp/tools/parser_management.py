@@ -247,7 +247,7 @@ async def list_parsers(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
-) -> str:
+) -> Dict[str, Any]:
     """List parsers in Chronicle, optionally filtered by log type.
 
     Enumerates parsers deployed in the Chronicle tenant without needing a parser ID
@@ -282,8 +282,8 @@ async def list_parsers(
             overriding.
 
     Returns:
-        str: Formatted list of parsers with ID, log type, state, and creation time.
-             Returns error message if retrieval fails.
+        Dict[str, Any]: A dictionary containing the list of parsers and their
+             details, or an error message if the operation fails.
 
     Example Usage:
         # List all parsers in the tenant (uses env-var credentials)
@@ -312,29 +312,11 @@ async def list_parsers(
             as_list=True,
         )
 
-        if not parsers:
-            return f'No parsers found for log type: {log_type}'
-
-        result = f'Found {len(parsers)} parser(s) for log type: {log_type}\n\n'
-        for parser in parsers:
-            name = parser.get("name", "")
-            parser_id = name.split("/")[-1] if name else "Unknown"
-            # Extract the per-parser log type from the resource name when listing across all types
-            parser_log_type = log_type
-            if "/logTypes/" in name:
-                parser_log_type = name.split("/logTypes/")[-1].split("/")[0]
-
-            result += f'Parser ID: {parser_id}\n'
-            result += f'Log Type: {parser_log_type}\n'
-            result += f'State: {parser.get("state", "Unknown")}\n'
-            result += f'Type: {parser.get("type", "Unknown")}\n'
-            result += f'Created: {parser.get("createTime", "Unknown")}\n\n'
-
-        return result
+        return {"parsers": parsers or []}
 
     except Exception as e:
         logger.error(f'Error listing parsers for log type {log_type}: {str(e)}', exc_info=True)
-        return f'Error listing parsers for log type {log_type}: {str(e)}'
+        return {"error": f"Error listing parsers for log type {log_type}: {str(e)}", "parsers": []}
 
 @server.tool()
 async def activate_parser(
