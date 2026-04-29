@@ -95,21 +95,22 @@ async def test_list_parsers_forwards_all_args(mock_get_client):
 
 @pytest.mark.asyncio
 async def test_list_parsers_empty_response(mock_get_client):
-    """An empty parser list should produce a 'No parsers found' message."""
+    """An empty parser list should return a dict with an empty parsers list."""
     mock_get_client.list_parsers.return_value = []
 
     result = await list_parsers(
         log_type="OKTA", project_id="test", customer_id="test", region="us"
     )
 
-    assert "No parsers found" in result
-    assert "OKTA" in result
+    assert isinstance(result, dict)
+    assert "parsers" in result
+    assert result["parsers"] == []
 
 
 @pytest.mark.asyncio
 async def test_list_parsers_formats_results(mock_get_client):
-    """Result should include parser ID, log type, state, type, and create time."""
-    mock_get_client.list_parsers.return_value = [
+    """Result should include raw parsers directly."""
+    parsers = [
         {
             "name": "projects/p/locations/us/instances/i/logTypes/OKTA/parsers/pa_abc",
             "state": "ACTIVE",
@@ -123,41 +124,41 @@ async def test_list_parsers_formats_results(mock_get_client):
             "createTime": "2025-02-02T00:00:00Z",
         },
     ]
+    mock_get_client.list_parsers.return_value = parsers
 
     result = await list_parsers(project_id="test", customer_id="test", region="us")
 
-    assert "Found 2 parser(s)" in result
-    assert "pa_abc" in result
-    assert "pa_def" in result
-    # Per-parser log type extracted from the resource name
-    assert "OKTA" in result
-    assert "WINDOWS_AD" in result
-    assert "ACTIVE" in result
-    assert "INACTIVE" in result
-    assert "CUSTOM" in result
-    assert "PREBUILT" in result
+    assert isinstance(result, dict)
+    assert "parsers" in result
+    assert result["parsers"] == parsers
 
 
 @pytest.mark.asyncio
 async def test_list_parsers_handles_missing_fields(mock_get_client):
-    """Parsers missing optional fields should fall back to 'Unknown' rather than error."""
-    mock_get_client.list_parsers.return_value = [{"name": ""}]
+    """Parsers missing optional fields should still be returned verbatim."""
+    parsers = [{"name": ""}]
+    mock_get_client.list_parsers.return_value = parsers
 
     result = await list_parsers(project_id="test", customer_id="test", region="us")
 
-    assert "Unknown" in result
+    assert isinstance(result, dict)
+    assert "parsers" in result
+    assert result["parsers"] == parsers
 
 
 @pytest.mark.asyncio
 async def test_list_parsers_returns_error_string_on_exception(mock_get_client):
-    """SDK errors should be caught and returned as a formatted error string."""
+    """SDK errors should be caught and returned as a dict with error and empty parsers."""
     mock_get_client.list_parsers.side_effect = RuntimeError("boom")
 
     result = await list_parsers(
         log_type="OKTA", project_id="test", customer_id="test", region="us"
     )
 
-    assert isinstance(result, str)
-    assert "Error listing parsers" in result
-    assert "boom" in result
-    assert "OKTA" in result
+    assert isinstance(result, dict)
+    assert "error" in result
+    assert "parsers" in result
+    assert result["parsers"] == []
+    assert "Error listing parsers" in result["error"]
+    assert "boom" in result["error"]
+    assert "OKTA" in result["error"]
