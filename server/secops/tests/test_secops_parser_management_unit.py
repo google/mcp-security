@@ -59,7 +59,7 @@ def mock_get_client(mock_chronicle_client):
 
 @pytest.mark.asyncio
 async def test_list_parsers_defaults_pass_wildcard_log_type(mock_get_client):
-    """By default, list_parsers should query across all log types with as_list=True."""
+    """By default, list_parsers should query across all log types with as_list=False."""
     await list_parsers(project_id="test", customer_id="test", region="us")
 
     mock_get_client.list_parsers.assert_called_once_with(
@@ -67,7 +67,7 @@ async def test_list_parsers_defaults_pass_wildcard_log_type(mock_get_client):
         page_size=None,
         page_token=None,
         filter=None,
-        as_list=True,
+        as_list=False,
     )
 
 
@@ -89,7 +89,7 @@ async def test_list_parsers_forwards_all_args(mock_get_client):
         page_size=25,
         page_token="tok123",
         filter='STATE="ACTIVE"',
-        as_list=True,
+        as_list=False,
     )
 
 
@@ -144,6 +144,29 @@ async def test_list_parsers_handles_missing_fields(mock_get_client):
     assert isinstance(result, dict)
     assert "parsers" in result
     assert result["parsers"] == parsers
+
+
+@pytest.mark.asyncio
+async def test_list_parsers_returns_pagination_token_when_page_size_set(mock_get_client):
+    """When the SDK returns a paginated dict, nextPageToken should flow back to the caller."""
+    parsers = [
+        {
+            "name": "projects/p/locations/us/instances/i/logTypes/OKTA/parsers/pa_abc",
+            "state": "ACTIVE",
+        }
+    ]
+    mock_get_client.list_parsers.return_value = {
+        "parsers": parsers,
+        "nextPageToken": "next-token-xyz",
+    }
+
+    result = await list_parsers(
+        page_size=10, project_id="test", customer_id="test", region="us"
+    )
+
+    assert isinstance(result, dict)
+    assert result["parsers"] == parsers
+    assert result["nextPageToken"] == "next-token-xyz"
 
 
 @pytest.mark.asyncio

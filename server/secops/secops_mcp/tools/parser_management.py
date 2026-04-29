@@ -286,8 +286,12 @@ async def list_parsers(
             overriding.
 
     Returns:
-        Dict[str, Any]: A dictionary containing the list of parsers and their
-             details, or an error message if the operation fails.
+        Dict[str, Any]: When `page_size` is None (default), returns
+            `{"parsers": [...]}` with all parsers auto-paginated by the SDK.
+            When `page_size` is provided, returns
+            `{"parsers": [...], "nextPageToken": "..."}`; pass `nextPageToken`
+            back as `page_token` on the next call to fetch the next page.
+            On error, returns `{"error": "...", "parsers": []}`.
 
     Example Usage:
         # List all parsers in the tenant (uses env-var credentials)
@@ -299,6 +303,10 @@ async def list_parsers(
         # List only active parsers
         list_parsers(filter='STATE="ACTIVE"')
 
+        # Paginate through results
+        first = list_parsers(page_size=50)
+        second = list_parsers(page_size=50, page_token=first["nextPageToken"])
+
     Next Steps (using MCP-enabled tools):
         - Pass a parser ID to `get_parser` to inspect its configuration.
         - Use `activate_parser` / `deactivate_parser` to manage parser lifecycle.
@@ -308,15 +316,24 @@ async def list_parsers(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
-        parsers = chronicle.list_parsers(
+        result = chronicle.list_parsers(
             log_type=log_type,
             page_size=page_size,
             page_token=page_token,
             filter=filter,
-            as_list=True,
+            as_list=False,
         )
 
-        return {"parsers": parsers or []}
+        # The SDK auto-paginates when `page_size` is None and returns a bare
+        # list of parsers. When `page_size` is provided it respects
+        # `as_list=False` and returns a dict with parsers plus pagination
+        # metadata. Normalize both shapes to a consistent dict.
+        if isinstance(result, list):
+            return {"parsers": result}
+        return {
+            "parsers": result.get("parsers", []),
+            "nextPageToken": result.get("nextPageToken", ""),
+        }
 
     except Exception as e:
         logger.error(
