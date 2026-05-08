@@ -50,11 +50,11 @@ async def list_security_rules(
     - Understand which rules might be relevant to a particular threat scenario or TTP.
 
     Args:
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        page_size (int): Maximum number of rules to return. Defaults to 100. Max is 1000.
-        page_token (str | None): Page token for pagination.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        page_size: Maximum number of rules to return. Defaults to 100. Max is 1000.
+        page_token: Page token for pagination.
 
     Returns:
         Dict[str, Any]: Raw response from the Chronicle API, typically containing a list
@@ -111,10 +111,10 @@ async def search_security_rules(
     - Searching for rules that reference a specific log_type like "WORKSPACE"
 
     Args:
-        query (str): Regex string to use for searching SecOps rules.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        query: Regex string to use for searching SecOps rules.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: Raw response from the Chronicle API, typically containing a list
@@ -171,13 +171,13 @@ async def get_detection_rule(
     - Associated rule ID, display name, and revision tracking
 
     Args:
-        rule_id (str): Unique ID of the detection rule to retrieve.
+        rule_id: Unique ID of the detection rule to retrieve.
                       Examples: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" (latest version),
                       "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890" (specific version).
                       If no version suffix is provided, the latest version is returned.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: Complete rule information including:
@@ -255,17 +255,17 @@ async def get_rule_detections(
     - Assess the Alert to determine liklihood of maliciousness
 
     Args:
-        rule_id (str): Unique ID of the rule to list detections for.
+        rule_id: Unique ID of the rule to list detections for.
                         Examples: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" (latest version),
                         "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890" (specific version),
                         "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@-" (all versions).
-        alert_state (Optional[str]): If provided, filter by alert state.
+        alert_state: If provided, filter by alert state.
                                      Valid values: "UNSPECIFIED", "NOT_ALERTING", "ALERTING".
-        page_size (Optional[int]): If provided, the maximum number of detections to return in a single response.
-        page_token (Optional[str]): If provided, a token to retrieve the next page of results for pagination.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        page_size: If provided, the maximum number of detections to return in a single response.
+        page_token: If provided, a token to retrieve the next page of results for pagination.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: A dictionary containing the list of detections (under a 'detections' key, typically)
@@ -354,13 +354,13 @@ async def list_rule_errors(
     - Get details of compilation or runtime errors for a given rule version.
 
     Args:
-        rule_id (str): Unique ID of the rule to list errors for.
+        rule_id: Unique ID of the rule to list errors for.
                         Examples: "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" (latest version),
                         "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890" (specific version),
                         "ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@-" (all versions).
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: A dictionary containing rule execution errors. The structure depends on the API.
@@ -437,10 +437,10 @@ async def create_rule(
     - Consider the rule's performance impact on Chronicle's processing capabilities.
 
     Args:
-        rule_text (str): Complete YARA-L 2.0 rule definition including rule metadata, events, and conditions.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        rule_text: Complete YARA-L 2.0 rule definition including rule metadata, events, and conditions.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message with the created rule ID and status information.
@@ -552,12 +552,12 @@ async def test_rule(
     - Test with different time windows to understand detection patterns and false positive rates.
 
     Args:
-        rule_text (str): Complete YARA-L 2.0 rule definition to test.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        hours_back (int): How many hours of historical data to test against. Defaults to 168 (7 days).
-        max_results (int): Maximum number of detection results to return. Defaults to 100.
+        rule_text: Complete YARA-L 2.0 rule definition to test.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        hours_back: How many hours of historical data to test against. Defaults to 168 (7 days).
+        max_results: Maximum number of detection results to return. Defaults to 100.
 
     Returns:
         str: Formatted test results showing detection count, sample detections, and analysis summary.
@@ -740,10 +740,10 @@ async def validate_rule(
     - Metadata section validation
 
     Args:
-        rule_text (str): Complete YARA-L 2.0 rule definition to validate.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        rule_text: Complete YARA-L 2.0 rule definition to validate.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Validation results indicating success or specific syntax errors with location information.
