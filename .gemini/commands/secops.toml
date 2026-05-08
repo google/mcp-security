@@ -1,0 +1,1518 @@
+description = "Implement slash command to call MCP Tools"
+prompt = """
+You are implementing /slash-commands to call the available MCP Tools
+"""
+
+
+# SecOps entity_lookup
+[[subCommands]]
+name = "entity-lookup"
+description = "Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment and historical context"
+prompt = """
+{% if help %}
+Usage: /secops entity-lookup [OPTIONS]
+
+Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment.
+
+Provides a comprehensive summary of an entity's activity based on historical log data
+within Chronicle over a specified time period. Chronicle automatically attempts to
+detect the entity type from the value provided.
+
+Options:
+  --entity-value  Value to look up (IP, domain, hash, username) [REQUIRED]
+  --hours-back    Hours of historical data to consider (default: 24)
+  --help          Show this help message
+
+Examples:
+  /secops entity-lookup --entity-value="192.168.1.100"           # Lookup IP address
+  /secops entity-lookup --entity-value="evil.com"                # Lookup domain
+  /secops entity-lookup --entity-value="user@example.com"        # Lookup user
+  /secops entity-lookup --entity-value="WIN-HELIUM"              # Lookup hostname
+  /secops entity-lookup --entity-value="abc123hash" --hours-back=72  # 3-day lookup
+
+The summary includes:
+- Primary entity details (type, first/last seen)
+- Related entities observed interacting with the primary entity
+- Associated Chronicle alerts triggered involving the entity
+- Timeline summary (event/alert counts over the period)
+- Prevalence information (if available)
+
+Use this to quickly understand context and prevalence of indicators by examining SIEM log data.
+{% else %}
+Call the lookup_entity tool with: `lookup_entity(entity_value={{entity-value}}, hours_back={{hours-back}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "entity-value"
+  required = true
+  description = "Value to look up (IP address, domain name, file hash, username)"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  description = "Number of hours of historical data to consider for the summary"
+
+# SecOps get_ioc_matches
+[[subCommands]]
+name = "ioc-matches"
+description = "Get Indicators of Compromise (IoC) matches from Chronicle SIEM - retrieves malicious IPs, domains, and hashes observed in logs"
+prompt = """
+{% if help %}
+Usage: /secops ioc-matches [OPTIONS]
+
+Get Indicators of Compromise (IoC) matches from Chronicle SIEM.
+Retrieves IoCs (e.g., malicious IPs, domains, hashes) from configured threat
+intelligence feeds that have been observed matching events in Chronicle logs.
+
+Options:
+  --hours-back    Hours to look back for IoC matches (default: 24)
+  --max-matches   Maximum number of IoC matches to return (default: 20)
+  --help          Show this help message
+
+Examples:
+  /secops ioc-matches                          # Get IoC matches from last 24 hours
+  /secops ioc-matches --hours-back 72          # Get IoC matches from last 3 days
+  /secops ioc-matches --max-matches 50         # Get up to 50 IoC matches
+  /secops ioc-matches --hours-back 48 --max-matches 100
+
+Use this to proactively identify potential threats based on IoC matches within SIEM data.
+{% else %}
+Call the get_ioc_matches tool with: `get_ioc_matches(hours_back={{hours-back}}, max_matches={{max-matches}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  description = "Number of hours to look back for IoC matches"
+  [[subCommands.args]]
+  name = "max-matches"
+  required = false
+  default = "20"
+  description = "Maximum number of IoC matches to return"
+
+# SecOps search_security_events
+[[subCommands]]
+name = "search-events"
+description = "Search for security events in Chronicle SIEM using natural language queries"
+prompt = """
+{% if help %}
+Usage: /secops search-events [OPTIONS]
+
+Search for security events in Chronicle SIEM using natural language.
+
+Allows searching Chronicle event logs using natural language queries, which are
+automatically translated into UDM queries for execution. Ideal for deep investigation
+after an initial alert, case, or entity has been prioritized.
+
+Options:
+  --query         Natural language description of events to find [REQUIRED]
+  --hours-back    Hours back from current time to search (default: 24)
+  --max-events    Maximum number of event records to return (default: 100)
+  --help          Show this help message
+
+Examples:
+  /secops search-events --query="Show network connections involving IP 10.0.0.5"
+  /secops search-events --query="Find login events for user 'admin' yesterday"
+  /secops search-events --query="List file modifications on host 'server1'"
+  /secops search-events --query="DNS lookups to malicious.example.com" --hours-back=72
+  /secops search-events --query="PowerShell execution events" --max-events=50
+
+Query Tips:
+- Use natural language to describe what you're looking for
+- Specify entity types: IPs, domains, users, hosts, files
+- Include time references: "yesterday", "last 6 hours", "today"
+- Be specific about event types: logins, network connections, file modifications
+- For email addresses, use only lowercase letters
+
+The response includes:
+- Translated UDM query used for the search
+- List of matching UDM event records
+- Total event count (may exceed max-events limit)
+
+Use this to retrieve detailed UDM event logs for specific indicators or activities.
+{% else %}
+Call the search_security_events tool with: `search_security_events(text={{query}}, hours_back={{hours-back}}, max_events={{max-events}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Natural language query to search for events"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  description = "Hours back from current time to search"
+  [[subCommands.args]]
+  name = "max-events"
+  required = false
+  default = "100"
+  description = "Maximum number of event records to return"
+
+# SecOps get_security_alerts
+[[subCommands]]
+name = "get-alerts"
+description = "Get security alerts directly from Chronicle SIEM for monitoring and triage"
+prompt = """
+{% if help %}
+Usage: /secops get-alerts [OPTIONS]
+
+Get security alerts directly from Chronicle SIEM.
+
+Retrieves a list of recent security alerts generated within Chronicle, based on
+detection rules or other alert sources configured in the SIEM. Use this for direct
+monitoring of SIEM alert activity and initial triage.
+
+Options:
+  --hours-back     Hours to look back for alerts (default: 24)
+  --max-alerts     Maximum number of alerts to return (default: 10)
+  --status-filter  Query string to filter alerts by status (default: exclude closed)
+  --help           Show this help message
+
+Examples:
+  /secops get-alerts                                    # Get recent non-closed alerts
+  /secops get-alerts --hours-back=72                    # Get alerts from last 3 days
+  /secops get-alerts --max-alerts=25                    # Get up to 25 alerts
+  /secops get-alerts --status-filter=""                 # Get all alerts (including closed)
+  /secops get-alerts --hours-back=48 --max-alerts=20   # Custom time and limit
+
+Status Filter Examples:
+  feedback_summary.status != "CLOSED"                   # Exclude closed alerts (default)
+  feedback_summary.status = "NEW"                       # Only new alerts
+  feedback_summary.severityDisplay = "HIGH"             # Only high severity alerts
+
+The response includes for each alert:
+- Rule name that generated the alert
+- Creation timestamp
+- Current status (NEW, REVIEWED, CLOSED)
+- Severity level
+- Associated case information (if available)
+
+Use Cases:
+- Monitor for recent high-priority security events
+- Get overview of current alert queue for triage
+- Check for alerts that might not have corresponding cases yet
+- Initial assessment before deeper investigation
+
+Next Steps:
+- Use /secops get-alert --alert-id=ID for specific alert details
+- Use /secops search-events to find related raw logs
+- Use /secops entity-lookup on indicators found in alerts
+{% else %}
+Call the get_security_alerts tool with: `get_security_alerts(hours_back={{hours-back}}, max_alerts={{max-alerts}}, status_filter={{status-filter}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "24"
+  description = "Hours to look back for alerts"
+  [[subCommands.args]]
+  name = "max-alerts"
+  required = false
+  default = "10"
+  description = "Maximum number of alerts to return"
+  [[subCommands.args]]
+  name = "status-filter"
+  required = false
+  default = "feedback_summary.status != \"CLOSED\""
+  description = "Query string to filter alerts by status"
+
+# SecOps get_security_alert_by_id
+[[subCommands]]
+name = "get-alert"
+description = "Get detailed information for a specific security alert by ID from Chronicle SIEM"
+prompt = """
+{% if help %}
+Usage: /secops get-alert [OPTIONS]
+
+Get security alert by ID directly from Chronicle SIEM.
+
+Retrieves detailed information for a specific security alert using its unique ID.
+This provides comprehensive alert details including detection information, metadata,
+and associated events for deep investigation and analysis.
+
+Options:
+  --alert-id            Unique ID of the alert to retrieve [REQUIRED]
+  --include-detections  Include detection details in response (default: true)
+  --help                Show this help message
+
+Examples:
+  /secops get-alert --alert-id="de_12345678-1234-1234-1234-123456789012"
+  /secops get-alert --alert-id="de_abcdef12-3456-7890-abcd-ef1234567890" --include-detections=false
+  /secops get-alert --alert-id="de_87654321-4321-4321-4321-210987654321" --include-detections=true
+
+Alert ID Format:
+  Alert IDs typically follow the pattern: de_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  You can get alert IDs from:
+  - /secops get-alerts command output
+  - Chronicle SIEM alert console
+  - SOAR case management systems
+  - Other security tools integrated with Chronicle
+
+The response includes:
+- Complete alert metadata and properties
+- Detection rule information that triggered the alert
+- Alert status, severity, and priority
+- Timeline and creation information
+- Associated detection details (if include-detections=true)
+- Related entities and indicators
+- Case association information (if available)
+
+Use Cases:
+- Deep dive investigation of a specific alert
+- Gather context before updating alert status
+- Extract detailed information for incident response
+- Validate alert details before taking response actions
+- Review detection logic and rule performance
+
+Next Steps:
+- Use /secops update-alert to modify alert status or add comments
+- Use /secops search-events to find related raw event logs
+- Use /secops entity-lookup on entities found in the alert
+- Use /secops get-detections to see historical detections from the same rule
+{% else %}
+Call the get_security_alert_by_id tool with: `get_security_alert_by_id(alert_id={{alert-id}}, include_detections={{include-detections}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique ID of the alert to retrieve"
+  [[subCommands.args]]
+  name = "include-detections"
+  required = false
+  default = "true"
+  description = "Include detection details in the response"
+
+# SecOps do_update_security_alert
+[[subCommands]]
+name = "update-alert"
+description = "Update security alert attributes directly in Chronicle SIEM for investigation disposition"
+prompt = """
+{% if help %}
+Usage: /secops update-alert [OPTIONS]
+
+Update security alert attributes directly in Chronicle SIEM.
+
+Modifies specific fields of an existing security alert based on its ID. Use this after
+investigation, triage, or automated analysis to record findings or change alert state.
+At least one optional field should be provided to perform a meaningful update.
+
+Options:
+  --alert-id     Unique ID of the alert to update [REQUIRED]
+  --reason       Reason for closing alert
+  --priority     Alert priority level
+  --status       Alert lifecycle status
+  --verdict      Investigation verdict (true/false positive)
+  --severity     Severity score (0-100)
+  --comment      Analyst comment (empty string clears existing)
+  --root-cause   Alert root cause (empty string clears existing)
+  --help         Show this help message
+
+Valid Values:
+
+Reason:
+  REASON_UNSPECIFIED, REASON_NOT_MALICIOUS, REASON_MALICIOUS, REASON_MAINTENANCE
+
+Priority:
+  PRIORITY_UNSPECIFIED, PRIORITY_INFO, PRIORITY_LOW, PRIORITY_MEDIUM, PRIORITY_HIGH, PRIORITY_CRITICAL
+
+Status:
+  STATUS_UNSPECIFIED, NEW, REVIEWED, CLOSED, OPEN
+
+Verdict:
+  VERDICT_UNSPECIFIED, TRUE_POSITIVE, FALSE_POSITIVE
+
+Examples:
+  # Mark alert as false positive
+  /secops update-alert --alert-id="de_12345" --verdict="FALSE_POSITIVE" --status="CLOSED" --comment="Benign admin activity"
+
+  # Escalate alert priority with analysis
+  /secops update-alert --alert-id="de_67890" --priority="PRIORITY_HIGH" --severity=85 --comment="Confirmed malicious activity"
+
+  # Close alert with root cause
+  /secops update-alert --alert-id="de_abcde" --status="CLOSED" --reason="REASON_NOT_MALICIOUS" --root-cause="Scheduled maintenance"
+
+  # Add investigation notes
+  /secops update-alert --alert-id="de_fghij" --comment="Investigating with IR team - potential data exfiltration"
+
+  # Clear existing comment
+  /secops update-alert --alert-id="de_klmno" --comment=""
+
+Use Cases:
+- Mark alerts as true/false positives after investigation
+- Escalate or de-escalate alert priority based on impact assessment
+- Add investigation comments and findings
+- Set final disposition when closing alerts
+- Update severity based on additional evidence
+- Record root cause analysis results
+
+Next Steps:
+- Use /secops get-alert to verify changes were applied
+- Consider rule tuning if marking as false positive
+- Document significant findings in external case management
+- Communicate critical updates to relevant teams
+{% else %}
+Call the do_update_security_alert tool with: `do_update_security_alert(alert_id={{alert-id}}, reason={{reason}}, priority={{priority}}, status={{status}}, verdict={{verdict}}, severity={{severity}}, comment={{comment}}, root_cause={{root-cause}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique ID of the alert to update"
+  [[subCommands.args]]
+  name = "reason"
+  required = false
+  description = "Reason for closing alert"
+  [[subCommands.args]]
+  name = "priority"
+  required = false
+  description = "Alert priority level"
+  [[subCommands.args]]
+  name = "status"
+  required = false
+  description = "Alert lifecycle status"
+  [[subCommands.args]]
+  name = "verdict"
+  required = false
+  description = "Investigation verdict"
+  [[subCommands.args]]
+  name = "severity"
+  required = false
+  description = "Severity score (0-100)"
+  [[subCommands.args]]
+  name = "comment"
+  required = false
+  description = "Analyst comment"
+  [[subCommands.args]]
+  name = "root-cause"
+  required = false
+  description = "Alert root cause"
+
+# SecOps list_security_rules
+[[subCommands]]
+name = "list-rules"
+description = "List security detection rules configured in Chronicle SIEM"
+prompt = """
+{% if help %}
+Usage: /secops list-rules [OPTIONS]
+
+List security detection rules configured in Chronicle SIEM.
+
+Retrieves the definitions of detection rules currently active or configured
+within the Chronicle SIEM instance. Useful for understanding detection capabilities,
+rule auditing, and identifying rules that generated specific alerts.
+
+Options:
+  --help    Show this help message
+
+Examples:
+  /secops list-rules    # List all active detection rules
+
+The response includes:
+- Rule definitions and metadata
+- Rule IDs for use with other commands
+- YARA-L code and logic
+- Rule status and configuration
+
+Use Cases:
+- Audit the set of active detection rules
+- Find rule that generated a specific alert
+- Review detection capabilities
+- Understand rule logic for tuning
+
+Next Steps:
+- Use /secops search-rules to find specific rules by pattern
+- Use /secops get-detections to see rule's historical detections
+- Use /secops list-errors to check for rule execution issues
+{% else %}
+Call the list_security_rules tool with: `list_security_rules()`
+{% endif %}
+"""
+
+# SecOps search_security_rules
+[[subCommands]]
+name = "search-rules"
+description = "Search security detection rules using regex patterns"
+prompt = """
+{% if help %}
+Usage: /secops search-rules [OPTIONS]
+
+Search security detection rules configured in Chronicle SIEM.
+
+Retrieves detection rules that match a regex pattern, allowing you to find
+specific rules by content, MITRE techniques, hostnames, or other criteria
+coded into the detection logic.
+
+Options:
+  --query    Regex string to search for in rules [REQUIRED]
+  --help     Show this help message
+
+Examples:
+  /secops search-rules --query="TA0005"                    # Find defense evasion rules
+  /secops search-rules --query="192.168.1.1"              # Find rules with specific IP
+  /secops search-rules --query="WORKSPACE"                 # Find rules using workspace logs
+  /secops search-rules --query="powershell.*downloadfile"  # Find PowerShell download rules
+  /secops search-rules --query="T1059.001"                 # Find specific MITRE technique
+
+Search Tips:
+- Use MITRE ATT&CK technique IDs (T1059.001, TA0005)
+- Search for specific hostnames or IP addresses
+- Look for log types (WORKSPACE, DNS, PROCESS_LAUNCH)
+- Use regex patterns for flexible matching
+- Search rule names, descriptions, or YARA-L code
+
+The response includes:
+- Matching rule definitions and metadata
+- Rule IDs and names
+- YARA-L code containing the search pattern
+- Rule configuration details
+
+Use Cases:
+- Find rules related to specific MITRE techniques
+- Locate rules that reference static infrastructure
+- Search for rules using specific log types
+- Find rules by name or description content
+
+Next Steps:
+- Use /secops get-detections to see historical detections
+- Use /secops list-errors to check rule execution status
+- Use /secops test-rule to validate rule modifications
+{% else %}
+Call the search_security_rules tool with: `search_security_rules(query={{query}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Regex string to search for in rules"
+
+# SecOps get_rule_detections
+[[subCommands]]
+name = "get-detections"
+description = "Retrieve historical detections generated by a specific Chronicle SIEM rule"
+prompt = """
+{% if help %}
+Usage: /secops get-detections [OPTIONS]
+
+Retrieve historical detections generated by a specific Chronicle SIEM rule.
+
+Fetches detections based on a rule ID, allowing for investigation and analysis
+of rule performance and threat activity. Essential for understanding rule
+effectiveness and scoping incident timelines.
+
+Options:
+  --rule-id      Unique ID of the rule to get detections for [REQUIRED]
+  --alert-state  Filter by alert state (optional)
+  --page-size    Maximum detections per response (optional)
+  --page-token   Token for pagination (optional)
+  --help         Show this help message
+
+Examples:
+  /secops get-detections --rule-id="ru_12345678-1234-1234-1234-123456789012"
+  /secops get-detections --rule-id="ru_abcdef12-3456-7890-abcd-ef1234567890" --alert-state="ALERTING"
+  /secops get-detections --rule-id="ru_87654321@v_12345_67890" --page-size=50
+
+Rule ID Formats:
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx              # Latest version
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890 # Specific version
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@-            # All versions
+
+Alert State Values:
+  UNSPECIFIED, NOT_ALERTING, ALERTING
+
+Use Cases:
+- Alert triage: Understand rule context and frequency
+- Rule effectiveness analysis: Determine if rule is too noisy/quiet
+- Threat hunting: Find all instances of specific TTP detection
+- Incident scoping: Identify timeline of related events
+- Assess alert likelihood of maliciousness
+
+The response includes:
+- List of detections with timestamps and details
+- Detection metadata and rule information
+- Pagination tokens for large result sets
+- Related UDM events and indicators
+
+Next Steps:
+- Use /secops search-events to find detailed logs for detected events
+- Use /secops entity-lookup on indicators found in detections
+- Use /secops list-errors if detections are missing or unexpected
+{% else %}
+Call the get_rule_detections tool with: `get_rule_detections(rule_id={{rule-id}}, alert_state={{alert-state}}, page_size={{page-size}}, page_token={{page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "rule-id"
+  required = true
+  description = "Unique ID of the rule to get detections for"
+  [[subCommands.args]]
+  name = "alert-state"
+  required = false
+  description = "Filter by alert state (UNSPECIFIED, NOT_ALERTING, ALERTING)"
+  [[subCommands.args]]
+  name = "page-size"
+  required = false
+  [[subCommands.args]]
+  name = "page-token"
+  required = false
+
+# SecOps list_rule_errors
+[[subCommands]]
+name = "list-errors"
+description = "List execution errors for a specific Chronicle SIEM rule"
+prompt = """
+{% if help %}
+Usage: /secops list-errors [OPTIONS]
+
+List execution errors for a specific Chronicle SIEM rule.
+
+Helps troubleshoot rules that might not be generating detections as expected
+or are failing during execution. Essential for maintaining SIEM operational
+health and ensuring rules run correctly.
+
+Options:
+  --rule-id  Unique ID of the rule to list errors for [REQUIRED]
+  --help     Show this help message
+
+Examples:
+  /secops list-errors --rule-id="ru_12345678-1234-1234-1234-123456789012"
+  /secops list-errors --rule-id="ru_abcdef12-3456-7890-abcd-ef1234567890@v_12345_67890"
+  /secops list-errors --rule-id="ru_87654321-4321-4321-4321-210987654321@-"
+
+Rule ID Formats:
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx              # Latest version
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@v_12345_67890 # Specific version
+  ru_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@-            # All versions
+
+Use Cases:
+- Rule troubleshooting: Check why rules aren't producing detections
+- Rule development: Verify new/modified rules are running properly
+- SIEM health monitoring: Identify rules with execution problems
+- Post-deployment validation: Ensure rules work after changes
+
+The response includes:
+- Compilation errors and syntax issues
+- Runtime execution failures
+- Error timestamps and descriptions
+- Rule version information
+
+Next Steps:
+- Use /secops search-rules to review rule definition and syntax
+- Use /secops validate-rule to check syntax after corrections
+- Use /secops get-detections to verify rule produces detections after fixes
+{% else %}
+Call the list_rule_errors tool with: `list_rule_errors(rule_id={{rule-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "rule-id"
+  required = true
+  description = "Unique ID of the rule to list errors for"
+
+# SecOps create_rule
+[[subCommands]]
+name = "create-rule"
+description = "Create a new detection rule in Chronicle SIEM using YARA-L 2.0"
+prompt = """
+{% if help %}
+Usage: /secops create-rule [OPTIONS]
+
+Create a new detection rule in Chronicle SIEM.
+
+Creates a new YARA-L 2.0 detection rule in Chronicle that can generate alerts
+when rule conditions are met by ingested events. Rules are the core mechanism
+for automated threat detection and response.
+
+Options:
+  --rule-text  Complete YARA-L 2.0 rule definition [REQUIRED]
+  --help       Show this help message
+
+Examples:
+  /secops create-rule --rule-text="rule suspicious_powershell_download {
+    meta:
+      description = \"Detects PowerShell downloading files\"
+      author = \"Security Team\"
+      severity = \"Medium\"
+      yara_version = \"YL2.0\"
+    events:
+      $process.metadata.event_type = "PROCESS_LAUNCH"
+      $process.principal.process.command_line = /powershell.*downloadfile/i
+    condition:
+      $process
+  }"
+
+YARA-L 2.0 Rule Structure:
+  rule rule_name {
+    meta:               # Rule metadata (description, author, severity, MITRE mappings)
+      description = "Rule description"
+      author = "Your Name"
+      severity = "Low|Medium|High|Critical"
+      yara_version = "YL2.0"
+      mitre_attack_tactic = "TA0001"
+      mitre_attack_technique = "T1059.001"
+    events:             # Event matching conditions using UDM fields
+      $event.metadata.event_type = "PROCESS_LAUNCH"
+      $event.principal.hostname != ""
+    condition:          # Logic combining events
+      $event
+  }
+
+Rule Development Best Practices:
+- Start with clear understanding of what to detect
+- Use precise conditions to minimize false positives
+- Include appropriate metadata (description, author, severity)
+- Test thoroughly before deploying to production
+- Consider performance impact on Chronicle processing
+
+Use Cases:
+- Detect specific attack patterns from threat hunting
+- Implement custom detection for proprietary applications
+- Create behavioral detection rules for user/entity patterns
+- Detect compliance violations or policy breaches
+- Implement threat intelligence indicators
+
+Next Steps:
+- Use /secops test-rule to validate effectiveness against historical data
+- Use /secops validate-rule to check syntax during development
+- Use /secops get-detections to monitor rule performance after creation
+- Use /secops get-alerts to review generated alerts
+{% else %}
+Call the create_rule tool with: `create_rule(rule_text={{rule-text}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition"
+
+# SecOps test_rule
+[[subCommands]]
+name = "test-rule"
+description = "Test a detection rule against historical data in Chronicle SIEM"
+prompt = """
+{% if help %}
+Usage: /secops test-rule [OPTIONS]
+
+Test a detection rule against historical data in Chronicle SIEM.
+
+Tests a YARA-L 2.0 detection rule against historical data to validate
+effectiveness and tune parameters before deployment. Essential for ensuring
+rules work as expected and generate appropriate alerts without excessive
+false positives.
+
+Options:
+  --rule-text     Complete YARA-L 2.0 rule definition to test [REQUIRED]
+  --hours-back    How many hours of historical data to test against (default: 168)
+  --max-results   Maximum number of detection results to return (default: 100)
+  --help          Show this help message
+
+Examples:
+  /secops test-rule --rule-text="rule test_network_connection {
+    meta:
+      description = \"Test rule for network connections\"
+      author = \"Security Team\"
+      yara_version = \"YL2.0\"
+    events:
+      $e.metadata.event_type = "NETWORK_CONNECTION"
+      $e.target.port = 443
+    condition:
+      $e
+  }"
+
+  /secops test-rule --rule-text="..." --hours-back=24 --max-results=50
+
+Rule Testing Best Practices:
+- Test against representative time periods (normal + suspicious activity)
+- Review detected events to ensure they align with detection objectives
+- Adjust rule conditions based on test results to optimize precision
+- Consider computational complexity and Chronicle performance impact
+- Test with different time windows to understand patterns
+
+The response includes:
+- Detection count and analysis summary
+- Sample detection details and timestamps
+- Rule performance metrics
+- Recommendations for rule refinement
+
+Use Cases:
+- Validate new rule logic against historical data
+- Tune rule thresholds and conditions based on event patterns
+- Validate rule modifications before production deployment
+- Assess rule performance impact and detection volume
+- Compare different rule variations for effectiveness
+
+Next Steps:
+- Analyze test results to determine if rule meets detection objectives
+- Refine rule based on results and retest as needed
+- Use /secops create-rule once testing shows satisfactory results
+- Use /secops validate-rule to check syntax during development
+{% else %}
+Call the test_rule tool with: `test_rule(rule_text={{rule-text}}, hours_back={{hours-back}}, max_results={{max-results}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition to test"
+  [[subCommands.args]]
+  name = "hours-back"
+  required = false
+  default = "168"
+  [[subCommands.args]]
+  name = "max-results"
+  required = false
+  default = "100"
+
+# SecOps validate_rule
+[[subCommands]]
+name = "validate-rule"
+description = "Validate YARA-L 2.0 detection rule syntax in Chronicle SIEM"
+prompt = """
+{% if help %}
+Usage: /secops validate-rule [OPTIONS]
+
+Validate YARA-L 2.0 detection rule syntax in Chronicle SIEM.
+
+Validates the syntax and structure of a YARA-L 2.0 detection rule without
+creating or testing it. Useful for checking rule syntax during development
+and identifying compilation errors before rule deployment.
+
+Options:
+  --rule-text  Complete YARA-L 2.0 rule definition to validate [REQUIRED]
+  --help       Show this help message
+
+Examples:
+  /secops validate-rule --rule-text="rule example_validation_rule {
+    meta:
+      description = \"Example rule for validation testing\"
+      author = \"Security Team\"
+      severity = \"Medium\"
+      yara_version = \"YL2.0\"
+    events:
+      $e.metadata.event_type = "NETWORK_CONNECTION"
+      $e.target.ip != ""
+      $e.principal.hostname != ""
+    condition:
+      $e
+  }"
+
+Validation capabilities:
+- Syntax validation for YARA-L 2.0 language constructs
+- Field name validation against Chronicle's UDM schema
+- Function and operator usage validation
+- Rule structure and format validation
+- Metadata section validation
+
+The response includes:
+- Validation success/failure status
+- Specific syntax errors with location information
+- Suggested fields if available
+- Error details for troubleshooting
+
+Use Cases:
+- Validate rule syntax during initial development or modification
+- Check for compilation errors before committing rule changes
+- Quickly verify complex rule logic is syntactically correct
+- Validate imported/shared rules before integration
+- Educational tool for learning YARA-L 2.0 syntax
+
+Next Steps:
+- If validation passes, proceed with /secops test-rule against historical data
+- If validation fails, review and correct identified syntax errors
+- Use validation feedback to refine rule logic and structure
+- Use /secops create-rule once validated and tested
+{% else %}
+Call the validate_rule tool with: `validate_rule(rule_text={{rule-text}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "rule-text"
+  required = true
+  description = "Complete YARA-L 2.0 rule definition to validate"
+
+# SecOps get_threat_intel
+[[subCommands]]
+name = "threat-intel"
+description = "Get answers to security questions using Chronicle's integrated Gemini model"
+prompt = """
+{% if help %}
+Usage: /secops threat-intel [OPTIONS]
+
+Get answers to security questions using Chronicle's integrated Gemini model.
+
+Leverages Gemini to answer general security domain questions or provide specific
+threat intelligence summaries about threat actors, IOCs, CVEs, TTPs, and other
+security topics based on Google's threat intelligence.
+
+Options:
+  --query  Security or threat intelligence question to ask Gemini [REQUIRED]
+  --help   Show this help message
+
+Examples:
+  /secops threat-intel --query="Summarize threat actor APT41"
+  /secops threat-intel --query="What is CVE-2024-23897?"
+  /secops threat-intel --query="Explain the MITRE ATT&CK technique T1059.001"
+  /secops threat-intel --query="What are common persistence mechanisms on Linux?"
+  /secops threat-intel --query="Tell me about the LockBit ransomware"
+  /secops threat-intel --query="How does the Log4j vulnerability work?"
+
+Question Types:
+- Threat Actor Intelligence: "Summarize APT28", "What are Lazarus Group's TTPs?"
+- Vulnerability Information: "Explain CVE-2023-44487", "What is the impact of Log4Shell?"
+- MITRE ATT&CK Details: "Describe technique T1566.001", "What is tactic TA0008?"
+- Malware Analysis: "How does Emotet work?", "What are Cobalt Strike's capabilities?"
+- General Security: "What is lateral movement?", "How do DDoS attacks work?"
+
+The response includes:
+- Comprehensive threat intelligence summaries
+- Technical details and context
+- MITRE ATT&CK mappings when relevant
+- IOCs and indicators when available
+- Recommended defensive measures
+
+Use Cases:
+- Quick context during investigations on specific threats/vulnerabilities
+- Background information before deeper investigation
+- Understanding potential impact of identified CVEs
+- Learning about unfamiliar threat actors or malware families
+- Getting security concept explanations
+
+Next Steps:
+- Use provided intelligence to inform further investigation steps
+- Use /secops entity-lookup to check for IOCs in your environment
+- Use /secops search-events to find related activity in SIEM logs
+- Document relevant findings in case management systems
+{% else %}
+Call the get_threat_intel tool with: `get_threat_intel(query={{query}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "query"
+  required = true
+  description = "Security or threat intelligence question to ask Gemini"
+
+# SOAR Case Management Commands
+
+# SOAR list_cases
+[[subCommands]]
+name = "list-cases"
+description = "List cases available in the Security Orchestration, Automation, and Response (SOAR) platform"
+prompt = """
+{% if help %}
+Usage: /secops list-cases [OPTIONS]
+
+List cases available in the Security Orchestration, Automation, and Response (SOAR) platform.
+
+In a SOAR context, a 'case' typically represents a security incident, investigation,
+or a container for related alerts and response actions. Listing cases provides an
+overview of ongoing or past security events being managed by the platform.
+
+Options:
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-cases                                    # List current cases
+  /secops list-cases --next-page-token="abc123xyz"      # Get next page of results
+
+Use Cases:
+- Get high-level overview of current incident queue within SOAR platform
+- Find specific incidents to investigate further
+- First step in triage workflow to understand ongoing security events
+- Monitor case backlog and priorities
+
+The response includes:
+- List of case objects with summary details (ID, name, status, priority)
+- Case priorities (initial indicator - true importance requires deeper analysis)
+- Associated metadata and timestamps
+- Pagination tokens for additional results
+
+Important Triage Note:
+Case priority is only an initial indicator. True importance must be assessed by
+examining the full context (alerts, entities, potential impact, threat intelligence)
+using tools like /secops get-case-details.
+
+Next Steps:
+- Use /secops get-case-details --case-id=ID for comprehensive case analysis
+- Use /secops list-alerts-by-case --case-id=ID to see associated alerts
+- Use /secops change-case-priority if initial assessment suggests different priority
+- Extract key indicators and use SIEM, TI, or other security tool integrations
+{% else %}
+Call the list_cases tool with: `list_cases(next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR post_case_comment
+[[subCommands]]
+name = "post-case-comment"
+description = "Post a comment to a specific case within the SOAR platform for documentation and collaboration"
+prompt = """
+{% if help %}
+Usage: /secops post-case-comment [OPTIONS]
+
+Post a comment to a specific case within the SOAR platform.
+
+Cases are used to track security incidents and investigations. Adding comments
+is essential for documenting findings, communication between analysts, recording
+actions taken, or providing updates on the investigation progress.
+
+Options:
+  --case-id  The unique identifier (ID) of the case [REQUIRED]
+  --comment  The textual content of the comment to be recorded [REQUIRED]
+  --help     Show this help message
+
+Examples:
+  /secops post-case-comment --case-id="523" --comment="Investigating potential impact"
+  /secops post-case-comment --case-id="724" --comment="Confirmed malicious activity - escalating"
+  /secops post-case-comment --case-id="891" --comment="False positive - benign admin activity"
+
+Use Cases:
+- Document findings from other MCP tool investigations (SIEM, TI, EDR, Cloud)
+- Record analyst actions and decisions during investigation
+- Provide updates on investigation progress for team collaboration
+- Maintain audit trail within the SOAR case
+- Justify changes in case priority or status
+
+The response includes:
+- Confirmation of successful comment posting
+- Any error messages if posting fails
+- Updated case comment history
+
+Workflow Integration:
+- Use throughout investigation to document findings from various security tools
+- Essential for collaboration and maintaining audit trail within SOAR case
+- Document conclusions derived from MCP-enabled tools (SIEM, TI, EDR, Cloud posture)
+
+Next Steps:
+- Continue investigation based on documented information
+- Use comments to justify case priority changes or status updates
+- Share key findings with other relevant systems (ticketing, reporting)
+{% else %}
+Call the post_case_comment tool with: `post_case_comment(case_id={{case-id}}, comment={{comment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "comment"
+  required = true
+  description = "The textual content of the comment to be recorded"
+
+# SOAR list_alerts_by_case
+[[subCommands]]
+name = "list-alerts-by-case"
+description = "List the security alerts associated with a specific case ID in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops list-alerts-by-case [OPTIONS]
+
+List the security alerts associated with a specific case ID in the SOAR platform.
+
+Alerts are notifications generated by security tools (like SIEMs, EDRs) indicating
+potential security issues. In SOAR, alerts are often grouped into cases for
+investigation and response. Listing alerts helps understand the scope of incidents.
+
+Options:
+  --case-id          The unique identifier (ID) of the case [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-alerts-by-case --case-id="523"
+  /secops list-alerts-by-case --case-id="724" --next-page-token="def456ghi"
+
+Use Cases:
+- Understand specific triggers (alerts) and scope of incident in SOAR case
+- Identify alert patterns and relationships within a case
+- Get alert severity and metadata for investigation prioritization
+- Find alert IDs for deeper event analysis
+
+The response includes:
+- List of alert objects linked to the specified case
+- Alert details: name, source, severity, timestamp
+- Alert severity (initial guidance - actual risk depends on context and evidence)
+- Associated alert metadata and identifiers
+
+Workflow Integration:
+- Use after identifying a case of interest (via list-cases or get-case-details)
+- Helps understand specific triggers and scope of incident in SOAR platform
+- Provides foundation for deeper investigation into underlying events
+
+Next Steps:
+- Use /secops list-events-by-alert to get raw events underlying specific alerts
+- Use /secops list-alert-group-identifiers-by-case to understand alert groupings
+- Use /secops get-entities-by-alert-group-identifiers to find entities in alert groups
+- Extract indicators from alerts and use SIEM entity lookup or event search
+- Correlate alert details with findings from other security tools (EDR, Network, Cloud, TI)
+{% else %}
+Call the list_alerts_by_case tool with: `list_alerts_by_case(case_id={{case-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR list_alert_group_identifiers_by_case
+[[subCommands]]
+name = "list-alert-group-identifiers"
+description = "List alert group identifiers associated with a specific case ID in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops list-alert-group-identifiers [OPTIONS]
+
+List alert group identifiers associated with a specific case ID in the SOAR platform.
+
+In this SOAR implementation, alerts within a case can be grouped using identifiers,
+potentially for correlation, playbook execution stages, or analyst assignment.
+Retrieving these identifiers helps understand the internal structure of a case.
+
+Options:
+  --case-id          The unique identifier (ID) of the case [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-alert-group-identifiers --case-id="523"
+  /secops list-alert-group-identifiers --case-id="724" --next-page-token="ghi789jkl"
+
+Use Cases:
+- Understand how alerts are grouped within the case
+- Identify related sets of alerts for targeted actions
+- Support playbook logic that operates on alert groups
+- Prepare for entity retrieval from specific alert groups
+
+The response includes:
+- List of alert group identifier strings associated with the case
+- Group identifiers used for correlation and organization
+- Identifiers that can be used with other SOAR tools
+
+Workflow Integration:
+- Use after identifying a case and its associated alerts within SOAR platform
+- Helps understand alert groupings relevant for playbook logic
+- Prepares for targeted actions on specific alert groupings
+
+Next Steps:
+- Use /secops get-entities-by-alert-group-identifiers to find entities in these groups
+- Use identifiers as parameters for playbook actions or integrations
+- Target specific alert groupings for automated or manual interventions
+{% else %}
+Call the list_alert_group_identifiers_by_case tool with: `list_alert_group_identifiers_by_case(case_id={{case-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR list_events_by_alert
+[[subCommands]]
+name = "list-events-by-alert"
+description = "List the underlying security events associated with a specific alert within a given case"
+prompt = """
+{% if help %}
+Usage: /secops list-events-by-alert [OPTIONS]
+
+List the underlying security events associated with a specific alert within a given case.
+
+Security alerts (often derived from detection rules or IoC matches) are typically
+triggered by one or more underlying events ingested into the security platform
+(e.g., Chronicle). These events provide the raw data needed to validate alerts.
+
+Options:
+  --case-id          The unique identifier (ID) of the case containing the alert [REQUIRED]
+  --alert-id         The unique identifier (ID) of the specific alert [REQUIRED]
+  --next-page-token  Token to fetch the next page of results (optional)
+  --help            Show this help message
+
+Examples:
+  /secops list-events-by-alert --case-id="523" --alert-id="751"
+  /secops list-events-by-alert --case-id="724" --alert-id="892" --next-page-token="xyz123abc"
+
+Use Cases:
+- Get ground truth event data (often from SIEM) to validate alerts
+- Understand exact actions that occurred to trigger the alert
+- Perform deep-dive investigations into specific alert triggers
+- Extract detailed forensic information from underlying events
+
+The response includes:
+- List of event objects (potentially in UDM format) related to the alert
+- Raw data needed to validate alert and understand specific activity
+- Event details for forensic analysis and investigation
+- Timestamps and metadata for timeline reconstruction
+
+Workflow Integration:
+- Use after identifying specific alert of interest within SOAR case
+- Provides ground truth event data from SIEM for alert validation
+- Essential for understanding exact actions that occurred
+
+Next Steps:
+- Analyze event data (UDM format) for specific details: command lines, network connections, file hashes, user activity
+- Extract new indicators from the events for further investigation
+- Use entity lookup or threat intelligence tools to enrich newly found indicators
+- Correlate event details with other related events using SIEM event search tools
+- Document findings in case management system using commenting tools
+{% else %}
+Call the list_events_by_alert tool with: `list_events_by_alert(case_id={{case-id}}, alert_id={{alert-id}}, next_page_token={{next-page-token}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case containing the alert"
+  [[subCommands.args]]
+  name = "alert-id"
+  required = true
+  description = "The unique identifier (ID) of the specific alert"
+  [[subCommands.args]]
+  name = "next-page-token"
+  required = false
+  description = "Token to fetch the next page of results"
+
+# SOAR change_case_priority
+[[subCommands]]
+name = "change-case-priority"
+description = "Change the priority level of a specific case in the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops change-case-priority [OPTIONS]
+
+Change the priority level of a specific case in the SOAR platform.
+
+Case priority helps security teams triage incidents and focus on the most urgent
+threats based on currently available information. Priority can change as more
+context is gathered during investigation.
+
+Options:
+  --case-id        The unique identifier (ID) of the case to update [REQUIRED]
+  --case-priority  The new priority level to assign to the case [REQUIRED]
+  --help          Show this help message
+
+Valid Priority Values:
+  PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium, PriorityHigh, PriorityCritical
+
+Examples:
+  /secops change-case-priority --case-id="523" --case-priority="PriorityHigh"
+  /secops change-case-priority --case-id="724" --case-priority="PriorityLow"
+  /secops change-case-priority --case-id="891" --case-priority="PriorityCritical"
+
+Use Cases:
+- Escalate case priority based on new information from MCP tools (SIEM, TI, EDR)
+- De-escalate cases found to be false positives or low impact
+- Ensure analyst focus aligns with actual risk posed by incident
+- Adjust priority during investigation lifecycle based on findings
+
+The response includes:
+- Confirmation of successful priority update
+- Error messages if update fails
+- Updated case priority information
+
+Workflow Integration:
+- Use during triage or investigation when new information suggests incorrect priority
+- Helps ensure analyst focus aligns with actual risk from multiple data sources
+- Typically follows analysis using various MCP-enabled security tools
+
+Next Steps:
+- Use /secops post-case-comment to document reason for priority change
+- Adjust investigation efforts based on new priority level
+- Consider resource allocation changes based on updated priority
+{% else %}
+Call the change_case_priority tool with: `change_case_priority(case_id={{case-id}}, case_priority={{case-priority}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case to update"
+  [[subCommands.args]]
+  name = "case-priority"
+  required = true
+  description = "The new priority level (PriorityUnspecified, PriorityInfo, PriorityLow, PriorityMedium, PriorityHigh, PriorityCritical)"
+
+# SOAR get_entities_by_alert_group_identifiers
+[[subCommands]]
+name = "get-entities-by-alert-groups"
+description = "Retrieve entities (IPs, hostnames, users) involved in specific alert groups within a case"
+prompt = """
+{% if help %}
+Usage: /secops get-entities-by-alert-groups [OPTIONS]
+
+Retrieve entities (e.g., IP addresses, hostnames, users) involved in specific alert groups within a case.
+
+Understanding which entities are associated with alerts is fundamental for incident
+investigation and response. This tool fetches entities linked to alert groups,
+crucial for identifying affected assets, attack vectors, or compromised accounts.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated list of alert group identifiers [REQUIRED]
+  --help                    Show this help message
+
+Examples:
+  /secops get-entities-by-alert-groups --case-id="523" --alert-group-identifiers="rule_name_hash_guid"
+  /secops get-entities-by-alert-groups --case-id="724" --alert-group-identifiers="group1,group2,group3"
+
+Use Cases:
+- Identify specific assets, users, or indicators involved in incident stages
+- Get target entities for manual response actions or playbook automation
+- Understand scope of impact from specific alert groupings
+- Prepare entity lists for targeted response actions
+
+The response includes:
+- List of entities (with identifiers, types, etc.) associated with alert groups
+- Entity details and metadata for investigation context
+- Information needed for targeted response actions
+
+Workflow Integration:
+- Use after identifying relevant alert group identifiers within SOAR case
+- Crucial for pinpointing specific assets/users/indicators in incident aspects
+- Provides foundation for targeted response and investigation actions
+
+Next Steps:
+- Analyze entity list to understand scope of impact
+- Use /secops get-entity-details to get more SOAR-specific context on individual entities
+- Use SIEM entity lookup tools to get broader historical context for these entities
+- Use SIEM event search tools to find detailed logs related to entities' activities
+- Use threat intelligence tools to enrich the identified entities
+- Use entity list as input for targeted response actions via SOAR playbooks or security tools
+{% else %}
+Call the get_entities_by_alert_group_identifiers tool with: `get_entities_by_alert_group_identifiers(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case containing the alert groups"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated list of identifiers for the alert groups"
+
+# SOAR get_entity_details
+[[subCommands]]
+name = "get-entity-details"
+description = "Fetch detailed information about a specific entity known to the SOAR platform"
+prompt = """
+{% if help %}
+Usage: /secops get-entity-details [OPTIONS]
+
+Fetch detailed information about a specific entity known to the SOAR platform.
+
+Entities (like IPs, domains, users, assets) are central to security investigations.
+This tool retrieves comprehensive details about a specific entity based on its
+identifier, type, and environment, including enrichment data and risk scores.
+
+Options:
+  --entity-identifier   The unique identifier of the entity (e.g., "192.168.1.100") [REQUIRED]
+  --entity-type        The type of the entity (e.g., "IP Address") [REQUIRED]
+  --entity-environment The environment context for the entity (e.g., "Production") [REQUIRED]
+  --help              Show this help message
+
+Examples:
+  /secops get-entity-details --entity-identifier="192.168.1.100" --entity-type="IP Address" --entity-environment="Production"
+  /secops get-entity-details --entity-identifier="user@company.com" --entity-type="User" --entity-environment="Corporate"
+  /secops get-entity-details --entity-identifier="workstation-01" --entity-type="Hostname" --entity-environment="Development"
+
+Use Cases:
+- Get SOAR platform's specific view of entity with enrichments
+- Retrieve threat intelligence scores and asset inventory details
+- Understand related alerts or cases involving the entity
+- Get risk scores and observed activity for the entity
+
+The response includes:
+- Detailed attributes and related information for the specified entity
+- Enrichment data performed by SOAR playbooks or integrations
+- Risk scores and threat intelligence information
+- Related alerts, cases, and observed activity
+
+Workflow Integration:
+- Use after identifying specific entity of interest within SOAR platform
+- Provides SOAR platform's enriched view including playbook-generated context
+- Complements broader SIEM entity lookup tools with SOAR-specific enrichments
+
+Next Steps:
+- Analyze enrichment data provided by SOAR platform (threat intel scores, asset details)
+- Compare SOAR entity details with broader context from SIEM entity lookup tools
+- Use findings to inform risk assessment and response decisions within SOAR workflow
+- Document key details using case commenting tools
+- Correlate with information from other security tools (EDR, Network, Cloud, TI)
+{% else %}
+Call the get_entity_details tool with: `get_entity_details(entity_identifier={{entity-identifier}}, entity_type={{entity-type}}, entity_environment={{entity-environment}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "entity-identifier"
+  required = true
+  description = "The unique identifier of the entity"
+  [[subCommands.args]]
+  name = "entity-type"
+  required = true
+  description = "The type of the entity"
+  [[subCommands.args]]
+  name = "entity-environment"
+  required = true
+  description = "The environment context for the entity"
+
+# SOAR search_entity
+[[subCommands]]
+name = "search-entity"
+description = "Search for entities within the SOAR platform based on various criteria"
+prompt = """
+{% if help %}
+Usage: /secops search-entity [OPTIONS]
+
+Search for entities within the SOAR platform based on various criteria.
+
+This tool provides a flexible way to find entities (assets, users, IOCs, etc.)
+matching specific attributes. Useful for exploring the entity database or finding
+potentially related entities during an investigation.
+
+Options:
+  --term              Search term (e.g., partial IP, hostname fragment) (optional)
+  --type              Comma-separated list of entity types to filter by (optional)
+  --is-suspicious     Filter for entities marked as suspicious (true/false) (optional)
+  --is-internal-asset Filter for entities identified as internal assets (true/false) (optional)
+  --is-enriched       Filter for entities that have undergone enrichment (true/false) (optional)
+  --network-name      Comma-separated list of networks to filter by (optional)
+  --environment-name  Comma-separated list of environments to filter by (optional)
+  --help             Show this help message
+
+Examples:
+  /secops search-entity --term="192.168"                    # Search for IPs starting with 192.168
+  /secops search-entity --type="IP Address,Hostname"        # Search for IPs and hostnames
+  /secops search-entity --is-suspicious=true                # Find all suspicious entities
+  /secops search-entity --is-internal-asset=false           # Find external entities
+  /secops search-entity --network-name="DMZ,Production"     # Search in specific networks
+  /secops search-entity --environment-name="Production"     # Search in production environment
+
+Use Cases:
+- Exploratory analysis within SOAR platform's entity database
+- Find potentially related entities based on partial information
+- Identify entities with specific characteristics (suspicious, internal, enriched)
+- Discover assets with shared characteristics in specific environments
+
+The response includes:
+- List of entity objects matching the search criteria
+- Entity attributes and metadata for investigation context
+- Filtering results based on specified criteria
+
+Workflow Integration:
+- Useful for exploratory analysis when you don't have specific identifier from alert/case
+- Can help identify potentially related entities based on shared characteristics
+- Supports discovery of suspicious hosts in specific environments as known by SOAR
+
+Next Steps:
+- Analyze the list of returned entities for patterns or relationships
+- Use /secops get-entity-details for more SOAR-specific information on entities found
+- Use SIEM entity lookup tools for broader historical context on interesting entities
+- Use threat intelligence tools to enrich findings from the search results
+{% else %}
+Call the search_entity tool with: `search_entity(term={{term}}, type={{type}}, is_suspicious={{is-suspicious}}, is_internal_asset={{is-internal-asset}}, is_enriched={{is-enriched}}, network_name={{network-name}}, environment_name={{environment-name}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "term"
+  required = false
+  description = "Search term to match against entity identifiers or names"
+  [[subCommands.args]]
+  name = "type"
+  required = false
+  description = "Comma-separated list of entity types to filter by"
+  [[subCommands.args]]
+  name = "is-suspicious"
+  required = false
+  description = "Filter for entities marked as suspicious (true/false)"
+  [[subCommands.args]]
+  name = "is-internal-asset"
+  required = false
+  description = "Filter for entities identified as internal assets (true/false)"
+  [[subCommands.args]]
+  name = "is-enriched"
+  required = false
+  description = "Filter for entities that have undergone enrichment processes (true/false)"
+  [[subCommands.args]]
+  name = "network-name"
+  required = false
+  description = "Comma-separated list of networks to filter entities by"
+  [[subCommands.args]]
+  name = "environment-name"
+  required = false
+  description = "Comma-separated list of environments to filter entities by"
+
+# SOAR get_case_full_details
+[[subCommands]]
+name = "get-case-details"
+description = "Retrieve comprehensive details for a specific case by aggregating core information, alerts, and comments"
+prompt = """
+{% if help %}
+Usage: /secops get-case-details [OPTIONS]
+
+Retrieve comprehensive details for a specific case by aggregating its core information, associated alerts, and comments.
+
+This tool provides a consolidated view of a security case by fetching its primary
+details (status, priority, description), all linked security alerts, and the full
+history of comments added by analysts or automation.
+
+Options:
+  --case-id  The unique identifier (ID) of the case for full details [REQUIRED]
+  --help    Show this help message
+
+Examples:
+  /secops get-case-details --case-id="523"
+  /secops get-case-details --case-id="724"
+
+Use Cases:
+- Primary tool for starting investigation of specific case identified within SOAR
+- Get comprehensive initial overview by gathering core SOAR case data in one call
+- Understand complete incident context, scope, investigation progress, and collaboration notes
+- Starting point for full investigation (requires deeper analysis using subsequent tools)
+
+The response includes:
+- case_details: Raw API response for basic case information
+- case_alerts: Raw API response containing list of alerts associated with the case
+- case_comments: Raw API response containing list of comments for the case
+
+Important Triage Note:
+Use the priority field as initial guide only. Analyze the combined details (alerts,
+comments, entities involved, potential impact, related threat intelligence) to
+determine the true importance and urgency of the case.
+
+Workflow Integration:
+- Primary tool for starting investigation of specific case identified within SOAR platform
+- Provides comprehensive initial overview - this is a starting point for full investigation
+- Requires deeper analysis using subsequent tools for complete understanding
+
+Next Steps (Essential for Full Investigation):
+- Analyze case_details for status, priority, and description
+- Examine case_alerts to understand triggers - use /secops list-events-by-alert for underlying event data
+- Review case_comments for analyst notes or previous actions
+- Identify key entities from alerts or comments
+- Use /secops get-entities-by-alert-groups to find entities associated with case/alert groups
+- Enrich findings using SIEM (entity-lookup, search-events), TI (threat-intel), EDR, Cloud tools
+- Document investigation progress using case commenting tools
+- Consider adjusting case priority using priority management tools based on findings
+{% else %}
+Call the get_case_full_details tool with: `get_case_full_details(case_id={{case-id}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case for full details"
