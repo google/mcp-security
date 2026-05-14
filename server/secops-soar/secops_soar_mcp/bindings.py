@@ -17,7 +17,7 @@ import os
 
 import dotenv
 from logger_utils import get_logger
-from secops_soar_mcp.http_client import HttpClient
+from secops_soar_mcp.http_client import HttpClient, SoarSSLError, SoarConnectionError
 from secops_soar_mcp.utils import consts
 
 dotenv.load_dotenv()
@@ -32,14 +32,20 @@ valid_scopes = set()
 async def _get_valid_scopes():
     valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
     if valid_scopes_list is None:
-        raise RuntimeError(
-            "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."
-        )
+        raise RuntimeError(consts.CREDENTIALS_ERROR_MESSAGE)
     return set(valid_scopes_list)
 
 
 async def bind():
-    """Binds global variables."""
+    """Binds global variables.
+
+    Raises:
+        SoarSSLError: If an SSL certificate verification error occurs
+            when connecting to SOAR.
+        SoarConnectionError: If the SOAR server cannot be reached.
+        RuntimeError: If the SOAR credentials are invalid or scopes
+            cannot be fetched.
+    """
     global http_client, valid_scopes
     http_client = HttpClient(
         os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
