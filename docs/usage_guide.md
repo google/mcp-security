@@ -244,3 +244,21 @@ If you encounter issues with the MCP servers:
 3. **Check server logs**: Look for error messages in the server output
 4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
 5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
+
+### SecOps SOAR: finding the correct SOAR_URL
+
+If the SecOps SOAR server starts and then shuts down with an error like this:
+
+```text
+Error: Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down...
+MCP error -32000: Connection closed
+```
+
+check that `SOAR_URL` is set to your Google SecOps SOAR base URL, not your Backstory URL. The SOAR APIs used by this server are specific to the SOAR platform, so they are not listed in a Backstory tenant's Swagger documentation.
+
+If you are not sure which URL to use, try one of these options:
+
+1. In Google SecOps SOAR, go to **Settings > Webhooks**, create a new webhook with any parameters, and copy the base URL from the generated webhook URL. For example: `https://s4i0z.siemplify-soar.com`.
+2. Open your browser developer tools, go to the **Network** tab, and navigate to **Cases** in the SOAR UI. Look for a request such as `GetCaseCardsByRequest`, open the **Headers** tab, and copy the base URL from that request. For example: `https://s4i0z.siemplify-soar.com`.
+
+After updating `SOAR_URL`, restart your MCP client so it picks up the new environment variable.
