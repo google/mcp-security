@@ -78,6 +78,13 @@ uvx scc_mcp
 uvx secops_soar_mcp --integrations CSV,OKTA
 ```
 
+If SecOps SOAR fails during startup with a TLS certificate verification error
+on macOS, install the CA list bundled with `certifi` for your Python version:
+
+```bash
+/Applications/Python\ 3.12/Install\ Certificates.command
+```
+
 With environment variables:
 
 ```bash

@@ -29,6 +29,7 @@ class HttpClient:
         self.base_url = base_url
         self.app_key = app_key
         self._session = None
+        self.last_error: Exception | None = None
 
     def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None:
@@ -56,6 +57,7 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        self.last_error = None
         try:
             async with self._get_session().get(
                 self.base_url + endpoint, params=params, headers=headers
@@ -63,8 +65,10 @@ class HttpClient:
                 response.raise_for_status()  # Raise an exception for 4xx/5xx responses
                 return await response.json()
         except aiohttp.ClientResponseError as e:
+            self.last_error = e
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self.last_error = e
             logger.debug("An error occurred: %s", e)
         return None
 
@@ -85,6 +89,7 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        self.last_error = None
         try:
             async with self._get_session().post(
                 self.base_url + endpoint, json=req, params=params, headers=headers
@@ -94,8 +99,10 @@ class HttpClient:
                 decoded_data = data.decode("utf-8")
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
+            self.last_error = e
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self.last_error = e
             logger.debug("An error occurred: %s", e)
         return None
 
@@ -116,6 +123,7 @@ class HttpClient:
             The response as a JSON object, or None if an error occurred.
         """
         headers = await self._get_headers()
+        self.last_error = None
         try:
             async with self._get_session().patch(
                 self.base_url + endpoint, json=req, params=params, headers=headers
@@ -123,8 +131,10 @@ class HttpClient:
                 response.raise_for_status()
                 return await response.json()
         except aiohttp.ClientResponseError as e:
+            self.last_error = e
             logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
+            self.last_error = e
             logger.debug("An error occurred: %s", e)
         return None
 

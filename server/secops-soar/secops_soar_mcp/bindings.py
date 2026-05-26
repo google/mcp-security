@@ -13,7 +13,9 @@
 # limitations under the License.
 """Bindings for the SOAR client."""
 
+from collections import deque
 import os
+import ssl
 
 import dotenv
 from logger_utils import get_logger
@@ -29,12 +31,56 @@ http_client: HttpClient = None
 valid_scopes = set()
 
 
+def _is_certificate_verification_error(error: BaseException | None) -> bool:
+    if error is None:
+        return False
+    pending = deque([error])
+    seen: set[int] = set()
+    while pending:
+        current = pending.popleft()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        message = str(current).lower()
+        if isinstance(current, ssl.SSLCertVerificationError):
+            return True
+        if (
+            isinstance(current, ssl.SSLError)
+            and "certificate verify failed" in message
+        ):
+            return True
+        if "certificate verify failed" in message:
+            return True
+        for related in (current.__cause__, current.__context__):
+            if isinstance(related, BaseException):
+                pending.append(related)
+        for arg in getattr(current, "args", ()):
+            if isinstance(arg, BaseException):
+                pending.append(arg)
+    return False
+
+
+def _valid_scopes_error_message(error: BaseException | None) -> str:
+    if _is_certificate_verification_error(error):
+        return (
+            "Failed to fetch valid scopes from SOAR because TLS certificate "
+            "verification failed. If you are using the Python.org macOS "
+            "installer, run the Install Certificates.command for your Python "
+            "version, for example: "
+            "`/Applications/Python\\ 3.12/Install\\ Certificates.command`. "
+            "You can also point Python at certifi's CA bundle with "
+            "`SSL_CERT_FILE=$(python -m certifi)`."
+        )
+    return (
+        "Failed to fetch valid scopes from SOAR, please make sure you have "
+        "configured the right SOAR credentials. Shutting down..."
+    )
+
+
 async def _get_valid_scopes():
     valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
     if valid_scopes_list is None:
-        raise RuntimeError(
-            "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."
-        )
+        raise RuntimeError(_valid_scopes_error_message(http_client.last_error))
     return set(valid_scopes_list)
 
 
