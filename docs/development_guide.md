@@ -111,6 +111,39 @@ When documenting tools:
 3. Explain the return values and any side effects
 4. Provide examples of how to use the tool
 
+## MCP Tool Optimization (GEPA)
+
+This repository integrates **GEPA (Gradient-based Engine for Prompt Ad-hoc Optimization)** to automatically optimize MCP tool docstrings and descriptions. Since LLMs decide which tool to call based on its description, optimizing these docstrings significantly improves tool-routing accuracy.
+
+### Running Optimization
+
+MCP servers supporting GEPA optimization include an optimization package and script under `gepa_opt/`:
+- `server/secops/gepa_opt/optimize_secops_mcp.py`
+- `server/secops-soar/gepa_opt/optimize_soar_mcp.py`
+- `server/gti/gepa_opt/optimize_gti_mcp.py`
+
+#### Prerequisites
+
+The optimizer runs against Google Cloud Vertex AI and requires the following environment variables (which can be configured in a `.env` file at the root of the project):
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to your GCP Service Account credentials JSON file.
+- `VERTEX_PROJECT`: The GCP project ID for Vertex AI execution.
+- `VERTEX_LOCATION`: The GCP location/region for Vertex AI execution (e.g., `us-central1`).
+
+If any of these are missing, the optimizer scripts will fail fast with a `ValueError`.
+
+#### Execution
+
+Run the optimizer script for the target server:
+```bash
+python server/secops-soar/gepa_opt/optimize_soar_mcp.py
+```
+
+### How it Works
+
+1. **Dataset**: A curation of user queries matched with expected tool calls is defined in `mcp_dataset.json` within each `gepa_opt/` directory.
+2. **Routing Evaluation**: GEPA executes mock queries against the tools using Vertex AI models, calculating a baseline routing accuracy.
+3. **Iterative Optimization**: GEPA generates candidate docstrings, evaluates them on the dataset, and updates the python source files of the tools with the best-performing docstring formulations.
+
 ## Building Documentation
 
 The documentation uses Sphinx with MyST Markdown. To build the docs:

@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -111,59 +111,13 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
 async def get_entities_related_to_a_file(
     hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10, 
 ) -> list[dict[str, typing.Any]]:
-    """Retrieve entities related to the the given file hash.
+    """Retrieve entities related to the given file hash.
 
-    The following table shows a summary of available relationships for file objects.
-
-    | Relationship           | Description                                                                       | Return type |
-    | ---------------------- | --------------------------------------------------------------------------------- | ----------- |
-    | analyses               | Analyses for the file                                                             | analysis |
-    | associations           | File's associated objects (reports, campaigns, IoC collections, malware families, software toolkits, vulnerabilities, threat-actors), without filtering by the associated object type.                                                                                      | collection |
-    | behaviours             | Behaviour reports for the file.                                                   | file-behaviour |
-    | attack_techniques      | Returns the Attack Techniques of the File.                                        | attack_technique |
-    | bundled_files          | Files bundled within the file.                                                    | file |
-    | campaigns              | Campaigns associated to the file.                                                 | collection |
-    | carbonblack_children   | Files derived from the file according to Carbon Black.                            | file |
-    | carbonblack_parents    | Files from where the file was derived according to Carbon Black.                  | file |
-    | collections            | IoC Collections associated to the file.                                           | collection |
-    | comments               | Comments for the file.                                                            | comment |
-    | compressed_parents     | Compressed files that contain the file.                                           | file |
-    | contacted_domains      | Domains contacted by the file.                                                    | domain |
-    | contacted_ips          | IP addresses contacted by the file.                                               | ip_address |
-    | contacted_urls         | URLs contacted by the file.                                                       | url |
-    | dropped_files          | Files dropped by the file during its execution.                                   | file |
-    | email_attachments      | Files attached to the email.                                                      | file |
-    | email_parents          | Email files that contained the file.                                              | file |
-    | embedded_domains       | Domain names embedded in the file.                                                | domain |
-    | embedded_ips           | IP addresses embedded in the file.                                                | ip_address |
-    | embedded_urls          | URLs embedded in the file.                                                        | url |
-    | execution_parents      | Files that executed the file.                                                     | file |
-    | graphs                 | Graphs that include the file.                                                     | graph |
-    | itw_domains            | In the wild domain names from where the file has been downloaded.                 | domain |
-    | itw_ips                | In the wild IP addresses from where the file has been downloaded.                 | ip_address |
-    | itw_urls               | In the wild URLs from where the file has been downloaded.                         | url |
-    | malware_families       | Malware families associated to the file.                                          | collection |
-    | memory_pattern_domains | Domain string patterns found in memory during sandbox execution.                  | domain |
-    | memory_pattern_ips     | IP address string patterns found in memory during sandbox execution.              | ip_address |
-    | memory_pattern_urls    | URL string patterns found in memory during sandbox execution.                     | url |
-    | overlay_children       | Files contained by the file as an overlay.                                        | file |
-    | overlay_parents        | File that contain the file as an overlay.                                         | file |
-    | pcap_children          | Files contained within the PCAP file.                                             | file |
-    | pcap_parents           | PCAP files that contain the file.                                                 | file |
-    | pe_resource_children   | Files contained by a PE file as a resource.                                       | file |
-    | pe_resource_parents    | PE files containing the file as a resource.                                       | file |
-    | related_attack_techniques    | Returns the Attack Techniques of the Collections containing this File.      | attack_technique |
-    | related_reports        | Reports that are directly and indirectly related to the file.                     | collection |
-    | related_threat_actors  | File's related threat actors.                                                     | collection |
-    | reports                | Reports directly associated to the file.                                          | collection |
-    | screenshots            | Screenshots related to the sandbox execution of the file.                         | screenshot |
-    | similar_files          | Files that are similar to the file.                                               | file |
-    | software_toolkits      | Software and Toolkits associated to the file.                                     | collection |
-    | submissions            | Submissions for the file.                                                         | submission |
-    | urls_for_embedded_js   | URLs where this (JS) file is embedded.                                            | url |
-    | user_votes             | File's votes made by current signed-in user.                                      | vote |
-    | votes                  | Votes for the file.                                                               | vote |
-    | vulnerabilities        | Vulnerabilities associated to the file.                                           | collection |
+    Available relationships: analyses, behaviors, carbonblack_children, carbonblack_parents,
+    compressed_parents, contacted_domains, contacted_ips, contacted_urls, dropped_files,
+    execution_parents, itw_domains, itw_urls, metadata, memory_pattern_domains, memory_pattern_ips,
+    mutexes_created, mutexes_opened, overlay_children, overlay_parents, pcap_parents, pe_resource_children,
+    pe_resource_parents, popular_threat_category, suggested_threat_label, yara_rules.
 
     Args:
       hash (required): MD5/SHA1/SHA256) hash that identifies the file.

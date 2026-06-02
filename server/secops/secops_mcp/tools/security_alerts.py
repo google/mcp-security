@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,8 +35,7 @@ async def get_security_alerts(
 ) -> str:
     """Get security alerts directly from Chronicle SIEM.
 
-    Retrieves a list of recent security alerts generated within Chronicle, based on
-    detection rules or other alert sources configured in the SIEM.
+    Retrieves a list of recent security alerts. If the user asks for "open alerts", you must explicitly set status_filter='feedback_summary.status != "CLOSED"'.
 
     **Workflow Integration:**
     - Use this for direct monitoring of SIEM alert activity, potentially identifying
@@ -219,9 +218,11 @@ async def do_update_security_alert(
     root_cause: Optional[str] = None
 ) -> str:
     """
-        Update security alert attributes directly in Chronicle SIEM.
+    Update security alert attributes directly in Chronicle SIEM.
 
-Modifies specific fields of an existing security alert within Chronicle based on its ID. This function allows for updates to an alert's status, severity, verdict, assigned scores, comments, and other metadata. This is typically performed after an investigation, triage, or automated analysis provides new insights or conclusions about the alert. At least one of the optional fields related to alert attributes (e.g., status, severity, comment) should be provided to perform a meaningful update.
+    NOTE: The 'priority' parameter must use the full prefix (e.g., 'PRIORITY_CRITICAL', 'PRIORITY_HIGH', 'PRIORITY_LOW'). The 'verdict' parameter must be 'TRUE_POSITIVE' or 'FALSE_POSITIVE'. The 'status' parameter must be 'CLOSED', 'OPEN', 'NEW', or 'REVIEWED'.
+
+    Modifies specific fields of an existing security alert within Chronicle based on its ID. This function allows for updates to an alert's status, severity, verdict, assigned scores, comments, and other metadata. This is typically performed after an investigation, triage, or automated analysis provides new insights or conclusions about the alert. At least one of the optional fields related to alert attributes (e.g., status, severity, comment) should be provided to perform a meaningful update.
 
 **Workflow Integration:**
 -   Utilize when SOAR is not a core technology the investigator uses

@@ -1,0 +1,104 @@
+[
+  {
+    "user_query": "Search for threat actor profiles related to APT28",
+    "tool_arguments": {
+      "query": "APT28"
+    },
+    "reference_answer": "search_threat_actors",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Find campaigns associated with Sandworm",
+    "tool_arguments": {
+      "query": "Sandworm"
+    },
+    "reference_answer": "search_campaigns",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Show me reports and profiles for the malware family known as Emotet",
+    "tool_arguments": {
+      "query": "Emotet"
+    },
+    "reference_answer": "search_malware_families",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Look up general threats associated with Apache Log4j CVE-2021-44228 vulnerability",
+    "tool_arguments": {
+      "query": "CVE-2021-44228"
+    },
+    "reference_answer": "search_vulnerabilities",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Get a comprehensive analysis report for the domain badsite.com",
+    "tool_arguments": {
+      "domain": "badsite.com"
+    },
+    "reference_answer": "get_domain_report",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Check file reputation for the SHA256 hash 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+    "tool_arguments": {
+      "hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+    },
+    "reference_answer": "get_file_report",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Retrieve sandbox behavior summary for file 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+    "tool_arguments": {
+      "hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+    },
+    "reference_answer": "get_file_behavior_summary",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Show me the sandbox behavior report for id 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_Jujubox",
+    "tool_arguments": {
+      "file_behaviour_id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_Jujubox"
+    },
+    "reference_answer": "get_file_behavior_report",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Search for indicators of compromise related to port 4444 connection in files",
+    "tool_arguments": {
+      "query": "entity:file p:4444"
+    },
+    "reference_answer": "search_iocs",
+    "additional_context": {}
+  },
+  {
+    "user_query": "What are the IP addresses contacted by the domain malicious.xyz?",
+    "tool_arguments": {
+      "domain": "malicious.xyz",
+      "relationship_name": "resolutions",
+      "descriptors_only": true
+    },
+    "reference_answer": "get_entities_related_to_a_domain",
+    "additional_context": {}
+  },
+  {
+    "user_query": "Find any communicating files that communicate with the URL http://malicious-link.com/download",
+    "tool_arguments": {
+      "url": "http://malicious-link.com/download",
+      "relationship_name": "communicating_files",
+      "descriptors_only": true
+    },
+    "reference_answer": "get_entities_related_to_an_url",
+    "additional_context": {}
+  },
+  {
+    "user_query": "List comments posted on the IP 8.8.8.8",
+    "tool_arguments": {
+      "ip_address": "8.8.8.8",
+      "relationship_name": "comments",
+      "descriptors_only": false
+    },
+    "reference_answer": "get_entities_related_to_an_ip_address",
+    "additional_context": {}
+  }
+]

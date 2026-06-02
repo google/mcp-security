@@ -1,0 +1,17 @@
+{
+  "best_score": 0.8571428571428571,
+  "optimized_tool_descriptions": {
+    "tool_description_search_security_events": "Search for security events in Chronicle SIEM using natural language. Allows searching Chronicle event logs using natural language queries, which are automatically translated into UDM queries for execution. Ideal for deep investigation after an initial alert, case, or entity has been prioritized.",
+    "tool_description_get_security_alerts": "Get security alerts directly from Chronicle SIEM. Retrieves a list of recent security alerts generated within Chronicle, based on detection rules or other alert sources configured in the SIEM.",
+    "tool_description_get_security_alert_by_id": "Get security alert by ID directly from Chronicle SIEM. Gets an alert by ID. Use this for direct monitoring of SIEM alert activity, potentially identifying issues before they are ingested or processed by other platforms.",
+    "tool_description_do_update_security_alert": "Update security alert attributes directly in Chronicle SIEM. Modifies specific fields of an existing security alert within Chronicle based on its ID. This function allows for updates to an alert's status, severity, verdict, assigned scores, comments, and other metadata.",
+    "tool_description_lookup_entity": "Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment. Provides a comprehensive summary of an entity's activity based on historical log data within Chronicle over a specified time period. This tool queries Chronicle SIEM directly.",
+    "tool_description_list_security_rules": "List security detection rules configured in Chronicle SIEM, with support for pagination. Retrieves the definitions of detection rules currently active or configured within the Chronicle SIEM instance.",
+    "tool_description_search_security_rules": "Search security detection rules configured in Chronicle SIEM. Retrieves the definitions of detection rules currently active or configured within the Chronicle SIEM instance based on a regex pattern.",
+    "tool_description_get_ioc_matches": "Get IoC matches directly from Chronicle SIEM. Retrieves recent IoC matches observed within the SIEM environment.",
+    "tool_description_get_threat_intel": "Retrieve threat intelligence from Chronicle SIEM. Queries threat intelligence data and returns detailed summaries regarding threat actors, campaigns, CVEs, or general best practices.",
+    "tool_description_search_udm": "Search UDM events using UDM query in Chronicle. Accepts raw YARA-L UDM query strings to locate underlying event records in the Chronicle database over a specified time range.",
+    "tool_description_export_udm_search_csv": "Export UDM search results as a formatted CSV string. Useful for downloading logs for external reporting or offline triage.",
+    "tool_description_find_udm_field_values": "Find UDM field values for autocomplete. Searches for values matching a query string in specified UDM fields."
+  }
+}

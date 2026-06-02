@@ -1,0 +1,238 @@
+[
+  {
+    "user_query": "Show me a list of recent security incidents or cases in the SOAR queue",
+    "reference_answer": "list_cases",
+    "tool_arguments": {}
+  },
+  {
+    "user_query": "Get the latest cases from Chronicle SOAR",
+    "reference_answer": "list_cases",
+    "tool_arguments": {}
+  },
+  {
+    "user_query": "Add a comment to case 523 saying 'We are starting investigation on this indicator.'",
+    "reference_answer": "post_case_comment",
+    "tool_arguments": {
+      "case_id": "523",
+      "comment": "We are starting investigation on this indicator."
+    }
+  },
+  {
+    "user_query": "Post a note to case 812 with details: Host has been isolated successfully.",
+    "reference_answer": "post_case_comment",
+    "tool_arguments": {
+      "case_id": "812",
+      "comment": "Host has been isolated successfully."
+    }
+  },
+  {
+    "user_query": "What alerts are associated with case ID 459?",
+    "reference_answer": "list_alerts_by_case",
+    "tool_arguments": {
+      "case_id": "459"
+    }
+  },
+  {
+    "user_query": "List all alerts triggered under case 204",
+    "reference_answer": "list_alerts_by_case",
+    "tool_arguments": {
+      "case_id": "204"
+    }
+  },
+  {
+    "user_query": "Show alert group identifiers for case 910",
+    "reference_answer": "list_alert_group_identifiers_by_case",
+    "tool_arguments": {
+      "case_id": "910"
+    }
+  },
+  {
+    "user_query": "Get the raw events linked to alert 334 in case 120",
+    "reference_answer": "list_events_by_alert",
+    "tool_arguments": {
+      "case_id": "120",
+      "alert_id": "334"
+    }
+  },
+  {
+    "user_query": "List all security events for alert ID 778 inside case 560",
+    "reference_answer": "list_events_by_alert",
+    "tool_arguments": {
+      "case_id": "560",
+      "alert_id": "778"
+    }
+  },
+  {
+    "user_query": "Set case priority for case 102 to PriorityCritical",
+    "reference_answer": "change_case_priority",
+    "tool_arguments": {
+      "case_id": "102",
+      "case_priority": "PriorityCritical"
+    }
+  },
+  {
+    "user_query": "Change priority of case 705 to PriorityLow because it was a false positive",
+    "reference_answer": "change_case_priority",
+    "tool_arguments": {
+      "case_id": "705",
+      "case_priority": "PriorityLow"
+    }
+  },
+  {
+    "user_query": "Fetch all entities involved in alert group 'rule_group_abc_123' inside case 880",
+    "reference_answer": "get_entities_by_alert_group_identifiers",
+    "tool_arguments": {
+      "case_id": "880",
+      "alert_group_identifiers": ["rule_group_abc_123"]
+    }
+  },
+  {
+    "user_query": "Fetch SOAR details for entity '192.168.1.100' of type 'IP Address' in the 'Production' environment",
+    "reference_answer": "get_entity_details",
+    "tool_arguments": {
+      "entity_identifier": "192.168.1.100",
+      "entity_type": "IP Address",
+      "entity_environment": "Production"
+    }
+  },
+  {
+    "user_query": "Search the SOAR database for suspicious entities with term 'victim-host'",
+    "reference_answer": "search_entity",
+    "tool_arguments": {
+      "term": "victim-host",
+      "is_suspicious": true
+    }
+  },
+  {
+    "user_query": "Find all enriched internal assets in our network",
+    "reference_answer": "search_entity",
+    "tool_arguments": {
+      "is_internal_asset": true,
+      "is_enriched": true
+    }
+  },
+  {
+    "user_query": "Retrieve the full aggregated details, alerts, and comments for case 144",
+    "reference_answer": "get_case_full_details",
+    "tool_arguments": {
+      "case_id": "144"
+    }
+  },
+  {
+    "user_query": "I need all info including history, alerts and comments for case ID 502",
+    "reference_answer": "get_case_full_details",
+    "tool_arguments": {
+      "case_id": "502"
+    }
+  },
+  {
+    "user_query": "Fetch the next batch of SOAR cases using token 'abc123token'",
+    "reference_answer": "list_cases",
+    "tool_arguments": {
+      "next_page_token": "abc123token"
+    }
+  },
+  {
+    "user_query": "Get the next page of alerts for case 459 using token 'page-token-789'",
+    "reference_answer": "list_alerts_by_case",
+    "tool_arguments": {
+      "case_id": "459",
+      "next_page_token": "page-token-789"
+    }
+  },
+  {
+    "user_query": "Load more group IDs for case 910 with token 'tok_910_xyz'",
+    "reference_answer": "list_alert_group_identifiers_by_case",
+    "tool_arguments": {
+      "case_id": "910",
+      "next_page_token": "tok_910_xyz"
+    }
+  },
+  {
+    "user_query": "Retrieve more events for alert 334 in case 120 using pagination token 'evt-page-112'",
+    "reference_answer": "list_events_by_alert",
+    "tool_arguments": {
+      "case_id": "120",
+      "alert_id": "334",
+      "next_page_token": "evt-page-112"
+    }
+  },
+  {
+    "user_query": "Set the priority level of case 224 to PriorityHigh",
+    "reference_answer": "change_case_priority",
+    "tool_arguments": {
+      "case_id": "224",
+      "case_priority": "PriorityHigh"
+    }
+  },
+  {
+    "user_query": "Update case 909 priority to PriorityInfo",
+    "reference_answer": "change_case_priority",
+    "tool_arguments": {
+      "case_id": "909",
+      "case_priority": "PriorityInfo"
+    }
+  },
+  {
+    "user_query": "Which entities are involved in alert groups 'detect_malware_01' and 'exfil_stage_02' inside case 712?",
+    "reference_answer": "get_entities_by_alert_group_identifiers",
+    "tool_arguments": {
+      "case_id": "712",
+      "alert_group_identifiers": [
+        "detect_malware_01",
+        "exfil_stage_02"
+      ]
+    }
+  },
+  {
+    "user_query": "Get SOAR details for user entity 'admin-user' of type 'User' under the 'Staging' environment",
+    "reference_answer": "get_entity_details",
+    "tool_arguments": {
+      "entity_identifier": "admin-user",
+      "entity_type": "User",
+      "entity_environment": "Staging"
+    }
+  },
+  {
+    "user_query": "Find detailed information for entity 'workstation-99' (type 'Hostname') in the 'Development' environment",
+    "reference_answer": "get_entity_details",
+    "tool_arguments": {
+      "entity_identifier": "workstation-99",
+      "entity_type": "Hostname",
+      "entity_environment": "Development"
+    }
+  },
+  {
+    "user_query": "Search for all entities of type 'IP Address' or 'Hostname' in the 'Production' and 'DMZ' environments that are suspicious",
+    "reference_answer": "search_entity",
+    "tool_arguments": {
+      "type": [
+        "IP Address",
+        "Hostname"
+      ],
+      "environment_name": [
+        "Production",
+        "DMZ"
+      ],
+      "is_suspicious": true
+    }
+  },
+  {
+    "user_query": "Show me all internal assets that have not been enriched yet",
+    "reference_answer": "search_entity",
+    "tool_arguments": {
+      "is_internal_asset": true,
+      "is_enriched": false
+    }
+  },
+  {
+    "user_query": "Search for entities in network 'Intranet-Zone' matching term 'database'",
+    "reference_answer": "search_entity",
+    "tool_arguments": {
+      "term": "database",
+      "network_name": [
+        "Intranet-Zone"
+      ]
+    }
+  }
+]
