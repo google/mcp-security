@@ -43,11 +43,20 @@ This is an MCP (Model Context Protocol) server for interacting with Google Cloud
         - `max_findings` (optional): Maximum findings to return. Defaults to 50.
         - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
 
-- **`top_vulnerability_findings(project_id, max_findings=20)`**
-    - **Description**: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project, sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the output if available. Aids prioritization for remediation.
+- **`set_finding_mute(project_id, finding_id, mute, location="global")`**
+    - **Description**: Mutes or unmutes a specific SCC finding. Muted findings are hidden from default views but retained for compliance. Use to suppress accepted risks or resurface previously muted findings.
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID.
+        - `finding_id` (required): The ID of the finding to mute or unmute.
+        - `mute` (required): The mute state to set: `MUTED` or `UNMUTED`.
+        - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
+
+- **`top_vulnerability_findings(project_id, max_findings=20, location="global")`**
+    - **Description**: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project, sorted by Attack Exposure Score (descending). Fetches up to 10× `max_findings` candidates (capped at 1000) to ensure the sort is meaningful across the full population. Includes Attack Exposure score and remediation steps (`nextSteps`).
     - **Parameters**:
         - `project_id` (required): The Google Cloud project ID (e.g., 'my-gcp-project').
         - `max_findings` (optional): The maximum number of findings to return. Defaults to 20.
+        - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
 
 - **`get_finding_remediation(project_id, resource_name=None, category=None, finding_id=None)`**
     - **Description**: Gets the remediation steps (`nextSteps`) for a specific finding within a project, along with details of the affected resource fetched from Cloud Asset Inventory (CAI). The finding can be identified either by its `resource_name` and `category` (for ACTIVE findings) or directly by its `finding_id` (regardless of state).
@@ -95,7 +104,7 @@ The server uses Google Cloud's authentication mechanisms. Ensure you have one of
 ### Required IAM Permissions
 
 Appropriate IAM permissions are required on the target Google Cloud project(s):
-- Security Command Center: `roles/securitycenter.adminViewer` or `roles/securitycenter.adminEditor`
+- Security Command Center: `roles/securitycenter.adminViewer` (read-only tools) or `roles/securitycenter.adminEditor` (required for `set_finding_mute`)
 - Cloud Asset Inventory: `roles/cloudasset.viewer`
 
 ## License

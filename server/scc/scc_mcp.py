@@ -64,8 +64,19 @@ def proto_message_to_dict(message: Any) -> Dict[str, Any]:
         return json_format.MessageToDict(message._pb)
     except Exception as e:
         logger.error(f"Error converting protobuf message to dict: {e}")
-        # Fallback or re-raise depending on desired error handling
         return {"error": "Failed to serialize response part", "details": str(e)}
+
+
+def _build_parent(project_id: str, location: str = "global") -> str:
+    return f"projects/{project_id}/sources/-/locations/{location}"
+
+
+def _build_or_filter(field: str, value: str) -> str:
+    """Build a SCC filter clause supporting OR-separated values."""
+    if " OR " in value.upper():
+        parts = [p.strip().upper() for p in value.split(" OR ")]
+        return "(" + " OR ".join(f'{field}="{p}"' for p in parts) + ")"
+    return f'{field}="{value.upper()}"'
 
 
 # --- Security Command Center Tools ---
@@ -117,49 +128,26 @@ async def search_findings(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
-    # Build filter string from parameters
     filter_parts = []
-
     if state:
         filter_parts.append(f'state="{state}"')
-
     if finding_class:
-        # Support multiple classes with OR
-        if " OR " in finding_class.upper():
-            classes = [c.strip() for c in finding_class.upper().split(" OR ")]
-            class_filter = " OR ".join([f'findingClass="{c}"' for c in classes])
-            filter_parts.append(f"({class_filter})")
-        else:
-            filter_parts.append(f'findingClass="{finding_class.upper()}"')
-
+        filter_parts.append(_build_or_filter("findingClass", finding_class))
     if severity:
-        # Support multiple severities with OR
-        if " OR " in severity.upper():
-            sevs = [s.strip() for s in severity.upper().split(" OR ")]
-            sev_filter = " OR ".join([f'severity="{s}"' for s in sevs])
-            filter_parts.append(f"({sev_filter})")
-        else:
-            filter_parts.append(f'severity="{severity.upper()}"')
-
+        filter_parts.append(_build_or_filter("severity", severity))
     if category:
         filter_parts.append(f'category="{category}"')
-
     if resource_name:
         filter_parts.append(f'resourceName="{resource_name}"')
-
     if resource_type:
         filter_parts.append(f'resource.type="{resource_type}"')
-
     if mute:
         filter_parts.append(f'mute="{mute.upper()}"')
-
     if custom_filter:
         filter_parts.append(custom_filter)
 
     filter_str = " AND ".join(filter_parts) if filter_parts else ""
-
-    # SCC v2: parent must include /locations/{location}
-    parent = f"projects/{project_id}/sources/-/locations/{location}"
+    parent = _build_parent(project_id, location)
 
     logger.info(f"Searching findings for project: {project_id}, filter: {filter_str}")
 
@@ -174,25 +162,25 @@ async def search_findings(
         response_pager = scc_client.list_findings(request=request_args)
 
         all_findings = []
-        count = 0
+        last_page = None
         for page in response_pager.pages:
+            last_page = page
             for item in page.list_findings_results:
-                if count >= max_findings:
+                if len(all_findings) >= max_findings:
                     break
-                finding_dict = proto_message_to_dict(item.finding)
-                all_findings.append(finding_dict)
-                count += 1
-            if count >= max_findings:
+                all_findings.append(proto_message_to_dict(item.finding))
+            if len(all_findings) >= max_findings:
                 break
 
-        # Check if more findings exist
-        more_findings_exist = count >= max_findings
+        more_findings_may_exist = bool(
+            last_page and getattr(last_page, "next_page_token", None)
+        ) or len(all_findings) >= max_findings
 
         return {
             "findings": all_findings,
             "count": len(all_findings),
             "filter_applied": filter_str if filter_str else "No filter (all findings)",
-            "more_findings_may_exist": more_findings_exist,
+            "more_findings_may_exist": more_findings_may_exist,
         }
 
     except google_exceptions.NotFound as e:
@@ -232,7 +220,7 @@ async def get_finding_details(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
-    parent = f"projects/{project_id}/sources/-/locations/{location}"
+    parent = _build_parent(project_id, location)
     finding_name_filter = f"projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"
     filter_str = f'name="{finding_name_filter}"'
 
@@ -347,23 +335,14 @@ async def search_findings_by_compliance(
             "details": "At least one of search_text, compliance_standard, or compliance_id must be provided.",
         }
 
-    # Build API-level filter (for fields the API supports filtering on)
     filter_parts = []
-
     if state:
         filter_parts.append(f'state="{state}"')
-
     if severity:
-        if " OR " in severity.upper():
-            sevs = [s.strip() for s in severity.upper().split(" OR ")]
-            sev_filter = " OR ".join([f'severity="{s}"' for s in sevs])
-            filter_parts.append(f"({sev_filter})")
-        else:
-            filter_parts.append(f'severity="{severity.upper()}"')
+        filter_parts.append(_build_or_filter("severity", severity))
 
     filter_str = " AND ".join(filter_parts) if filter_parts else ""
-
-    parent = f"projects/{project_id}/sources/-/locations/{location}"
+    parent = _build_parent(project_id, location)
 
     logger.info(
         f"Searching findings by compliance for project: {project_id}, "
@@ -507,71 +486,54 @@ async def top_vulnerability_findings(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
-    # SCC v2: parent must include /locations/{location}
-    parent = f"projects/{project_id}/sources/-/locations/{location}"
-    # Filter for active, high/critical vulnerability findings
+    parent = _build_parent(project_id, location)
     filter_str = 'state="ACTIVE" AND findingClass="VULNERABILITY" AND (severity="HIGH" OR severity="CRITICAL")'
 
-    # Define a larger page size to fetch enough findings for sorting
-    fetch_page_size = 20 # Fetch up to 20 findings initially
+    # Fetch significantly more than max_findings so sort-by-attack-exposure is meaningful
+    # across the full population, not just the first page.
+    final_max = max(max_findings if max_findings and max_findings > 0 else 20, 1)
+    fetch_size = min(final_max * 10, 1000)
 
-    logger.info(f"Getting top vulnerability findings for project: {project_id}")
-    logger.debug(f"Using parent: {parent}, filter: {filter_str}, fetching up to {fetch_page_size} findings for sorting.")
+    logger.info(f"Getting top vulnerability findings for project: {project_id}, fetching up to {fetch_size} for sorting")
 
     try:
-        request_args = {
+        response_pager = scc_client.list_findings(request={
             "parent": parent,
             "filter": filter_str,
-            "page_size": fetch_page_size, # Use the larger fetch size here
-        }
+            "page_size": min(fetch_size, 1000),
+        })
 
-        response_pager = scc_client.list_findings(request=request_args)
-
-        all_fetched_findings = []
-        # Iterate through the first page (up to fetch_page_size)
-        page = next(iter(response_pager.pages), None)
-        if page:
+        all_fetched = []
+        for page in response_pager.pages:
             for item in page.list_findings_results:
+                if len(all_fetched) >= fetch_size:
+                    break
                 finding_dict = proto_message_to_dict(item.finding)
-                # SCC v2: attackExposure is a nested message { score: float, ... }
-                attack_exposure_score = finding_dict.get("attackExposure", {}).get("score")
-
-                finding_summary = {
+                all_fetched.append({
                     "name": finding_dict.get("name"),
                     "category": finding_dict.get("category"),
                     "resourceName": finding_dict.get("resourceName"),
                     "severity": finding_dict.get("severity"),
                     "description": finding_dict.get("description", "No description provided."),
-                    "attackExposureScore": attack_exposure_score, # Include score
-                }
-                all_fetched_findings.append(finding_summary)
+                    "nextSteps": finding_dict.get("nextSteps", ""),
+                    "attackExposureScore": (
+                        finding_dict.get("attackExposure") or {}
+                    ).get("score"),
+                })
+            if len(all_fetched) >= fetch_size:
+                break
 
-        # Sort the findings: Attack Exposure Score (desc)
-        # Treat None scores as lowest (-1.0)
-        def sort_key(f):
-            # Prioritize Attack Exposure Score (higher is worse)
-            # Treat None as -1.0 for sorting purposes to put them last in descending order
-            aes = f.get("attackExposureScore", -1.0)
-            # Handle potential non-numeric values if they can occur
-            aes = float(aes) if aes is not None else -1.0
-            # Sort ONLY by Attack Exposure Score
-            return aes # Return only AES for sorting
-
-        all_fetched_findings.sort(key=sort_key, reverse=True) # Sort descending by AES
-
-        # Limit results to max_findings
-        # Ensure max_findings is not None and is positive before slicing
-        final_max_findings = max_findings if max_findings is not None and max_findings > 0 else 20
-        sorted_findings = all_fetched_findings[:final_max_findings]
-
-        # Determine if more findings *might* exist beyond the initial fetch_page_size
-        more_findings_exist = bool(response_pager.next_page_token) or len(all_fetched_findings) == fetch_page_size
+        all_fetched.sort(
+            key=lambda f: float(f["attackExposureScore"]) if f["attackExposureScore"] is not None else -1.0,
+            reverse=True,
+        )
+        sorted_findings = all_fetched[:final_max]
 
         return {
-            "top_findings": sorted_findings, # Return the sorted and limited list
+            "top_findings": sorted_findings,
             "count": len(sorted_findings),
-             # Indicate if there might be more findings beyond the *initial fetch* limit
-            "more_findings_exist_beyond_fetch_limit": more_findings_exist
+            "fetched_for_sorting": len(all_fetched),
+            "more_findings_exist_beyond_fetch_limit": len(all_fetched) >= fetch_size,
         }
 
     except google_exceptions.NotFound as e:
@@ -622,9 +584,8 @@ async def get_finding_remediation(
 
     first_finding_result = None
     scc_error = None
-    # SCC v2: parent must include /locations/{location}
-    parent = f"projects/{project_id}/sources/-/locations/{location}"
-    filter_str = "" # Initialize filter string
+    parent = _build_parent(project_id, location)
+    filter_str = ""
 
     try:
         if finding_id:
@@ -738,6 +699,81 @@ async def get_finding_remediation(
         # General fallback, including potential CAI client errors not caught inside
         logger.error(f"An unexpected error occurred in get_finding_remediation: {e}", exc_info=True)
         return {"error": "An unexpected error occurred", "details": str(e)}
+
+@mcp.tool()
+async def set_finding_mute(
+    project_id: str,
+    finding_id: str,
+    mute: str,
+    location: str = "global",
+) -> Dict[str, Any]:
+    """Name: set_finding_mute
+
+    Description: Mutes or unmutes a specific Security Command Center finding. Muted findings are
+                 hidden from default views but remain in the system for compliance purposes. Use
+                 MUTED to suppress known/accepted risks and UNMUTED to resurface them.
+    Parameters:
+    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    finding_id (required): The ID of the finding to mute or unmute.
+    mute (required): The mute state to set. Valid values: MUTED, UNMUTED.
+    location (optional): The Google Cloud location for SCC v2. Defaults to 'global'.
+    """
+    if not scc_client:
+        return {"error": "Security Center Client not initialized."}
+
+    mute_upper = mute.upper()
+    if mute_upper not in ("MUTED", "UNMUTED"):
+        return {"error": "Invalid mute value", "details": "Must be 'MUTED' or 'UNMUTED'."}
+
+    # set_mute requires the canonical finding name (with actual source ID, not wildcard).
+    # Look up the finding first via list_findings to resolve the full name.
+    parent = _build_parent(project_id, location)
+    filter_str = f'name="projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"'
+
+    logger.info(f"Resolving finding {finding_id} for mute operation in project {project_id}")
+
+    try:
+        response_pager = scc_client.list_findings(request={
+            "parent": parent,
+            "filter": filter_str,
+            "page_size": 1,
+        })
+        page = next(iter(response_pager.pages), None)
+        finding = None
+        if page and page.list_findings_results:
+            finding = list(page.list_findings_results)[0].finding
+
+        if not finding:
+            return {"error": "Finding not found", "details": f"No finding with ID '{finding_id}' in project '{project_id}'."}
+
+        full_name = finding.name
+        mute_enum = securitycenter_v2.Finding.Mute[mute_upper]
+
+        request = securitycenter_v2.SetMuteFindingRequest(
+            name=full_name,
+            mute=mute_enum,
+        )
+        updated = scc_client.set_mute(request=request)
+
+        return {
+            "success": True,
+            "finding_name": full_name,
+            "mute_state": mute_upper,
+            "finding": proto_message_to_dict(updated),
+        }
+
+    except google_exceptions.NotFound as e:
+        logger.error(f"Finding not found: {e}")
+        return {"error": "Not Found", "details": str(e)}
+    except google_exceptions.PermissionDenied as e:
+        logger.error(f"Permission denied setting mute: {e}")
+        return {"error": "Permission Denied", "details": str(e)}
+    except KeyError:
+        return {"error": "Invalid mute value", "details": f"'{mute}' is not a valid Mute enum value. Use MUTED or UNMUTED."}
+    except Exception as e:
+        logger.error(f"Unexpected error setting mute on {finding_id}: {e}", exc_info=True)
+        return {"error": "An unexpected error occurred", "details": str(e)}
+
 
 # --- Main execution ---
 
