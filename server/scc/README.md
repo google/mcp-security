@@ -6,6 +6,43 @@ This is an MCP (Model Context Protocol) server for interacting with Google Cloud
 
 ### Available Tools
 
+- **`search_findings(project_id, finding_class=None, severity=None, state="ACTIVE", category=None, ...)`**
+    - **Description**: Searches and lists ALL types of Security Command Center findings with flexible filtering. Returns full finding details including descriptions, remediation steps, severity, attack exposure, and all associated metadata.
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+        - `finding_class` (optional): Filter by finding class. Valid values: `VULNERABILITY`, `THREAT`, `MISCONFIGURATION`, `OBSERVATION`, `SCC_ERROR`, `POSTURE_VIOLATION`, `TOXIC_COMBINATION`, `SENSITIVE_DATA_RISK`, `CHOKEPOINT`. Supports OR (e.g., `'THREAT OR MISCONFIGURATION'`).
+        - `severity` (optional): Filter by severity: `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`. Supports OR (e.g., `'HIGH OR CRITICAL'`).
+        - `state` (optional): Filter by state: `ACTIVE`, `INACTIVE`. Defaults to `ACTIVE`. Set to `None` for all states.
+        - `category` (optional): Filter by finding category (e.g., `PUBLIC_BUCKET_ACL`, `XSS`, `OPEN_FIREWALL`).
+        - `resource_name` (optional): Filter by the full resource name associated with the finding.
+        - `resource_type` (optional): Filter by resource type (e.g., `google.compute.Instance`).
+        - `mute` (optional): Filter by mute status: `MUTED`, `UNMUTED`, `UNDEFINED`.
+        - `custom_filter` (optional): Raw SCC filter string appended via AND for advanced filtering.
+        - `max_findings` (optional): Maximum number of findings to return. Defaults to 50.
+        - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
+        - `order_by` (optional): Ordering of results. Defaults to `event_time desc`.
+
+- **`get_finding_details(project_id, finding_id, location="global", include_resource_details=True)`**
+    - **Description**: Gets the full details of a specific finding by its ID, including description, remediation steps, severity, attack exposure, compliance information, MITRE ATT&CK data, vulnerability details, and optionally the affected resource details from Cloud Asset Inventory (CAI). Works for any finding class.
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID.
+        - `finding_id` (required): The ID of the finding to retrieve.
+        - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
+        - `include_resource_details` (optional): Whether to fetch resource details from CAI. Defaults to `True`.
+
+- **`search_findings_by_compliance(project_id, search_text=None, compliance_standard=None, compliance_version=None, compliance_id=None, ...)`**
+    - **Description**: Searches SCC findings by compliance framework information (CIS benchmarks, PCI DSS, NIST 800-53, ISO 27001, etc.) or by free-text search on finding descriptions and categories. Use when you have a compliance control name or description (e.g., 'ServiceAccount should not have Admin privileges') and want to find the corresponding SCC findings.
+    - **Parameters**:
+        - `project_id` (required): The Google Cloud project ID.
+        - `search_text` (optional): Free-text to search across finding descriptions, categories, and compliance standard names (case-insensitive). Examples: `'ServiceAccount should not have Admin privileges'`, `'log metric filter'`, `'MFA'`.
+        - `compliance_standard` (optional): Filter by compliance standard name (case-insensitive partial match). Examples: `'CIS'`, `'PCI DSS'`, `'NIST 800-53'`.
+        - `compliance_version` (optional): Filter by standard version (exact match). Examples: `'1.3.0'`, `'2.0'`.
+        - `compliance_id` (optional): Filter by control ID (exact match). Examples: `'1.5'`, `'4.1'`.
+        - `severity` (optional): Pre-filter by severity. Supports OR (e.g., `'HIGH OR CRITICAL'`).
+        - `state` (optional): Filter by state. Defaults to `ACTIVE`.
+        - `max_findings` (optional): Maximum findings to return. Defaults to 50.
+        - `location` (optional): Google Cloud location for SCC v2. Defaults to `global`.
+
 - **`top_vulnerability_findings(project_id, max_findings=20)`**
     - **Description**: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project, sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the output if available. Aids prioritization for remediation.
     - **Parameters**:
