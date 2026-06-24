@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
     "mcp>=1.26.0",
     "vt-py",
-    "fastmcp>=2.11.1",
+    "fastmcp>=3.2.0",
     "uvicorn>=0.34.0",
 ]
 
