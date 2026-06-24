@@ -105,9 +105,7 @@ You can configure MCP clients to use the installed packages with uvx. Here's an 
         "CHRONICLE_PROJECT_ID": "your-project-id",
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
         "CHRONICLE_REGION": "us"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "gti": {
       "command": "uvx",
@@ -116,18 +114,14 @@ You can configure MCP clients to use the installed packages with uvx. Here's an 
       ],
       "env": {
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "scc-mcp": {
       "command": "uvx",
       "args": [
         "scc_mcp"
       ],
-      "env": {},
-      "disabled": false,
-      "autoApprove": []
+      "env": {}
     },
     "secops-soar": {
       "command": "uvx",
@@ -139,9 +133,7 @@ You can configure MCP clients to use the installed packages with uvx. Here's an 
       "env": {
         "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
         "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     }
   }
 }
@@ -158,8 +150,7 @@ You can also use environment files with uvx:
         "--env-file",
         "/path/to/.env",
         "secops_mcp"
-      ],
-      "disabled": false
+      ]
     }
   }
 }
@@ -220,9 +211,7 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
         "CHRONICLE_PROJECT_ID": "your-project-id",
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
         "CHRONICLE_REGION": "us"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "secops-soar": {
       "command": "uv",
@@ -237,9 +226,7 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
       "env": {
         "SOAR_URL": "https://yours-here.siemplify-soar.com:443",
         "SOAR_APP_KEY": "01234567-abcd-4321-1234-0123456789ab"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "gti": {
       "command": "uv",
@@ -251,9 +238,7 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
       ],
       "env": {
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     },
     "scc-mcp": {
       "command": "uv",
@@ -264,9 +249,7 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
         "scc_mcp.py"
       ],
       "env": {
-      },
-      "disabled": false,
-      "autoApprove": []
+      }
     }
   }
 }
@@ -309,9 +292,6 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
         "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
         "CHRONICLE_REGION": "us"
       },
-      "disabled": false,
-      "autoApprove": [
-      ],
       "alwaysAllow": [
       ]
     },
@@ -324,9 +304,6 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
       "env": {
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       },
-      "disabled": false,
-      "autoApprove": [
-      ],
       "alwaysAllow": [
       ]
     },
@@ -338,14 +315,9 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
       ],
       "env": {
       },
-      "disabled": false,
-      "autoApprove": [],
       "alwaysAllow": []
     },
     "secops-soar": {
-      "autoApprove": [
-      ],
-      "disabled": false,
       "timeout": 60,
       "command": "/bin/bash",
       "args": [
