@@ -43,6 +43,80 @@ COLLECTION_KEY_RELATIONSHIPS = [
 ]
 COLLECTION_EXCLUDED_ATTRS = ",".join(["aggregations"])
 
+# Fields stripped client-side from the `attributes.aggregations.files`
+# section of the response of `get_collections_commonalities`. The API's
+# `exclude_attributes` param only works at whole-attribute granularity (e.g.
+# dropping all of `aggregations`, as COLLECTION_EXCLUDED_ATTRS does above),
+# so it can't remove nested sub-fields while keeping the rest of
+# `aggregations.files`; these are removed after the fact instead. They are
+# either too verbose/noisy or too large for regular consumption.
+COLLECTION_COMMONALITIES_FILES_EXCLUDED_ATTRS = [
+    "itw_urls",
+    "execution_parents",
+    "compressed_parents",
+    "pcap_parents",
+    "dropped_files_sha256",
+    "email_parents",
+    "tags",
+    "main_icon_dhash",
+    "main_icon_raw_md5",
+    "vhash",
+    "imphash",
+    "behash",
+    "tlshhash",
+    "attributions",
+    "crowdsourced_ids_results",
+    "crowdsourced_yara_results",
+    "embedded_domains",
+    "embedded_ips",
+    "mutexes_created",
+    "mutexes_opened",
+    "registry_keys_deleted",
+    "registry_keys_opened",
+    "registry_keys_set",
+    "file_types",
+    "crowdsourced_sigma_results",
+    "debug_codeview_guids",
+    "debug_codeview_names",
+    "debug_timestamps",
+    "dropped_files_path",
+    "exiftool_authors",
+    "exiftool_create_dates",
+    "exiftool_creators",
+    "exiftool_last_printed",
+    "exiftool_producers",
+    "exiftool_subjects",
+    "exiftool_titles",
+    "filecondis_dhash",
+    "netassembly_mvid",
+    "office_application_names",
+    "office_authors",
+    "office_creation_datetimes",
+    "office_last_saved",
+    "pe_info_imports",
+    "pe_info_exports",
+    "pe_info_section_md5",
+    "pe_info_section_names",
+    "sandbox_verdicts",
+    "memory_pattern_urls",
+    "embedded_urls",
+    "parent_contacted_domains",
+]
+
+# Fields excluded (via the `exclude_attributes` API param, on top of
+# COLLECTION_EXCLUDED_ATTRS) from `search_vulnerabilities` results. These are
+# specific to the "vulnerability" collection type and either too
+# verbose/noisy or too large for regular consumption.
+VULNERABILITY_EXCLUDED_ATTRS = [
+    "cpes",
+    "vendor_fix_references",
+    "sources",
+    "version_history",
+    "field_sources",
+    "tags_details",
+    "alt_names_details",
+]
+
 COLLECTION_TYPES = {
     "threat-actor",
     "malware-family",
@@ -142,6 +216,7 @@ async def _search_threats_by_collection_type(
     ctx: Context,
     limit: int = 10,
     order_by: str = "relevance-",
+    extra_excluded_attrs: typing.List[str] | None = None,
 ) -> typing.List[typing.Dict[str, typing.Any]]:
   """Search a given threat type in the Google Threat Intelligence platform,
 
@@ -150,6 +225,9 @@ async def _search_threats_by_collection_type(
     collection_type (required): Collection type. One of: "threat-actor", "malware-family", "campaign", "report", "vulnerability", "collection".
     limit: Limit the number of threats to retrieve. 10 by default.
     order_by: Order results by the given order key. "relevance-" by default.
+    extra_excluded_attrs: Additional attribute names to exclude, on top of
+      COLLECTION_EXCLUDED_ATTRS, for collection types with their own noisy
+      fields (e.g. vulnerabilities).
 
   Returns:
     List of collections, aka threats.
@@ -157,6 +235,10 @@ async def _search_threats_by_collection_type(
   if collection_type not in COLLECTION_TYPES:
       raise ValueError(
           f"wrong collection_type. Available collection_type are: {','.join(COLLECTION_TYPES)} ")
+
+  exclude_attributes = COLLECTION_EXCLUDED_ATTRS
+  if extra_excluded_attrs:
+    exclude_attributes = ",".join([COLLECTION_EXCLUDED_ATTRS, *extra_excluded_attrs])
 
   async with vt_client(ctx) as client:
     res = await utils.consume_vt_iterator(
@@ -166,7 +248,7 @@ async def _search_threats_by_collection_type(
             "filter": f"collection_type:{collection_type} {query}",
             "order": order_by,
             "relationships": COLLECTION_KEY_RELATIONSHIPS,
-            "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+            "exclude_attributes": exclude_attributes,
         },
         limit=limit,
     )
@@ -372,7 +454,8 @@ async def search_vulnerabilities(
     List of collections, aka threats.
   """
   res = await _search_threats_by_collection_type(
-      query, "vulnerability", ctx, limit, order_by)
+      query, "vulnerability", ctx, limit, order_by,
+      extra_excluded_attrs=VULNERABILITY_EXCLUDED_ATTRS)
   return res
 
 
@@ -645,11 +728,16 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
     Markdown-formatted string with the commonalities of the collection.
   """
   async with vt_client(ctx) as client:
-    data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
-    data = await data.json_async()
+    response = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
+    data = await response.json_async()
+
     sanitized_data = utils.sanitize_response(data["data"])
-    markdown_output = utils.parse_collection_commonalities(sanitized_data)
-  return markdown_output
+    excluded_paths = [
+        f"attributes.aggregations.files.{attr}"
+        for attr in COLLECTION_COMMONALITIES_FILES_EXCLUDED_ATTRS
+    ]
+    sanitized_data = utils.remove_fields(sanitized_data, excluded_paths)
+  return utils.parse_collection_commonalities(sanitized_data)
 
 
 async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
@@ -707,7 +795,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.Optional[typing.List[str]] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
 
   Note:
@@ -752,7 +840,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
           # Iterate through different community rule types
           for key, rule_type in rule_keys_map.items():
             rules = files_aggregations.get(key, [])
-            if rule_type not in rule_type and not rules:
+            if rule_type not in rule_types and not rules:
               continue
 
             # Sort rules by count and take the top N
