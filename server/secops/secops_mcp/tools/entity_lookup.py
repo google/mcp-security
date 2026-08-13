@@ -141,7 +141,14 @@ async def lookup_entity(
                 if hasattr(entity, 'metadata') and hasattr(entity.metadata, 'entity_type'):
                     entity_type = entity.metadata.entity_type
 
-                result += f'{i}. Type: {entity_type}\n'
+                name = getattr(entity, 'name', 'Unknown')
+                extra = ''
+                if hasattr(entity, 'entity') and isinstance(entity.entity, dict):
+                    if 'asset' in entity.entity and 'ip' in entity.entity['asset']:
+                        extra = f" ip={','.join(entity.entity['asset']['ip'])}"
+                    elif 'domain' in entity.entity and 'name' in entity.entity['domain']:
+                        extra = f" domain={entity.entity['domain']['name']}"
+                result += f'{i}. {name} (Type: {entity_type}){extra}\n'
 
             if len(related_entities) > 5:
                 result += f'... and {len(related_entities) - 5} more related entities\n'
@@ -185,7 +192,10 @@ async def lookup_entity(
 
         # Add prevalence information if available
         if hasattr(entity_summary, 'prevalence') and entity_summary.prevalence:
-            result += 'Prevalence Information Available\n\n'
+            result += 'Prevalence:\n'
+            for p in entity_summary.prevalence[:10]:
+                result += f'  - {p.prevalence_time}: count={p.count}\n'
+            result += '\n'
 
         return result
     except Exception as e:
