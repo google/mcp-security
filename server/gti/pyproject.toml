@@ -18,8 +18,8 @@ classifiers = [
     "Topic :: Security",
 ]
 dependencies = [
-    "mcp",
-    "vt-py"
+    "mcp>=1.23.0,<2.0",
+    "vt-py",
 ]
 
 [project.urls]
