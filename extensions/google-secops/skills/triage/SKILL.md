@@ -39,7 +39,7 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
     *   **Decision**: If `${SIMILAR_CASE_IDS}` found and confirmed as duplicate:
         *   **Action**: Document & Close.
         *   **Remote**: `create_case_comment` -> `execute_bulk_close_case`.
-        *   **Local**: `post_case_comment` -> *(Close not supported locally, advise user)*.
+        *   **Local**: `post_case_comment` -> `close_case`.
         *   **STOP**.
 
 3.  **Find Related Cases**:
@@ -77,8 +77,9 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
     *   **If FP/BTP**:
         *   **Action**: Document reasoning.
         *   **Tool**: `create_case_comment` (Remote) / `post_case_comment` (Local).
-        *   **Action**: Close Case (Remote only).
-        *   **Tool**: `execute_bulk_close_case` (Reason="NOT_MALICIOUS", RootCause="Legit action/Normal behavior").
+        *   **Action**: Close Case.
+        *   **Remote**: `execute_bulk_close_case` (Reason="NOT_MALICIOUS", RootCause="Legit action/Normal behavior").
+        *   **Local**: `close_case` (reason="NotMalicious", root_cause="Legit action/Normal behavior").
     *   **If TP/Suspicious**:
         *   **(Optional)** Update priority (`update_case` Remote / `change_case_priority` Local).
         *   **Action**: Document findings.
