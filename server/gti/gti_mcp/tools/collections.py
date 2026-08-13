@@ -840,7 +840,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
           # Iterate through different community rule types
           for key, rule_type in rule_keys_map.items():
             rules = files_aggregations.get(key, [])
-            if rule_type not in rule_types and not rules:
+            if rule_type not in rule_types or not rules:
               continue
 
             # Sort rules by count and take the top N
