@@ -45,6 +45,7 @@ except ImportError:
 from secops_mcp.tools.search import search_udm
 from secops_mcp.tools.udm_search import export_udm_search_csv
 from secops_mcp.tools.security_events import search_security_events
+from secops_mcp.tools.security_rules import get_rule_detections
 
 @pytest.fixture
 def mock_chronicle_client():
@@ -59,8 +60,64 @@ def mock_chronicle_client():
 def mock_get_client(mock_chronicle_client):
     with patch('secops_mcp.tools.search.get_chronicle_client', return_value=mock_chronicle_client) as m1, \
          patch('secops_mcp.tools.udm_search.get_chronicle_client', return_value=mock_chronicle_client) as m2, \
-         patch('secops_mcp.tools.security_events.get_chronicle_client', return_value=mock_chronicle_client) as m3:
+         patch('secops_mcp.tools.security_events.get_chronicle_client', return_value=mock_chronicle_client) as m3, \
+         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client):
         yield mock_chronicle_client
+
+
+@pytest.mark.asyncio
+async def test_get_rule_detections_forwards_filters(mock_get_client):
+    """Test detection filters use the Chronicle SDK parameter names."""
+    expected = {"detections": []}
+
+    def list_detections(
+        rule_id,
+        start_time=None,
+        end_time=None,
+        list_basis=None,
+        alert_state=None,
+        page_size=None,
+        page_token=None,
+    ):
+        if start_time:
+            start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return expected
+
+    mock_get_client.list_detections.side_effect = list_detections
+
+    result = await get_rule_detections(
+        "ru_test",
+        alert_state="ALERTING",
+        page_size=25,
+        page_token="next-page",
+    )
+
+    assert result == expected
+    call_args = mock_get_client.list_detections.call_args
+    assert call_args.args == ("ru_test",)
+    assert call_args.kwargs["alert_state"] == "ALERTING"
+    assert call_args.kwargs["page_size"] == 25
+    assert call_args.kwargs["page_token"] == "next-page"
+
+
+@pytest.mark.asyncio
+async def test_get_rule_detections_forwards_time_range(mock_get_client):
+    """Test detection time range parameters are converted and forwarded."""
+    await get_rule_detections(
+        "ru_test",
+        start_time="2025-01-20T00:00:00Z",
+        end_time="2025-01-27T23:59:59Z",
+        list_basis="DETECTION_TIME",
+    )
+
+    call_args = mock_get_client.list_detections.call_args
+    assert call_args.kwargs["start_time"] == datetime(
+        2025, 1, 20, tzinfo=timezone.utc
+    )
+    assert call_args.kwargs["end_time"] == datetime(
+        2025, 1, 27, 23, 59, 59, tzinfo=timezone.utc
+    )
+    assert call_args.kwargs["list_basis"] == "DETECTION_TIME"
 
 @pytest.mark.asyncio
 async def test_search_udm_with_start_time(mock_get_client):
