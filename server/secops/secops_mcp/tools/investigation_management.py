@@ -76,19 +76,21 @@ async def list_investigations(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        print(f"Listing investigations (page_size={page_size})...")
+        logger.info("Listing investigations (page_size=%s)...", page_size)
 
         result = chronicle.list_investigations(
             page_size=page_size, page_token=page_token
         )
 
         investigations = result.get("investigations", [])
-        print(f"Successfully retrieved {len(investigations)} investigation(s)")
+        logger.info(
+            "Successfully retrieved %s investigation(s)", len(investigations)
+        )
         return result
 
     except Exception as e:
         error_msg = f"Error listing investigations: {str(e)}"
-        print(error_msg)
+        logger.exception(error_msg)
         return {"error": error_msg}
 
 
