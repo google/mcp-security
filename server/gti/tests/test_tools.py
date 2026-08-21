@@ -17,13 +17,23 @@ import pytest
 import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 
-from gti_mcp.server import server
+from gti_mcp.server import _vt_client_factory, server
 from gti_mcp import tools
 from gti_mcp.tools import collections
 
 from mcp.shared.memory import (
     create_connected_server_and_client_session as client_session,
 )
+
+
+def test_vt_client_factory_trusts_proxy_environment(monkeypatch):
+    """Ensure the VirusTotal client honors standard proxy environment vars."""
+    monkeypatch.setenv("VT_APIKEY", "test-api-key")
+
+    with patch("gti_mcp.server.vt.Client") as client:
+        _vt_client_factory(None)
+
+    client.assert_called_once_with("test-api-key", trust_env=True)
 
 
 @pytest.mark.asyncio(loop_scope="session")
