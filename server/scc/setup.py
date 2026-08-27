@@ -18,10 +18,10 @@ setup = setuptools.setup
 
 setup(
     name="scc-mcp",
-    version="0.1.0",
+    version="0.1.1",
     py_modules=["scc_mcp", "main"],
     install_requires=[
-        "mcp",
+        "mcp[cli]>=1.4.1,<2.0",
         "google-cloud-securitycenter",
         "google-cloud-asset",
     ],
