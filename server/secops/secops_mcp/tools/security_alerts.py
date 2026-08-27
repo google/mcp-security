@@ -61,12 +61,16 @@ async def get_security_alerts(
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
-        str: A formatted string summarizing the retrieved security alerts, including rule name,
-             creation time, status, severity, and associated case ID (if available).
+        str: A formatted string summarizing the retrieved security alerts, including alert ID
+             (when present), rule name, creation time, status, verdict, severity, and associated
+             case ID (if available). The alert ID can be passed to `get_security_alert_by_id`
+             or `do_update_security_alert`.
              Returns 'No security alerts found...' if none match the criteria.
 
     Next Steps (using MCP-enabled tools):
         - Analyze the returned alerts for priority and relevance.
+        - Pass a returned Alert ID to `get_security_alert_by_id` for details or
+          `do_update_security_alert` to update its status, verdict, or severity.
         - For high-priority alerts, check if a corresponding case exists in your case management/SOAR system.
         - If no Alerts are found, expand the filter for this tool by increasing the max_alerts incremently until you are confident there are no recent Alerts
         - If no case exists, consider creating one or initiating investigation directly.
@@ -113,29 +117,36 @@ async def get_security_alerts(
                 rule_name = alert.get('ruleName', 'Unknown Rule')
 
             created_time = alert.get('createdTime', 'Unknown')
+            alert_id = alert.get('id')
+
+            feedback_summary = alert.get('feedbackSummary')
+            has_feedback_summary = isinstance(feedback_summary, dict)
+            if not has_feedback_summary:
+                feedback_summary = {}
 
             # Try different possible status field paths
             status = 'Unknown'
-            if 'feedbackSummary' in alert and isinstance(
-                alert['feedbackSummary'], dict
-            ):
-                status = alert['feedbackSummary'].get('status', 'Unknown')
+            if has_feedback_summary:
+                status = feedback_summary.get('status', 'Unknown')
             elif 'status' in alert:
                 status = alert.get('status', 'Unknown')
 
+            verdict = feedback_summary.get('verdict', 'Unknown')
+
             # Try different possible severity field paths
             severity = 'Unknown'
-            if 'feedbackSummary' in alert and isinstance(
-                alert['feedbackSummary'], dict
-            ):
-                severity = alert['feedbackSummary'].get('severityDisplay', 'Unknown')
+            if has_feedback_summary:
+                severity = feedback_summary.get('severityDisplay', 'Unknown')
             elif 'severity' in alert:
                 severity = alert.get('severity', 'Unknown')
 
             result += f'Alert {i}:\n'
+            if alert_id:
+                result += f'Alert ID: {alert_id}\n'
             result += f'Rule: {rule_name}\n'
             result += f'Created: {created_time}\n'
             result += f'Status: {status}\n'
+            result += f'Verdict: {verdict}\n'
             result += f'Severity: {severity}\n'
 
             # Add case information if available
