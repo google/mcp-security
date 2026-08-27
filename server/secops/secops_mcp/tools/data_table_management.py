@@ -60,14 +60,14 @@ async def create_data_table(
     - BOOL: Boolean values (true/false)
 
     Args:
-        name (str): Unique name for the data table (used to reference in detection rules).
-        description (str): Description of the data table's purpose and contents.
-        header (Dict[str, str]): Column definitions mapping column names to their data types.
+        name: Unique name for the data table (used to reference in detection rules).
+        description: Description of the data table's purpose and contents.
+        header: Column definitions mapping column names to their data types.
                                 Valid types: "STRING", "CIDR", "INT64", "BOOL".
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        rows (Optional[List[List[str]]]): Initial rows to populate the table. Each row should match the header columns.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        rows: Initial rows to populate the table. Each row should match the header columns.
 
     Returns:
         str: Success message with the created data table details.
@@ -196,11 +196,11 @@ async def add_rows_to_data_table(
     - Consider deduplication to avoid redundant entries in the table.
 
     Args:
-        table_name (str): Name of the existing data table to add rows to.
-        rows (List[List[str]]): List of rows to add. Each row should match the table's column schema.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        table_name: Name of the existing data table to add rows to.
+        rows: List of rows to add. Each row should match the table's column schema.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message with details about the added rows.
@@ -300,11 +300,11 @@ async def list_data_table_rows(
     - Generate reports on security context data for compliance or operational reviews.
 
     Args:
-        table_name (str): Name of the data table to list rows from.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        max_rows (int): Maximum number of rows to return. Defaults to 50.
+        table_name: Name of the data table to list rows from.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        max_rows: Maximum number of rows to return. Defaults to 50.
 
     Returns:
         str: Formatted list of table rows with their data values.
@@ -409,11 +409,11 @@ async def delete_data_table_rows(
     - Maintain backups or logs of deleted data for audit purposes.
 
     Args:
-        table_name (str): Name of the data table to delete rows from.
-        row_ids (List[str]): List of row IDs to delete. Use `list_data_table_rows` to get row IDs.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        table_name: Name of the data table to delete rows from.
+        row_ids: List of row IDs to delete. Use `list_data_table_rows` to get row IDs.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message confirming the deletion of specified rows.

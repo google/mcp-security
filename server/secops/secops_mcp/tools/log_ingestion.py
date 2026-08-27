@@ -58,17 +58,17 @@ async def ingest_raw_log(
     - Ingest Windows Event logs in XML format for endpoint monitoring.
 
     Args:
-        log_type (str): Chronicle log type identifier (e.g., "OKTA", "WINEVTLOG_XML", "AWS_CLOUDTRAIL").
+        log_type: Chronicle log type identifier (e.g., "OKTA", "WINEVTLOG_XML", "AWS_CLOUDTRAIL").
                        Use get_available_log_types to see supported types.
-        log_message (Union[str, List[str]]): Log content as string or list of strings for batch ingestion.
+        log_message: Log content as string or list of strings for batch ingestion.
                                            For JSON logs, provide as JSON string. For XML/other formats, provide raw content.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        forwarder_id (Optional[str]): Custom forwarder ID for log routing. If not provided, uses default forwarder.
-        labels (Optional[Dict[str, str]]): Custom labels to attach to ingested logs for categorization.
-        log_entry_time (Optional[str]): ISO 8601 timestamp when the log was originally generated.
-        collection_time (Optional[str]): ISO 8601 timestamp when the log was collected.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        forwarder_id: Custom forwarder ID for log routing. If not provided, uses default forwarder.
+        labels: Custom labels to attach to ingested logs for categorization.
+        log_entry_time: ISO 8601 timestamp when the log was originally generated.
+        collection_time: ISO 8601 timestamp when the log was collected.
 
     Returns:
         str: Success message with operation details, including any operation IDs for tracking.
@@ -176,11 +176,11 @@ async def ingest_udm_events(
     - event-specific fields: Varies by event type (principal, target, network, etc.)
 
     Args:
-        udm_events (Union[Dict[str, Any], List[Dict[str, Any]]]): Single UDM event or list of UDM events.
+        udm_events: Single UDM event or list of UDM events.
                                                                Each event must be a properly formatted UDM structure.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
 
     Returns:
         str: Success message with details about the ingested events, including any generated event IDs.
@@ -317,10 +317,10 @@ async def get_available_log_types(
     - Validate log type names before attempting ingestion.
 
     Args:
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
-        search_term (Optional[str]): Filter log types by name or description containing this term.
+        project_id: Google Cloud project ID (required).
+        customer_id: Chronicle customer ID (required).
+        region: Chronicle region (e.g., "us", "europe") (required).
+        search_term: Filter log types by name or description containing this term.
 
     Returns:
         str: Formatted list of available log types with their IDs and descriptions.

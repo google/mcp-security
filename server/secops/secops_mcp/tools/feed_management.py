@@ -50,11 +50,11 @@ async def list_feeds(
     - Audit feed configurations as part of security reviews
 
     Args:
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -129,12 +129,12 @@ async def get_feed(
     - Review feed metadata and labels
 
     Args:
-        feed_id (str): The ingestion feed identifier to retrieve details for.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        feed_id: The ingestion feed identifier to retrieve details for.
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -191,17 +191,17 @@ async def create_feed(
     - Set up GCP Security Command Center integration
 
     Args:
-        display_name (str): User-friendly name for the feed.
-        feed_details (Dict[str, Any]): Dictionary containing feed configuration
+        display_name: User-friendly name for the feed.
+        feed_details: Dictionary containing feed configuration
             details. Must include:
             - logType (str): The Chronicle log type (e.g., "WINEVTLOG")
             - feedSourceType (str): Type of feed ("HTTP", "S3", "GCS", etc.)
             - Source-specific settings (httpSettings, s3Settings, etc.)
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -268,16 +268,16 @@ async def update_feed(
     - Update feed configuration parameters
 
     Args:
-        feed_id (str): The ID of the feed to update.
-        display_name (Optional[str]): New display name for the feed.
+        feed_id: The ID of the feed to update.
+        display_name: New display name for the feed.
             If None, the existing name is retained.
-        feed_details (Optional[Dict[str, Any]]): Dictionary containing updated
+        feed_details: Dictionary containing updated
             feed configuration details. Only specified fields will be updated.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -341,12 +341,12 @@ async def enable_feed(
     - Enable feeds after troubleshooting connectivity issues
 
     Args:
-        feed_id (str): The feed identifier which is to be enabled.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        feed_id: The feed identifier which is to be enabled.
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -406,12 +406,12 @@ async def disable_feed(
     - Stop unused feeds to optimize resource usage
 
     Args:
-        feed_id (str): The ID of the feed to disable.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        feed_id: The ID of the feed to disable.
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -471,12 +471,12 @@ async def delete_feed(
     - Part of environment cleanup during migrations
 
     Args:
-        feed_id (str): The ID of the feed to delete.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        feed_id: The ID of the feed to delete.
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:
@@ -532,12 +532,12 @@ async def generate_feed_secret(
     - Update credentials during security review processes
 
     Args:
-        feed_id (str): The ID of the feed to generate a secret for.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to
+        feed_id: The ID of the feed to generate a secret for.
+        project_id: Google Cloud project ID. Defaults to
             environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to
+        customer_id: Chronicle customer ID. Defaults to
             environment configuration.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe").
+        region: Chronicle region (e.g., "us", "europe").
             Defaults to environment configuration.
 
     Returns:

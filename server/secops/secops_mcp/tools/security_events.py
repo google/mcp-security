@@ -63,14 +63,14 @@ async def search_security_events(
     Note: When searching for email addresses, use only lowercase letters.
 
     Args:
-        text (str): Natural language description of the events you want to find.
-        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
-        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
-        hours_back (int): How many hours back from the current time to search. Used if start_time is not provided.
-        start_time (Optional[str]): Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
-        end_time (Optional[str]): End time in ISO 8601 format. Defaults to current time if not provided.
-        max_events (int): Maximum number of event records to return. Defaults to 100.
-        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+        text: Natural language description of the events you want to find.
+        project_id: Google Cloud project ID. Defaults to environment configuration.
+        customer_id: Chronicle customer ID. Defaults to environment configuration.
+        hours_back: How many hours back from the current time to search. Used if start_time is not provided.
+        start_time: Start time in ISO 8601 format (e.g. "2023-01-01T00:00:00Z"). Overrides hours_back.
+        end_time: End time in ISO 8601 format. Defaults to current time if not provided.
+        max_events: Maximum number of event records to return. Defaults to 100.
+        region: Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         Dict[str, Any]: A dictionary containing:
