@@ -435,3 +435,136 @@ async def remove_alert_tag(
     except Exception as e:
         logger.error("Error removing tag from alert: %s", e)
         return {"error": f"Failed to remove tag from alert: {str(e)}"}
+
+
+@server.tool()
+async def list_alert_group_identifiers_by_case(
+    case_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    page_size: int = 50,
+    page_token: Optional[str] = None,
+) -> Dict[str, Any]:
+    """List alert group identifiers associated with a specific Case in Chronicle SOAR.
+
+    Retrieves grouping keys used for correlation, playbook execution stages, or analyst assignment.
+
+    Args:
+        case_id (str): The Case ID or full resource name.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+        page_size (int): Max number of results. Defaults to 50.
+        page_token (Optional[str]): Pagination token.
+
+    Returns:
+        Dict[str, Any]: List of alert group identifier strings and pagination info.
+    """
+    try:
+        if not case_id:
+            return {"error": "case_id parameter is required"}
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        short_case_id = case_id.split("/")[-1]
+        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}:listAlertGroupIdentifiers"
+
+        params: Dict[str, Any] = {"pageSize": page_size}
+        if page_token:
+            params["pageToken"] = page_token
+
+        response = chronicle.session.get(url, params=params)
+        if response.status_code != 200:
+            # Fallback to extracting from list_case_alerts if dedicated endpoint is not active
+            alerts_res = await list_case_alerts(case_id=short_case_id, project_id=project_id, customer_id=customer_id, region=region)
+            if "caseAlerts" in alerts_res:
+                group_ids = list({
+                    gid for a in alerts_res["caseAlerts"]
+                    for gid in a.get("alertGroupIdentifiers", [])
+                })
+                return {"alertGroupIdentifiers": group_ids, "caseId": short_case_id}
+            return {
+                "error": f"Failed to list alert group identifiers: {response.status_code} - {response.text}"
+            }
+        return response.json()
+    except Exception as e:
+        logger.error(f"Error listing alert group identifiers for case {case_id}: {e}")
+        return {"error": f"Failed to list alert group identifiers: {str(e)}"}
+
+
+@server.tool()
+async def list_events_by_alert(
+    case_id: str,
+    alert_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    page_size: int = 50,
+    page_token: Optional[str] = None,
+) -> Dict[str, Any]:
+    """List the underlying security events (UDM events) associated with a specific alert.
+
+    Retrieves the raw ground truth telemetry events that triggered the alert,
+    vital for verifying alerts, inspecting command lines, network connections, and forensic analysis.
+
+    Args:
+        case_id (str): The Case ID containing the alert.
+        alert_id (str): The Alert ID or full resource name.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+        page_size (int): Max number of events to return. Defaults to 50.
+        page_token (Optional[str]): Pagination token.
+
+    Returns:
+        Dict[str, Any]: List of raw/UDM event objects linked to the alert.
+    """
+    try:
+        if not case_id or not alert_id:
+            return {"error": "Both case_id and alert_id parameters are required"}
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        short_case_id = case_id.split("/")[-1]
+        short_alert_id = alert_id.split("/")[-1]
+        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/{short_alert_id}:listEvents"
+
+        params: Dict[str, Any] = {"pageSize": page_size}
+        if page_token:
+            params["pageToken"] = page_token
+
+        response = chronicle.session.get(url, params=params)
+        if response.status_code != 200:
+            # Fallback to get_case_alert with expand=events
+            alert_detail = await get_case_alert(case_id=short_case_id, alert_id=short_alert_id, project_id=project_id, customer_id=customer_id, region=region)
+            if "events" in alert_detail:
+                return {"events": alert_detail["events"], "alertId": short_alert_id}
+            return {
+                "error": f"Failed to list events for alert: {response.status_code} - {response.text}"
+            }
+        return response.json()
+    except Exception as e:
+        logger.error(f"Error listing events for alert {alert_id}: {e}")
+        return {"error": f"Failed to list events for alert: {str(e)}"}
+
+
+@server.tool()
+async def list_involved_events(
+    case_id: str,
+    alert_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    page_size: int = 50,
+    page_token: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Alias for list_events_by_alert. Retrieves security telemetry events for a case alert."""
+    return await list_events_by_alert(
+        case_id=case_id,
+        alert_id=alert_id,
+        project_id=project_id,
+        customer_id=customer_id,
+        region=region,
+        page_size=page_size,
+        page_token=page_token,
+    )
+

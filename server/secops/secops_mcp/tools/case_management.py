@@ -725,3 +725,194 @@ async def reopen_case(
     except Exception as e:
         logger.error("Error reopening case(s): %s", e)
         return {"error": f"Failed to reopen case: {str(e)}"}
+
+
+@server.tool()
+async def list_case_comments(
+    case_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+    filter_query: Optional[str] = None,
+    order_by: Optional[str] = None,
+    page_size: int = 50,
+    page_token: Optional[str] = None,
+) -> Dict[str, Any]:
+    """List all case comments for a given Case in Chronicle using 1P CaseCommentService.
+
+    Retrieves a paginated list of comments associated with a specific SOAR case,
+    essential for understanding the timeline of investigation and reviewing analyst notes.
+
+    Args:
+        case_id (str): The Case ID or full resource name.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+        filter_query (Optional[str]): Filter expression (e.g., 'user = "analyst@example.com"').
+        order_by (Optional[str]): Sort order (e.g., "create_time desc").
+        page_size (int): Max number of comments to return. Defaults to 50.
+        page_token (Optional[str]): Pagination token for next page.
+
+    Returns:
+        Dict[str, Any]: List of CaseComment objects and pagination token.
+    """
+    try:
+        if not case_id:
+            return {"error": "case_id parameter is required"}
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        case_name = _format_case_name(chronicle.instance_id, case_id)
+        short_id = case_name.split("/")[-1]
+        url = f"{_get_base_endpoint(chronicle)}/cases/{short_id}/caseComments"
+
+        params: Dict[str, Any] = {"pageSize": page_size}
+        if filter_query:
+            params["filter"] = filter_query
+        if order_by:
+            params["orderBy"] = order_by
+        if page_token:
+            params["pageToken"] = page_token
+
+        response = chronicle.session.get(url, params=params)
+        if response.status_code != 200:
+            return {
+                "error": f"Failed to list case comments: {response.status_code} - {response.text}"
+            }
+        return response.json()
+    except Exception as e:
+        logger.error(f"Error listing comments for case {case_id}: {e}")
+        return {"error": f"Failed to list case comments: {str(e)}"}
+
+
+@server.tool()
+async def create_case_comment(
+    case_id: str,
+    comment: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Create a new comment on a Case in Chronicle using 1P CaseCommentService.
+
+    Adds a new structured comment to an existing SOAR case for documenting findings,
+    decisions, and analyst notes.
+
+    Args:
+        case_id (str): The Case ID or full resource name.
+        comment (str): The text content of the comment.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+
+    Returns:
+        Dict[str, Any]: The created CaseComment object.
+    """
+    try:
+        if not case_id or not comment:
+            return {"error": "Both case_id and comment parameters are required"}
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        case_name = _format_case_name(chronicle.instance_id, case_id)
+        short_id = case_name.split("/")[-1]
+        url = f"{_get_base_endpoint(chronicle)}/cases/{short_id}/caseComments"
+
+        body = {"comment": comment}
+        response = chronicle.session.post(url, json=body)
+        if response.status_code != 200:
+            return {
+                "error": f"Failed to create case comment: {response.status_code} - {response.text}"
+            }
+        return response.json()
+    except Exception as e:
+        logger.error(f"Error creating comment for case {case_id}: {e}")
+        return {"error": f"Failed to create case comment: {str(e)}"}
+
+
+@server.tool()
+async def post_case_comment(
+    case_id: str,
+    comment: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Alias for create_case_comment. Posts a comment to a specific case within SOAR."""
+    return await create_case_comment(
+        case_id=case_id,
+        comment=comment,
+        project_id=project_id,
+        customer_id=customer_id,
+        region=region,
+    )
+
+
+@server.tool()
+async def get_case_full_details(
+    case_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Retrieve consolidated, full details for a case by aggregating metadata, alerts, and comments.
+
+    Fetches the core case object, associated security alerts, and comment timeline in parallel,
+    providing a comprehensive 360-degree incident investigation overview in a single call.
+
+    Args:
+        case_id (str): The Case ID or full resource name.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+
+    Returns:
+        Dict[str, Any]: Aggregated dictionary containing `case_details`, `case_alerts`,
+            `case_comments`, and `alert_count`.
+    """
+    import asyncio
+    try:
+        if not case_id:
+            return {"error": "case_id parameter is required"}
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        case_name = _format_case_name(chronicle.instance_id, case_id)
+        short_id = case_name.split("/")[-1]
+        base = _get_base_endpoint(chronicle)
+
+        case_url = f"{base}/cases/{short_id}"
+        alerts_url = f"{base}/cases/{short_id}/caseAlerts"
+        comments_url = f"{base}/cases/{short_id}/caseComments"
+
+        # Execute requests in parallel using thread executor / session calls
+        loop = asyncio.get_event_loop()
+        case_fut = loop.run_in_executor(None, lambda: chronicle.session.get(case_url))
+        alerts_fut = loop.run_in_executor(None, lambda: chronicle.session.get(alerts_url))
+        comments_fut = loop.run_in_executor(None, lambda: chronicle.session.get(comments_url))
+
+        case_res, alerts_res, comments_res = await asyncio.gather(
+            case_fut, alerts_fut, comments_fut, return_exceptions=True
+        )
+
+        def _safe_json(res):
+            if isinstance(res, Exception):
+                return {"error": str(res)}
+            if hasattr(res, "status_code") and res.status_code == 200:
+                return res.json()
+            return {"status_code": getattr(res, "status_code", None), "text": getattr(res, "text", str(res))}
+
+        case_data = _safe_json(case_res)
+        alerts_data = _safe_json(alerts_res)
+        comments_data = _safe_json(comments_res)
+
+        alerts_list = alerts_data.get("caseAlerts", []) if isinstance(alerts_data, dict) else []
+
+        return {
+            "case_id": short_id,
+            "case_details": case_data,
+            "case_alerts": alerts_data,
+            "alert_count": len(alerts_list),
+            "case_comments": comments_data,
+        }
+    except Exception as e:
+        logger.error(f"Error retrieving full details for case {case_id}: {e}")
+        return {"error": f"Failed to get full case details: {str(e)}"}
+
