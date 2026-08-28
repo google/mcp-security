@@ -1,0 +1,37 @@
+[project]
+name = "secops-mcp"
+version = "0.7.1"
+description = "Google SecOps MCP server (official alias for google-secops-mcp)"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Google SecOps Team", email = "chronicle@google.com" }
+]
+keywords = ["google", "security", "chronicle", "secops", "mcp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+]
+dependencies = [
+    "google-secops-mcp==0.7.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/google/mcp-security"
+Documentation = "https://github.com/google/mcp-security/tree/main/server/secops#readme"
+Repository = "https://github.com/google/mcp-security"
+Issues = "https://github.com/google/mcp-security/issues"
+
+[project.scripts]
+secops_mcp = "secops_mcp.server:main"
+secops-mcp = "secops_mcp.server:main"
+google-secops-mcp = "secops_mcp.server:main"
+
+[project.entry-points.mcp]
+secops_mcp = "secops_mcp.server:main"
+secops-mcp = "secops_mcp.server:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

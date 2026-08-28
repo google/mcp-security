@@ -32,6 +32,8 @@ setup(
     entry_points={
         "console_scripts": [
             "secops-mcp=secops_mcp.server:main",
+            "secops_mcp=secops_mcp.server:main",
+            "google-secops-mcp=secops_mcp.server:main",
         ],
     },
 )

@@ -218,3 +218,8 @@ app_data.db
 
 # IDE / Project tools
 .cm_project
+
+# Local scratch and working notes
+notes.md
+notes.MD
+NOTES.md

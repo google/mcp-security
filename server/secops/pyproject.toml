@@ -36,9 +36,12 @@ test = [
 
 [project.scripts]
 secops_mcp = "secops_mcp.server:main"
+secops-mcp = "secops_mcp.server:main"
+google-secops-mcp = "secops_mcp.server:main"
 
 [project.entry-points.mcp]
 secops_mcp = "secops_mcp.server:main"
+secops-mcp = "secops_mcp.server:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

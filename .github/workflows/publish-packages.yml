@@ -514,12 +514,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
       
-      - name: Build and publish
+      - name: Build and publish canonical google-secops-mcp
         working-directory: ./server/secops
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          python -m build
+          python -m twine upload dist/*
+
+      - name: Synchronize and publish alias secops-mcp
+        working-directory: ./server/secops-alias
+        env:
+          VERSION: ${{ needs.request_approval.outputs.secops_current_ver }}
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          sed -i "s/^version = .*/version = \"${VERSION}\"/" pyproject.toml
+          sed -i "s/\"google-secops-mcp==.*\"/\"google-secops-mcp==${VERSION}\"/" pyproject.toml
           python -m build
           python -m twine upload dist/*
   
