@@ -76,7 +76,7 @@ async def list_integrations(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing integrations: {e}")
+        logger.error("Error listing integrations: %s", e)
         return {"error": f"Failed to list integrations: {str(e)}"}
 
 
@@ -126,7 +126,7 @@ async def list_integration_actions(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing integration actions: {e}")
+        logger.error("Error listing integration actions: %s", e)
         return {"error": f"Failed to list integration actions: {str(e)}"}
 
 
@@ -176,7 +176,7 @@ async def list_integration_instances(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing integration instances: {e}")
+        logger.error("Error listing integration instances: %s", e)
         return {"error": f"Failed to list integration instances: {str(e)}"}
 
 
@@ -246,7 +246,7 @@ async def execute_manual_action(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error executing manual action {action_name}: {e}")
+        logger.error("Error executing manual action %s: %s", action_name, e)
         return {"error": f"Failed to execute manual action: {str(e)}"}
 
 
@@ -282,5 +282,5 @@ async def get_action_result_by_id(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting action result {action_result_id}: {e}")
+        logger.error("Error getting action result %s: %s", action_result_id, e)
         return {"error": f"Failed to get action result: {str(e)}"}

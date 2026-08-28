@@ -488,7 +488,7 @@ async def list_alert_group_identifiers_by_case(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing alert group identifiers for case {case_id}: {e}")
+        logger.error("Error listing alert group identifiers for case %s: %s", case_id, e)
         return {"error": f"Failed to list alert group identifiers: {str(e)}"}
 
 
@@ -543,7 +543,7 @@ async def list_events_by_alert(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing events for alert {alert_id}: {e}")
+        logger.error("Error listing events for alert %s: %s", alert_id, e)
         return {"error": f"Failed to list events for alert: {str(e)}"}
 
 

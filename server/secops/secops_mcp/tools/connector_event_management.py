@@ -78,7 +78,7 @@ async def list_connector_events(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing connector events: {e}")
+        logger.error("Error listing connector events: %s", e)
         return {"error": f"Failed to list connector events: {str(e)}"}
 
 
@@ -115,5 +115,5 @@ async def get_connector_event(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting connector event {connector_event_id}: {e}")
+        logger.error("Error getting connector event %s: %s", connector_event_id, e)
         return {"error": f"Failed to get connector event: {str(e)}"}

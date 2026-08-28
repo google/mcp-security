@@ -780,7 +780,7 @@ async def list_case_comments(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing comments for case {case_id}: {e}")
+        logger.error("Error listing comments for case %s: %s", case_id, e)
         return {"error": f"Failed to list case comments: {str(e)}"}
 
 
@@ -824,7 +824,7 @@ async def create_case_comment(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error creating comment for case {case_id}: {e}")
+        logger.error("Error creating comment for case %s: %s", case_id, e)
         return {"error": f"Failed to create case comment: {str(e)}"}
 
 
@@ -913,6 +913,6 @@ async def get_case_full_details(
             "case_comments": comments_data,
         }
     except Exception as e:
-        logger.error(f"Error retrieving full details for case {case_id}: {e}")
+        logger.error("Error retrieving full details for case %s: %s", case_id, e)
         return {"error": f"Failed to get full case details: {str(e)}"}
 

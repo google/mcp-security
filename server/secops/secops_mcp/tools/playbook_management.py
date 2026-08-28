@@ -74,7 +74,7 @@ async def list_playbooks(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing playbooks: {e}")
+        logger.error("Error listing playbooks: %s", e)
         return {"error": f"Failed to list playbooks: {str(e)}"}
 
 
@@ -111,7 +111,7 @@ async def get_playbook(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting playbook {playbook_id}: {e}")
+        logger.error("Error getting playbook %s: %s", playbook_id, e)
         return {"error": f"Failed to get playbook: {str(e)}"}
 
 
@@ -154,7 +154,7 @@ async def list_playbook_instances(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing playbook instances for case {case_id}: {e}")
+        logger.error("Error listing playbook instances for case %s: %s", case_id, e)
         return {"error": f"Failed to list playbook instances: {str(e)}"}
 
 
@@ -208,7 +208,7 @@ async def execute_playbook(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error executing playbook {playbook_id} on case {case_id}: {e}")
+        logger.error("Error executing playbook %s on case %s: %s", playbook_id, case_id, e)
         return {"error": f"Failed to execute playbook: {str(e)}"}
 
 

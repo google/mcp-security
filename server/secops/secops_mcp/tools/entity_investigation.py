@@ -75,7 +75,7 @@ async def get_involved_entity(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting involved entity {involved_entity_id}: {e}")
+        logger.error("Error getting involved entity %s: %s", involved_entity_id, e)
         return {"error": f"Failed to get involved entity: {str(e)}"}
 
 
@@ -127,7 +127,7 @@ async def list_involved_entities(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing involved entities for alert {alert_id}: {e}")
+        logger.error("Error listing involved entities for alert %s: %s", alert_id, e)
         return {"error": f"Failed to list involved entities: {str(e)}"}
 
 
@@ -167,7 +167,7 @@ async def get_entities_by_alert_group_identifiers(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting entities by alert groups for case {case_id}: {e}")
+        logger.error("Error getting entities by alert groups for case %s: %s", case_id, e)
         return {"error": f"Failed to get entities by alert group identifiers: {str(e)}"}
 
 
@@ -212,7 +212,7 @@ async def get_entity_details(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting entity details for {entity_identifier}: {e}")
+        logger.error("Error getting entity details for %s: %s", entity_identifier, e)
         return {"error": f"Failed to get entity details: {str(e)}"}
 
 
@@ -275,5 +275,5 @@ async def search_entity(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error searching entities: {e}")
+        logger.error("Error searching entities: %s", e)
         return {"error": f"Failed to search entities: {str(e)}"}
