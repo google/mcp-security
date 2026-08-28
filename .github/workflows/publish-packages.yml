@@ -9,10 +9,15 @@ on:
         description: 'Comma-separated list of package tags (e.g., gti-v1.0.0,secops-v2.1.0,secops-soar-v1.0.0,scc-v1.0.0)'
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   detect_changes:
     runs-on: ubuntu-latest
     name: Detect package changes
+    permissions:
+      contents: read
     outputs:
       gti_changed: ${{ steps.check_versions.outputs.gti_changed }}
       scc_changed: ${{ steps.check_versions.outputs.scc_changed }}
@@ -40,12 +45,13 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0  # Fetch all history for proper version comparison
+          persist-credentials: false
       
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.11'
       
@@ -185,6 +191,8 @@ jobs:
     needs: detect_changes
     name: Change
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: ${{ needs.detect_changes.outputs.gti_changed == 'true' || 
             needs.detect_changes.outputs.scc_changed == 'true' || 
             needs.detect_changes.outputs.secops_changed == 'true' || 
@@ -340,7 +348,9 @@ jobs:
     needs: [detect_changes, display_summary]
     runs-on: ubuntu-latest
     name: Approve package publication
-    permissions: write-all
+    permissions:
+      deployments: write
+      contents: read
     environment:
       name: production # The workflow will continue only when approved
     if: ${{ needs.detect_changes.outputs.gti_changed == 'true' || 
@@ -367,7 +377,7 @@ jobs:
     steps:
       - name: Create deployment
         id: deployment
-        uses: bobheadxi/deployments@v1
+        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -431,7 +441,7 @@ jobs:
       
       - name: Update deployment status
         if: always()
-        uses: bobheadxi/deployments@v1
+        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -443,13 +453,17 @@ jobs:
     needs: request_approval
     if: ${{ needs.request_approval.outputs.gti_changed == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.11'
       
@@ -471,13 +485,17 @@ jobs:
     needs: request_approval
     if: ${{ needs.request_approval.outputs.scc_changed == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.11'
       
@@ -499,13 +517,17 @@ jobs:
     needs: request_approval
     if: ${{ needs.request_approval.outputs.secops_changed == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.11'
       
@@ -539,13 +561,17 @@ jobs:
     needs: request_approval
     if: ${{ needs.request_approval.outputs.soar_changed == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.11'
       
