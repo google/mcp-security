@@ -210,3 +210,8 @@ app_data.db
 
 # devcontainer
 .devcontainer/
+
+# Local scratch and working notes
+notes.md
+notes.MD
+NOTES.md
