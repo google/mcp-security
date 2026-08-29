@@ -14,12 +14,43 @@
 """HTTP client for making requests to the SecOps SOAR API."""
 
 import json
-from typing import Any, Dict
+import ssl
+from typing import Any, Dict, Optional
 
 import aiohttp
 from logger_utils import get_logger
+from secops_soar_mcp.exceptions import (
+    SoarAuthError,
+    SoarConnectionError,
+    SoarError,
+    SoarHttpError,
+    SoarSSLError,
+)
 
 logger = get_logger(__name__)
+
+
+def is_ssl_cert_verification_error(exc: Optional[BaseException]) -> bool:
+    """Checks whether an exception was caused by an SSL certificate verification failure."""
+    if exc is None:
+        return False
+    current = exc
+    visited = set()
+    while current is not None and id(current) not in visited:
+        visited.add(id(current))
+        if isinstance(current, (ssl.SSLCertVerificationError, aiohttp.ClientConnectorCertificateError)):
+            return True
+        msg = str(current).lower()
+        if "certificate verify failed" in msg or "certifi" in msg:
+            return True
+        for related in (current.__cause__, current.__context__):
+            if related is not None and is_ssl_cert_verification_error(related):
+                return True
+        if hasattr(current, "os_error") and current.os_error is not None:
+            if is_ssl_cert_verification_error(current.os_error):
+                return True
+        current = current.__cause__ or current.__context__
+    return False
 
 
 class HttpClient:
@@ -35,17 +66,48 @@ class HttpClient:
             self._session = aiohttp.ClientSession()
         return self._session
 
-    async def _get_headers(self):
+    async def _get_headers(self) -> Dict[str, str]:
         headers = {}
         if self.app_key:
             headers["AppKey"] = self.app_key
         return headers
 
+    def _handle_error(self, exc: Exception) -> None:
+        """Translates low-level aiohttp/network errors into structured SoarError subtypes."""
+        if is_ssl_cert_verification_error(exc):
+            logger.error("TLS certificate verification failed: %s", exc)
+            raise SoarSSLError(
+                "TLS certificate verification failed while connecting to SOAR. "
+                "If you are using macOS (python.org installer), run: "
+                "'/Applications/Python 3.X/Install Certificates.command' "
+                "or set SSL_CERT_FILE with certifi's CA bundle (e.g. SSL_CERT_FILE=$(python -m certifi))."
+            ) from exc
+
+        if isinstance(exc, aiohttp.ClientResponseError):
+            logger.debug("HTTP response error occurred (%s): %s", exc.status, exc)
+            if exc.status in (401, 403):
+                raise SoarAuthError(
+                    f"SOAR authentication failed ({exc.status}): {exc.message}"
+                ) from exc
+            raise SoarHttpError(
+                f"SOAR API returned HTTP {exc.status}: {exc.message}",
+                status_code=exc.status,
+            ) from exc
+
+        if isinstance(exc, (aiohttp.ClientConnectorError, aiohttp.ServerTimeoutError)):
+            logger.debug("Connection error occurred: %s", exc)
+            raise SoarConnectionError(
+                f"Failed to connect to SOAR endpoint ({self.base_url}): {exc}"
+            ) from exc
+
+        logger.debug("Unexpected error occurred: %s", exc)
+        raise SoarError(f"SOAR request failed: {exc}") from exc
+
     async def get(
         self,
         endpoint: str,
-        params: Dict[str, Any] = None,
-    ):
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         """Makes a GET request to the specified endpoint.
 
         Args:
@@ -60,20 +122,17 @@ class HttpClient:
             async with self._get_session().get(
                 self.base_url + endpoint, params=params, headers=headers
             ) as response:
-                response.raise_for_status()  # Raise an exception for 4xx/5xx responses
+                response.raise_for_status()
                 return await response.json()
-        except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
-        return None
+            self._handle_error(e)
 
     async def post(
         self,
         endpoint: str,
-        req: Dict[str, Any] = None,
-        params: Dict[str, Any] = None,
-    ):
+        req: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         """Makes a POST request to the specified endpoint.
 
         Args:
@@ -93,18 +152,15 @@ class HttpClient:
                 data = await response.content.read()
                 decoded_data = data.decode("utf-8")
                 return json.loads(decoded_data)
-        except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
-        return None
+            self._handle_error(e)
 
     async def patch(
         self,
         endpoint: str,
-        req: Dict[str, Any] = None,
-        params: Dict[str, Any] = None,
-    ):
+        req: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Any:
         """Makes a PATCH request to the specified endpoint.
 
         Args:
@@ -122,12 +178,10 @@ class HttpClient:
             ) as response:
                 response.raise_for_status()
                 return await response.json()
-        except aiohttp.ClientResponseError as e:
-            logger.debug("HTTP error occurred: %s", e)
         except Exception as e:
-            logger.debug("An error occurred: %s", e)
-        return None
+            self._handle_error(e)
 
-    async def close(self):
+    async def close(self) -> None:
+        """Closes the underlying aiohttp session if open."""
         if self._session is not None:
             await self._session.close()

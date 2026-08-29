@@ -97,15 +97,17 @@ def register_tools(integrations_arg: str):
                 module_stem = (
                     py_file.stem
                 )  # The filename without .py (e.g., "csv")
-                if module_stem not in enabled_integrations_set:
-                    continue
-                module_import_path = f"marketplace.{module_stem}"  # The import path (e.g., "marketplace.csv")
+                module_import_path = f"secops_soar_mcp.marketplace.{module_stem}"
+                fallback_import_path = f"marketplace.{module_stem}"
 
                 try:
                     logger.debug(
                         "  Attempting to import module: %s", module_import_path
                     )
-                    module = importlib.import_module(module_import_path)
+                    try:
+                        module = importlib.import_module(module_import_path)
+                    except ImportError:
+                        module = importlib.import_module(fallback_import_path)
 
                     if hasattr(module, "register_tools") and callable(
                         getattr(module, "register_tools")
