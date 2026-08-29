@@ -80,6 +80,8 @@ $Env:SOAR_APP_KEY = "your-soar-api-key"
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
+If the server closes with a `Failed to fetch valid scopes from SOAR` error, confirm that `SOAR_URL` points to your SOAR base URL rather than your Backstory URL. The [usage guide](../usage_guide.md) includes steps for finding the correct value.
+
 ### Available Integrations
 
 The `--integrations` flag in the server configuration allows you to enable specific integrations. The integration modules are located in the `marketplace/` directory. Here's a subset of the available integrations:
