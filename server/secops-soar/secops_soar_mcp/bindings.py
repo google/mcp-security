@@ -49,4 +49,6 @@ async def bind():
 
 async def cleanup():
     """Cleans up global variables."""
+    if http_client is None:
+        return
     await http_client.close()
