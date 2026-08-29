@@ -27,7 +27,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "secops-soar-mcp=secops_soar_mcp.server:main",
+            "secops-soar-mcp=secops_soar_mcp.server:run_main",
         ],
     },
 )
