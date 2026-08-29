@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.utils import parse_iso_datetime
 
 
 # Configure logging
@@ -119,9 +120,9 @@ async def ingest_raw_log(
         if labels:
             ingestion_params['labels'] = labels
         if log_entry_time:
-            ingestion_params['log_entry_time'] = datetime.fromisoformat(log_entry_time.replace('Z', '+00:00'))
+            ingestion_params['log_entry_time'] = parse_iso_datetime(log_entry_time)
         if collection_time:
-            ingestion_params['collection_time'] = datetime.fromisoformat(collection_time.replace('Z', '+00:00'))
+            ingestion_params['collection_time'] = parse_iso_datetime(collection_time)
 
         # Ingest the log(s)
         result = chronicle.ingest_log(**ingestion_params)
