@@ -93,7 +93,7 @@ async def test_get_security_alerts_handles_missing_actionable_fields(
 
 
 @pytest.mark.asyncio
-async def test_get_security_alerts_keeps_empty_feedback_summary_authoritative(
+async def test_get_security_alerts_falls_back_from_empty_feedback_summary(
     chronicle_client,
 ):
     chronicle_client.get_alerts.return_value = [
@@ -101,6 +101,7 @@ async def test_get_security_alerts_keeps_empty_feedback_summary_authoritative(
             "id": "de_2a5b279c",
             "ruleName": "Untriaged Rule",
             "status": "OPEN",
+            "verdict": "FALSE_POSITIVE",
             "severity": "Medium",
             "feedbackSummary": {},
         }
@@ -110,9 +111,9 @@ async def test_get_security_alerts_keeps_empty_feedback_summary_authoritative(
         await get_security_alerts(project_id="test", customer_id="test")
     )
 
-    assert "Status: Unknown" in output
-    assert "Verdict: Unknown" in output
-    assert "Severity: Unknown" in output
+    assert "Status: OPEN" in output
+    assert "Verdict: FALSE_POSITIVE" in output
+    assert "Severity: Medium" in output
 
 
 @pytest.mark.asyncio

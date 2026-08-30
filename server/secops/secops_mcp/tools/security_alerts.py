@@ -120,25 +120,18 @@ async def get_security_alerts(
             alert_id = alert.get('id')
 
             feedback_summary = alert.get('feedbackSummary')
-            has_feedback_summary = isinstance(feedback_summary, dict)
-            if not has_feedback_summary:
+            if not isinstance(feedback_summary, dict):
                 feedback_summary = {}
 
-            # Try different possible status field paths
-            status = 'Unknown'
-            if has_feedback_summary:
-                status = feedback_summary.get('status', 'Unknown')
-            elif 'status' in alert:
-                status = alert.get('status', 'Unknown')
-
-            verdict = feedback_summary.get('verdict', 'Unknown')
-
-            # Try different possible severity field paths
-            severity = 'Unknown'
-            if has_feedback_summary:
-                severity = feedback_summary.get('severityDisplay', 'Unknown')
-            elif 'severity' in alert:
-                severity = alert.get('severity', 'Unknown')
+            status = feedback_summary.get('status') or alert.get('status') or 'Unknown'
+            verdict = (
+                feedback_summary.get('verdict') or alert.get('verdict') or 'Unknown'
+            )
+            severity = (
+                feedback_summary.get('severityDisplay')
+                or alert.get('severity')
+                or 'Unknown'
+            )
 
             result += f'Alert {i}:\n'
             if alert_id:
