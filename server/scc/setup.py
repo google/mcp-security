@@ -18,7 +18,7 @@ setup = setuptools.setup
 
 setup(
     name="scc-mcp",
-    version="0.1.1",
+    version="0.2.0",
     py_modules=["scc_mcp", "main"],
     install_requires=[
         "mcp[cli]>=1.4.1,<2.0",
