@@ -28,7 +28,7 @@ jobs:
           CHANGED_FILES=$(git diff -U0 --name-only origin/$BASE_BRANCH...HEAD | grep -E '\.(py|md|json|yaml|yml|txt|sh|js|ts|jsx|tsx|css|html|xml)$' || true)
 
           if [ -z "$CHANGED_FILES" ]; then
-            echo "✅ No relevant files changed in this PR"
+            echo "No relevant files changed in this PR"
             exit 0
           fi
 
@@ -57,7 +57,7 @@ jobs:
               grep '[[:space:]]$' || true)
 
             if [ -n "$LINES_WITH_TRAILING_SPACES" ]; then
-              echo "❌ Trailing spaces found in changed lines of: $file"
+              echo "Trailing spaces found in changed lines of: $file"
               files_with_trailing_spaces="${files_with_trailing_spaces}$file\n"
               has_trailing_spaces=true
 
@@ -74,7 +74,7 @@ jobs:
                 head -5
               echo ""
             else
-              echo "✅ No trailing spaces in changed lines of: $file"
+              echo "No trailing spaces in changed lines of: $file"
             fi
           done
 
@@ -95,5 +95,5 @@ jobs:
             done
             exit 1
           else
-            echo "✅ No trailing spaces found in changed lines!"
+            echo "No trailing spaces found in changed lines!"
           fi
