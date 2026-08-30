@@ -68,11 +68,22 @@ def get_chronicle_client(
             'as parameters or through environment variables '
             '(CHRONICLE_PROJECT_ID, CHRONICLE_CUSTOMER_ID)'
         )
-    service_account_path = os.getenv("SECOPS_SA_PATH")
+    service_account_path = (
+        os.getenv("SECOPS_SA_PATH")
+        or os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    )
+    impersonate_service_account = (
+        os.getenv("SECOPS_IMPERSONATE_SERVICE_ACCOUNT")
+        or os.getenv("GOOGLE_IMPERSONATE_SERVICE_ACCOUNT")
+    )
+
+    auth_kwargs = {}
     if service_account_path:
-        client = SecOpsClient(service_account_path=service_account_path)
-    else:
-        client = SecOpsClient()
+        auth_kwargs["service_account_path"] = service_account_path
+    if impersonate_service_account:
+        auth_kwargs["impersonate_service_account"] = impersonate_service_account
+
+    client = SecOpsClient(**auth_kwargs)
 
     chronicle = client.chronicle(
         customer_id=customer_id, project_id=project_id, region=region
