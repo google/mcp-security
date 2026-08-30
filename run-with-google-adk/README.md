@@ -141,86 +141,43 @@ MINIMAL_LOGGING=N
 
 ```
 
-Once the variables are updated, run the agent again (make sure you are back in the `mcp-security/run-with-google-adk` directory).
+Once the variables are updated in `.env`, run the agent (make sure you are in the `mcp-security/run-with-google-adk` directory).
 
 ```bash
-   # Authenticate to use SecOps APIs
-   # Skip if running in Google Cloud Shell
-   gcloud auth application-default login
+# Authenticate to use Google Cloud / SecOps APIs
+# Skip if running in Google Cloud Shell
+gcloud auth application-default login
+
+# Start interactive terminal chat
+uv run mcp-security-agent chat
+
+# Or start the ADK Web interface
+adk web src/mcp_security_agent
 ```
+
+Access the agent interface by navigating to `http://localhost:8000`.
+
+> **NOTE:**  
+> First response usually takes a moment as the agent connects to the configured MCP server(s) and initializes tool schemas.
+
+> **CAUTION:**  
+> In case an investigation seems stuck or an error occurs on the console, you can ask a follow-up question like `Are you still there?` or `Can you retry that?`. You can also enable token streaming in the ADK UI.
+
+#### Running Agent with Custom Session and Artifact Services
+
+Google ADK provides persistent [sessions](https://google.github.io/adk-docs/sessions/) and [artifacts](https://google.github.io/adk-docs/artifacts/).
+
+You can run the agent with the session and artifact service of your choice:
 
 ```bash
-   # Run the agent again
-   ./run-adk-agent.sh adk_web
+# Run with SQLite session storage and GCS artifact bucket
+adk web src/mcp_security_agent --session_service_uri sqlite:///./app_data.db --artifact_service_uri gs://<your_bucket_name>
+
+# Run with SQLite session storage only
+adk web src/mcp_security_agent --session_service_uri sqlite:///./app_data.db
 ```
 
-You should get an output like following
-
-```bash
-# Sample output
-$./run-adk-agent.sh adk_web
-Contents of .env (with masked values):
-# Please do not use quotes / double quotes for values except for DEFAULT_PROMPT (use single quotes there)
-# SecOps MCP
-LOAD_SECOPS_MCP=Y
-.
-(output cropped)
-.
-
-Running ADK Web for local agent...
-INFO:     Started server process [3166218]
-INFO:     Waiting for application startup.
-
-+-----------------------------------------------------------------------------+
-| ADK Web Server started                                                      |
-|                                                                             |
-| For local testing, access at http://localhost:8000.                         |
-+-----------------------------------------------------------------------------+
-
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-
-```
-
-Access the Agent 🤖 interface by going to `http://localhost:8000`. Make sure you select `google_mcp_security_agent` in the UI.
-
-> 🪧 **NOTE:**  
-> First response usually takes a bit longer as the agent is loading the tools from the MCP server(s).
-
-> ⚠️ **CAUTION:**  
-> In case the response seems stuck and/or there is an error on the console, create a new session in the ADK Web UI by clicking `+ New Session` in the top right corner. You can also ask a follow up question in the same session like `Are you still there?` or `Can you retry that?`. You can also try switching `Token Streaming` on.
-
-
-
-> 🪧 **NOTE:**  
-> When exiting, shut down the browser tab first and then use `ctrl+c` to exit on the console. 
-
-
-#### Running agent with session and artifact service of your choice
-
-ADK provides persistent [sessions](https://google.github.io/adk-docs/sessions/) and [artifacts](https://google.github.io/adk-docs/artifacts/) (files etc.).
-
-You can run the agent with session and artifact service of your choice.
-
-Sample command
-
-```
-
-$./run-adk-agent.sh adk_web sqlite:///./app_data.db gs://<your_bucket_name>
-
-```
-
-This command will run the agent with session stored in `app_data.db` and any artifacts stored in <your_bucket>.
-
-You can also just use persisten storage (and in memory artifacts)
-
-```
-
-$./run-adk-agent.sh adk_web sqlite:///./app_data.db
-
-```
-
-When the artifact service is backed by GCS - you can get signed URLs for your files to share them easily. Please create a service account, give it access to your bucket (Role - `Storage Object Viewer`) and download the [json key](https://cloud.google.com/iam/docs/keys-create-delete) associated with it. Name the key `object-viewer-sa.json`. Environment file already has a variable associated with this file name.
+When the artifact service is backed by GCS, signed URLs allow easy file sharing. Grant the runtime service account the `roles/storage.objectViewer` role.
 
 
 ## 2. Running Agent as a Cloud Run Service
@@ -246,68 +203,20 @@ In addition to Gemini/ Vertex API costs, running agent will incur cloud costs. P
 > It is not recommended to run the a Cloud Run service with unauthenticated invocations enabled (we do that initially for verification). Please follow steps to enable [IAM authentication](https://cloud.google.com/run/docs/authenticating/developers) on your service. You could also deploy it behind the [Identity Aware Proxy (IAP)](https://cloud.google.com/iap/docs/enabling-cloud-run) - but that is out of scope for this documentation.
 
 ### Deployment Steps
-> 🪧 **NOTE:**  
-> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying
+
+> **NOTE:**  
+> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying to Cloud Run.
 
 ```bash
-# Please run these commands from the mcp-security directory
-chmod +x ./run-with-google-adk/cloudrun_deploy_run.sh
-
-bash ./run-with-google-adk/cloudrun_deploy_run.sh deploy
+# Build and deploy the container directly to Cloud Run
+gcloud run deploy mcp-security-agent-service \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars="LOAD_SECOPS_MCP=Y,LOAD_SCC_MCP=Y,LOAD_GTI_MCP=Y,GOOGLE_GENAI_USE_VERTEXAI=True"
 ```
-Sample output is provided below
 
-```bash
-# Sample output
-$ bash ./run-with-google-adk/cloudrun_deploy_run.sh deploy
-Starting deployment process...
-Adding environment variable: LOAD_SECOPS_MCP
-Adding environment variable: CHRONICLE_PROJECT_ID
-Adding environment variable: CHRONICLE_CUSTOMER_ID
-Adding environment variable: CHRONICLE_REGION
-Adding environment variable: LOAD_GTI_MCP
-Adding environment variable: VT_APIKEY
-Adding environment variable: LOAD_SECOPS_SOAR_MCP
-Adding environment variable: SOAR_URL
-Adding environment variable: SOAR_APP_KEY
-Adding environment variable: LOAD_SCC_MCP
-Adding environment variable: GOOGLE_GENAI_USE_VERTEXAI
-Adding environment variable: GOOGLE_API_KEY
-Adding environment variable: GOOGLE_MODEL
-Adding environment variable: DEFAULT_PROMPT
-Adding environment variable: MINIMAL_LOGGING
-Adding environment variable: GOOGLE_CLOUD_PROJECT
-Adding environment variable: GOOGLE_CLOUD_LOCATION
-Using environment variables: LOAD_SECOPS_MCP=Y,
-.
-.
-[REDACTED]
-.
-.
-Temporarily copying files in the top level directory for image creation.
-Building using Dockerfile and deploying container to Cloud Run service [mcp-security-agent-service] in project [REDACTED] region [us-central1]
-⠛ Building and deploying... Uploading sources.                                                                                                                                               
-⠏ Building and deploying... Uploading sources.                                                                                                                                               
-  ⠏ Uploading sources...                                                                                                                                                                     
-  . Creating Revision...                                                                                                                                                                     
-  . Routing traffic...                                                                                                                                                                       
-  . Setting IAM Policy...                                                                                                                                                                    
-Creating temporary archive of 581 file(s) totalling 11.2 MiB before compression.
-Some files were not included in the source upload.
-✓ Building and deploying... Done.                                                                                                                                                            
-  ✓ Uploading sources...                                                                                                                                                                     
-  ✓ Building Container... Logs are available at [REDACTED].          
-  ✓ Creating Revision...                                                                                                                                                                     
-  ✓ Routing traffic...                                                                                                                                                                       
-  ✓ Setting IAM Policy...                                                                                                                                                                    
-Done.                                                                                                                                                                                        
-Service [mcp-security-agent-service] revision [mcp-security-agent-[REDACTED]] has been deployed and is serving 100 percent of traffic.
-Service URL: [REDACTED]
-Deleting temporarily copied files in the top level directory for image creation.
-Successfully deployed the service.
-
-```
-Now, you can verify the service by browsing to the service endpoint.
+Now, you can verify the service by browsing to the service endpoint URL.
 
 ### IAM access to use Chronicle and SCC
 

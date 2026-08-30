@@ -13,7 +13,9 @@
 # limitations under the License.
 """FastAPI application factory for MCP Security Agent."""
 
+from pathlib import Path
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from mcp_security_agent import __version__
 from mcp_security_agent.server.routes import router
 
@@ -30,4 +32,11 @@ def create_app() -> FastAPI:
         description="Autonomous Security Operations Center (SOC) Agent API",
     )
     app.include_router(router)
+
+    # Mount static assets if directory exists
+    pkg_root = Path(__file__).resolve().parents[3]
+    static_dir = pkg_root / "static"
+    if static_dir.is_dir():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
     return app
