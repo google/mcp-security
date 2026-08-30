@@ -45,7 +45,7 @@ except ImportError:
 from secops_mcp.tools.search import search_udm
 from secops_mcp.tools.udm_search import export_udm_search_csv
 from secops_mcp.tools.security_events import search_security_events
-from secops_mcp.tools.security_rules import get_rule_detections
+from secops_mcp.tools.security_rules import get_rule_detections, test_rule as secops_test_rule
 
 @pytest.fixture
 def mock_chronicle_client():
@@ -299,3 +299,43 @@ async def test_export_csv_invalid_date(mock_get_client):
     assert isinstance(result, str)
     assert "Error parsing date format" in result
     assert "yesterday" in result
+
+
+# =========================================================================
+# Tests for test_rule (PR #143)
+# =========================================================================
+
+@pytest.mark.asyncio
+async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
+    """Test test_rule buffers end_time to start of current hour."""
+    mock_get_client.run_rule_test.return_value = [
+        {"type": "detection", "detection": {"ruleName": "test_rule", "id": "d-1"}},
+        {"type": "progress", "percentDone": 100},
+    ]
+
+    result = await secops_test_rule(
+        rule_text="rule test { condition: true }",
+        project_id="my-proj",
+        customer_id="my-cust",
+        region="us",
+        hours_back=24,
+    )
+
+    # Verify run_rule_test was invoked
+    mock_get_client.run_rule_test.assert_called_once()
+    _, kwargs = mock_get_client.run_rule_test.call_args
+
+    # Check end_time has minute, second, microsecond set to 0 (buffered to start of hour)
+    end_time = kwargs["end_time"]
+    start_time = kwargs["start_time"]
+    assert end_time.minute == 0
+    assert end_time.second == 0
+    assert end_time.microsecond == 0
+
+    # Check start_time is 24 hours before end_time
+    assert end_time - start_time == timedelta(hours=24)
+
+    # Check output contains detection summary
+    assert "Total Detections: 1" in result
+    assert "Rule successfully detected 1 event(s)" in result
+
