@@ -557,7 +557,7 @@ def register_tools(mcp: FastMCP):
         )
         results = await asyncio.gather(case_coro, case_alerts_coro, case_comments_coro)
         return {
-            "case_details:": results[0],
+            "case_details": results[0],
             "case_alerts": results[1],
             "case_comments": results[2],
         }

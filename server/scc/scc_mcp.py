@@ -13,6 +13,7 @@
 # limitations under the License.
 import logging
 import os
+import re
 from typing import Any, Dict, List
 
 from google.api_core import exceptions as google_exceptions
@@ -67,23 +68,39 @@ def proto_message_to_dict(message: Any) -> Dict[str, Any]:
         return {"error": "Failed to serialize response part", "details": str(e)}
 
 
-def _build_parent(project_id: str, location: str = "global") -> str:
-    return f"projects/{project_id}/sources/-/locations/{location}"
+def _build_parent(
+    project_id: str = None,
+    organization_id: str = None,
+    location: str = "global",
+) -> str:
+    """Build the canonical SCC v2 parent resource path."""
+    if organization_id:
+        return f"organizations/{organization_id}/sources/-/locations/{location}"
+    elif project_id:
+        return f"projects/{project_id}/sources/-/locations/{location}"
+    raise ValueError("Either project_id or organization_id must be provided.")
 
 
 def _build_or_filter(field: str, value: str) -> str:
-    """Build a SCC filter clause supporting OR-separated values."""
-    if " OR " in value.upper():
-        parts = [p.strip().upper() for p in value.split(" OR ")]
+    """Build a SCC filter clause supporting OR-separated or comma-separated values."""
+    parts = [
+        p.strip().upper()
+        for p in re.split(r"\s+or\s+|,", value, flags=re.IGNORECASE)
+        if p.strip()
+    ]
+    if len(parts) > 1:
         return "(" + " OR ".join(f'{field}="{p}"' for p in parts) + ")"
-    return f'{field}="{value.upper()}"'
+    elif parts:
+        return f'{field}="{parts[0]}"'
+    return ""
 
 
 # --- Security Command Center Tools ---
 
 @mcp.tool()
 async def search_findings(
-    project_id: str,
+    project_id: str = None,
+    organization_id: str = None,
     finding_class: str = None,
     severity: str = None,
     state: str = "ACTIVE",
@@ -99,13 +116,14 @@ async def search_findings(
     """Name: search_findings
 
     Description: Searches and lists ALL types of Security Command Center findings for a specific project
-                 with flexible filtering. Returns full finding details including descriptions, remediation
-                 steps, severity, attack exposure, and all associated metadata. Supports filtering by
-                 finding class (VULNERABILITY, THREAT, MISCONFIGURATION, OBSERVATION, SCC_ERROR,
+                 or organization with flexible filtering. Returns full finding details including descriptions,
+                 remediation steps, severity, attack exposure, and all associated metadata. Supports filtering
+                 by finding class (VULNERABILITY, THREAT, MISCONFIGURATION, OBSERVATION, SCC_ERROR,
                  POSTURE_VIOLATION, TOXIC_COMBINATION, SENSITIVE_DATA_RISK, CHOKEPOINT), severity,
                  state, category, resource name/type, and mute status.
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     finding_class (optional): Filter by finding class. Valid values: VULNERABILITY, THREAT,
         MISCONFIGURATION, OBSERVATION, SCC_ERROR, POSTURE_VIOLATION, TOXIC_COMBINATION,
         SENSITIVE_DATA_RISK, CHOKEPOINT. Can combine with OR (e.g., 'THREAT OR MISCONFIGURATION').
@@ -128,6 +146,9 @@ async def search_findings(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
+
     filter_parts = []
     if state:
         filter_parts.append(f'state="{state}"')
@@ -147,9 +168,13 @@ async def search_findings(
         filter_parts.append(custom_filter)
 
     filter_str = " AND ".join(filter_parts) if filter_parts else ""
-    parent = _build_parent(project_id, location)
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
 
-    logger.info(f"Searching findings for project: {project_id}, filter: {filter_str}")
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
+    logger.info(f"Searching findings for {target_label}, filter: {filter_str}")
 
     try:
         request_args = {
@@ -184,8 +209,8 @@ async def search_findings(
         }
 
     except google_exceptions.NotFound as e:
-        logger.error(f"Project or resource not found for search on {parent}: {e}")
-        return {"error": "Not Found", "details": f"Could not find project '{project_id}' or relevant resources. {str(e)}"}
+        logger.error(f"Target not found for search on {parent}: {e}")
+        return {"error": "Not Found", "details": f"Could not find {target_label} or relevant resources. {str(e)}"}
     except google_exceptions.PermissionDenied as e:
         logger.error(f"Permission denied for search on {parent}: {e}")
         return {"error": "Permission Denied", "details": str(e)}
@@ -199,8 +224,9 @@ async def search_findings(
 
 @mcp.tool()
 async def get_finding_details(
-    project_id: str,
-    finding_id: str,
+    project_id: str = None,
+    organization_id: str = None,
+    finding_id: str = None,
     location: str = "global",
     include_resource_details: bool = True,
 ) -> Dict[str, Any]:
@@ -211,7 +237,8 @@ async def get_finding_details(
                  vulnerability details, and optionally the affected resource details from Cloud Asset
                  Inventory (CAI). Works for any finding class (VULNERABILITY, THREAT, MISCONFIGURATION, etc.).
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     finding_id (required): The ID of the finding to retrieve.
     location (optional): The Google Cloud location for SCC v2 (e.g., 'global', 'us-central1'). Defaults to 'global'.
     include_resource_details (optional): Whether to fetch additional resource details from Cloud Asset
@@ -220,11 +247,25 @@ async def get_finding_details(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
-    parent = _build_parent(project_id, location)
-    finding_name_filter = f"projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"
-    filter_str = f'name="{finding_name_filter}"'
+    if not finding_id:
+        return {"error": "finding_id is required."}
 
-    logger.info(f"Getting details for finding {finding_id} in project {project_id}")
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
+
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
+
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
+    if organization_id:
+        finding_name_filter = f"organizations/{organization_id}/sources/-/locations/{location}/findings/{finding_id}"
+    else:
+        finding_name_filter = f"projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"
+
+    filter_str = f'name="{finding_name_filter}"'
+    logger.info(f"Getting details for finding {finding_id} in {target_label}")
 
     try:
         scc_request_args = {
@@ -242,7 +283,7 @@ async def get_finding_details(
                 first_finding = results[0].finding
 
         if not first_finding:
-            return {"error": "Finding not found", "details": f"No finding with ID '{finding_id}' found in project '{project_id}'."}
+            return {"error": "Finding not found", "details": f"No finding with ID '{finding_id}' found in {target_label}."}
 
         finding_dict = proto_message_to_dict(first_finding)
 
@@ -255,7 +296,7 @@ async def get_finding_details(
         resource_name_from_finding = finding_dict.get("resourceName")
         if include_resource_details and resource_name_from_finding and cai_client:
             try:
-                cai_scope = f"projects/{project_id}"
+                cai_scope = f"organizations/{organization_id}" if organization_id else f"projects/{project_id}"
                 cai_request = asset_v1.SearchAllResourcesRequest(
                     scope=cai_scope,
                     query=f'name="{resource_name_from_finding}"',
@@ -292,7 +333,8 @@ async def get_finding_details(
 
 @mcp.tool()
 async def search_findings_by_compliance(
-    project_id: str,
+    project_id: str = None,
+    organization_id: str = None,
     search_text: str = None,
     compliance_standard: str = None,
     compliance_version: str = None,
@@ -311,7 +353,8 @@ async def search_findings_by_compliance(
                  and want to find the corresponding SCC findings. Also supports filtering by specific compliance
                  standard name, version, and control ID.
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     search_text (optional): Free-text to search across finding descriptions, categories, and compliance standard names.
         Matches if any of these fields contain the search text (case-insensitive). Examples:
         'ServiceAccount should not have Admin privileges', 'log metric filter', 'MFA', 'firewall'.
@@ -329,6 +372,9 @@ async def search_findings_by_compliance(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
+
     if not search_text and not compliance_standard and not compliance_id:
         return {
             "error": "Missing parameters",
@@ -342,10 +388,14 @@ async def search_findings_by_compliance(
         filter_parts.append(_build_or_filter("severity", severity))
 
     filter_str = " AND ".join(filter_parts) if filter_parts else ""
-    parent = _build_parent(project_id, location)
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
 
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
     logger.info(
-        f"Searching findings by compliance for project: {project_id}, "
+        f"Searching findings by compliance for {target_label}, "
         f"search_text='{search_text}', standard='{compliance_standard}', "
         f"version='{compliance_version}', id='{compliance_id}'"
     )
@@ -454,8 +504,8 @@ async def search_findings_by_compliance(
         }
 
     except google_exceptions.NotFound as e:
-        logger.error(f"Project not found for compliance search on {parent}: {e}")
-        return {"error": "Not Found", "details": f"Could not find project '{project_id}'. {str(e)}"}
+        logger.error(f"Target not found for compliance search on {parent}: {e}")
+        return {"error": "Not Found", "details": f"Could not find {target_label}. {str(e)}"}
     except google_exceptions.PermissionDenied as e:
         logger.error(f"Permission denied for compliance search on {parent}: {e}")
         return {"error": "Permission Denied", "details": str(e)}
@@ -469,24 +519,33 @@ async def search_findings_by_compliance(
 
 @mcp.tool()
 async def top_vulnerability_findings(
-    project_id: str,
+    project_id: str = None,
+    organization_id: str = None,
     max_findings: int = 20,
     location: str = "global",
 ) -> Dict[str, Any]:
     """Name: top_vulnerability_findings
 
-    Description: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project,
-                 sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the output if available.
-                 Aids prioritization for remediation.
+    Description: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project
+                 or organization, sorted by Attack Exposure Score (descending). Includes the Attack Exposure score in the
+                 output if available. Aids prioritization for remediation.
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     max_findings (optional): The maximum number of findings to return. Defaults to 20.
     location (optional): The Google Cloud location for SCC v2 (e.g., 'global', 'us-central1'). Defaults to 'global'.
     """
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
-    parent = _build_parent(project_id, location)
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
+
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
+
     filter_str = 'state="ACTIVE" AND findingClass="VULNERABILITY" AND (severity="HIGH" OR severity="CRITICAL")'
 
     # Fetch significantly more than max_findings so sort-by-attack-exposure is meaningful
@@ -494,7 +553,8 @@ async def top_vulnerability_findings(
     final_max = max(max_findings if max_findings and max_findings > 0 else 20, 1)
     fetch_size = min(final_max * 10, 1000)
 
-    logger.info(f"Getting top vulnerability findings for project: {project_id}, fetching up to {fetch_size} for sorting")
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
+    logger.info(f"Getting top vulnerability findings for {target_label}, fetching up to {fetch_size} for sorting")
 
     try:
         response_pager = scc_client.list_findings(request={
@@ -537,22 +597,23 @@ async def top_vulnerability_findings(
         }
 
     except google_exceptions.NotFound as e:
-        logger.error(f"Project or resource not found for top findings on {parent}: {e}")
-        return {"error": "Not Found", "details": f"Could not find project '{project_id}' or relevant resources. {str(e)}"}
+        logger.error(f"Target or resource not found for top findings on {parent}: {e}")
+        return {"error": "Not Found", "details": f"Could not find {target_label} or relevant resources. {str(e)}"}
     except google_exceptions.PermissionDenied as e:
         logger.error(f"Permission denied for top findings on {parent}: {e}")
         return {"error": "Permission Denied", "details": str(e)}
     except google_exceptions.InvalidArgument as e:
-        # Catch potential filter syntax errors
         logger.error(f"Invalid argument (check filter syntax?) for top findings on {parent}: {e}")
         return {"error": "Invalid Argument", "details": str(e)}
     except Exception as e:
         logger.error(f"An unexpected error occurred getting top findings: {e}", exc_info=True)
         return {"error": "An unexpected error occurred", "details": str(e)}
 
+
 @mcp.tool()
 async def get_finding_remediation(
-    project_id: str,
+    project_id: str = None,
+    organization_id: str = None,
     resource_name: str = None,
     category: str = None,
     finding_id: str = None,
@@ -560,12 +621,13 @@ async def get_finding_remediation(
 ) -> Dict[str, Any]:
     """Name: get_finding_remediation
 
-    Description: Gets the remediation steps (nextSteps) for a specific finding within a project,
+    Description: Gets the remediation steps (nextSteps) for a specific finding within a project or organization,
                  along with details of the affected resource fetched from Cloud Asset Inventory (CAI).
                  The finding can be identified either by its resource_name and category (for ACTIVE findings)
                  or directly by its finding_id (regardless of state).
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     resource_name (optional): The full resource name associated with the finding.
         (e.g., '//container.googleapis.com/projects/my-project/locations/us-central1/clusters/my-cluster')
     category (optional): The category of the finding (e.g., 'GKE_SECURITY_BULLETIN').
@@ -581,17 +643,26 @@ async def get_finding_remediation(
     # Input validation
     if not resource_name and not category and not finding_id:
         return {"error": "Missing required parameters", "details": "Either resource_name and category or finding_id must be provided."}
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
 
     first_finding_result = None
-    scc_error = None
-    parent = _build_parent(project_id, location)
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
+
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
     filter_str = ""
 
     try:
         if finding_id:
             # --- Use list_findings with name filter for finding_id (SCC v2 Client) ---
             # v2 finding names include /locations/{location}/
-            finding_name_to_filter = f"projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"
+            if organization_id:
+                finding_name_to_filter = f"organizations/{organization_id}/sources/-/locations/{location}/findings/{finding_id}"
+            else:
+                finding_name_to_filter = f"projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"
             filter_str = f'name="{finding_name_to_filter}"'
             logger.info(f"Attempting to list findings by name filter: {filter_str}")
             scc_request_args = {
@@ -628,7 +699,6 @@ async def get_finding_remediation(
             first_finding_result = results[0].finding
             logger.info(f"Successfully retrieved finding matching criteria.")
         else:
-             # Logged later in the 'if first_finding_result:' block
              first_finding_result = None
 
         # --- Process the found finding (if any) --- 
@@ -643,7 +713,7 @@ async def get_finding_remediation(
             asset_details = None
             if resource_name_from_finding:
                  try:
-                     cai_scope = f"projects/{project_id}"
+                     cai_scope = f"organizations/{organization_id}" if organization_id else f"projects/{project_id}"
                      cai_request = asset_v1.SearchAllResourcesRequest(
                          scope=cai_scope,
                          query=f'name="{resource_name_from_finding}"',
@@ -682,29 +752,31 @@ async def get_finding_remediation(
         else:
             # --- Handle case where no finding was found --- 
             search_criteria = f"finding ID '{finding_id}' (using name filter)" if finding_id else f"active finding for resource '{resource_name}' and category '{category}'"
-            logger.warning(f"No finding found matching {search_criteria} in project '{project_id}'. Filter: {filter_str}")
+            logger.warning(f"No finding found matching {search_criteria} in {target_label}. Filter: {filter_str}")
             return {"message": f"No finding found matching the specified criteria ({search_criteria})."}
 
     # --- Outer Exception Handling --- 
     except google_exceptions.NotFound as e:
-        logger.error(f"Resource not found during SCC operation for project {project_id} (finding_id: {finding_id}, resource: {resource_name}): {e}")
-        return {"error": "Not Found", "details": f"Could not find project '{project_id}' or related SCC resources. {str(e)}"}
+        logger.error(f"Resource not found during SCC operation for {target_label} (finding_id: {finding_id}, resource: {resource_name}): {e}")
+        return {"error": "Not Found", "details": f"Could not find {target_label} or related SCC resources. {str(e)}"}
     except google_exceptions.PermissionDenied as e:
-        logger.error(f"Permission denied during SCC operation for project {project_id} (finding_id: {finding_id}, resource: {resource_name}): {e}")
+        logger.error(f"Permission denied during SCC operation for {target_label} (finding_id: {finding_id}, resource: {resource_name}): {e}")
         return {"error": "Permission Denied", "details": str(e)}
     except google_exceptions.InvalidArgument as e:
-        logger.error(f"Invalid argument during SCC operation for project {project_id} (finding_id: {finding_id}, resource: {resource_name}): {e}")
+        logger.error(f"Invalid argument during SCC operation for {target_label} (finding_id: {finding_id}, resource: {resource_name}): {e}")
         return {"error": "Invalid Argument", "details": f"Check SCC filter syntax or input parameters. {str(e)}"}
     except Exception as e:
         # General fallback, including potential CAI client errors not caught inside
         logger.error(f"An unexpected error occurred in get_finding_remediation: {e}", exc_info=True)
         return {"error": "An unexpected error occurred", "details": str(e)}
 
+
 @mcp.tool()
 async def set_finding_mute(
-    project_id: str,
-    finding_id: str,
-    mute: str,
+    project_id: str = None,
+    organization_id: str = None,
+    finding_id: str = None,
+    mute: str = None,
     location: str = "global",
 ) -> Dict[str, Any]:
     """Name: set_finding_mute
@@ -713,7 +785,8 @@ async def set_finding_mute(
                  hidden from default views but remain in the system for compliance purposes. Use
                  MUTED to suppress known/accepted risks and UNMUTED to resurface them.
     Parameters:
-    project_id (required): The Google Cloud project ID (e.g., 'my-gcp-project').
+    project_id (optional): The Google Cloud project ID (e.g., 'my-gcp-project'). Either project_id or organization_id must be provided.
+    organization_id (optional): The Google Cloud organization ID (e.g., '123456789'). When provided, queries findings across all projects in the organization.
     finding_id (required): The ID of the finding to mute or unmute.
     mute (required): The mute state to set. Valid values: MUTED, UNMUTED.
     location (optional): The Google Cloud location for SCC v2. Defaults to 'global'.
@@ -721,16 +794,33 @@ async def set_finding_mute(
     if not scc_client:
         return {"error": "Security Center Client not initialized."}
 
+    if not finding_id:
+        return {"error": "finding_id is required."}
+
+    if not project_id and not organization_id:
+        return {"error": "Either project_id or organization_id must be provided."}
+
+    if not mute:
+        return {"error": "mute parameter is required."}
+
     mute_upper = mute.upper()
     if mute_upper not in ("MUTED", "UNMUTED"):
         return {"error": "Invalid mute value", "details": "Must be 'MUTED' or 'UNMUTED'."}
 
     # set_mute requires the canonical finding name (with actual source ID, not wildcard).
     # Look up the finding first via list_findings to resolve the full name.
-    parent = _build_parent(project_id, location)
-    filter_str = f'name="projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"'
+    try:
+        parent = _build_parent(project_id=project_id, organization_id=organization_id, location=location)
+    except ValueError as e:
+        return {"error": str(e)}
 
-    logger.info(f"Resolving finding {finding_id} for mute operation in project {project_id}")
+    target_label = f"organization '{organization_id}'" if organization_id else f"project '{project_id}'"
+    if organization_id:
+        filter_str = f'name="organizations/{organization_id}/sources/-/locations/{location}/findings/{finding_id}"'
+    else:
+        filter_str = f'name="projects/{project_id}/sources/-/locations/{location}/findings/{finding_id}"'
+
+    logger.info(f"Resolving finding {finding_id} for mute operation in {target_label}")
 
     try:
         response_pager = scc_client.list_findings(request={
@@ -744,7 +834,7 @@ async def set_finding_mute(
             finding = list(page.list_findings_results)[0].finding
 
         if not finding:
-            return {"error": "Finding not found", "details": f"No finding with ID '{finding_id}' in project '{project_id}'."}
+            return {"error": "Finding not found", "details": f"No finding with ID '{finding_id}' in {target_label}."}
 
         full_name = finding.name
         mute_enum = securitycenter_v2.Finding.Mute[mute_upper]

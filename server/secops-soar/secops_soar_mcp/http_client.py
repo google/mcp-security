@@ -129,4 +129,5 @@ class HttpClient:
         return None
 
     async def close(self):
-        await self._get_session().close()
+        if self._session is not None:
+            await self._session.close()
