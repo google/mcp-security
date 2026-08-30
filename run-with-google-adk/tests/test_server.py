@@ -19,6 +19,13 @@ def test_healthz():
     assert response.json() == {"status": "ok"}
 
 
+def test_app_name():
+    client = TestClient(create_app())
+    response = client.get("/app_name")
+    assert response.status_code == 200
+    assert response.json() == {"app_name": "Google Security Agent"}
+
+
 def test_info():
     client = TestClient(create_app())
     response = client.get("/info")
@@ -34,13 +41,22 @@ def test_root():
     assert response.status_code == 200
 
 
-def test_get_session():
+def test_get_session_default():
     client = TestClient(create_app())
     response = client.get("/get_session")
     assert response.status_code == 200
     data = response.json()
     assert "session_id" in data
     assert len(data["session_id"]) > 10
+    assert data["user_id"] == "default_user"
+
+
+def test_get_session_with_username():
+    client = TestClient(create_app())
+    response = client.get("/get_session", params={"username": "alice"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_id"] == "alice"
 
 
 def test_chat_post():

@@ -57,10 +57,19 @@ def health_check() -> Dict[str, str]:
     return {"status": "ok"}
 
 
+@router.get("/app_name")
+def get_app_name() -> Dict[str, str]:
+    """Returns the application display name for the Web UI navbar."""
+    return {"app_name": "Google Security Agent"}
+
+
 @router.get("/get_session")
-def get_session() -> Dict[str, str]:
-    """Generates a new session ID for chat sessions."""
-    return {"session_id": str(uuid.uuid4())}
+def get_session(username: Optional[str] = Query(None, description="Username for session")) -> Dict[str, str]:
+    """Generates a session ID and returns user context for chat sessions."""
+    return {
+        "session_id": str(uuid.uuid4()),
+        "user_id": username or "default_user",
+    }
 
 
 @router.get("/info")

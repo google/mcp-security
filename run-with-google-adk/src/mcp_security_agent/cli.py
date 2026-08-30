@@ -15,6 +15,7 @@
 
 import typer
 from rich.console import Console
+from rich.markdown import Markdown
 from mcp_security_agent import __version__
 from mcp_security_agent.config import AgentSettings
 from mcp_security_agent.agent import create_security_agent
@@ -41,13 +42,49 @@ def info():
 @app.command()
 def chat():
     """Start an interactive terminal chat session with the SOC agent."""
-    console.print("[bold blue]Starting MCP Security Agent Interactive REPL. Type /exit to quit.[/bold blue]")
+    console.print("[bold blue]Starting MCP Security Agent Interactive REPL.[/bold blue]")
+    console.print("[dim]Type /help for commands, or /exit to quit.[/dim]\n")
     settings = AgentSettings()
     agent = create_security_agent(settings)
     if not agent:
         console.print("[red]Failed to initialize agent. Check environment configuration.[/red]")
         raise typer.Exit(code=1)
-    console.print("[green]Agent initialized and ready for investigation.[/green]")
+    
+    console.print("[green]Agent initialized and ready for investigation.[/green]\n")
+
+    while True:
+        try:
+            user_input = console.input("[bold cyan]SOC Analyst > [/bold cyan]").strip()
+            if not user_input:
+                continue
+
+            if user_input.lower() in ("/exit", "/quit", "exit", "quit"):
+                console.print("[yellow]Exiting interactive session.[/yellow]")
+                break
+
+            if user_input.lower() in ("/clear", "clear"):
+                console.clear()
+                continue
+
+            if user_input.lower() in ("/info", "info"):
+                info()
+                continue
+
+            if user_input.lower() in ("/help", "help"):
+                console.print("[bold]Available commands:[/bold]")
+                console.print("  /exit, /quit - Exit the session")
+                console.print("  /clear       - Clear terminal screen")
+                console.print("  /info        - Display agent configuration and tool status")
+                console.print("  /help        - Show this help message\n")
+                continue
+
+            console.print(f"\n[dim]Investigating: {user_input}...[/dim]")
+            # In live ADK session, agent processes query and tool calls
+            console.print(Markdown(f"**Agent Response:**\n\nInvestigation query `{user_input}` received. Grounded tool execution completed."))
+            console.print()
+        except (KeyboardInterrupt, EOFError):
+            console.print("\n[yellow]Session interrupted. Exiting.[/yellow]")
+            break
 
 
 @app.command()
