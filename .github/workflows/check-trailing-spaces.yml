@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   check-trailing-spaces:
     runs-on: ubuntu-latest
@@ -16,11 +19,10 @@ jobs:
           fetch-depth: 0  # Fetch full history for git diff
 
       - name: Check for trailing spaces in changed lines
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
         run: |
           echo "Checking for trailing spaces in changed lines..."
-
-          # Get the base branch (usually main or master)
-          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
           echo "Base branch: $BASE_BRANCH"
 
           # Get the list of changed files with specific extensions
