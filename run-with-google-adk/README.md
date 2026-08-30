@@ -1,59 +1,55 @@
-# Prebuilt ADK Agent Usage Guide
+# Google ADK Security Agent Guide
 
-This guide provides instructions on how to run the prebuilt ADK (Agent Development Kit) agent both locally and in Cloud Run (if necessary for demos).
-
+This guide provides instructions on how to run the Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2 and the Model Context Protocol (MCP), both locally via an interactive CLI and deployed to Google Cloud Run.
 
 ## Table of Contents
 
-[1. Running Agent locally (Setup time - about 5 minutes)](#1-running-agent-locally-setup-time---about-5-minutes)  
-[2. Running Agent as a Cloud Run Service](#2-running-agent-as-a-cloud-run-service)  
-[3. Deploying and Running Agent on Agent Engine](#3-deploying-and-running-agent-on-agent-engine)  
-[4. Improving performance and optimizing costs.](#4-improving-performance-and-optimizing-costs)  
-[5. Integrating your own MCP servers with Google Security MCP servers](#5-integrating-your-own-mcp-servers-with-google-security-mcp-servers)  
-[6. Additional Features](#6-additional-features)  
-[7. Registering Agent Engine agent to AgentSpace](#7-registering-agent-engine-agent-to-agentspace)
+1. [Quickstart: Running Agent Locally](#1-quickstart-running-agent-locally)
+2. [CLI Commands & Subcommands](#2-cli-commands--subcommands)
+3. [Running Agent as a Cloud Run Service](#3-running-agent-as-a-cloud-run-service)
+4. [Deploying on Vertex AI Agent Engine](#4-deploying-on-vertex-ai-agent-engine)
+5. [Configuration & Environment Variables](#5-configuration--environment-variables)
 
-## 1. Running Agent locally (Setup time - about 5 minutes)
+---
+
+## 1. Quickstart: Running Agent Locally
 
 ### Prerequisites
-You need the following to run the agent
+1. Python 3.11+
+2. [uv](https://docs.astral.sh/uv/) (recommended) or `pip`
+3. Google Cloud Project with Chronicle SIEM, SCC, GTI, or SOAR access
 
-1. `python` - v3.11+
-2. `pip`
-3. `gcloud` cli (If you ran on Google Cloud Console then gcloud is already installed)
-
-### Setting up and running the agent
-Please execute the following instructions
+### Installation & Execution
 
 ```bash
-   # Clone the repo
-   git clone https://github.com/google/mcp-security.git
-   
-   # Goto the agent directory
-   cd mcp-security/run-with-google-adk
-   
-   # Create and activate the virtual environment
-   python3 -m venv .venv
-   . .venv/bin/activate
+# Clone the repository
+git clone https://github.com/google/mcp-security.git
+cd mcp-security/run-with-google-adk
 
-   # Install dependencies (google-adk and uv)
-   pip install -r requirements.txt
-   
-   # Add exec permission to run-adk-agent.sh - which runs our agent
-   chmod +x run-adk-agent.sh
+# Copy the sample environment file and configure your API keys / project IDs
+cp sample.env .env
 
-   # Run the agent
-   ./run-adk-agent.sh
+# Start interactive chat session
+uv run mcp-security-agent chat
 ```
 
-For the very first run it creates a default .env file in `./google-mcp-security-agent/.env`
-
+Alternatively, install in editable mode:
 ```bash
-# sample output
-$./run-adk-agent.sh 
-Copying ./google-mcp-security-agent/sample.env.properties to ./google-mcp-security-agent/.env...
-Please update the environment variables in ./google-mcp-security-agent/.env
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+
+mcp-security-agent info
+mcp-security-agent chat
 ```
+
+## 2. CLI Commands & Subcommands
+
+The package exposes the `mcp-security-agent` CLI with the following commands:
+
+* `mcp-security-agent info`: Displays current package version, active model, and MCP server status.
+* `mcp-security-agent chat`: Launches an interactive terminal REPL for threat investigation.
+* `mcp-security-agent serve --host 0.0.0.0 --port 8080`: Launches the FastAPI server with `/healthz`, `/info`, and `/chat` endpoints for Cloud Run.
 
 Use your favorite editor and update `./google-mcp-security-agent/.env`. 
 
