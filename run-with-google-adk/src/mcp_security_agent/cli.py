@@ -13,12 +13,13 @@
 # limitations under the License.
 """Command-line interface for the MCP Security Agent."""
 
+import asyncio
+from pathlib import Path
+from typing import Optional
 import typer
 from rich.console import Console
-from rich.markdown import Markdown
 from mcp_security_agent import __version__
 from mcp_security_agent.config import AgentSettings
-from mcp_security_agent.agent import create_security_agent
 
 app = typer.Typer(
     help="Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2 & MCP",
@@ -40,51 +41,38 @@ def info():
 
 
 @app.command()
-def chat():
-    """Start an interactive terminal chat session with the SOC agent."""
-    console.print("[bold blue]Starting MCP Security Agent Interactive REPL.[/bold blue]")
-    console.print("[dim]Type /help for commands, or /exit to quit.[/dim]\n")
-    settings = AgentSettings()
-    agent = create_security_agent(settings)
-    if not agent:
-        console.print("[red]Failed to initialize agent. Check environment configuration.[/red]")
+def chat(
+    query: Optional[str] = typer.Argument(None, help="Optional single-turn investigation query to execute"),
+):
+    """Start an interactive terminal chat session with the SOC agent powered by ADK v2."""
+    try:
+        from google.adk.cli.cli import run_cli, run_once_cli
+    except (ImportError, ModuleNotFoundError):
+        console.print("[red]Google ADK CLI runner is unavailable in this environment.[/red]")
         raise typer.Exit(code=1)
-    
-    console.print("[green]Agent initialized and ready for investigation.[/green]\n")
 
-    while True:
-        try:
-            user_input = console.input("[bold cyan]SOC Analyst > [/bold cyan]").strip()
-            if not user_input:
-                continue
+    pkg_root = Path(__file__).resolve().parents[2]
+    src_dir = pkg_root / "src"
 
-            if user_input.lower() in ("/exit", "/quit", "exit", "quit"):
-                console.print("[yellow]Exiting interactive session.[/yellow]")
-                break
-
-            if user_input.lower() in ("/clear", "clear"):
-                console.clear()
-                continue
-
-            if user_input.lower() in ("/info", "info"):
-                info()
-                continue
-
-            if user_input.lower() in ("/help", "help"):
-                console.print("[bold]Available commands:[/bold]")
-                console.print("  /exit, /quit - Exit the session")
-                console.print("  /clear       - Clear terminal screen")
-                console.print("  /info        - Display agent configuration and tool status")
-                console.print("  /help        - Show this help message\n")
-                continue
-
-            console.print(f"\n[dim]Investigating: {user_input}...[/dim]")
-            # In live ADK session, agent processes query and tool calls
-            console.print(Markdown(f"**Agent Response:**\n\nInvestigation query `{user_input}` received. Grounded tool execution completed."))
-            console.print()
-        except (KeyboardInterrupt, EOFError):
-            console.print("\n[yellow]Session interrupted. Exiting.[/yellow]")
-            break
+    if query:
+        exit_code = asyncio.run(
+            run_once_cli(
+                agent_parent_dir=str(src_dir),
+                agent_folder_name="mcp_security_agent",
+                query=query,
+                use_local_storage=True,
+            )
+        )
+        raise typer.Exit(code=exit_code or 0)
+    else:
+        asyncio.run(
+            run_cli(
+                agent_parent_dir=str(src_dir),
+                agent_folder_name="mcp_security_agent",
+                save_session=False,
+                use_local_storage=True,
+            )
+        )
 
 
 @app.command()
