@@ -18,4 +18,4 @@ def test_bmc_trim_llm_request_passthrough():
     mock_request.contents = ["alert summary"]
     
     result = bmc_trim_llm_request(mock_context, mock_request)
-    assert result == mock_request
+    assert result is None

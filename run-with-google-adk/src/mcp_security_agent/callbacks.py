@@ -14,20 +14,23 @@
 """Lifecycle callbacks for request trimming and context logging in Google ADK."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
 
-def bmc_trim_llm_request(callback_context: Any, llm_request: Any) -> Any:
+def bmc_trim_llm_request(callback_context: Any, llm_request: Any) -> Optional[Any]:
     """Callback executed prior to LLM invocation to inspect and trim context if necessary.
+
+    In Google ADK v2, returning None allows the standard model execution flow to proceed.
+    Returning an LlmResponse will short-circuit and provide an immediate response.
 
     Args:
         callback_context: ADK callback context object.
         llm_request: Inbound LLM request object.
 
     Returns:
-        The processed LLM request object.
+        None to proceed with LLM generation, or an LlmResponse to short-circuit.
     """
     logger.debug("Executing before_model_callback for context verification.")
-    return llm_request
+    return None

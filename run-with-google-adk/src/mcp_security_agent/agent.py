@@ -59,3 +59,7 @@ def create_security_agent(settings: Optional[AgentSettings] = None) -> Any:
         before_model_callback=bmc_trim_llm_request,
     )
     return agent
+
+
+# Expose root_agent for standard ADK CLI discovery (adk run, adk web)
+root_agent = create_security_agent()
