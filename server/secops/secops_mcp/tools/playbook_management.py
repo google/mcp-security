@@ -57,8 +57,17 @@ async def list_playbooks(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        url = f"{_get_base_endpoint(chronicle)}/playbooks"
+        # 1. Try Google OnePlatform v1alpha legacyPlaybooks RPC first
+        v1alpha_base = f"{_get_base_endpoint(chronicle, version='v1alpha')}"
+        legacy_url = f"{v1alpha_base}/legacyPlaybooks:legacyGetWorkflowMenuCardsWithEnvFilter"
+        legacy_body = {"legacyPayload": playbook_types or ["REGULAR", "NESTED"]}
+        
+        legacy_resp = chronicle.session.post(legacy_url, json=legacy_body)
+        if legacy_resp.status_code == 200:
+            return legacy_resp.json()
 
+        # 2. Fall back to standard v1 playbooks REST endpoint
+        url = f"{_get_base_endpoint(chronicle)}/playbooks"
         params: Dict[str, Any] = {"pageSize": page_size}
         if playbook_types:
             params["playbookTypes"] = playbook_types

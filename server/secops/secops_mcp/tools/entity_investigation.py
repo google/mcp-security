@@ -250,8 +250,16 @@ async def search_entity(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        url = f"{_get_base_endpoint(chronicle)}:searchEntities"
+        url = f"{_get_base_endpoint(chronicle, version='v1alpha')}:searchEntities"
 
+        # 1. Try standard GET with indicator query parameter
+        if term:
+            get_params = {"indicator": term, "pageSize": page_size}
+            get_resp = chronicle.session.get(url, params=get_params)
+            if get_resp.status_code == 200:
+                return get_resp.json()
+
+        # 2. Fall back to structured POST request
         body: Dict[str, Any] = {"pageSize": page_size}
         if term:
             body["term"] = term
