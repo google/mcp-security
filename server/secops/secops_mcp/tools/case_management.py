@@ -95,7 +95,7 @@ async def list_cases(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing cases: {e}")
+        logger.error("Error listing cases: %s", e)
         return {"error": f"Failed to list cases: {str(e)}"}
 
 
@@ -139,7 +139,7 @@ async def get_case(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting case {case_id}: {e}")
+        logger.error("Error getting case %s: %s", case_id, e)
         return {"error": f"Failed to get case: {str(e)}"}
 
 
@@ -220,7 +220,7 @@ async def update_case(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error updating case {case_id}: {e}")
+        logger.error("Error updating case %s: %s", case_id, e)
         return {"error": f"Failed to update case: {str(e)}"}
 
 
@@ -268,7 +268,7 @@ async def change_case_priority(
             }
         return {"status": "SUCCESS", "message": f"Updated priority to {p_upper} for {len(full_names)} case(s)"}
     except Exception as e:
-        logger.error(f"Error changing case priority: {e}")
+        logger.error("Error changing case priority: %s", e)
         return {"error": f"Failed to change case priority: {str(e)}"}
 
 
@@ -313,7 +313,7 @@ async def change_case_stage(
             }
         return {"status": "SUCCESS", "message": f"Updated stage to '{stage}' for {len(full_names)} case(s)"}
     except Exception as e:
-        logger.error(f"Error changing case stage: {e}")
+        logger.error("Error changing case stage: %s", e)
         return {"error": f"Failed to change case stage: {str(e)}"}
 
 
@@ -366,7 +366,7 @@ async def assign_case(
         assigned_target = assignee or soc_role
         return {"status": "SUCCESS", "message": f"Assigned {len(full_names)} case(s) to {assigned_target}"}
     except Exception as e:
-        logger.error(f"Error assigning case: {e}")
+        logger.error("Error assigning case: %s", e)
         return {"error": f"Failed to assign case: {str(e)}"}
 
 
@@ -421,7 +421,7 @@ async def set_custom_case_fields(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error setting custom case fields: {e}")
+        logger.error("Error setting custom case fields: %s", e)
         return {"error": f"Failed to set custom case fields: {str(e)}"}
 
 
@@ -461,7 +461,7 @@ async def add_case_tag(
             }
         return response.json() if response.text else {"status": "SUCCESS", "message": f"Added tag '{tag}'"}
     except Exception as e:
-        logger.error(f"Error adding tag to case: {e}")
+        logger.error("Error adding tag to case: %s", e)
         return {"error": f"Failed to add tag: {str(e)}"}
 
 
@@ -501,7 +501,7 @@ async def remove_case_tag(
             }
         return response.json() if response.text else {"status": "SUCCESS", "message": f"Removed tag '{tag}'"}
     except Exception as e:
-        logger.error(f"Error removing tag from case: {e}")
+        logger.error("Error removing tag from case: %s", e)
         return {"error": f"Failed to remove tag: {str(e)}"}
 
 
@@ -547,7 +547,7 @@ async def add_case_insight(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error adding insight to case: {e}")
+        logger.error("Error adding insight to case: %s", e)
         return {"error": f"Failed to add insight: {str(e)}"}
 
 
@@ -587,7 +587,7 @@ async def pause_case_sla(
             }
         return {"status": "SUCCESS", "message": f"Paused SLA on case {case_id}"}
     except Exception as e:
-        logger.error(f"Error pausing SLA on case: {e}")
+        logger.error("Error pausing SLA on case: %s", e)
         return {"error": f"Failed to pause SLA: {str(e)}"}
 
 
@@ -625,7 +625,7 @@ async def resume_case_sla(
             }
         return {"status": "SUCCESS", "message": f"Resumed SLA on case {case_id}"}
     except Exception as e:
-        logger.error(f"Error resuming SLA on case: {e}")
+        logger.error("Error resuming SLA on case: %s", e)
         return {"error": f"Failed to resume SLA: {str(e)}"}
 
 
@@ -680,7 +680,7 @@ async def close_case(
             }
         return {"status": "SUCCESS", "message": f"Closed {len(full_names)} case(s)"}
     except Exception as e:
-        logger.error(f"Error closing case(s): {e}")
+        logger.error("Error closing case(s): %s", e)
         return {"error": f"Failed to close case: {str(e)}"}
 
 
@@ -723,5 +723,5 @@ async def reopen_case(
             }
         return {"status": "SUCCESS", "message": f"Reopened {len(full_names)} case(s)"}
     except Exception as e:
-        logger.error(f"Error reopening case(s): {e}")
+        logger.error("Error reopening case(s): %s", e)
         return {"error": f"Failed to reopen case: {str(e)}"}

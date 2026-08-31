@@ -92,7 +92,7 @@ async def list_case_alerts(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error listing case alerts for case {case_id}: {e}")
+        logger.error("Error listing case alerts for case %s: %s", case_id, e)
         return {"error": f"Failed to list case alerts: {str(e)}"}
 
 
@@ -132,7 +132,7 @@ async def get_case_alert(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error getting case alert {alert_id}: {e}")
+        logger.error("Error getting case alert %s: %s", alert_id, e)
         return {"error": f"Failed to get case alert: {str(e)}"}
 
 
@@ -212,7 +212,7 @@ async def update_case_alert(
             }
         return response.json()
     except Exception as e:
-        logger.error(f"Error updating case alert {alert_id}: {e}")
+        logger.error("Error updating case alert %s: %s", alert_id, e)
         return {"error": f"Failed to update case alert: {str(e)}"}
 
 
@@ -256,7 +256,7 @@ async def change_alert_priority(
             region=region,
         )
     except Exception as e:
-        logger.error(f"Error changing alert priority: {e}")
+        logger.error("Error changing alert priority: %s", e)
         return {"error": f"Failed to change alert priority: {str(e)}"}
 
 
@@ -304,7 +304,7 @@ async def set_alert_custom_fields(
             region=region,
         )
     except Exception as e:
-        logger.error(f"Error setting alert custom fields: {e}")
+        logger.error("Error setting alert custom fields: %s", e)
         return {"error": f"Failed to set alert custom fields: {str(e)}"}
 
 
@@ -349,7 +349,7 @@ async def move_case_alert(
             }
         return response.json() if response.text else {"status": "SUCCESS", "message": f"Moved alert {short_alert_id} to case {short_dest_case_id}"}
     except Exception as e:
-        logger.error(f"Error moving case alert: {e}")
+        logger.error("Error moving case alert: %s", e)
         return {"error": f"Failed to move case alert: {str(e)}"}
 
 
@@ -391,7 +391,7 @@ async def add_alert_tag(
             }
         return response.json() if response.text else {"status": "SUCCESS", "message": f"Added tag '{tag}' to alert"}
     except Exception as e:
-        logger.error(f"Error adding tag to alert: {e}")
+        logger.error("Error adding tag to alert: %s", e)
         return {"error": f"Failed to add tag to alert: {str(e)}"}
 
 
@@ -433,5 +433,5 @@ async def remove_alert_tag(
             }
         return response.json() if response.text else {"status": "SUCCESS", "message": f"Removed tag '{tag}' from alert"}
     except Exception as e:
-        logger.error(f"Error removing tag from alert: {e}")
+        logger.error("Error removing tag from alert: %s", e)
         return {"error": f"Failed to remove tag from alert: {str(e)}"}
