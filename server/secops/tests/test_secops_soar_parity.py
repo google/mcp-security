@@ -85,6 +85,7 @@ from secops_mcp.tools.integration_management import (
     list_integrations,
     list_integration_actions,
     list_integration_instances,
+    execute_integration_instance_test,
     execute_manual_action,
     get_action_result_by_id,
 )
@@ -199,6 +200,12 @@ async def test_integration_management(mock_chronicle):
 
         instances = await list_integration_instances(integration_id="SiemplifyUtilities")
         assert "error" not in instances
+
+        inst_test = await execute_integration_instance_test(
+            integration_id="VirusTotalV3",
+            instance_id="3e9496eb-09cd-4b3c-a4ce-4c788d6663a7",
+        )
+        assert "error" not in inst_test
 
         exec_action = await execute_manual_action(
             case_id="c1",

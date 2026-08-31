@@ -159,7 +159,7 @@ async def list_integration_instances(
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_id = integration_id.split("/")[-1] if integration_id != "-" else "-"
-        url = f"{_get_base_endpoint(chronicle)}/integrations/{short_id}/instances"
+        url = f"{_get_base_endpoint(chronicle)}/integrations/{short_id}/integrationInstances"
 
         params: Dict[str, Any] = {"pageSize": page_size}
         if filter_query:
@@ -171,6 +171,11 @@ async def list_integration_instances(
 
         response = chronicle.session.get(url, params=params)
         if response.status_code != 200:
+            # Fallback to alternative instances subpath
+            alt_url = f"{_get_base_endpoint(chronicle)}/integrations/{short_id}/instances"
+            alt_resp = chronicle.session.get(alt_url, params=params)
+            if alt_resp.status_code == 200:
+                return alt_resp.json()
             return {
                 "error": f"Failed to list integration instances: {response.status_code} - {response.text}"
             }
@@ -178,6 +183,46 @@ async def list_integration_instances(
     except Exception as e:
         logger.error("Error listing integration instances: %s", e)
         return {"error": f"Failed to list integration instances: {str(e)}"}
+
+
+@server.tool()
+async def execute_integration_instance_test(
+    integration_id: str,
+    instance_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Execute a live connectivity test ('ping') for a specific integration instance.
+
+    Verifies that Google SecOps can successfully communicate with the third-party
+    service (e.g. VirusTotal, Slack, SIEM/EDR) using the configured credentials.
+
+    Args:
+        integration_id (str): Integration identifier (e.g. 'VirusTotalV3', 'Tools').
+        instance_id (str): Integration instance identifier or GUID.
+        project_id (Optional[str]): Google Cloud project ID.
+        customer_id (Optional[str]): Chronicle customer/instance ID.
+        region (Optional[str]): Chronicle region.
+
+    Returns:
+        Dict[str, Any]: Test result containing success status and message.
+    """
+    try:
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+        short_integ = integration_id.split("/")[-1]
+        short_inst = instance_id.split("/")[-1]
+        url = f"{_get_base_endpoint(chronicle)}/integrations/{short_integ}/integrationInstances/{short_inst}:executeTest"
+
+        response = chronicle.session.post(url, json={})
+        if response.status_code != 200:
+            return {
+                "error": f"Failed to execute integration test: {response.status_code} - {response.text}"
+            }
+        return response.json()
+    except Exception as e:
+        logger.error("Error executing integration test on %s: %s", integration_id, e)
+        return {"error": f"Failed to execute integration test: {str(e)}"}
 
 
 @server.tool()
