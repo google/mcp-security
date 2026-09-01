@@ -827,7 +827,180 @@ The service account or user credentials need the following Chronicle roles:
         - `project_id` (optional): Google Cloud project ID (defaults to environment config).
         - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
-    - **Returns:** Dictionary containing investigation associations grouped by detection ID, with verdict and confidence information.
+### Case Management Tools
+
+- **`list_cases(page_size=50, page_token=None, filter_query=None, order_by=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List cases in Chronicle Security Operations with optional filtering (e.g. stage, priority, assignee, status, tags).
+    - **Parameters:**
+        - `page_size` (optional): Maximum number of cases to return (default: 50).
+        - `page_token` (optional): Pagination token for subsequent pages.
+        - `filter_query` (optional): Filter expression (e.g., `'priority = "HIGH" AND status = "OPEN"'`).
+        - `order_by` (optional): Sort order for results (e.g., `'create_time desc'`).
+        - `project_id` (optional): Google Cloud project ID.
+        - `customer_id` (optional): Chronicle customer ID.
+        - `region` (optional): Chronicle region.
+    - **Returns:** Dictionary containing list of cases and pagination metadata.
+
+- **`get_case(case_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Retrieve a single case by ID with complete metadata including priority, stage, assignee, tags, insights, and SLA status.
+    - **Parameters:**
+        - `case_id` (required): The case ID or full resource name.
+    - **Returns:** Complete case resource object.
+
+- **`get_case_full_details(case_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Perform parallel multi-resource triage by concurrently fetching the case details, all associated alerts, and analyst comments in a single unified payload.
+    - **Parameters:**
+        - `case_id` (required): The case ID.
+    - **Returns:** Dictionary containing `case_details`, `case_alerts`, and `case_comments`.
+
+- **`update_case(case_id, update_fields, update_mask=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update case properties and metadata with automatic FieldMask generation.
+    - **Parameters:**
+        - `case_id` (required): The case ID to update.
+        - `update_fields` (required): Dictionary of fields to update (e.g., `{'displayName': 'Updated Case Title'}`).
+        - `update_mask` (optional): Comma-separated list of field paths (e.g., `'display_name,priority'`).
+
+- **`change_case_priority(case_id, priority, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update case priority, firing the Chronicle SOAR *Case Priority Changed* automated reaction trigger.
+    - **Parameters:**
+        - `case_id` (required): The case ID.
+        - `priority` (required): New priority level (`'LOW'`, `'MEDIUM'`, `'HIGH'`, `'CRITICAL'`).
+
+- **`change_case_stage(case_id, stage, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update case investigation stage, firing the Chronicle SOAR *Case Stage Changed* reaction trigger.
+    - **Parameters:**
+        - `case_id` (required): The case ID.
+        - `stage` (required): New stage name (e.g., `'Triage'`, `'Investigation'`, `'Containment'`, `'Remediation'`).
+
+- **`assign_case(case_id, assignee, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Assign or reassign case ownership, firing the Chronicle SOAR *Case Assignee Changed* reaction trigger.
+    - **Parameters:**
+        - `case_id` (required): The case ID.
+        - `assignee` (required): Email or identifier of the assignee.
+
+- **`set_custom_case_fields(case_id, custom_fields, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Set custom case fields, firing the Chronicle SOAR *Custom Case Field Changed* reaction trigger.
+    - **Parameters:**
+        - `case_id` (required): The case ID.
+        - `custom_fields` (required): Key-value dictionary of custom fields.
+
+- **`add_case_tag(case_id, tag, project_id=None, customer_id=None, region=None)`** / **`remove_case_tag(case_id, tag, ...)`**
+    - **Description:** Add or remove a categorization tag on a case.
+
+- **`add_case_insight(case_id, insight_text, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Record an analytical finding, evidence summary, or key decision into the case evidence journal.
+
+- **`pause_case_sla(case_id, reason=None, ...)`** / **`resume_case_sla(case_id, ...)`**
+    - **Description:** Pause or resume the active SLA countdown timer for a case.
+
+- **`close_case(case_id, close_reason=None, root_cause=None, ...)`** / **`reopen_case(case_id, ...)`**
+    - **Description:** Transition a case to closed or reopened status with resolution reasoning.
+
+- **`list_case_comments(case_id, page_size=50, page_token=None, ...)`**
+    - **Description:** List all analyst notes, automated system comments, and discussion threads attached to a case.
+
+- **`create_case_comment(case_id, comment, ...)`** (Alias: **`post_case_comment`**)
+    - **Description:** Post a new analyst comment, triage note, or communication entry to the case wall.
+
+---
+
+### Case Alert Management Tools
+
+- **`list_case_alerts(case_id, page_size=50, page_token=None, filter_query=None, ...)`**
+    - **Description:** List all security alerts grouped under a specific case.
+
+- **`get_case_alert(case_id, alert_id, ...)`**
+    - **Description:** Retrieve full details for a specific alert within a case.
+
+- **`update_case_alert(case_id, alert_id, update_fields, update_mask=None, ...)`**
+    - **Description:** Update alert properties with FieldMask support.
+
+- **`change_alert_priority(case_id, alert_id, priority, ...)`**
+    - **Description:** Update alert priority, firing the Chronicle SOAR *Alert Priority Changed* reaction trigger.
+
+- **`set_alert_custom_fields(case_id, alert_id, custom_fields, ...)`**
+    - **Description:** Set custom fields on an alert, firing the Chronicle SOAR *Alert Custom Field Changed* reaction trigger.
+
+- **`move_case_alert(source_case_id, alert_id, target_case_id, ...)`**
+    - **Description:** Move an alert from one case to another to consolidate or split incident investigations.
+
+- **`add_alert_tag(case_id, alert_id, tag, ...)`** / **`remove_alert_tag(case_id, alert_id, tag, ...)`**
+    - **Description:** Add or remove categorization tags on an alert.
+
+- **`list_alert_group_identifiers_by_case(case_id, ...)`**
+    - **Description:** List alert group identifiers associated with a case for correlated multi-alert investigations.
+
+- **`list_events_by_alert(case_id, alert_id, page_size=50, ...)`** (Alias: **`list_involved_events`**)
+    - **Description:** Query and stream the raw forensic events and security telemetry that triggered a specific alert.
+
+---
+
+### Entity Investigation Tools
+
+- **`get_involved_entity(case_id, alert_id, entity_id, ...)`**
+    - **Description:** Retrieve details for a specific entity involved in an alert in SOAR context.
+
+- **`list_involved_entities(case_id, alert_id=None, page_size=50, ...)`**
+    - **Description:** List all entities (hosts, users, IPs, domains, hashes) involved in a case or alert.
+
+- **`get_entities_by_alert_group_identifiers(case_id, alert_group_identifiers, ...)`**
+    - **Description:** Fetch entities associated with specific alert group IDs.
+
+- **`get_entity_details(identifier, ...)`**
+    - **Description:** Retrieve rich enrichment data, threat intelligence score, and asset context for an entity.
+
+- **`search_entity(term=None, entity_types=None, is_suspicious=None, page_size=50, ...)`**
+    - **Description:** Search across all known entities in the Chronicle SOAR environment matching specific attributes.
+
+---
+
+### Integration Management & Action Execution Tools
+
+- **`list_integrations(page_size=50, page_token=None, ...)`**
+    - **Description:** Discover all third-party and custom integrations configured on the tenant (e.g. VirusTotal, SentinelOne, Slack, Jira).
+
+- **`list_integration_actions(integration_id, page_size=50, ...)`**
+    - **Description:** List all executable manual and automated actions supported by an integration (e.g. Enrich IP, Isolate Host).
+
+- **`list_integration_instances(integration_id, page_size=50, ...)`**
+    - **Description:** List configured environment instances and instance GUIDs for an integration.
+
+- **`execute_integration_instance_test(integration_id, instance_id, ...)`**
+    - **Description:** Execute a live connectivity test ('ping') to verify that SecOps can communicate with the third-party service using configured credentials.
+
+- **`execute_manual_action(case_id, action_name, action_provider="Scripts", properties=None, target_entities=None, ...)`**
+    - **Description:** Execute a response action (e.g. enrich IOC, block IP, isolate endpoint) on a case, alert, or target entities.
+
+- **`get_action_result_by_id(action_result_id, ...)`**
+    - **Description:** Retrieve the execution status, logs, and structured output of an asynchronous action.
+
+---
+
+### Playbook Lifecycle & Execution Tools
+
+- **`list_playbooks(playbook_types=None, filter_query=None, page_size=50, ...)`**
+    - **Description:** List automated playbook workflows configured in Chronicle SOAR (e.g. Regular and Nested playbooks).
+
+- **`get_playbook(playbook_id, ...)`**
+    - **Description:** Retrieve workflow definition, trigger conditions, and step graph for a playbook.
+
+- **`list_playbook_instances(playbook_id=None, case_id=None, page_size=50, ...)`**
+    - **Description:** List historical playbook execution runs and instance tracking data.
+
+- **`execute_playbook(playbook_id, case_id, alert_id=None, ...)`** (Alias: **`trigger_playbook`**)
+    - **Description:** Manually trigger a SOAR playbook workflow on a case or alert.
+
+---
+
+### Connector Event Tools
+
+- **`list_connector_events(connector_id=None, page_size=50, ...)`**
+    - **Description:** List raw events ingested via security data connectors.
+
+- **`get_connector_event(connector_event_id, ...)`**
+    - **Description:** Retrieve complete raw payload and processing status for a connector event.
+
+---
 
 ## Usage Examples
 
@@ -1123,9 +1296,75 @@ Entities previously on this watchlist will now use their base risk scores
 without the 4.0x multiplier.
 ```
 
+### Example 9: Parallel Multi-Resource Case Triage & Trigger Workflow
+
+```
+User: Can you pull up case 1042, give me a full breakdown of the incident, and raise its priority if it involves compromised credentials?
+
+AI uses: get_case_full_details(case_id="1042")
+
+AI: Here is the unified triage summary for Case #1042:
+- Title: Suspicious Kerberoasting Activity Against Service Account
+- Priority: MEDIUM
+- Stage: Triage
+- Assignee: None (Unassigned)
+- Associated Alerts (2):
+  1. "Potential Kerberoasting SPN Ticket Request" (High)
+  2. "Excessive Kerberos TGS Requests from Workstation" (Medium)
+- Involved Entities:
+  - User: `svc_backup`
+  - Host: `ws-fin-08.corp.internal`
+- Recent Comments:
+  - "Automated ingest: Correlated 2 detections into single incident."
+
+Because this involves active credential abuse against a privileged service account, I recommend escalating to CRITICAL.
+
+User: Yes, escalate the priority to CRITICAL, assign it to me (secops-lead@company.com), and post a triage note.
+
+AI uses: change_case_priority(case_id="1042", priority="CRITICAL")
+AI uses: assign_case(case_id="1042", assignee="secops-lead@company.com")
+AI uses: create_case_comment(
+  case_id="1042",
+  comment="Priority escalated to CRITICAL due to confirmed service account credential exposure. Assigned to secops-lead for containment."
+)
+
+AI: Case #1042 updated:
+- Priority changed to CRITICAL (Chronicle SOAR Case Priority Changed trigger dispatched).
+- Assigned to secops-lead@company.com (Case Assignee Changed trigger dispatched).
+- Triage comment recorded in the case wall.
+```
+
+### Example 10: Integration Connectivity & Manual Action Execution
+
+```
+User: Test our VirusTotal integration to see if it's healthy, then enrich the suspicious IP 198.51.100.44 on Case 1042.
+
+AI uses: list_integration_instances(integration_id="VirusTotalV3")
+AI extracts instance ID: "3e9496eb-09cd-4b3c-a4ce-4c788d6663a7"
+
+AI uses: execute_integration_instance_test(
+  integration_id="VirusTotalV3",
+  instance_id="3e9496eb-09cd-4b3c-a4ce-4c788d6663a7"
+)
+
+AI: VirusTotal V3 connectivity test succeeded:
+"Successfully connected to the VirusTotal server with the provided connection parameters!"
+
+Now executing the manual enrichment action on Case #1042...
+
+AI uses: execute_manual_action(
+  case_id="1042",
+  action_name="VirusTotalV3_Enrich IP",
+  target_entities=[{"entity": "198.51.100.44", "entityType": "IP Address"}]
+)
+
+AI: Manual enrichment action dispatched. VirusTotal reputation and ASN data attached to the case evidence graph.
+```
+
 ## Additional Resources
 
 - [Chronicle API Documentation](https://cloud.google.com/chronicle/docs/reference/rest)
 - [UDM Schema Reference](https://cloud.google.com/chronicle/docs/reference/udm-field-list)
 - [Chronicle Security Operations Overview](https://cloud.google.com/chronicle/docs/overview)
 - [Chronicle Query Language Syntax](https://cloud.google.com/chronicle/docs/reference/yara-l-2-0-syntax)
+
