@@ -253,29 +253,4 @@ async def test_connector_events(mock_chronicle):
         assert "error" not in event
 
 
-class TestSoarParityUnit(unittest.TestCase):
-    """Unittest test runner for all SOAR parity tools."""
-
-    def setUp(self):
-        self.mock_chronicle = mock_chronicle()
-
-    def test_case_comments(self):
-        asyncio.run(test_case_comments(self.mock_chronicle))
-
-    def test_get_case_full_details(self):
-        asyncio.run(test_get_case_full_details(self.mock_chronicle))
-
-    def test_alert_group_and_events(self):
-        asyncio.run(test_alert_group_and_events(self.mock_chronicle))
-
-    def test_entity_investigation(self):
-        asyncio.run(test_entity_investigation(self.mock_chronicle))
-
-    def test_integration_management(self):
-        asyncio.run(test_integration_management(self.mock_chronicle))
-
-    def test_playbook_management(self):
-        asyncio.run(test_playbook_management(self.mock_chronicle))
-
-    def test_connector_events(self):
-        asyncio.run(test_connector_events(self.mock_chronicle))
+# All tests are defined above as pytest async test functions
