@@ -2,6 +2,8 @@
 
 *   [Development Guide](development_guide.md)
 *   [Usage Guide](usage_guide.md)
+*   [Agentic Detection Engineering](agentic_detection_engineering.md)
+*   [Google SecOps Extension](google_secops_extension.md)
 *   [Servers](servers/index.md)
     *   [Remote MCP Server](remote_server.md)
     *   [Google Threat Intelligence](servers/gti_mcp.md)

@@ -81,6 +81,11 @@ You will be prompted for two environment variables for the MCP configuration:
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 
+### 6. Detection Engineering (`detection-engineering-coverage-evaluation`)
+*   **Trigger**: "Develop detections for [Threat]", "Evaluate coverage for [URL/Text]", `/security:detect`.
+*   **Function**: Orchestrates the end-to-end Detection Engineering lifecycle: extracts TDOs from threat intelligence, simulates synthetic UDM events, evaluates existing rule coverage with long-running operations, generates draft YARA-L 2.0 rules to close coverage gaps, and deploys approved rules.
+*   **Guide**: See [Agentic Detection Engineering Guide](agentic_detection_engineering.md).
+
 ## How it Works
 
 These skills act as **Driver Agents** that:
