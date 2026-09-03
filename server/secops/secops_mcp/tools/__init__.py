@@ -15,6 +15,7 @@
 
 from .curated_rules_management import *
 from .data_table_management import *
+from .detection_agent import *
 from .entity_lookup import *
 from .feed_management import *
 from .investigation_management import *
