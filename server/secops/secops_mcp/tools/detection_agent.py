@@ -87,6 +87,8 @@ async def generate_threat_detection_opportunity(
         payload: dict[str, Any] = {"threat": raw_threat.strip()}
         effective_log_types = log_types or logTypes
         if effective_log_types:
+            if isinstance(effective_log_types, str):
+                effective_log_types = [effective_log_types.strip()]
             payload["log_types"] = effective_log_types
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -210,16 +212,18 @@ async def generate_synthetic_events(
 
         def _clean_tdo(tdo_item: dict[str, Any]) -> dict[str, Any] | str:
             raw_log_types = tdo_item.get("log_types") or tdo_item.get("logTypes")
+            if isinstance(raw_log_types, str):
+                raw_log_types = [raw_log_types.strip()]
             if not raw_log_types or not isinstance(raw_log_types, list) or len(raw_log_types) == 0:
                 return "The TDO MUST include a populated 'log_types' list (e.g., ['WINEVTLOG'])."
             clean_log_types: list[str] = []
             for lt in raw_log_types:
                 if isinstance(lt, str):
-                    clean_log_types.append(lt)
+                    clean_log_types.append(lt.strip())
                 elif isinstance(lt, dict):
                     val = lt.get("log_type") or lt.get("logType")
                     if val and isinstance(val, str):
-                        clean_log_types.append(val)
+                        clean_log_types.append(val.strip())
             if not clean_log_types:
                 return "The TDO MUST include a populated 'log_types' list with valid log type strings."
             tdo_item["log_types"] = clean_log_types
@@ -229,6 +233,22 @@ async def generate_synthetic_events(
                     tdo_item["summary"] = desc
             return tdo_item
 
+        def _extract_tdo_events(tdo_id: Any, events: list[Any]) -> dict[str, Any] | None:
+            if not tdo_id or not isinstance(events, list):
+                return None
+            udms_json: list[str] = []
+            for ev in events:
+                if isinstance(ev, dict):
+                    u_json = ev.get("udm_json") or ev.get("udmJson")
+                    if u_json and isinstance(u_json, str):
+                        udms_json.append(u_json)
+            if udms_json:
+                return {
+                    "threat_detection_opportunity_id": str(tdo_id),
+                    "udms_json": udms_json,
+                }
+            return None
+
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Single TDO execution path
@@ -237,16 +257,28 @@ async def generate_synthetic_events(
             if isinstance(cleaned, str):
                 return {"error": cleaned, "synthetic_events": []}
             if hasattr(type(chronicle), "generate_synthetic_events"):
-                return chronicle.generate_synthetic_events(threat_detection_opportunity=cleaned)
-            return chronicle_request(
-                chronicle,
-                method="POST",
-                endpoint_path=":generateSyntheticEvents",
-                api_version="v1alpha",
-                json={"threat_detection_opportunity": cleaned},
-                timeout=timeout,
-                error_message="Failed to generate synthetic events",
-            )
+                res = chronicle.generate_synthetic_events(threat_detection_opportunity=cleaned)
+            else:
+                res = chronicle_request(
+                    chronicle,
+                    method="POST",
+                    endpoint_path=":generateSyntheticEvents",
+                    api_version="v1alpha",
+                    json={"threat_detection_opportunity": cleaned},
+                    timeout=timeout,
+                    error_message="Failed to generate synthetic events",
+                )
+            if isinstance(res, dict):
+                events = res.get("synthetic_events") or res.get("syntheticEvents") or []
+                tdo_events = (
+                    res.get("threat_detection_opportunity_events")
+                    or res.get("threatDetectionOpportunityEvents")
+                )
+                if tdo_events is None:
+                    tdo_id = cleaned.get("id") or cleaned.get("threat_detection_opportunity_id")
+                    extracted = _extract_tdo_events(tdo_id, events)
+                    res["threat_detection_opportunity_events"] = [extracted] if extracted else []
+            return res
 
         # Multi-TDO batching execution path
         aggregated_events: list[Any] = []
@@ -254,6 +286,7 @@ async def generate_synthetic_events(
         for tdo_item in tdo_list:
             cleaned = _clean_tdo(tdo_item)
             if isinstance(cleaned, str):
+                logger.warning("Skipping invalid TDO in batch generation: %s", cleaned)
                 continue
             if hasattr(type(chronicle), "generate_synthetic_events"):
                 res = chronicle.generate_synthetic_events(threat_detection_opportunity=cleaned)
@@ -271,9 +304,17 @@ async def generate_synthetic_events(
                 events = res.get("synthetic_events") or res.get("syntheticEvents") or []
                 if isinstance(events, list):
                     aggregated_events.extend(events)
-                tdo_events = res.get("threat_detection_opportunity_events") or res.get("threatDetectionOpportunityEvents") or []
-                if isinstance(tdo_events, list):
+                tdo_events = (
+                    res.get("threat_detection_opportunity_events")
+                    or res.get("threatDetectionOpportunityEvents")
+                )
+                if isinstance(tdo_events, list) and len(tdo_events) > 0:
                     aggregated_tdo_events.extend(tdo_events)
+                else:
+                    tdo_id = cleaned.get("id") or cleaned.get("threat_detection_opportunity_id")
+                    extracted = _extract_tdo_events(tdo_id, events)
+                    if extracted:
+                        aggregated_tdo_events.append(extracted)
 
         return {
             "synthetic_events": aggregated_events,
@@ -363,10 +404,17 @@ async def evaluate_rule_coverage_long_running(
 
         # Unwrap if raw wrapper dict was passed
         if isinstance(raw_events, dict):
-            if "threat_detection_opportunity_events" in raw_events:
-                events_list = raw_events["threat_detection_opportunity_events"]
-            elif "threatDetectionOpportunityEvents" in raw_events:
-                events_list = raw_events["threatDetectionOpportunityEvents"]
+            for key in (
+                "threat_detection_opportunity_events",
+                "threatDetectionOpportunityEvents",
+                "tdo_events",
+                "tdoEvents",
+                "opportunity_events",
+                "opportunityEvents",
+            ):
+                if key in raw_events and isinstance(raw_events[key], list):
+                    events_list = raw_events[key]
+                    break
             else:
                 events_list = [raw_events]
         elif isinstance(raw_events, list):
