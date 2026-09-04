@@ -34,6 +34,7 @@ from secops_mcp.tools.detection_agent import (
     generate_threat_detection_opportunity,
     get_operation,
 )
+from secops_mcp.tools.security_rules import get_rule
 
 
 @pytest.fixture
@@ -113,6 +114,28 @@ async def test_generate_threat_detection_opportunity_alias_and_validation(
             timeout=300,
             error_message="Failed to generate threat detection opportunity",
         )
+
+        # Test threat_description and log_types aliases
+        result2 = await generate_threat_detection_opportunity(
+            threat_description="WinRM execution",
+            log_types=["WINEVTLOG"],
+        )
+        assert result2 == expected_response
+        assert mock_request.call_args.kwargs["json"] == {
+            "threat": "WinRM execution",
+            "log_types": ["WINEVTLOG"],
+        }
+
+        # Test camelCase threatDescription and logTypes
+        result3 = await generate_threat_detection_opportunity(
+            threatDescription="C2 Beaconing",
+            logTypes=["NETWORK"],
+        )
+        assert result3 == expected_response
+        assert mock_request.call_args.kwargs["json"] == {
+            "threat": "C2 Beaconing",
+            "log_types": ["NETWORK"],
+        }
 
     # Test empty input validation
     result_empty = await generate_threat_detection_opportunity(threat="")
@@ -211,6 +234,61 @@ async def test_generate_synthetic_events_validation(mock_get_client):
     )
     assert "error" in res3
     assert "log_types" in res3["error"]
+
+
+@pytest.mark.asyncio
+async def test_generate_synthetic_events_multi_tdo_batching(mock_get_client):
+    """Test generating synthetic events with multiple TDOs batches API calls."""
+    tdo1 = {"id": "tdo-1", "log_types": ["WINEVTLOG"]}
+    tdo2 = {"id": "tdo-2", "log_types": ["PROCESS"]}
+    resp1 = {
+        "synthetic_events": [{"feedback_id": "fb-1"}],
+        "threat_detection_opportunity_events": [{"threat_detection_opportunity_id": "tdo-1"}],
+    }
+    resp2 = {
+        "synthetic_events": [{"feedback_id": "fb-2"}],
+        "threat_detection_opportunity_events": [{"threat_detection_opportunity_id": "tdo-2"}],
+    }
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        side_effect=[resp1, resp2],
+    ) as mock_request:
+        result = await generate_synthetic_events(
+            threat_detection_opportunities=[tdo1, tdo2]
+        )
+        assert result == {
+            "synthetic_events": [{"feedback_id": "fb-1"}, {"feedback_id": "fb-2"}],
+            "threat_detection_opportunity_events": [
+                {"threat_detection_opportunity_id": "tdo-1"},
+                {"threat_detection_opportunity_id": "tdo-2"},
+            ],
+        }
+        assert mock_request.call_count == 2
+
+
+@pytest.mark.asyncio
+async def test_generate_synthetic_events_wrapped_dict(mock_get_client):
+    """Test unwrapping raw output dictionary from generate_threat_detection_opportunity."""
+    tdo = {"id": "tdo-1", "log_types": ["WINEVTLOG"]}
+    wrapped_input = {"threat_detection_opportunities": [tdo]}
+    expected_response = {"synthetic_events": [{"feedback_id": "fb-1"}]}
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        return_value=expected_response,
+    ) as mock_request:
+        result = await generate_synthetic_events(tdo=wrapped_input)
+        assert result == expected_response
+        mock_request.assert_called_once_with(
+            mock_get_client,
+            method="POST",
+            endpoint_path=":generateSyntheticEvents",
+            api_version="v1alpha",
+            json={"threat_detection_opportunity": tdo},
+            timeout=300,
+            error_message="Failed to generate synthetic events",
+        )
 
 
 @pytest.mark.asyncio
@@ -314,6 +392,40 @@ async def test_evaluate_rule_coverage_long_running_validation_and_aliases(
 
 
 @pytest.mark.asyncio
+async def test_evaluate_rule_coverage_aliases_and_wrapped_dict(mock_get_client):
+    """Test tdo_events alias and unwrapping raw dictionary."""
+    events = [
+        {
+            "threat_detection_opportunity_id": "tdo-1",
+            "udms_json": ['{"e": 1}'],
+        }
+    ]
+    expected_op = {"name": "op-wrapped", "done": False}
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        return_value=expected_op,
+    ) as mock_request:
+        # Test tdo_events with wrapped dict {"threat_detection_opportunity_events": events}
+        result = await evaluate_rule_coverage_long_running(
+            tdo_events={"threat_detection_opportunity_events": events}
+        )
+        assert result == expected_op
+        mock_request.assert_called_once_with(
+            mock_get_client,
+            method="POST",
+            endpoint_path=":evaluateRuleCoverageLongRunning",
+            api_version="v1alpha",
+            json={
+                "threat_detection_opportunity_events": events,
+                "exclude_composite_coverage": True,
+            },
+            timeout=300,
+            error_message="Failed to evaluate rule coverage",
+        )
+
+
+@pytest.mark.asyncio
 async def test_get_operation_success(mock_get_client):
     """Test get_operation successfully polls an LRO."""
     expected_response = {
@@ -345,6 +457,40 @@ async def test_get_operation_empty_name(mock_get_client):
     """Test get_operation validates empty name."""
     res = await get_operation(name="")
     assert "error" in res
+
+
+@pytest.mark.asyncio
+async def test_get_operation_name_aliases_and_normalization(mock_get_client):
+    """Test operation_name alias and endpoint normalization."""
+    expected_response = {"name": "op-test", "done": True}
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        return_value=expected_response,
+    ) as mock_request:
+        # Test operation_name with 'operations/dea-999'
+        res1 = await get_operation(operation_name="operations/dea-999")
+        assert res1 == expected_response
+        mock_request.assert_called_with(
+            mock_get_client,
+            method="GET",
+            endpoint_path="operations/dea-999",
+            api_version="v1alpha",
+            timeout=60,
+            error_message="Failed to get operation status",
+        )
+
+        # Test bare id 'dea-888' auto-prefixed to 'operations/dea-888'
+        res2 = await get_operation(operationName="dea-888")
+        assert res2 == expected_response
+        mock_request.assert_called_with(
+            mock_get_client,
+            method="GET",
+            endpoint_path="operations/dea-888",
+            api_version="v1alpha",
+            timeout=60,
+            error_message="Failed to get operation status",
+        )
 
 
 @pytest.mark.asyncio
@@ -412,3 +558,75 @@ async def test_generate_rules_validation_and_aliases(mock_get_client):
             timeout=300,
             error_message="Failed to generate rules",
         )
+
+
+@pytest.mark.asyncio
+async def test_generate_rules_multi_tdo_batching_and_context(mock_get_client):
+    """Test multi-TDO batching and background_context support in generate_rules."""
+    tdo1 = {"id": "tdo-1"}
+    tdo2 = {"id": "tdo-2"}
+    resp1 = {"generated_rules": [{"rule_text": "rule 1"}]}
+    resp2 = {"generated_rules": [{"rule_text": "rule 2"}]}
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        side_effect=[resp1, resp2],
+    ) as mock_request:
+        result = await generate_rules(
+            threat_detection_opportunities=[tdo1, tdo2],
+            background_context="Windows enterprise environment",
+        )
+        assert result == {
+            "generated_rules": [{"rule_text": "rule 1"}, {"rule_text": "rule 2"}]
+        }
+        assert mock_request.call_count == 2
+        first_call = mock_request.call_args_list[0]
+        assert first_call.kwargs["json"] == {
+            "threat_detection_opportunity": tdo1,
+            "background_context": "Windows enterprise environment",
+        }
+
+
+@pytest.mark.asyncio
+async def test_generate_rules_wrapped_dict(mock_get_client):
+    """Test generate_rules with wrapped dictionary input."""
+    tdo = {"id": "tdo-wrapped"}
+    wrapped_input = {"threat_detection_opportunities": [tdo]}
+    expected_response = {"generated_rules": [{"rule_text": "rule wrapped"}]}
+
+    with patch(
+        "secops_mcp.tools.detection_agent.chronicle_request",
+        return_value=expected_response,
+    ) as mock_request:
+        result = await generate_rules(tdo=wrapped_input)
+        assert result == expected_response
+        mock_request.assert_called_once_with(
+            mock_get_client,
+            method="POST",
+            endpoint_path=":generateRules",
+            api_version="v1alpha",
+            json={"threat_detection_opportunity": tdo},
+            timeout=300,
+            error_message="Failed to generate rules",
+        )
+
+
+@pytest.mark.asyncio
+async def test_get_rule_alias():
+    """Test get_rule alias delegates to get_detection_rule."""
+    mock_client = MagicMock()
+    mock_rule = {"ruleId": "ru_12345", "name": "Suspicious_Process"}
+    mock_client.get_rule.return_value = mock_rule
+
+    with patch(
+        "secops_mcp.tools.security_rules.get_chronicle_client",
+        return_value=mock_client,
+    ):
+        result = await get_rule(
+            rule_id="ru_12345",
+            project_id="p-1",
+            customer_id="c-1",
+            region="us",
+        )
+        assert result == mock_rule
+        mock_client.get_rule.assert_called_once_with("ru_12345")
