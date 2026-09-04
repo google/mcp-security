@@ -25,11 +25,12 @@ If you're new to this project, we recommend starting with the [Usage Guide](usag
 - **[Development Guide](development_guide.md)** - Learn how to contribute to or extend the project
 - **[GitHub Repository](https://github.com/google/mcp-security)** - Access the project's source code and contribute.
 
-## MCP Servers
+## MCP Servers & Agents
 
-Each server provides different capabilities:
+Each component provides different capabilities:
 
 - [**Remote MCP Server**](remote_server.md) - Fully managed, enterprise-ready MCP server for Google SecOps (Recommended)
+- [**Autonomous SOC Agent (Google ADK v2)**](../run-with-google-adk/README.md) - Prebuilt autonomous security operations agent with CLI REPL, FastAPI server, and native MCP multi-transport
 
 - [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
 - [Security Command Center (SCC) Server](servers/scc_mcp.md) - Manage cloud security posture and vulnerabilities

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-security-agent"
+version = "0.2.0"
+description = "Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2 and MCP"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Google LLC" }
+]
+dependencies = [
+    "google-adk>=2.0.0",
+    "google-genai>=1.20.0",
+    "google-cloud-aiplatform>=1.97.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "mcp>=1.0.0,<2.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.0.0",
+    "typer>=0.12.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+mcp-security-agent = "mcp_security_agent.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
