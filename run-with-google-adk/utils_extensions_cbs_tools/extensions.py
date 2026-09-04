@@ -13,17 +13,13 @@
 # limitations under the License.
 
 
-# imports for overriding `get_tools`
-from typing_extensions import override
-from google.adk.tools.mcp_tool.mcp_session_manager import retry_on_closed_resource
 from typing import List
 from typing import Optional, Union, TextIO
 from google.adk.agents.readonly_context import ReadonlyContext
-from google.adk.tools.mcp_tool.mcp_tool import MCPTool, BaseTool
-from google.adk.tools.mcp_tool.mcp_session_manager import  StdioServerParameters, StdioConnectionParams, SseConnectionParams,StreamableHTTPConnectionParams
-from mcp.types import ListToolsResult
+from google.adk.tools.base_tool import BaseTool
+from google.adk.tools.mcp_tool.mcp_toolset import StdioServerParameters
 from .cache import tools_cache
-from  google.adk.tools.mcp_tool.mcp_toolset  import MCPToolset, ToolPredicate
+from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset
 import sys
 import logging
 
@@ -42,31 +38,23 @@ class MCPToolSetWithSchemaAccess(MCPToolset):
       self,
       *,
       tool_set_name: str, # <-- new parameter
-      connection_params: Union[
-          StdioServerParameters,
-          StdioConnectionParams,
-          SseConnectionParams,
-          StreamableHTTPConnectionParams,
-      ],
-      tool_filter: Optional[Union[ToolPredicate, List[str]]] = None,
+      connection_params: StdioServerParameters,
+      tool_filter: Optional[List[str]] = None,
       errlog: TextIO = sys.stderr,
   ):
     super().__init__(
         connection_params=connection_params,
-        tool_filter=tool_filter,
         errlog=errlog
     )
     self.tool_set_name = tool_set_name
     logging.info(f"MCPToolSetWithSchemaAccess initialized with tool_set_name: '{self.tool_set_name}'")  
     self._session = None
 
-  @retry_on_closed_resource("_reinitialize_session")
-  @override
   async def get_tools(
       self,
       readonly_context: Optional[ReadonlyContext] = None,
   ) -> List[BaseTool]:
-    """Return all tools in the toolset based on the provided context.
+    """Return all tools in the toolset based on the provided context with caching.
 
     Args:
         readonly_context: Context used to filter tools available to the agent.
@@ -75,28 +63,17 @@ class MCPToolSetWithSchemaAccess(MCPToolset):
     Returns:
         List[BaseTool]: A list of tools available under the specified context.
     """
-    # Get session from session manager
-    if not self._session:
-      self._session = await self._mcp_session_manager.create_session()
-
+    # Check cache first
     if self.tool_set_name in tools_cache.keys():
       logging.info(f"Tools found in cache for toolset {self.tool_set_name}, returning them")  
       return tools_cache[self.tool_set_name]
     else:
-      logging.info(f"No tools found in cache for toolset {self.tool_set_name}, loading")
+      logging.info(f"No tools found in cache for toolset {self.tool_set_name}, loading from parent")
 
-    tools_response: ListToolsResult = await self._session.list_tools()
-
-    # Apply filtering based on context and tool_filter
-    tools = []
-    for tool in tools_response.tools:
-      mcp_tool = MCPTool(
-          mcp_tool=tool,
-          mcp_session_manager=self._mcp_session_manager,
-      )
-
-      if self._is_tool_selected(mcp_tool, readonly_context):
-        tools.append(mcp_tool)
-
+    # Get tools from parent class
+    tools = await super().get_tools(readonly_context)
+    
+    # Cache the tools
     tools_cache[self.tool_set_name] = tools
+    logging.info(f"Cached {len(tools)} tools for toolset {self.tool_set_name}")
     return tools
