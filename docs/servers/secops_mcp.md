@@ -850,11 +850,11 @@ Tools for automating the Detection Engineering lifecycle using Chronicle's Agent
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
     - **Returns:** Dictionary containing `threat_detection_opportunity_events` with synthetic raw logs, structured UDM events, and JSON-encoded `udmJson` strings.
 
-- **`evaluate_rule_coverage_long_running(threat_detection_opportunity_events, exclude_composite_coverage=False, project_id=None, customer_id=None, region=None)`**
+- **`evaluate_rule_coverage_long_running(threat_detection_opportunity_events, exclude_composite_coverage=True, project_id=None, customer_id=None, region=None)`**
     - **Description:** Initiate an asynchronous Long-Running Operation (LRO) via Chronicle's `:evaluateRuleCoverageLongRunning` endpoint to test synthetic events against active rulesets in a safe sandbox simulation.
     - **Parameters:**
         - `threat_detection_opportunity_events` (required): List of event bundles containing `threat_detection_opportunity_id` and list of `udms_json`.
-        - `exclude_composite_coverage` (optional): Whether to exclude multi-event composite rules from evaluation (default: `False`).
+        - `exclude_composite_coverage` (optional): Whether to exclude multi-event composite rules from evaluation (default: `True`).
         - `project_id` (optional): Google Cloud project ID (defaults to environment config).
         - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
