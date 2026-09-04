@@ -225,6 +225,34 @@ async def get_detection_rule(
 
 
 @server.tool()
+async def get_rule(
+    rule_id: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Retrieve the complete definition and metadata of a specific detection rule from Chronicle SIEM.
+
+    Alias for `get_detection_rule`, providing parity with Remote MCP tool naming conventions.
+
+    Args:
+        rule_id: The unique identifier of the detection rule (e.g., 'ru_12345678-1234-1234-1234-123456789012').
+        project_id: Optional Google Cloud project ID.
+        customer_id: Optional Chronicle customer ID.
+        region: Optional Chronicle region.
+
+    Returns:
+        Dict[str, Any]: The complete rule object including metadata and YARA-L code.
+    """
+    return await get_detection_rule(
+        rule_id=rule_id,
+        project_id=project_id,
+        customer_id=customer_id,
+        region=region,
+    )
+
+
+@server.tool()
 async def get_rule_detections(
     rule_id: str,
     alert_state: Optional[str] = None,
