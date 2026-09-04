@@ -132,9 +132,15 @@ async def test_generate_threat_detection_opportunity_alias_and_validation(
             logTypes=["NETWORK"],
         )
         assert result3 == expected_response
+        # Test string log_types coerced to list
+        result4 = await generate_threat_detection_opportunity(
+            threat="Suspicious Service Installation",
+            log_types="SYSTEM",
+        )
+        assert result4 == expected_response
         assert mock_request.call_args.kwargs["json"] == {
-            "threat": "C2 Beaconing",
-            "log_types": ["NETWORK"],
+            "threat": "Suspicious Service Installation",
+            "log_types": ["SYSTEM"],
         }
 
     # Test empty input validation
@@ -172,7 +178,13 @@ async def test_generate_synthetic_events_success(mock_get_client):
             region="us",
         )
 
-        assert result == expected_response
+        assert result["synthetic_events"] == expected_response["synthetic_events"]
+        assert result["threat_detection_opportunity_events"] == [
+            {
+                "threat_detection_opportunity_id": "tdo-123",
+                "udms_json": ['{"metadata": {"event_type": "PROCESS_LAUNCH"}}'],
+            }
+        ]
         mock_request.assert_called_once_with(
             mock_get_client,
             method="POST",
@@ -411,7 +423,25 @@ async def test_evaluate_rule_coverage_aliases_and_wrapped_dict(mock_get_client):
             tdo_events={"threat_detection_opportunity_events": events}
         )
         assert result == expected_op
-        mock_request.assert_called_once_with(
+        mock_request.assert_called_with(
+            mock_get_client,
+            method="POST",
+            endpoint_path=":evaluateRuleCoverageLongRunning",
+            api_version="v1alpha",
+            json={
+                "threat_detection_opportunity_events": events,
+                "exclude_composite_coverage": True,
+            },
+            timeout=300,
+            error_message="Failed to evaluate rule coverage",
+        )
+
+        # Test tdo_events with wrapped dict {"tdo_events": events}
+        result2 = await evaluate_rule_coverage_long_running(
+            tdo_events={"tdo_events": events}
+        )
+        assert result2 == expected_op
+        mock_request.assert_called_with(
             mock_get_client,
             method="POST",
             endpoint_path=":evaluateRuleCoverageLongRunning",
