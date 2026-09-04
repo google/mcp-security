@@ -827,7 +827,59 @@ The service account or user credentials need the following Chronicle roles:
         - `project_id` (optional): Google Cloud project ID (defaults to environment config).
         - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
-    - **Returns:** Dictionary containing investigation associations grouped by detection ID, with verdict and confidence information.
+### Detection Engineering Agent Tools
+
+Tools for automating the Detection Engineering lifecycle using Chronicle's Agentic Detection Engineering (ADE) APIs:
+
+- **`generate_threat_detection_opportunity(threat_description, log_types, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Generate structured Threat Detection Opportunities (TDOs) from a threat intelligence description and targeted log types. Returns extracted tactics, techniques, and procedures (TTPs) mapped to MITRE ATT&CK.
+    - **Parameters:**
+        - `threat_description` (required): Natural-language text describing the threat or adversary TTPs.
+        - `log_types` (required): List of Chronicle log types to consider (e.g. `["WINEVTLOG", "PROCESS_EXECUTION"]`).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing generated `threat_detection_opportunities` with IDs, summaries, log types, and MITRE ATT&CK mappings.
+
+- **`generate_synthetic_events(threat_detection_opportunities, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Generate high-fidelity synthetic telemetry (raw logs and structured UDM events) to simulate attacker behavior for given Threat Detection Opportunities.
+    - **Parameters:**
+        - `threat_detection_opportunities` (required): List of TDO dictionaries (or TDO objects returned by `generate_threat_detection_opportunity`).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing `threat_detection_opportunity_events` with synthetic raw logs, structured UDM events, and JSON-encoded `udmJson` strings.
+
+- **`evaluate_rule_coverage_long_running(threat_detection_opportunity_events, exclude_composite_coverage=True, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Initiate an asynchronous Long-Running Operation (LRO) via Chronicle's `:evaluateRuleCoverageLongRunning` endpoint to test synthetic events against active rulesets in a safe sandbox simulation.
+    - **Parameters:**
+        - `threat_detection_opportunity_events` (required): List of event bundles containing `threat_detection_opportunity_id` and list of `udms_json`.
+        - `exclude_composite_coverage` (optional): Whether to exclude multi-event composite rules from evaluation (default: `True`).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing the Long-Running Operation resource with `name` (e.g., `operations/dea-...`).
+
+- **`get_operation(name, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Poll the status of a Long-Running Operation (such as rule coverage evaluation). Returns progress metadata or final coverage results when `done` is `True`.
+    - **Parameters:**
+        - `name` (required): Full operation resource name returned by `evaluate_rule_coverage_long_running`.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing operation state (`done`, `metadata`, and `response`).
+
+- **`generate_rules(threat_detection_opportunities, background_context=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Synthesize candidate YARA-L 2.0 detection rules tailored to close coverage gaps identified for specific Threat Detection Opportunities.
+    - **Parameters:**
+        - `threat_detection_opportunities` (required): List of uncovered TDO dictionaries.
+        - `background_context` (optional): Additional organizational context, telemetry nuances, or detection conventions.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing synthesized candidate YARA-L 2.0 rules with metadata and logic.
+
+For an end-to-end walkthrough, see the [Agentic Detection Engineering Guide](../agentic_detection_engineering.md).
 
 ## Usage Examples
 
@@ -1121,6 +1173,68 @@ AI uses: delete_watchlist(
 AI: Successfully deleted the "APT Threat Actors 2024" watchlist.
 Entities previously on this watchlist will now use their base risk scores
 without the 4.0x multiplier.
+```
+
+### Example 9: Agentic Detection Engineering Workflow
+
+```
+User: We received a threat intel advisory detailing a new PowerShell download cradle communicating with pastebin-like sites. Can you extract detection opportunities, test our rule coverage, and generate rules for any gaps?
+
+AI uses: generate_threat_detection_opportunity(
+  threat_description="Threat actors leverage obfuscated PowerShell commands with DownloadString to fetch scripts from paste sites and execute memory-resident payloads.",
+  log_types=["WINEVTLOG", "PROCESS_EXECUTION"]
+)
+
+AI: Generated 2 Threat Detection Opportunities:
+1. t01: Obfuscated PowerShell execution with WebClient DownloadString
+2. t02: Memory-resident payload invocation via reflective loading
+
+AI uses: generate_synthetic_events(
+  threat_detection_opportunities=[
+    {"threat_detection_opportunity_id": "t01", "summary": "Obfuscated PowerShell DownloadString", "log_types": ["WINEVTLOG", "PROCESS_EXECUTION"]},
+    {"threat_detection_opportunity_id": "t02", "summary": "Reflective PE loading", "log_types": ["PROCESS_EXECUTION"]}
+  ]
+)
+
+AI: Generated 8 synthetic events simulating the adversary techniques across PowerShell event logs and process creation telemetry.
+
+AI uses: evaluate_rule_coverage_long_running(
+  threat_detection_opportunity_events=[...],
+  exclude_composite_coverage=True
+)
+
+AI: Initiated Long-Running Operation: operations/dea-xyz789...
+
+AI uses: get_operation(
+  name="operations/dea-xyz789..."
+)
+
+AI: Evaluation completed. Coverage results:
+- t01 (PowerShell DownloadString): COVERED by rule "win_powershell_downloadstring_webclient"
+- t02 (Reflective PE loading): UNCOVERED (coverage gap identified)
+
+AI uses: generate_rules(
+  threat_detection_opportunities=[
+    {"threat_detection_opportunity_id": "t02", "summary": "Reflective PE loading via suspicious memory allocation"}
+  ],
+  background_context="Enterprise Windows environment with Sysmon Event ID 7 and 8 telemetry."
+)
+
+AI: Synthesized candidate YARA-L 2.0 rule:
+rule ttp_reflective_pe_memory_loading {
+  meta:
+    author = "SecOps ADE"
+    description = "Detects suspicious memory allocation and reflective DLL injection"
+    severity = "HIGH"
+  events:
+    $e.metadata.event_type = "PROCESS_UNCATEGORIZED"
+    $e.target.process.file.full_path = /powershell\.exe/ nocase
+    $e.security_result.action = "ALLOW"
+  condition:
+    $e
+}
+
+Would you like to run historical backtesting (`test_rule`) and create this rule in disabled mode for staging?
 ```
 
 ## Additional Resources
