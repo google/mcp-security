@@ -20,6 +20,7 @@ If you're new to this project, we recommend starting with the [Usage Guide](usag
 ## Quick Links
 
 - **[Installation & Setup](usage_guide.md#getting-started)** - Get started quickly with installation instructions
+- **[Agentic Detection Engineering](agentic_detection_engineering.md)** - Automate detection engineering with TDO extraction, synthetic events, and rule coverage evaluations
 - **[Configuration Reference](usage_guide.md#mcp-server-configuration-reference)** - Configure the MCP servers for your environment
 - **[Usage Examples](usage_guide.md#usage-examples)** - See examples of how to interact with the MCP servers
 - **[Development Guide](development_guide.md)** - Learn how to contribute to or extend the project
