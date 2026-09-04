@@ -104,8 +104,8 @@ For any TDO identified as having a coverage gap, `generate_rules` synthesizes ca
 Generated rules must never be automatically activated in production without human validation. Detection engineers follow these verification steps:
 1. **Rule Logic Inspection:** Verify UDM field references and thresholds.
 2. **Backtesting (`test_rule`):** Execute historical test queries over real tenant data to assess alert volume and detect potential false positives.
-3. **Draft Rule Creation (`create_security_rule`):** Deploy rule in a disabled (`enabled=False`) or alerting-only state for staging observation.
-4. **Activation (`enable_rule`):** Enable live evaluation once verified.
+3. **Draft Rule Creation (`create_rule`):** Deploy rule in a disabled (`enabled=False`) or alerting-only state for staging observation.
+4. **Activation:** Enable live evaluation once verified (via the SecOps console or rule management tools).
 
 ---
 
