@@ -138,10 +138,13 @@ async def lookup_entity(
             result += f'Related Entities ({len(related_entities)}):\n'
             for i, entity in enumerate(related_entities[:5], 1):  # Limit to 5 related entities
                 entity_type = 'Unknown'
+                entity_value = 'Unknown'
                 if hasattr(entity, 'metadata') and hasattr(entity.metadata, 'entity_type'):
                     entity_type = entity.metadata.entity_type
+                if hasattr(entity, 'value'):
+                    entity_value = entity.value
 
-                result += f'{i}. Type: {entity_type}\n'
+                result += f'{i}. Value: {entity_value}, Type: {entity_type}\n'
 
             if len(related_entities) > 5:
                 result += f'... and {len(related_entities) - 5} more related entities\n'
