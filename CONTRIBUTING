@@ -31,3 +31,18 @@ All submissions, including submissions by project members, require review. We
 use GitHub pull requests for this purpose. Consult
 [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
 information on using pull requests.
+
+### Code quality checks
+
+All pull requests must pass automated code quality checks, including:
+
+- **Trailing spaces check**: Our CI pipeline will automatically check for trailing spaces in **changed lines only** (using `git diff -U0`). If trailing spaces are detected in lines you modified, the check will fail and provide guidance on how to fix them. To remove trailing spaces from your changes before submitting:
+  ```bash
+  # Remove trailing spaces from a specific file
+  sed -i 's/[[:space:]]*$//' filename
+  
+  # To see which lines have trailing spaces in your changes:
+  git diff -U0 | grep '^+' | grep -v '^+++' | grep '[[:space:]]$'
+  ```
+  
+  **Note**: Our CI only checks the lines you've modified, not the entire file. This keeps your pull request focused on your changes and avoids introducing unrelated formatting changes.
