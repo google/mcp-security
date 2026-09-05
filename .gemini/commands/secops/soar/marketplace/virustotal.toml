@@ -1,0 +1,318 @@
+description = "VirusTotal SOAR marketplace integration slash commands for threat analysis and file scanning"
+prompt = "VirusTotal SOAR marketplace integration. Use '/virustotal help' for a list of commands."
+
+[[subCommands]]
+name = "help"
+description = "Show help for VirusTotal SOAR marketplace integration commands"
+prompt = """
+{% if help %}
+VirusTotal SOAR Marketplace Integration Commands
+
+Available Commands:
+- scan-hash: Scan file hashes via VirusTotal with threat scoring
+- ping: Test VirusTotal integration connectivity
+- upload-scan-files: Upload and scan files from remote paths
+- scan-url: Scan URLs for malicious content detection
+- scan-ip: Scan IP addresses for threat intelligence
+- get-domain-report: Retrieve comprehensive domain analysis reports
+
+Use /virustotal <command> --help for detailed command usage.
+
+Security Context:
+- All commands require active SOAR case context
+- VirusTotal integration provides file, URL, IP, and domain threat analysis
+- Essential for malware analysis, threat hunting, and IOC validation
+- Supports threshold-based suspicious entity marking
+{% else %}
+Display help information for VirusTotal SOAR marketplace integration commands.
+{% endif %}
+"""
+
+[[subCommands]]
+name = "scan-hash"
+description = "Scan file hashes via VirusTotal with configurable threat threshold"
+prompt = """
+{% if help %}
+Usage: /virustotal scan-hash [OPTIONS]
+
+Scan file hashes via VirusTotal and mark entities as suspicious based on threat threshold.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --threshold               Threshold for marking entities suspicious (number of negative engines) [REQUIRED]
+  --rescan-after-days       Days after which to automatically rescan if results are older (optional)
+  --help                    Show this help message
+
+Examples:
+  /virustotal scan-hash --case-id="523" --alert-group-identifiers="group1" --threshold="5"
+  /virustotal scan-hash --case-id="724" --alert-group-identifiers="group1,group2" --threshold="3" --rescan-after-days="7"
+
+Use Cases:
+- Analyze file hashes found in security incidents for malware detection
+- Validate suspicious files against VirusTotal's threat intelligence database
+- Set custom thresholds for marking entities as suspicious based on engine detections
+- Automatically rescan older results to get latest threat intelligence
+
+Security Context:
+- Marks entities as suspicious if negative engine detections meet or exceed threshold
+- Creates insights for threat analysis and investigation documentation
+- Supports both automatic rescanning and manual threshold configuration
+{% else %}
+Call the virus_total_scan_hash tool with: `virus_total_scan_hash(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, threshold={{threshold}}{% if rescan-after-days %}, rescan_after_days={{rescan-after-days}}{% endif %})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "threshold"
+  required = true
+  description = "Threshold for marking entities suspicious (number of negative engines)"
+  [[subCommands.args]]
+  name = "rescan-after-days"
+  required = false
+  description = "Days after which to automatically rescan if results are older"
+
+[[subCommands]]
+name = "ping"
+description = "Test connectivity to VirusTotal integration"
+prompt = """
+{% if help %}
+Usage: /virustotal ping [OPTIONS]
+
+Test connectivity to VirusTotal integration with configured parameters.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --help                    Show this help message
+
+Example:
+  /virustotal ping --case-id="523" --alert-group-identifiers="group1"
+
+Use Cases:
+- Validate VirusTotal integration configuration and authentication
+- Test API connectivity before running analysis commands
+- Troubleshoot integration issues and verify API access
+{% else %}
+Call the virus_total_ping tool with: `virus_total_ping(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+
+[[subCommands]]
+name = "upload-scan-files"
+description = "Upload and scan files from remote paths via VirusTotal"
+prompt = """
+{% if help %}
+Usage: /virustotal upload-scan-files [OPTIONS]
+
+Upload and scan files from remote paths (Windows share or Linux remote server) via VirusTotal.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --threshold               Entity risk threshold for suspicious marking [REQUIRED]
+  --file-paths              Target file path for upload and scanning [REQUIRED]
+  --linux-server-address    Linux server address (e.g., x.x.x.x) (optional)
+  --linux-user              Linux server username (optional)
+  --linux-password          Linux server password (optional)
+  --help                    Show this help message
+
+Examples:
+  /virustotal upload-scan-files --case-id="523" --alert-group-identifiers="group1" --threshold="3" --file-paths="/tmp/suspicious.exe"
+  /virustotal upload-scan-files --case-id="724" --alert-group-identifiers="group1" --threshold="5" --file-paths="C:\\\\temp\\\\malware.dll" --linux-server-address="192.168.1.100" --linux-user="analyst" --linux-password="password"
+
+Use Cases:
+- Upload suspicious files found during incident response for malware analysis
+- Scan files from remote systems without transferring them locally
+- Analyze files from both Windows shares and Linux remote servers
+- Get comprehensive threat intelligence on uploaded files
+
+Security Context:
+- Supports file upload from both Windows and Linux remote systems
+- Applies configurable risk thresholds for suspicious entity marking
+- Essential for malware analysis and file-based threat hunting
+{% else %}
+Call the virus_total_upload_and_scan_files tool with: `virus_total_upload_and_scan_files(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, threshold={{threshold}}, file_paths={{file-paths}}{% if linux-server-address %}, linux_server_address={{linux-server-address}}{% endif %}{% if linux-user %}, linux_user={{linux-user}}{% endif %}{% if linux-password %}, linux_password={{linux-password}}{% endif %})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "threshold"
+  required = true
+  description = "Entity risk threshold for suspicious marking"
+  [[subCommands.args]]
+  name = "file-paths"
+  required = true
+  description = "Target file path for upload and scanning"
+  [[subCommands.args]]
+  name = "linux-server-address"
+  required = false
+  description = "Linux server address (e.g., x.x.x.x)"
+  [[subCommands.args]]
+  name = "linux-user"
+  required = false
+  description = "Linux server username"
+  [[subCommands.args]]
+  name = "linux-password"
+  required = false
+  description = "Linux server password"
+
+[[subCommands]]
+name = "scan-url"
+description = "Scan URLs for malicious content detection via VirusTotal"
+prompt = """
+{% if help %}
+Usage: /virustotal scan-url [OPTIONS]
+
+Scan URLs for malicious content detection using VirusTotal's threat intelligence.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --threshold               Threshold for marking URLs suspicious (number of negative engines) [REQUIRED]
+  --rescan-after-days       Days after which to automatically rescan if results are older (optional)
+  --help                    Show this help message
+
+Examples:
+  /virustotal scan-url --case-id="523" --alert-group-identifiers="group1" --threshold="3"
+  /virustotal scan-url --case-id="724" --alert-group-identifiers="group1,group2" --threshold="5" --rescan-after-days="30"
+
+Use Cases:
+- Analyze suspicious URLs found in phishing campaigns or malicious emails
+- Validate URLs against VirusTotal's threat intelligence database
+- Set custom thresholds for marking URLs as malicious based on engine detections
+- Monitor URL reputation changes over time with automatic rescanning
+
+Security Context:
+- Essential for phishing detection and malicious URL analysis
+- Marks URLs as suspicious based on configurable engine threshold
+- Supports automatic rescanning to get latest threat intelligence
+{% else %}
+Call the virus_total_scan_url tool with: `virus_total_scan_url(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}, threshold={{threshold}}{% if rescan-after-days %}, rescan_after_days={{rescan-after-days}}{% endif %})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "threshold"
+  required = true
+  description = "Threshold for marking URLs suspicious (number of negative engines)"
+  [[subCommands.args]]
+  name = "rescan-after-days"
+  required = false
+  description = "Days after which to automatically rescan if results are older"
+
+[[subCommands]]
+name = "scan-ip"
+description = "Scan IP addresses for threat intelligence via VirusTotal"
+prompt = """
+{% if help %}
+Usage: /virustotal scan-ip [OPTIONS]
+
+Scan IP addresses for threat intelligence using VirusTotal's database.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --threshold               Threshold for detected malicious samples related to IP (optional)
+  --help                    Show this help message
+
+Examples:
+  /virustotal scan-ip --case-id="523" --alert-group-identifiers="group1"
+  /virustotal scan-ip --case-id="724" --alert-group-identifiers="group1,group2" --threshold="10"
+
+Use Cases:
+- Analyze suspicious IP addresses found in network traffic or security alerts
+- Validate IP reputation against VirusTotal's threat intelligence
+- Identify command and control servers or malicious infrastructure
+- Set thresholds for marking IPs as suspicious based on related malicious samples
+
+Security Context:
+- Essential for network-based threat hunting and IP reputation analysis
+- Marks IPs as suspicious if related malicious samples exceed threshold
+- Supports threat intelligence gathering for network security investigations
+{% else %}
+Call the virus_total_scan_ip tool with: `virus_total_scan_ip(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}}{% if threshold %}, threshold={{threshold}}{% endif %})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
+  [[subCommands.args]]
+  name = "threshold"
+  required = false
+  description = "Threshold for detected malicious samples related to IP"
+
+[[subCommands]]
+name = "get-domain-report"
+description = "Retrieve comprehensive domain analysis reports from VirusTotal"
+prompt = """
+{% if help %}
+Usage: /virustotal get-domain-report [OPTIONS]
+
+Retrieve comprehensive domain analysis reports from VirusTotal's threat intelligence.
+
+Options:
+  --case-id                  The unique identifier (ID) of the case [REQUIRED]
+  --alert-group-identifiers  Comma-separated identifiers for alert groups [REQUIRED]
+  --help                    Show this help message
+
+Examples:
+  /virustotal get-domain-report --case-id="523" --alert-group-identifiers="group1"
+  /virustotal get-domain-report --case-id="724" --alert-group-identifiers="group1,group2"
+
+Use Cases:
+- Get detailed analysis of suspicious domains found in security incidents
+- Analyze domain reputation and associated threat intelligence
+- Investigate phishing domains or malicious infrastructure
+- Gather comprehensive domain information for threat hunting
+
+Security Context:
+- Provides detailed domain reputation and threat intelligence analysis
+- Essential for investigating suspicious domains in phishing and malware campaigns
+- Supports comprehensive domain-based threat hunting activities
+{% else %}
+Call the virus_total_get_domain_report tool with: `virus_total_get_domain_report(case_id={{case-id}}, alert_group_identifiers={{alert-group-identifiers}})`
+{% endif %}
+"""
+  [[subCommands.args]]
+  name = "case-id"
+  required = true
+  description = "The unique identifier (ID) of the case"
+  [[subCommands.args]]
+  name = "alert-group-identifiers"
+  required = true
+  description = "Comma-separated identifiers for the alert groups"
