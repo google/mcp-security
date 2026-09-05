@@ -62,7 +62,7 @@ def update_env_vars(soar_config: Dict[str, str]):
         os.environ[key] = value
 
 
-@pytest_asyncio.fixture(loop_scope="session", autouse=True)
+@pytest_asyncio.fixture(loop_scope="session")
 async def setup_bindings(soar_config: Dict[str, str]):
     """Ensures bindings are done once before tests in this module run."""
     update_env_vars(soar_config)
