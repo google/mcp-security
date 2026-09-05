@@ -1,0 +1,168 @@
+[
+  {
+    "user_query": "Find network connections from 192.168.1.100 in the last 48 hours using natural language",
+    "reference_answer": "search_security_events",
+    "tool_arguments": {
+      "text": "network connections from 192.168.1.100",
+      "hours_back": 48
+    }
+  },
+  {
+    "user_query": "Search for failed login events for user 'admin' in the last 12 hours",
+    "reference_answer": "search_security_events",
+    "tool_arguments": {
+      "text": "failed login events for user 'admin'",
+      "hours_back": 12
+    }
+  },
+  {
+    "user_query": "Search security events for 'DNS lookups to phishing.com' in the last 24 hours",
+    "reference_answer": "search_security_events",
+    "tool_arguments": {
+      "text": "DNS lookups to phishing.com",
+      "hours_back": 24
+    }
+  },
+  {
+    "user_query": "List the last 10 security alerts generated in Chronicle",
+    "reference_answer": "get_security_alerts",
+    "tool_arguments": {
+      "max_alerts": 10
+    }
+  },
+  {
+    "user_query": "Retrieve recent open security alerts from the last 7 days",
+    "reference_answer": "get_security_alerts",
+    "tool_arguments": {
+      "hours_back": 168,
+      "status_filter": "feedback_summary.status != \"CLOSED\""
+    }
+  },
+  {
+    "user_query": "Get the detailed information and detections for alert ID 'de_1234567890'",
+    "reference_answer": "get_security_alert_by_id",
+    "tool_arguments": {
+      "alert_id": "de_1234567890",
+      "include_detections": true
+    }
+  },
+  {
+    "user_query": "Show me alert details for 'de_9876543210' without including detections",
+    "reference_answer": "get_security_alert_by_id",
+    "tool_arguments": {
+      "alert_id": "de_9876543210",
+      "include_detections": false
+    }
+  },
+  {
+    "user_query": "Update alert 'de_1122334455' to CLOSED status with verdict FALSE_POSITIVE, comment 'Confirmed staging test activity', and reason REASON_MAINTENANCE",
+    "reference_answer": "do_update_security_alert",
+    "tool_arguments": {
+      "alert_id": "de_1122334455",
+      "status": "CLOSED",
+      "verdict": "FALSE_POSITIVE",
+      "comment": "Confirmed staging test activity",
+      "reason": "REASON_MAINTENANCE"
+    }
+  },
+  {
+    "user_query": "Mark alert 'de_9988776655' as TRUE_POSITIVE with critical priority, severity 95, and root cause 'Phishing email leading to credential theft'",
+    "reference_answer": "do_update_security_alert",
+    "tool_arguments": {
+      "alert_id": "de_9988776655",
+      "verdict": "TRUE_POSITIVE",
+      "priority": "PRIORITY_CRITICAL",
+      "severity": 95,
+      "root_cause": "Phishing email leading to credential theft"
+    }
+  },
+  {
+    "user_query": "Lookup entity information for IP address '8.8.8.8'",
+    "reference_answer": "lookup_entity",
+    "tool_arguments": {
+      "entity_value": "8.8.8.8"
+    }
+  },
+  {
+    "user_query": "Check if there is any entity data for domain 'bad-domain.com' in the last 7 days",
+    "reference_answer": "lookup_entity",
+    "tool_arguments": {
+      "entity_value": "bad-domain.com",
+      "hours_back": 168
+    }
+  },
+  {
+    "user_query": "Search for entity details of file hash '44d88612fea8a8f36de82e1278abb02f'",
+    "reference_answer": "lookup_entity",
+    "tool_arguments": {
+      "entity_value": "44d88612fea8a8f36de82e1278abb02f"
+    }
+  },
+  {
+    "user_query": "List all configured security detection rules in Chronicle",
+    "reference_answer": "list_security_rules",
+    "tool_arguments": {}
+  },
+  {
+    "user_query": "Find rules matching the query pattern '.*ransomware.*'",
+    "reference_answer": "search_security_rules",
+    "tool_arguments": {
+      "query": ".*ransomware.*"
+    }
+  },
+  {
+    "user_query": "Retrieve recent IoC matches from the last 24 hours (max 15 matches)",
+    "reference_answer": "get_ioc_matches",
+    "tool_arguments": {
+      "hours_back": 24,
+      "max_matches": 15
+    }
+  },
+  {
+    "user_query": "Search threat intelligence for information on 'APT29' threat actor group",
+    "reference_answer": "get_threat_intel",
+    "tool_arguments": {
+      "query": "APT29"
+    }
+  },
+  {
+    "user_query": "Get threat intelligence for CVE-2021-44228",
+    "reference_answer": "get_threat_intel",
+    "tool_arguments": {
+      "query": "CVE-2021-44228"
+    }
+  },
+  {
+    "user_query": "Search UDM using query 'metadata.event_type = \"NETWORK_CONNECTION\" AND principal.ip = \"10.0.0.5\"' for the last 6 hours",
+    "reference_answer": "search_udm",
+    "tool_arguments": {
+      "query": "metadata.event_type = \"NETWORK_CONNECTION\" AND principal.ip = \"10.0.0.5\"",
+      "hours_back": 6
+    }
+  },
+  {
+    "user_query": "Run UDM query 'target.user.userid = \"admin\"' from start time '2026-06-01T00:00:00Z' to end time '2026-06-02T00:00:00Z' limiting to 50 events",
+    "reference_answer": "search_udm",
+    "tool_arguments": {
+      "query": "target.user.userid = \"admin\"",
+      "start_time": "2026-06-01T00:00:00Z",
+      "end_time": "2026-06-02T00:00:00Z",
+      "max_events": 50
+    }
+  },
+  {
+    "user_query": "Export UDM search results for query 'metadata.event_type = \"USER_LOGIN\"' with fields 'metadata.event_timestamp, principal.user.userid' to CSV",
+    "reference_answer": "export_udm_search_csv",
+    "tool_arguments": {
+      "query": "metadata.event_type = \"USER_LOGIN\"",
+      "fields": ["metadata.event_timestamp", "principal.user.userid"]
+    }
+  },
+  {
+    "user_query": "Find UDM field values for autocomplete with term 'cymbal' in the last 24 hours",
+    "reference_answer": "find_udm_field_values",
+    "tool_arguments": {
+      "query": "cymbal"
+    }
+  }
+]

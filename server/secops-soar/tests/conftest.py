@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@ import json
 import os
 import pytest
 import pytest_asyncio
+import dotenv
 from secops_soar_mcp import bindings
 from typing import Dict
+
+# Load .env file at session start
+dotenv.load_dotenv()
 
 
 @pytest.fixture
@@ -32,7 +36,7 @@ def config_path() -> str:
 
 @pytest.fixture
 def soar_config(config_path: str) -> Dict[str, str]:
-    """Load SOAR configuration from the config file.
+    """Load SOAR configuration from the config file or environment variables.
 
     Args:
         config_path: Path to the configuration file
@@ -41,20 +45,22 @@ def soar_config(config_path: str) -> Dict[str, str]:
         Dictionary with SOAR configuration
 
     Raises:
-        FileNotFoundError: If the config file is missing
+        FileNotFoundError: If the config file is missing and env vars are not set
     """
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(
-            f"SOAR config file not found at {config_path}. "
-            f"Please create this file with the following format:\n"
-            f"{{\n"
-            f'    "SOAR_URL": "your-soar-url",\n'
-            f'    "SOAR_APP_KEY": "your-soar-app-key",\n'
-            f"}}"
-        )
+    if os.path.exists(config_path):
+        with open(config_path, "r") as f:
+            return json.load(f)
 
-    with open(config_path, "r") as f:
-        return json.load(f)
+    if os.getenv("SOAR_URL") and os.getenv("SOAR_APP_KEY"):
+        return {
+            "SOAR_URL": os.getenv("SOAR_URL"),
+            "SOAR_APP_KEY": os.getenv("SOAR_APP_KEY"),
+        }
+
+    raise FileNotFoundError(
+        f"SOAR configuration not found. Please set SOAR_URL and SOAR_APP_KEY environment variables "
+        f"or create a config file at {config_path}."
+    )
 
 
 def update_env_vars(soar_config: Dict[str, str]):

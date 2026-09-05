@@ -1,0 +1,23 @@
+{
+  "best_score": 0.9166666666666666,
+  "optimized_tool_descriptions": {
+    "tool_description_search_threats": "Search threats in the Google Threat Intelligence platform. Threats are modeled as collections. Once you get collections from this tool, you can use get_collection_report to fetch the full reports and their relationships.",
+    "tool_description_search_campaigns": "Search threat campaigns in the Google Threat Intelligence platform. Campaigns are modeled as collections.",
+    "tool_description_search_threat_actors": "Search threat actors in the Google Threat Intelligence platform. Threat actors are modeled as collections.",
+    "tool_description_search_malware_families": "Search malware families in the Google Threat Intelligence platform. Malware families are modeled as collections.",
+    "tool_description_search_software_toolkits": "Search software toolkits (or just tools) in the Google Threat Intelligence platform. Software toolkits are modeled as collections.",
+    "tool_description_search_threat_reports": "Search threat reports in the Google Threat Intelligence platform. Threat reports are modeled as collections.",
+    "tool_description_search_vulnerabilities": "Search vulnerabilities (CVEs) in the Google Threat Intelligence platform. Vulnerabilities are modeled as collections.",
+    "tool_description_get_entities_related_to_a_domain": "Retrieve entities related to the given domain. Available relationships: associations, caa_records, campaigns, cname_records, collections, comments, communicating_files, downloaded_files, graphs, historical_ssl_certificates, historical_whois, immediate_parent, malware_families, memory_pattern_parents, mx_records, ns_records, parent, referrer_files, related_comments, related_reports, related_threat_actors, reports, resolutions, siblings, soa_records, software_toolkits, subdomains, urls, user_votes, votes, vulnerabilities.",
+    "tool_description_get_entities_related_to_an_url": "Retrieve entities related to the given URL. Available relationships: analyses, associations, campaigns, collections, comments, communicating_files, contacted_domains, contacted_ips, downloaded_files, embedded_js_files, last_serving_ip_address, malware_families, parent_resource_urls, redirects_to, referrer_files, referrer_urls.",
+    "tool_description_get_entities_related_to_an_ip_address": "Retrieve entities related to the given IP address. Available relationships: associations, campaigns, collections, comments, communicating_files, downloaded_files, graphs, historical_ssl_certificates, historical_whois, malware_families, memory_pattern_parents, referrer_files, related_comments, related_reports, related_threat_actors, reports, resolutions, software_toolkits, urls, user_votes, votes, vulnerabilities.",
+    "tool_description_get_entities_related_to_a_file": "Retrieve entities related to the given file hash. Available relationships: analyses, behaviors, carbonblack_children, carbonblack_parents, compressed_parents, contacted_domains, contacted_ips, contacted_urls, dropped_files, execution_parents, itw_domains, itw_urls, metadata, memory_pattern_domains, memory_pattern_ips, mutexes_created, mutexes_opened, overlay_children, overlay_parents, pcap_parents, pe_resource_children, pe_resource_parents, popular_threat_category, suggested_threat_label, yara_rules.",
+    "tool_description_get_domain_report": "Get a comprehensive domain analysis report from Google Threat Intelligence. Provides attributes, threat classification, and historical metadata for a domain.",
+    "tool_description_get_ip_address_report": "Get a comprehensive IP Address analysis report from Google Threat Intelligence. Provides geolocation, autonomous system details, and threat reputation data.",
+    "tool_description_get_url_report": "Get a comprehensive URL analysis report from Google Threat Intelligence. Provides security analysis, categorizations, and threat category classifications.",
+    "tool_description_get_file_report": "Get a comprehensive file analysis report using its hash (MD5/SHA-1/SHA-256). Provides detection stats, threat classifications, and static metadata.",
+    "tool_description_get_file_behavior_summary": "Retrieve a summary of all sandbox execution reports and dynamic analysis details for a file.",
+    "tool_description_get_file_behavior_report": "Retrieve a full, detailed sandbox behavior report using a behavior ID formatted as {hash}_{sandbox}.",
+    "tool_description_search_iocs": "Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform using VirusTotal query search modifiers."
+  }
+}

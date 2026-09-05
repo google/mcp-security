@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,12 +30,19 @@ valid_scopes = set()
 
 
 async def _get_valid_scopes():
-    valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
-    if valid_scopes_list is None:
-        raise RuntimeError(
-            "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."
+    try:
+        valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
+        if valid_scopes_list is None:
+            logger.warning(
+                "Failed to fetch valid scopes from SOAR. Please make sure you have configured the right SOAR credentials if you need active API access. Continuing in offline mode..."
+            )
+            return set()
+        return set(valid_scopes_list)
+    except Exception as e:
+        logger.warning(
+            "Error fetching valid scopes from SOAR: %s. Continuing in offline mode...", e
         )
-    return set(valid_scopes_list)
+        return set()
 
 
 async def bind():
