@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.utils import parse_iso_datetime
 
 # Configure logging
 logger = logging.getLogger("secops-mcp")
@@ -969,21 +970,8 @@ async def create_retrohunt(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Parse time strings to datetime objects if needed
-        if isinstance(start_time, str):
-            start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
-        else:
-            start_dt = start_time
-
-        if isinstance(end_time, str):
-            end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
-        else:
-            end_dt = end_time
-
-        # Ensure timezone awareness
-        if start_dt.tzinfo is None:
-            start_dt = start_dt.replace(tzinfo=timezone.utc)
-        if end_dt.tzinfo is None:
-            end_dt = end_dt.replace(tzinfo=timezone.utc)
+        start_dt = parse_iso_datetime(start_time)
+        end_dt = parse_iso_datetime(end_time)
 
         # Create retrohunt
         retrohunt = chronicle.create_retrohunt(rule_id, start_dt, end_dt)
@@ -1253,21 +1241,8 @@ async def search_rule_alerts(
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
         # Parse time strings to datetime objects
-        if isinstance(start_time, str):
-            start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
-        else:
-            start_dt = start_time
-
-        if isinstance(end_time, str):
-            end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
-        else:
-            end_dt = end_time
-
-        # Ensure timezone awareness
-        if start_dt.tzinfo is None:
-            start_dt = start_dt.replace(tzinfo=timezone.utc)
-        if end_dt.tzinfo is None:
-            end_dt = end_dt.replace(tzinfo=timezone.utc)
+        start_dt = parse_iso_datetime(start_time) if start_time else None
+        end_dt = parse_iso_datetime(end_time) if end_time else None
 
         # Search for rule alerts
         alerts_response = chronicle.search_rule_alerts(

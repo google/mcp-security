@@ -339,3 +339,60 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
     assert "Total Detections: 1" in result
     assert "Rule successfully detected 1 event(s)" in result
 
+
+# =========================================================================
+# Tests for parse_iso_datetime (Issue #291)
+# =========================================================================
+
+def test_parse_iso_datetime_utc():
+    """Test parse_iso_datetime with UTC timestamps ending in Z and z."""
+    from secops_mcp.utils import parse_iso_datetime
+    
+    # Uppercase Z
+    dt1 = parse_iso_datetime("2025-01-20T10:00:00Z")
+    assert dt1 == datetime(2025, 1, 20, 10, 0, 0, tzinfo=timezone.utc)
+    assert dt1.tzinfo == timezone.utc
+    
+    # Lowercase z
+    dt2 = parse_iso_datetime("2025-01-20T10:00:00z")
+    assert dt2 == datetime(2025, 1, 20, 10, 0, 0, tzinfo=timezone.utc)
+    assert dt2.tzinfo == timezone.utc
+
+
+def test_parse_iso_datetime_timezone_offsets():
+    """Test parse_iso_datetime normalizes non-UTC timezone offsets to UTC."""
+    from secops_mcp.utils import parse_iso_datetime
+    
+    # -05:00 offset (12:00 EST = 17:00 UTC)
+    dt_est = parse_iso_datetime("2025-01-20T12:00:00-05:00")
+    assert dt_est == datetime(2025, 1, 20, 17, 0, 0, tzinfo=timezone.utc)
+    assert dt_est.tzinfo == timezone.utc
+    assert dt_est.hour == 17
+    
+    # +02:00 offset (12:00 EET = 10:00 UTC)
+    dt_eet = parse_iso_datetime("2025-01-20T12:00:00+02:00")
+    assert dt_eet == datetime(2025, 1, 20, 10, 0, 0, tzinfo=timezone.utc)
+    assert dt_eet.tzinfo == timezone.utc
+    assert dt_eet.hour == 10
+
+
+def test_parse_iso_datetime_naive_defaults_to_utc():
+    """Test parse_iso_datetime defaults naive ISO strings to UTC."""
+    from secops_mcp.utils import parse_iso_datetime
+    
+    dt = parse_iso_datetime("2025-01-20T10:00:00")
+    assert dt == datetime(2025, 1, 20, 10, 0, 0, tzinfo=timezone.utc)
+    assert dt.tzinfo == timezone.utc
+
+
+def test_parse_iso_datetime_invalid():
+    """Test parse_iso_datetime raises ValueError on invalid inputs."""
+    from secops_mcp.utils import parse_iso_datetime
+    
+    with pytest.raises(ValueError):
+        parse_iso_datetime("invalid-date")
+    
+    with pytest.raises(ValueError):
+        parse_iso_datetime("2025-13-45T99:99:99")
+>>>>>>> 413a018 (fix(secops): standardize ISO datetime parsing and normalize to UTC)
+
