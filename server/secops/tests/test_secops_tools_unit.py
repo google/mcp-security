@@ -46,6 +46,7 @@ from secops_mcp.tools.search import search_udm
 from secops_mcp.tools.udm_search import export_udm_search_csv
 from secops_mcp.tools.security_events import search_security_events
 from secops_mcp.tools.security_rules import get_rule_detections, test_rule as secops_test_rule
+from secops_mcp.tools.ioc_matches import get_ioc_matches
 
 @pytest.fixture
 def mock_chronicle_client():
@@ -54,6 +55,7 @@ def mock_chronicle_client():
     client.search_udm.return_value = {"total_events": 0, "events": []}
     client.fetch_udm_search_csv.return_value = {"csv": {"row": []}}
     client.translate_nl_to_udm.return_value = "metadata.event_type = 'USER_LOGIN'"
+    client.list_iocs.return_value = {"matches": []}
     return client
 
 @pytest.fixture
@@ -61,7 +63,8 @@ def mock_get_client(mock_chronicle_client):
     with patch('secops_mcp.tools.search.get_chronicle_client', return_value=mock_chronicle_client) as m1, \
          patch('secops_mcp.tools.udm_search.get_chronicle_client', return_value=mock_chronicle_client) as m2, \
          patch('secops_mcp.tools.security_events.get_chronicle_client', return_value=mock_chronicle_client) as m3, \
-         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client):
+         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client), \
+         patch('secops_mcp.tools.ioc_matches.get_chronicle_client', return_value=mock_chronicle_client):
         yield mock_chronicle_client
 
 
@@ -338,4 +341,87 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
     # Check output contains detection summary
     assert "Total Detections: 1" in result
     assert "Rule successfully detected 1 event(s)" in result
+
+
+# =========================================================================
+# Tests for get_ioc_matches formatting (Issue #264)
+# =========================================================================
+
+@pytest.mark.asyncio
+async def test_get_ioc_matches_multi_indicator(mock_get_client):
+    """Test get_ioc_matches surfaces all indicator fields (e.g. domain and url)."""
+    mock_get_client.list_iocs.return_value = {
+        "matches": [
+            {
+                "artifactIndicator": {
+                    "domain": "bad-domain.com",
+                    "url": "https://bad-domain.com/malware.exe",
+                },
+                "sources": ["US_CERT", "MANDIANT"],
+                "firstSeenTime": "2025-01-01T00:00:00Z",
+                "lastSeenTime": "2025-01-02T00:00:00Z",
+                "category": "MALWARE",
+                "severity": "HIGH",
+                "confidence": "HIGH",
+                "associatedEntity": "workstation-01",
+            }
+        ]
+    }
+
+    result = await get_ioc_matches()
+
+    assert "Found 1 IoC matches:" in result
+    assert "domain=bad-domain.com" in result or "domain: bad-domain.com" in result
+    assert "url=https://bad-domain.com/malware.exe" in result or "url: https://bad-domain.com/malware.exe" in result
+    assert "First Seen: 2025-01-01T00:00:00Z" in result
+    assert "Last Seen: 2025-01-02T00:00:00Z" in result
+    assert "Category: MALWARE" in result
+    assert "Severity: HIGH" in result
+    assert "Confidence: HIGH" in result
+    assert "Associated Entity: workstation-01" in result or "Associated: workstation-01" in result
+    assert "Sources: US_CERT, MANDIANT" in result
+
+
+@pytest.mark.asyncio
+async def test_get_ioc_matches_snake_case_fields(mock_get_client):
+    """Test get_ioc_matches handles snake_case keys from SDK response."""
+    mock_get_client.list_iocs.return_value = {
+        "matches": [
+            {
+                "artifact_indicator": {
+                    "hash_sha256": "abcdef1234567890",
+                    "file_name": "trojan.exe",
+                },
+                "sources": ["VIRUSTOTAL"],
+                "first_seen_time": "2025-01-10T12:00:00Z",
+                "last_seen_time": "2025-01-11T12:00:00Z",
+                "ioc_category": "TROJAN",
+                "ioc_severity": "CRITICAL",
+                "ioc_confidence": "HIGH",
+                "associated_entity": "host-finance",
+            }
+        ]
+    }
+
+    result = await get_ioc_matches()
+
+    assert "Found 1 IoC matches:" in result
+    assert "hash_sha256" in result and "abcdef1234567890" in result
+    assert "file_name" in result and "trojan.exe" in result
+    assert "First Seen: 2025-01-10T12:00:00Z" in result
+    assert "Last Seen: 2025-01-11T12:00:00Z" in result
+    assert "Category: TROJAN" in result
+    assert "Severity: CRITICAL" in result
+    assert "Confidence: HIGH" in result
+    assert "host-finance" in result
+    assert "Sources: VIRUSTOTAL" in result
+
+
+@pytest.mark.asyncio
+async def test_get_ioc_matches_no_matches(mock_get_client):
+    """Test get_ioc_matches returns friendly message when no matches found."""
+    mock_get_client.list_iocs.return_value = {"matches": []}
+    result = await get_ioc_matches()
+    assert result == "No IoC matches found for the specified time range."
+>>>>>>> 077b983 (fix(secops): surface all indicator fields and metadata in get_ioc_matches)
 
