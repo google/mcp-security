@@ -243,16 +243,18 @@ Before you do this, please consider following
 ### Prerequisites
 
 1. Must have locally run the ADK based agent successfully at least once. Environment variables `GOOGLE_CLOUD_PROJECT` and `GOOGLE_CLOUD_LOCATION` should have valid values.
-2. Must have required APIs enabled and proper IAM access ([details](https://cloud.google.com/run/docs/deploying-source-code#before_you_begin))
+2. Must have the [proper permissions for the identity deploying the server](https://cloud.google.com/run/docs/deploying-source-code#required_roles) (e.g. `roles/run.admin` and `roles/iam.serviceAccountUser` on the deployment project).
+3. Must have the [proper permissions for the Cloud Run runtime service account](https://cloud.google.com/run/docs/configuring/service-accounts) (e.g., the default compute engine service account or a dedicated runtime service account needs `roles/chronicle.viewer` for Chronicle SecOps, `roles/securitycenter.findingsViewer` for SCC, and `roles/aiplatform.user` if using Vertex AI).
+4. Must have required APIs enabled ([details](https://cloud.google.com/run/docs/deploying-source-code#before_you_begin)).
 
 ### Costs
 In addition to Gemini/ Vertex API costs, running agent will incur cloud costs. Please check [Cloud Run Pricing](https://cloud.google.com/run/pricing).
 
-> ⚠️ **WARNING:**  
+> **WARNING:**  
 > It is not recommended to run the a Cloud Run service with unauthenticated invocations enabled (we do that initially for verification). Please follow steps to enable [IAM authentication](https://cloud.google.com/run/docs/authenticating/developers) on your service. You could also deploy it behind the [Identity Aware Proxy (IAP)](https://cloud.google.com/iap/docs/enabling-cloud-run) - but that is out of scope for this documentation.
 
 ### Deployment Steps
-> 🪧 **NOTE:**  
+> **NOTE:**  
 > It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying
 
 ```bash
