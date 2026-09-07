@@ -14,7 +14,9 @@
 """Bindings for the SOAR client."""
 
 import os
+import ssl
 
+import aiohttp
 import dotenv
 from logger_utils import get_logger
 from secops_soar_mcp.http_client import HttpClient
@@ -28,9 +30,23 @@ logger = get_logger(__name__)
 http_client: HttpClient = None
 valid_scopes = set()
 
+_CERTIFICATE_ERROR_MESSAGE = (
+    "Failed to fetch valid scopes from SOAR due to an SSL certificate "
+    "verification error. This is usually a local CA certificate "
+    "configuration issue, not incorrect SOAR credentials. Install the "
+    "certifi CA bundle, e.g. run Python's `Install Certificates.command` "
+    "(macOS) or point SSL_CERT_FILE at the output of `python -m certifi`. "
+    "See the 'Troubleshooting' section in README.md or setup notes in "
+    "docs/usage_guide.md for setup steps. "
+    "Shutting down..."
+)
+
 
 async def _get_valid_scopes():
-    valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
+    try:
+        valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
+    except (ssl.SSLError, aiohttp.ClientSSLError) as e:
+        raise RuntimeError(_CERTIFICATE_ERROR_MESSAGE) from e
     if valid_scopes_list is None:
         raise RuntimeError(
             "Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down..."

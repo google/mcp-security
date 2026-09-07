@@ -14,6 +14,7 @@
 """HTTP client for making requests to the SecOps SOAR API."""
 
 import json
+import ssl
 from typing import Any, Dict
 
 import aiohttp
@@ -64,6 +65,10 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None
@@ -95,6 +100,10 @@ class HttpClient:
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None
@@ -124,6 +133,10 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None

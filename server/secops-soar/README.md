@@ -119,6 +119,22 @@ $Env:SOAR_APP_KEY = "your-soar-app-key"
 $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
+## Troubleshooting
+
+If the server shuts down at startup with an error like `Failed to fetch valid
+scopes from SOAR due to an SSL certificate verification error`, this is a
+local CA certificate problem, not incorrect `SOAR_URL`/`SOAR_APP_KEY` values.
+Install the certifi CA bundle:
+
+- **macOS:** run `Install Certificates.command` from your Python install,
+  e.g. `/Applications/Python\ 3.12/Install\ Certificates.command` (match the
+  Python minor version you're running).
+- **Linux/Windows:** point `SSL_CERT_FILE` at the certifi bundle, e.g.
+  `export SSL_CERT_FILE=$(python -m certifi)` (or the PowerShell equivalent
+  `$Env:SSL_CERT_FILE = (python -m certifi)`).
+
+See `docs/usage_guide.md` for further details.
+
 ## Requirements
 
 -   Python 3.11+
