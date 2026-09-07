@@ -87,3 +87,19 @@ async def test_get_valid_scopes_still_blames_credentials_when_no_data():
         await bindings._get_valid_scopes()
 
     assert "credentials" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_get_valid_scopes_reports_certificate_issue_on_client_ssl_error():
+    conn_key = aiohttp.client_reqrep.ConnectionKey("example.com", 443, True, True, None, None, None)
+    client_ssl_err = aiohttp.ClientSSLError(conn_key, OSError("handshake failed"))
+    with (
+        mock.patch.object(
+            bindings,
+            "http_client",
+            new=mock.AsyncMock(get=mock.AsyncMock(side_effect=client_ssl_err)),
+        ),
+        pytest.raises(RuntimeError) as exc_info,
+    ):
+        await bindings._get_valid_scopes()
+    assert "certificate" in str(exc_info.value).lower()

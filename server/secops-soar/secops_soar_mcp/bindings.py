@@ -16,6 +16,7 @@
 import os
 import ssl
 
+import aiohttp
 import dotenv
 from logger_utils import get_logger
 from secops_soar_mcp.http_client import HttpClient
@@ -35,8 +36,8 @@ _CERTIFICATE_ERROR_MESSAGE = (
     "configuration issue, not incorrect SOAR credentials. Install the "
     "certifi CA bundle, e.g. run Python's `Install Certificates.command` "
     "(macOS) or point SSL_CERT_FILE at the output of `python -m certifi`. "
-    "See the 'Additionally, for the secops-soar MCP server...' note in "
-    "README.md / docs/usage_guide.md for the exact setup steps. "
+    "See the 'Troubleshooting' section in README.md or setup notes in "
+    "docs/usage_guide.md for setup steps. "
     "Shutting down..."
 )
 
@@ -44,7 +45,7 @@ _CERTIFICATE_ERROR_MESSAGE = (
 async def _get_valid_scopes():
     try:
         valid_scopes_list = await http_client.get(consts.Endpoints.GET_SCOPES)
-    except ssl.SSLError as e:
+    except (ssl.SSLError, aiohttp.ClientSSLError) as e:
         raise RuntimeError(_CERTIFICATE_ERROR_MESSAGE) from e
     if valid_scopes_list is None:
         raise RuntimeError(
