@@ -58,13 +58,15 @@ async def test_http_client_get_swallows_generic_connection_error():
 
 @pytest.mark.asyncio
 async def test_get_valid_scopes_reports_certificate_issue_not_credentials():
-    with mock.patch.object(
-        bindings,
-        "http_client",
-        new=mock.AsyncMock(get=mock.AsyncMock(side_effect=ssl.SSLCertVerificationError())),
+    with (
+        mock.patch.object(
+            bindings,
+            "http_client",
+            new=mock.AsyncMock(get=mock.AsyncMock(side_effect=ssl.SSLCertVerificationError())),
+        ),
+        pytest.raises(RuntimeError) as exc_info,
     ):
-        with pytest.raises(RuntimeError) as exc_info:
-            await bindings._get_valid_scopes()
+        await bindings._get_valid_scopes()
 
     message = str(exc_info.value)
     assert "certifi" in message.lower()
@@ -74,12 +76,14 @@ async def test_get_valid_scopes_reports_certificate_issue_not_credentials():
 
 @pytest.mark.asyncio
 async def test_get_valid_scopes_still_blames_credentials_when_no_data():
-    with mock.patch.object(
-        bindings,
-        "http_client",
-        new=mock.AsyncMock(get=mock.AsyncMock(return_value=None)),
+    with (
+        mock.patch.object(
+            bindings,
+            "http_client",
+            new=mock.AsyncMock(get=mock.AsyncMock(return_value=None)),
+        ),
+        pytest.raises(RuntimeError) as exc_info,
     ):
-        with pytest.raises(RuntimeError) as exc_info:
-            await bindings._get_valid_scopes()
+        await bindings._get_valid_scopes()
 
     assert "credentials" in str(exc_info.value).lower()

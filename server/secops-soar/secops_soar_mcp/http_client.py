@@ -65,7 +65,7 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
-        except ssl.SSLError:
+        except (ssl.SSLError, aiohttp.ClientSSLError):
             # Don't mask certificate configuration problems as a plain
             # "no data" result; callers need to see and report on these.
             raise
@@ -100,7 +100,7 @@ class HttpClient:
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
-        except ssl.SSLError:
+        except (ssl.SSLError, aiohttp.ClientSSLError):
             # Don't mask certificate configuration problems as a plain
             # "no data" result; callers need to see and report on these.
             raise
@@ -133,7 +133,7 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
-        except ssl.SSLError:
+        except (ssl.SSLError, aiohttp.ClientSSLError):
             # Don't mask certificate configuration problems as a plain
             # "no data" result; callers need to see and report on these.
             raise

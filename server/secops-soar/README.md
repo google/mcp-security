@@ -131,7 +131,7 @@ Install the certifi CA bundle:
   Python minor version you're running).
 - **Linux/Windows:** point `SSL_CERT_FILE` at the certifi bundle, e.g.
   `export SSL_CERT_FILE=$(python -m certifi)` (or the PowerShell equivalent
-  `$Env:SSL_CERT_FILE = python -m certifi`).
+  `$Env:SSL_CERT_FILE = (python -m certifi)`).
 
 See `docs/usage_guide.md` for further details.
 
