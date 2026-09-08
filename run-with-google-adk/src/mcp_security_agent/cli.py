@@ -40,11 +40,50 @@ def info():
     console.print(f"SecOps SOAR MCP: {'[green]Enabled[/green]' if settings.load_secops_soar_mcp else '[dim]Disabled[/dim]'}")
 
 
+def _display_active_toolsets(settings: AgentSettings) -> None:
+    enabled_tools = []
+    if settings.load_secops_mcp:
+        enabled_tools.append("SecOps SIEM")
+    if settings.load_scc_mcp:
+        enabled_tools.append("SCC")
+    if settings.load_gti_mcp:
+        enabled_tools.append("GTI")
+    if settings.load_secops_soar_mcp:
+        enabled_tools.append("SecOps SOAR")
+
+    if not enabled_tools:
+        console.print(
+            "[bold yellow]Warning:[/bold yellow] No MCP tools are currently enabled.\n"
+            "Enable tools using environment variables (e.g. [cyan]LOAD_SECOPS_MCP=Y[/cyan]), "
+            "CLI flags ([cyan]--secops[/cyan], [cyan]--scc[/cyan]), or [cyan].env[/cyan].\n"
+        )
+    else:
+        console.print(f"[bold green]Active MCP Toolsets:[/bold green] {', '.join(enabled_tools)}\n")
+
+
 @app.command()
 def chat(
     query: Optional[str] = typer.Argument(None, help="Optional single-turn investigation query to execute"),
+    secops: Optional[bool] = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
+    scc: Optional[bool] = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
+    gti: Optional[bool] = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
+    soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
 ):
     """Start an interactive terminal chat session with the SOC agent powered by ADK v2."""
+    import os
+
+    if secops is not None:
+        os.environ["LOAD_SECOPS_MCP"] = "Y" if secops else "N"
+    if scc is not None:
+        os.environ["LOAD_SCC_MCP"] = "Y" if scc else "N"
+    if gti is not None:
+        os.environ["LOAD_GTI_MCP"] = "Y" if gti else "N"
+    if soar is not None:
+        os.environ["LOAD_SECOPS_SOAR_MCP"] = "Y" if soar else "N"
+
+    settings = AgentSettings()
+    _display_active_toolsets(settings)
+
     try:
         from google.adk.cli.cli import run_cli, run_once_cli
     except (ImportError, ModuleNotFoundError):
@@ -79,8 +118,26 @@ def chat(
 def serve(
     host: str = typer.Option("0.0.0.0", help="Host address to bind"),
     port: int = typer.Option(8080, help="Port to listen on"),
+    secops: Optional[bool] = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
+    scc: Optional[bool] = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
+    gti: Optional[bool] = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
+    soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
 ):
     """Run the FastAPI web server and Cloud Run REST API."""
+    import os
+
+    if secops is not None:
+        os.environ["LOAD_SECOPS_MCP"] = "Y" if secops else "N"
+    if scc is not None:
+        os.environ["LOAD_SCC_MCP"] = "Y" if scc else "N"
+    if gti is not None:
+        os.environ["LOAD_GTI_MCP"] = "Y" if gti else "N"
+    if soar is not None:
+        os.environ["LOAD_SECOPS_SOAR_MCP"] = "Y" if soar else "N"
+
+    settings = AgentSettings()
+    _display_active_toolsets(settings)
+
     import uvicorn
     from mcp_security_agent.server.app import create_app
 

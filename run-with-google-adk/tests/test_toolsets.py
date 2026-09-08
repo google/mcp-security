@@ -1,5 +1,6 @@
 """Unit tests for mcp_security_agent.toolsets."""
 
+import os
 import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
@@ -25,15 +26,19 @@ from mcp_security_agent.toolsets import build_mcp_toolsets
 
 
 def test_build_toolsets_none_enabled():
-    settings = AgentSettings()
-    toolsets = build_mcp_toolsets(settings)
-    assert toolsets == []
+    mock_mcp_toolset_mod.reset_mock()
+    with patch.dict(os.environ, {}, clear=True):
+        settings = AgentSettings(_env_file=None)
+        toolsets = build_mcp_toolsets(settings)
+        assert toolsets == []
 
 
 def test_build_toolsets_stdio_secops_and_scc():
-    settings = AgentSettings(LOAD_SECOPS_MCP="Y", LOAD_SCC_MCP="Y")
+    mock_mcp_toolset_mod.reset_mock()
     mock_mcp_toolset_mod.McpToolset = MagicMock(side_effect=lambda connection_params: f"Toolset({connection_params})")
     
-    toolsets = build_mcp_toolsets(settings)
-    assert len(toolsets) == 2
-    assert mock_mcp_toolset_mod.StdioConnectionParams.call_count == 2
+    with patch.dict(os.environ, {}, clear=True):
+        settings = AgentSettings(_env_file=None, LOAD_SECOPS_MCP="Y", LOAD_SCC_MCP="Y")
+        toolsets = build_mcp_toolsets(settings)
+        assert len(toolsets) == 2
+        assert mock_mcp_toolset_mod.StdioConnectionParams.call_count == 2

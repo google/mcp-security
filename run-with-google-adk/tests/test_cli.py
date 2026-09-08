@@ -37,3 +37,16 @@ def test_cli_chat_query():
     with patch.dict("sys.modules", {"google.adk.cli.cli": mock_adk_cli}):
         result = runner.invoke(app, ["chat", "list 1 page of rules"])
         assert result.exit_code == 0
+
+
+def test_cli_chat_tool_flags():
+    mock_adk_cli = MagicMock()
+    async def fake_run_once(*args, **kwargs):
+        return 0
+    mock_adk_cli.run_once_cli = fake_run_once
+
+    with patch.dict("sys.modules", {"google.adk.cli.cli": mock_adk_cli}):
+        result = runner.invoke(app, ["chat", "--secops", "test query"])
+        assert result.exit_code == 0
+        assert "Active MCP Toolsets:" in result.stdout
+        assert "SecOps SIEM" in result.stdout

@@ -14,11 +14,12 @@ from mcp_security_agent.config import AgentSettings
 
 
 def test_default_settings():
-    settings = AgentSettings()
-    assert settings.google_model == "gemini-2.5-flash"
-    assert settings.stdio_timeout_seconds == 60.0
-    assert settings.minimal_logging is False
-    assert settings.load_secops_mcp is False
+    with patch.dict(os.environ, {}, clear=True):
+        settings = AgentSettings(_env_file=None)
+        assert settings.google_model == "gemini-2.5-flash"
+        assert settings.stdio_timeout_seconds == 60.0
+        assert settings.minimal_logging is False
+        assert settings.load_secops_mcp is False
 
 
 def test_env_override_settings():
@@ -33,7 +34,7 @@ def test_env_override_settings():
         },
         clear=True,
     ):
-        settings = AgentSettings()
+        settings = AgentSettings(_env_file=None)
         assert settings.google_model == "gemini-2.5-pro"
         assert settings.load_secops_mcp is True
         assert settings.load_scc_mcp is True

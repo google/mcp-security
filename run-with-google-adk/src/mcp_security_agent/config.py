@@ -13,15 +13,23 @@
 # limitations under the License.
 """Centralized configuration and settings for MCP Security Agent."""
 
+from pathlib import Path
 from typing import Optional
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_pkg_dir = Path(__file__).resolve().parents[2]
+_env_files = (
+    ".env",
+    str(_pkg_dir / ".env"),
+    str(_pkg_dir.parent / ".env"),
+)
 
 
 class AgentSettings(BaseSettings):
     """Configuration settings loaded from environment variables or .env file."""
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_env_files,
         env_file_encoding="utf-8",
         extra="ignore",
         populate_by_name=True,
