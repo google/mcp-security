@@ -160,5 +160,18 @@ def test_no_emojis_in_web_app_and_stream():
                 assert char in ("`", "^", "~", "<", ">", "+", "=", "|", "•"), f"Unexpected emoji/symbol in stream: {char!r}"
 
 
+def test_scroll_and_layout_constraints():
+    client = TestClient(create_app())
+    resp = client.get("/static/app.css")
+    assert resp.status_code == 200
+    css = resp.text
 
-
+    # Ensure body is constrained to viewport height to avoid pushing input offscreen
+    assert "max-height: 100vh" in css or "height: 100vh" in css
+    # Ensure layout and workspace flex items allow shrinking
+    assert "min-height: 0" in css
+    # Ensure messages container scrolls vertically
+    assert "overflow-y: auto" in css
+    # Ensure custom scrollbar rules are defined for visibility
+    assert "scrollbar-width: thin" in css
+    assert "::-webkit-scrollbar" in css
