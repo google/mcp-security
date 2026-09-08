@@ -52,15 +52,16 @@ def test_cli_chat_tool_flags():
 
     with patch.dict(os.environ, {}, clear=True):
         with patch.dict("sys.modules", {"google.adk.cli.cli": mock_adk_cli}):
-            result = runner.invoke(app, ["chat", "--secops", "test query"])
+            result = runner.invoke(app, ["chat", "--secops", "--no-scc", "test query"])
             assert result.exit_code == 0
             assert "Active MCP Toolsets:" in result.stdout
             assert "SecOps SIEM" in result.stdout
             assert len(agent_mod.root_agent.tools) == 1
             assert sys.modules["mcp_security_agent"].root_agent == agent_mod.root_agent
 
-            result_no_secops = runner.invoke(app, ["chat", "--no-secops", "test query"])
+            result_no_secops = runner.invoke(app, ["chat", "--no-secops", "--no-scc", "test query"])
             assert result_no_secops.exit_code == 0
             assert "No MCP tools are currently enabled" in result_no_secops.stdout
             assert len(agent_mod.root_agent.tools) == 0
+
 

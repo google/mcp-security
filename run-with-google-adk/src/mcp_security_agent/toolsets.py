@@ -47,6 +47,49 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
         logger.warning("google.adk.tools.mcp_tool not available; using mock/fallback toolset representation.")
         return toolsets
 
+    def _build_stdio_env() -> dict[str, str]:
+        """Constructs environment dictionary for Stdio subprocesses with credential and project isolation."""
+        import os
+        env = dict(os.environ)
+
+        # Propagate local ADC and CloudSDK config
+        if settings.google_application_credentials:
+            env["GOOGLE_APPLICATION_CREDENTIALS"] = settings.google_application_credentials
+            if "CLOUDSDK_CONFIG" not in env:
+                env["CLOUDSDK_CONFIG"] = str(Path(settings.google_application_credentials).parent)
+
+        # Propagate Chronicle SIEM & GCP credentials
+        target_project = (
+            settings.chronicle_project_id
+            or settings.google_cloud_project
+            or os.environ.get("GOOGLE_CLOUD_PROJECT")
+            or os.environ.get("GCP_PROJECT_ID")
+        )
+        if target_project:
+            env["CHRONICLE_PROJECT_ID"] = target_project
+            env["GOOGLE_CLOUD_PROJECT"] = target_project
+        if settings.chronicle_customer_id:
+            env["CHRONICLE_CUSTOMER_ID"] = settings.chronicle_customer_id
+        if settings.chronicle_region:
+            env["CHRONICLE_REGION"] = settings.chronicle_region
+
+        # Propagate GTI / SOAR params if set
+        if settings.vt_apikey:
+            env["VT_APIKEY"] = settings.vt_apikey
+        if settings.soar_url:
+            env["SOAR_URL"] = settings.soar_url
+        if settings.soar_app_key:
+            env["SOAR_APP_KEY"] = settings.soar_app_key
+
+        # Cloudtop mTLS bypass
+        env["GOOGLE_API_USE_CLIENT_CERTIFICATE"] = "false"
+        env["GOOGLE_API_USE_MTLS_ENDPOINT"] = "never"
+        env["CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE"] = "false"
+
+        return env
+
+    stdio_env = _build_stdio_env()
+
     # 1. Google SecOps SIEM MCP
     if settings.load_secops_mcp:
         if settings.secops_mcp_url:
@@ -58,6 +101,7 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
                 server_params=StdioServerParameters(
                     command="uv",
                     args=["--directory", str(secops_dir), "run", "secops_mcp/server.py"],
+                    env=stdio_env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -74,6 +118,7 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
                 server_params=StdioServerParameters(
                     command="uv",
                     args=["--directory", str(scc_dir), "run", "scc_mcp.py"],
+                    env=stdio_env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -90,6 +135,7 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
                 server_params=StdioServerParameters(
                     command="uv",
                     args=["--directory", str(gti_dir), "run", "gti_mcp/server.py"],
+                    env=stdio_env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -106,9 +152,11 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
                 server_params=StdioServerParameters(
                     command="uv",
                     args=["--directory", str(soar_dir), "run", "secops_soar_mcp/server.py"],
+                    env=stdio_env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
             toolsets.append(McpToolset(connection_params=conn))
 
     return toolsets
+
