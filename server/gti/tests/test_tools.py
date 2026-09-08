@@ -289,7 +289,7 @@ async def test_get_reports(
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
             },
             {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
-        ),   
+        ),
         (
             "get_entities_related_to_an_ip_address",
             {"ip_address": "8.8.8.8", "relationship_name": "associations", "descriptors_only": "True"},
@@ -371,6 +371,84 @@ async def test_get_entities_related(
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
+        "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response", "expected",
+    ],
+    argvalues=[
+        (
+            {
+                "hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+                "relationship_name": "behaviours",
+                "descriptors_only": "False",
+            },
+            "/api/v3/files/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/behaviours",
+            {
+                "exclude_attributes": ",".join(tools.FILE_BEHAVIOUR_EXCLUDED_ATTRS),
+            },
+            {
+                "data": [{
+                    "type": "file-behaviour",
+                    "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
+                    "attributes": {"sandbox_name": "VirusTotal Jujubox"},
+                }],
+            },
+            {
+                "type": "file-behaviour",
+                "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f_VirusTotal Jujubox",
+                "attributes": {"sandbox_name": "VirusTotal Jujubox"},
+            },
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_with_params_mock")
+async def test_get_entities_related_to_a_file_sends_exclude_attributes(
+    vt_get_object_with_params_mock,
+    tool_arguments,
+    expected,
+):
+    """`get_entities_related_to_a_file` must always request `exclude_attributes`
+    for FILE_BEHAVIOUR_EXCLUDED_ATTRS, so the API omits noisy fields instead of
+    fetching and stripping them client-side."""
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "get_entities_related_to_a_file", arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        assert isinstance(result.content[0], mcp.types.TextContent)
+        assert json.loads(result.content[0].text) == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_get_entities_related_to_a_file_invalid_relationship():
+    """An unknown relationship_name must return a clean error dict rather
+    than crash the tool's structured-output validation. The return type is
+    Union[List[Dict], Dict[str, str]] specifically so this error path (which
+    returns a bare dict) is a valid response shape."""
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "get_entities_related_to_a_file",
+            arguments={
+                "hash": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+                "relationship_name": "not_a_real_relationship",
+                "descriptors_only": "True",
+            },
+        )
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == False
+        assert len(result.content) == 1
+        content = json.loads(result.content[0].text)
+        assert content["error"] == (
+            "Relationship not_a_real_relationship does not exist. "
+            f"Available relationships are: {','.join(tools.FILE_RELATIONSHIPS)}"
+        )
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
         "tool_name", "tool_arguments", "vt_endpoint", "vt_object_response", "expected",
     ],
     argvalues=[
@@ -382,7 +460,20 @@ async def test_get_entities_related(
                 "data": {"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}},
             },
             {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}}
-        ), 
+        ),
+        (
+            "get_file_behavior_summary",
+            {"hash": "375a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"},
+            "/api/v3/files/375a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f/behaviour_summary",
+            {
+                "data": {
+                    "calls_highlighted": ["GetTickCount"],
+                    "tags": ["evil"],
+                    "files_opened": ["C:\\evil.txt"],
+                },
+            },
+            {"calls_highlighted": ["GetTickCount"]}
+        ),
         (
             "get_collection_timeline_events",
             {"id": "collection_id"},
@@ -629,10 +720,12 @@ async def test_get_simple_tools(
             {"query": "APT44"},
             "/api/v3/collections",
             {
-                "filter": "collection_type:vulnerability APT44", 
+                "filter": "collection_type:vulnerability APT44",
                 "order": "relevance-",
                 "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
-                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+                "exclude_attributes": ",".join(
+                    [tools.COLLECTION_EXCLUDED_ATTRS, *tools.VULNERABILITY_EXCLUDED_ATTRS]
+                ),
             },
             {
                 "data": [{
@@ -775,6 +868,14 @@ async def test_get_collection_feature_matches(
                                         "total_related": 1,
                                         "prevalence": 1.0
                                     }
+                                ],
+                                "first_submission_dates": [
+                                    {
+                                        "value": "2024-01-01",
+                                        "count": 5,
+                                        "total_related": 5,
+                                        "prevalence": 1.0
+                                    }
                                 ]
                             }
                         }
@@ -784,8 +885,8 @@ async def test_get_collection_feature_matches(
             (
                 "# Commonalities for 67869ffd5a02cfc31584dfcf9b7516e7f443cbd1d8cfae4436b5cc38c9fdecf6\n\n"
                 "## files commonalities\n\n"
-                "### itw urls\n"
-                "- 1 matches of https://pcsdl.com/short-url-v2/000585065547/scenario/f91705e56983ba3c3cd940d62bc2ed35___158e5ef2-6f0f-46fd-b1b7-feaa02550432.vbs?protocol=https with a prevalence of 1\n\n"
+                "### first submission dates\n"
+                "- 5 matches of 2024-01-01 with a prevalence of 1\n\n"
             )
         ),
     ],
@@ -810,6 +911,42 @@ async def test_get_collections_commonalities(
         assert isinstance(result.content[0], mcp.types.TextContent)
         assert isinstance(result.content[0].text, str)
         assert result.content[0].text == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    argnames=[
+        "tool_arguments", "vt_endpoint", "vt_request_params", "vt_object_response",
+    ],
+    argvalues=[
+        (
+            {"collection_id": "does-not-exist"},
+            "/api/v3/collections/does-not-exist",
+            {"attributes": "aggregations"},
+            {"error": {"code": "NotFoundError", "message": "Collection \"does-not-exist\" not found"}},
+        ),
+    ],
+    indirect=["vt_endpoint", "vt_request_params", "vt_object_response"],
+)
+@pytest.mark.usefixtures("vt_get_object_with_params_mock")
+async def test_get_collections_commonalities_api_error(
+    vt_get_object_with_params_mock,
+    tool_arguments,
+):
+    """Current behavior: when the API response has no 'data' key (e.g. an
+    invalid/nonexistent collection_id), `get_collections_commonalities`
+    crashes with a raw KeyError surfaced as a tool execution error, since it
+    indexes `data["data"]` without checking for the key first."""
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "get_collections_commonalities", arguments=tool_arguments)
+        assert isinstance(result, mcp.types.CallToolResult)
+        assert result.isError == True
+        assert len(result.content) == 1
+        assert result.content[0].text == (
+            "Error executing tool get_collections_commonalities: 'data'"
+        )
 
 
 @pytest.mark.asyncio(loop_scope="session")
@@ -1396,7 +1533,38 @@ async def test_get_collection_rules_partial_error():
     mock_client_instance.get_async.side_effect = mock_get_async
     mock_vt_client = MagicMock()
     mock_vt_client.__aenter__.return_value = mock_client_instance
-    
+
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
     assert result == []
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_get_collection_rules_explicit_null_rule_types():
+    """Calling `get_collection_rules` over the real MCP protocol with an
+    explicit `rule_types: null` must not fail schema validation. The
+    parameter is typed `Optional[List[str]]` specifically to allow this --
+    a plain `List[str] = None` annotation accepts an omitted/defaulted field
+    but rejects an explicit null with a pydantic validation error."""
+    mock_client_instance = AsyncMock()
+
+    async def mock_get_async(url, **kwargs):
+        mock_resp = MagicMock()
+        async def json_async():
+            return {"data": {"attributes": {"aggregations": {"files": {}}}}}
+        mock_resp.json_async = json_async
+        return mock_resp
+
+    mock_client_instance.get_async.side_effect = mock_get_async
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__.return_value = mock_client_instance
+
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "get_collection_rules",
+                arguments={"collection_id": "test_id", "top_n": 4, "rule_types": None},
+            )
+            assert isinstance(result, mcp.types.CallToolResult)
+            assert not result.isError
+            assert result.structuredContent == {"result": []}

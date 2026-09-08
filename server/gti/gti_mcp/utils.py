@@ -116,6 +116,36 @@ async def fetch_object_relationships(
   return data
 
 
+def remove_fields(
+    data: typing.Any, field_paths: typing.List[str]
+) -> typing.Any:
+  """Removes the given dotted-path fields from a dict, in place.
+
+  Args:
+    data: The dict to strip fields from (no-op for other types).
+    field_paths: Dotted paths (e.g. "attributes.tags") identifying the
+      fields to remove.
+  Returns:
+    The same object passed in `data`, with the fields removed.
+  """
+  if not isinstance(data, dict) or not field_paths:
+    return data
+
+  for path in field_paths:
+    keys = path.split(".")
+    obj = data
+    for key in keys[:-1]:
+      if isinstance(obj, dict) and key in obj:
+        obj = obj[key]
+      else:
+        obj = None
+        break
+    if isinstance(obj, dict):
+      obj.pop(keys[-1], None)
+
+  return data
+
+
 def sanitize_response(data: typing.Any) -> typing.Any:
   """Removes empty dictionaries and lists recursively from a response."""
   if isinstance(data, dict):
