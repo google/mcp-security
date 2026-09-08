@@ -65,3 +65,57 @@ def test_cli_chat_tool_flags():
             assert len(agent_mod.root_agent.tools) == 0
 
 
+def test_cli_chat_config_flags():
+    import os
+    import mcp_security_agent.agent as agent_mod
+    mock_adk_cli = MagicMock()
+    async def fake_run_once(*args, **kwargs):
+        return 0
+    mock_adk_cli.run_once_cli = fake_run_once
+
+    with patch.dict(os.environ, {}, clear=True):
+        with patch.dict("sys.modules", {"google.adk.cli.cli": mock_adk_cli}):
+            result = runner.invoke(app, [
+                "chat",
+                "--vertex",
+                "--model", "gemini-2.5-pro",
+                "--project", "test-project-123",
+                "--customer-id", "cust-uuid-456",
+                "test query"
+            ])
+            assert result.exit_code == 0
+            assert os.environ["GOOGLE_GENAI_USE_VERTEXAI"] == "TRUE"
+            assert os.environ["GOOGLE_MODEL"] == "gemini-2.5-pro"
+            assert os.environ["GOOGLE_CLOUD_PROJECT"] == "test-project-123"
+            assert os.environ["CHRONICLE_PROJECT_ID"] == "test-project-123"
+            assert os.environ["CHRONICLE_CUSTOMER_ID"] == "cust-uuid-456"
+            assert agent_mod.root_agent.model == "gemini-2.5-pro"
+
+
+def test_cli_serve_command():
+    import os
+    mock_uvicorn = MagicMock()
+    with patch.dict(os.environ, {"PORT": "9090"}, clear=True):
+        with patch.dict("sys.modules", {"uvicorn": mock_uvicorn}):
+            result = runner.invoke(app, ["serve"])
+            assert result.exit_code == 0
+            assert "Starting MCP Security Agent server on 0.0.0.0:9090" in result.stdout
+            mock_uvicorn.run.assert_called_once()
+            _, kwargs = mock_uvicorn.run.call_args
+            assert kwargs["port"] == 9090
+
+    mock_uvicorn.reset_mock()
+    with patch.dict(os.environ, {}, clear=True):
+        with patch.dict("sys.modules", {"uvicorn": mock_uvicorn}):
+            result = runner.invoke(app, ["serve", "--port", "7070", "--reload"])
+            assert result.exit_code == 0
+            assert "Starting MCP Security Agent server on 0.0.0.0:7070" in result.stdout
+            mock_uvicorn.run.assert_called_once()
+            args, kwargs = mock_uvicorn.run.call_args
+            assert args[0] == "mcp_security_agent.server.app:create_app"
+            assert kwargs["factory"] is True
+            assert kwargs["port"] == 7070
+            assert kwargs["reload"] is True
+
+
+

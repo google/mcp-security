@@ -20,9 +20,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _pkg_dir = Path(__file__).resolve().parents[2]
 _env_files = (
-    ".env",
-    str(_pkg_dir / ".env"),
     str(_pkg_dir.parent / ".env"),
+    str(_pkg_dir / ".env"),
+    ".env",
 )
 
 
@@ -113,11 +113,15 @@ class AgentSettings(BaseSettings):
         if "CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE" not in os.environ:
             os.environ["CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE"] = "false"
 
+        if self.google_api_key and not os.environ.get("GOOGLE_API_KEY"):
+            os.environ["GOOGLE_API_KEY"] = self.google_api_key
+
         target_project = self.google_cloud_project or os.environ.get("GCP_PROJECT_ID")
-        if target_project and not os.environ.get("GOOGLE_API_KEY"):
+        if target_project and not os.environ.get("GOOGLE_CLOUD_PROJECT"):
+            os.environ["GOOGLE_CLOUD_PROJECT"] = target_project
+
+        if self.use_vertex_ai or (target_project and not self.google_api_key and not os.environ.get("GOOGLE_API_KEY")):
             os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "TRUE"
-            if not os.environ.get("GOOGLE_CLOUD_PROJECT"):
-                os.environ["GOOGLE_CLOUD_PROJECT"] = target_project
 
     
     # Chronicle SIEM Params

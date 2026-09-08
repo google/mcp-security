@@ -58,16 +58,30 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
             if "CLOUDSDK_CONFIG" not in env:
                 env["CLOUDSDK_CONFIG"] = str(Path(settings.google_application_credentials).parent)
 
-        # Propagate Chronicle SIEM & GCP credentials
-        target_project = (
-            settings.chronicle_project_id
-            or settings.google_cloud_project
+        # Propagate credentials & impersonation
+        if settings.secops_sa_path:
+            env["SECOPS_SA_PATH"] = settings.secops_sa_path
+        if settings.secops_impersonate_service_account:
+            env["SECOPS_IMPERSONATE_SERVICE_ACCOUNT"] = settings.secops_impersonate_service_account
+
+        # Propagate GCP Project (for SCC, Vertex AI, and general Cloud SDK)
+        gcp_project = (
+            settings.google_cloud_project
             or os.environ.get("GOOGLE_CLOUD_PROJECT")
             or os.environ.get("GCP_PROJECT_ID")
+            or settings.chronicle_project_id
         )
-        if target_project:
-            env["CHRONICLE_PROJECT_ID"] = target_project
-            env["GOOGLE_CLOUD_PROJECT"] = target_project
+        if gcp_project:
+            env["GOOGLE_CLOUD_PROJECT"] = gcp_project
+
+        # Propagate Chronicle SIEM Project (independent from SCC/GCP project)
+        chronicle_project = (
+            settings.chronicle_project_id
+            or gcp_project
+        )
+        if chronicle_project:
+            env["CHRONICLE_PROJECT_ID"] = chronicle_project
+
         if settings.chronicle_customer_id:
             env["CHRONICLE_CUSTOMER_ID"] = settings.chronicle_customer_id
         if settings.chronicle_region:
@@ -82,9 +96,9 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
             env["SOAR_APP_KEY"] = settings.soar_app_key
 
         # Cloudtop mTLS bypass
-        env["GOOGLE_API_USE_CLIENT_CERTIFICATE"] = "false"
-        env["GOOGLE_API_USE_MTLS_ENDPOINT"] = "never"
-        env["CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE"] = "false"
+        env.setdefault("GOOGLE_API_USE_CLIENT_CERTIFICATE", "false")
+        env.setdefault("GOOGLE_API_USE_MTLS_ENDPOINT", "never")
+        env.setdefault("CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE", "false")
 
         return env
 

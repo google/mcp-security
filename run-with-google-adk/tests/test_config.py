@@ -98,3 +98,25 @@ def test_tool_explicit_override_overrules_credentials():
         assert settings.load_gti_mcp is False
         assert settings.load_secops_soar_mcp is False
         assert settings.load_secops_mcp is False
+
+
+def test_bootstrap_environment_with_api_key_preserves_gemini_api():
+    with patch.dict(os.environ, {"GOOGLE_API_KEY": "AIzaSyTestKey123", "GOOGLE_CLOUD_PROJECT": "my-gcp-proj"}, clear=True):
+        settings = AgentSettings(_env_file=None)
+        assert settings.google_api_key == "AIzaSyTestKey123"
+        assert os.environ.get("GOOGLE_GENAI_USE_VERTEXAI") is None
+        assert os.environ.get("GOOGLE_API_KEY") == "AIzaSyTestKey123"
+
+
+def test_bootstrap_environment_vertex_ai_default():
+    with patch.dict(os.environ, {"GOOGLE_CLOUD_PROJECT": "my-gcp-proj"}, clear=True):
+        settings = AgentSettings(_env_file=None)
+        assert os.environ.get("GOOGLE_GENAI_USE_VERTEXAI") == "TRUE"
+        assert os.environ.get("GOOGLE_CLOUD_PROJECT") == "my-gcp-proj"
+
+
+def test_env_files_precedence_order():
+    from mcp_security_agent.config import _env_files
+    # Local .env must come after parent .env so pydantic-settings gives it higher precedence
+    assert _env_files[-1] == ".env"
+

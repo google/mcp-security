@@ -118,10 +118,10 @@ The agent reads configuration from environment variables and an optional `.env` 
 
 ```properties
 # Google Cloud & LLM Settings
-GOOGLE_CLOUD_PROJECT=your-gcp-project-id
+GOOGLE_CLOUD_PROJECT=
 GOOGLE_CLOUD_LOCATION=us-central1
 GOOGLE_GENAI_USE_VERTEXAI=False
-GOOGLE_API_KEY=your-gemini-api-key
+GOOGLE_API_KEY=
 GOOGLE_MODEL=gemini-2.5-flash
 
 # MCP Server Enablement Flags
@@ -138,8 +138,8 @@ GOOGLE_APPLICATION_CREDENTIALS=
 SECOPS_IMPERSONATE_SERVICE_ACCOUNT=
 
 # Google SecOps (Chronicle SIEM) Settings - Populating enables SecOps MCP
-CHRONICLE_PROJECT_ID=your-chronicle-project-id
-CHRONICLE_CUSTOMER_ID=your-chronicle-customer-id
+CHRONICLE_PROJECT_ID=
+CHRONICLE_CUSTOMER_ID=
 CHRONICLE_REGION=us
 
 # Google Threat Intelligence (GTI / VirusTotal) - Populating enables GTI MCP
@@ -195,7 +195,7 @@ Open `http://localhost:8080` in your browser to access the SOC Agent UI.
 * **`GET /healthz`**: Liveness & readiness probe returning `{"status": "ok"}` for Cloud Run.
 * **`GET /info`**: Returns JSON metadata including package version, active model, and toolset configurations.
 * **`POST /chat`**: Synchronous chat endpoint accepting `{"prompt": "string", "session_id": "optional"}`.
-* **`GET /chat/stream?prompt=...`**: Server-Sent Events (SSE) token streaming endpoint.
+* **`GET /chat?message=...`**: Server-Sent Events (SSE) token streaming endpoint.
 
 ---
 
@@ -292,10 +292,10 @@ Sample reference interfaces:
 Run the hermetic test suite:
 
 ```bash
-uv run pytest tests/
+uv run --extra test pytest tests/
 ```
 
-All 21 unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
+All 30 unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
 
 
 
