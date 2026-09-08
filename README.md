@@ -172,7 +172,7 @@ It can be run locally via an interactive CLI REPL or launched as a FastAPI servi
 
 ```bash
 cd run-with-google-adk
-cp sample.env .env
+cp .env.example .env
 
 # Interactive terminal investigation REPL
 uv run mcp-security-agent chat

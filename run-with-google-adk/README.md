@@ -41,7 +41,7 @@ This guide provides instructions on how to run the Autonomous Security Operation
 cd run-with-google-adk
 
 # Copy the sample environment template
-cp sample.env .env
+cp .env.example .env
 ```
 
 Configure your credentials and project IDs in `.env` (see [Configuration](#configuration--environment-variables)).
@@ -114,7 +114,7 @@ Launches the FastAPI application for web UI access or Cloud Run hosting.
 
 The agent reads configuration from environment variables and an optional `.env` file located in the working directory.
 
-### `sample.env` Template
+### `.env.example` Template
 
 ```properties
 # Google Cloud & LLM Settings
