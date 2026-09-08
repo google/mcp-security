@@ -64,21 +64,37 @@ def test_get_session_with_username():
     assert data["user_id"] == "alice"
 
 
+class MockRunner:
+    async def run_async(self, *args, **kwargs):
+        from google.adk.events import Event
+        from google.genai import types
+        yield Event(
+            author="SecurityOperationsAgent",
+            content=types.Content(role="model", parts=[types.Part(text="Mocked analysis response")]),
+        )
+
+
 def test_chat_post():
-    client = TestClient(create_app())
-    response = client.post("/chat", json={"prompt": "Investigate alert 123", "session_id": "test-sess"})
-    assert response.status_code == 200
-    data = response.json()
-    assert "response" in data
-    assert data["session_id"] == "test-sess"
+    from unittest.mock import patch
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
+        client = TestClient(create_app())
+        response = client.post("/chat", json={"prompt": "Investigate alert 123", "session_id": "test-sess"})
+        assert response.status_code == 200
+        data = response.json()
+        assert "response" in data
+        assert "Mocked analysis response" in data["response"]
+        assert data["session_id"] == "test-sess"
 
 
 def test_chat_sse_stream():
-    client = TestClient(create_app())
-    response = client.get("/chat", params={"message": "check finding", "session_id": "test-sess"})
-    assert response.status_code == 200
-    assert "text/event-stream" in response.headers["content-type"]
-    assert "data:" in response.text
+    from unittest.mock import patch
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
+        client = TestClient(create_app())
+        response = client.get("/chat", params={"message": "check finding", "session_id": "test-sess"})
+        assert response.status_code == 200
+        assert "text/event-stream" in response.headers["content-type"]
+        assert "Mocked analysis response" in response.text
+        assert "Stream finished." in response.text
 
 
 def test_login_and_alias_routes():
@@ -89,11 +105,15 @@ def test_login_and_alias_routes():
 
 
 def test_chat_post_sse_streaming():
-    client = TestClient(create_app())
-    response = client.post("/chat", json={"message": "Investigate alert 123", "session_id": "test-sess"})
-    assert response.status_code == 200
-    assert "text/event-stream" in response.headers["content-type"]
-    assert "data:" in response.text
+    from unittest.mock import patch
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
+        client = TestClient(create_app())
+        response = client.post("/chat", json={"message": "Investigate alert 123", "session_id": "test-sess"})
+        assert response.status_code == 200
+        assert "text/event-stream" in response.headers["content-type"]
+        assert "Mocked analysis response" in response.text
+        assert "Stream finished." in response.text
+
 
 
 def test_no_cache_headers():
