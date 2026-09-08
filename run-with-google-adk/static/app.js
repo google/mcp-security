@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to fetch the session ID
     async function fetchSessionId() {
         try {
-            const response = await fetch('http://localhost:8000/get_session');
+            const response = await fetch('/get_session');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Make a request to the /chat API using Server-Sent Events (SSE)
             try {
-                const eventSource = new EventSource(`http://localhost:8000/chat?message=${encodeURIComponent(message)}&session_id=${encodeURIComponent(currentSessionId)}`);
+                const eventSource = new EventSource(`/chat?message=${encodeURIComponent(message)}&session_id=${encodeURIComponent(currentSessionId)}`);
 
                 eventSource.onmessage = (event) => {
                     const data = JSON.parse(event.data);

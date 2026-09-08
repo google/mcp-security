@@ -44,9 +44,22 @@ No additional installation is needed as `uv` will handle dependencies when runni
 ### Step 2: Configure Your MCP Client
 
 
-#### For Prebuilt Google ADK Agent as a client:
+#### For Prebuilt Google ADK Agent as a Client:
 
-Detailed instructions are provided [here](https://github.com/google/mcp-security/#using-the-prebuilt-google-adk-agent-as-client)
+The repository provides a prebuilt Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2.x and MCP in [`run-with-google-adk/`](../run-with-google-adk/README.md).
+
+```bash
+cd run-with-google-adk
+cp sample.env .env
+
+# Interactive terminal investigation REPL
+uv run mcp-security-agent chat
+
+# Web UI and Cloud Run API server
+uv run mcp-security-agent serve --port 8080
+```
+
+For complete configuration and deployment details, see the [ADK Agent Guide](../run-with-google-adk/README.md).
 
 
 #### For Claude Desktop:

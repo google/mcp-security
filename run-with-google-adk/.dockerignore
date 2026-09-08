@@ -1,9 +1,9 @@
 # Environment files containing credentials
-run-with-google-adk/google_mcp_security_agent/.env
-google_mcp_security_agent/.env
 .env
 *.env
 .env.*
+**/.env
+**/.env.*
 
 # Additional credential files
 *.key
@@ -12,7 +12,7 @@ google_mcp_security_agent/.env
 credentials/
 secrets/
 
-# Development files
+# Development and cache files
 .git/
 .gitignore
 *.pyc

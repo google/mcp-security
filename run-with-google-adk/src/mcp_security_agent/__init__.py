@@ -11,4 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from . import agent
+"""MCP Security Agent powered by Google ADK v2."""
+
+from mcp_security_agent.agent import create_security_agent, root_agent
+
+__version__ = "0.2.0"
+__all__ = ["create_security_agent", "root_agent", "__version__"]

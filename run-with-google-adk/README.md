@@ -1,72 +1,66 @@
-# Prebuilt ADK Agent Usage Guide
+# Google ADK Security Agent Guide
 
-This guide provides instructions on how to run the prebuilt ADK (Agent Development Kit) agent both locally and in Cloud Run (if necessary for demos).
-
+This guide provides instructions on how to run the Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2 and the Model Context Protocol (MCP), both locally via an interactive CLI and deployed to Google Cloud Run.
 
 ## Table of Contents
 
-[1. Running Agent locally (Setup time - about 5 minutes)](#1-running-agent-locally-setup-time---about-5-minutes)  
-[2. Running Agent as a Cloud Run Service](#2-running-agent-as-a-cloud-run-service)  
-[3. Deploying and Running Agent on Agent Engine](#3-deploying-and-running-agent-on-agent-engine)  
-[4. Improving performance and optimizing costs.](#4-improving-performance-and-optimizing-costs)  
-[5. Integrating your own MCP servers with Google Security MCP servers](#5-integrating-your-own-mcp-servers-with-google-security-mcp-servers)  
-[6. Additional Features](#6-additional-features)  
-[7. Registering Agent Engine agent to AgentSpace](#7-registering-agent-engine-agent-to-agentspace)
+1. [Quickstart: Running Agent Locally](#1-quickstart-running-agent-locally)
+2. [CLI Commands & Subcommands](#2-cli-commands--subcommands)
+3. [Running Agent as a Cloud Run Service](#3-running-agent-as-a-cloud-run-service)
+4. [Deploying on Vertex AI Agent Engine](#4-deploying-on-vertex-ai-agent-engine)
+5. [Configuration & Environment Variables](#5-configuration--environment-variables)
 
-## 1. Running Agent locally (Setup time - about 5 minutes)
+---
+
+## 1. Quickstart: Running Agent Locally
 
 ### Prerequisites
-You need the following to run the agent
+1. Python 3.11+
+2. [uv](https://docs.astral.sh/uv/) (recommended) or `pip`
+3. Google Cloud Project with Chronicle SIEM, SCC, GTI, or SOAR access
 
-1. `python` - v3.11+
-2. `pip`
-3. `gcloud` cli (If you ran on Google Cloud Console then gcloud is already installed)
-
-### Setting up and running the agent
-Please execute the following instructions
+### Installation & Execution
 
 ```bash
-   # Clone the repo
-   git clone https://github.com/google/mcp-security.git
-   
-   # Goto the agent directory
-   cd mcp-security/run-with-google-adk
-   
-   # Create and activate the virtual environment
-   python3 -m venv .venv
-   . .venv/bin/activate
+# Clone the repository
+git clone https://github.com/google/mcp-security.git
+cd mcp-security/run-with-google-adk
 
-   # Install dependencies (google-adk and uv)
-   pip install -r requirements.txt
-   
-   # Add exec permission to run-adk-agent.sh - which runs our agent
-   chmod +x run-adk-agent.sh
+# Copy the sample environment file and configure your API keys / project IDs
+cp sample.env .env
 
-   # Run the agent
-   ./run-adk-agent.sh
+# Start interactive chat session
+uv run mcp-security-agent chat
 ```
 
-For the very first run it creates a default .env file in `./google-mcp-security-agent/.env`
-
+Alternatively, install in editable mode:
 ```bash
-# sample output
-$./run-adk-agent.sh 
-Copying ./google-mcp-security-agent/sample.env.properties to ./google-mcp-security-agent/.env...
-Please update the environment variables in ./google-mcp-security-agent/.env
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+
+mcp-security-agent info
+mcp-security-agent chat
 ```
+
+## 2. CLI Commands & Subcommands
+
+The package exposes the `mcp-security-agent` CLI with the following commands:
+
+* `mcp-security-agent info`: Displays current package version, active model, and MCP server status.
+* `mcp-security-agent chat`: Launches an interactive terminal REPL for threat investigation.
+* `mcp-security-agent serve --host 0.0.0.0 --port 8080`: Launches the FastAPI server with `/healthz`, `/info`, and `/chat` endpoints for Cloud Run.
 
 Use your favorite editor and update `./google-mcp-security-agent/.env`. 
 
 The default `.env` file is shown below. 
 
-1. Update the variables as needed in your favorite editor. You can choose to load some or all of the MCP servers available using the load environment variable at the start of each section. Don't use quotes for values except for `DEFAULT_PROMPT`. 
-2. Make sure that variables in the `MANDATORY` section have proper values (make sure you get and update the `GOOGLE_API_KEY` using these [instructions](https://ai.google.dev/gemini-api/docs/api-key)) 
-3. You can experiment with the prompt `DEFAULT_PROMPT`. Use single quotes for the prompt. If you plan to later deploy to a Cloud Run Service - avoid commas (or if you use them they will be converted to semicommas during deployment).
+1. Update the variables as needed in your favorite editor. You can choose to load some or all of the MCP servers available using the load environment variable at the start of each section.
+2. Make sure that variables in the `MANDATORY` section have proper values (make sure you get and update the `GOOGLE_API_KEY` using these [instructions](https://ai.google.dev/gemini-api/docs/api-key)).
+3. You can experiment with the prompt `DEFAULT_PROMPT`.
 4. You can experiment with the Gemini Model (we recommend using one of the gemini-2.5 models). Based on the value of `GOOGLE_GENAI_USE_VERTEXAI` you can either use [Gemini API models](https://ai.google.dev/gemini-api/docs/models#model-variations) or [Vertex API models](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
 
 ```bash
-# Please do not use quotes / double quotes for values except for DEFAULT_PROMPT (use single quotes there)
-
 APP_NAME=google_mcp_security_agent
 # SESSION_SERVICE - in_memory/db. If set to db please provide SESSION_SERVICE_URL
 #SESSION_SERVICE=db
@@ -147,86 +141,43 @@ MINIMAL_LOGGING=N
 
 ```
 
-Once the variables are updated, run the agent again (make sure you are back in the `mcp-security/run-with-google-adk` directory).
+Once the variables are updated in `.env`, run the agent (make sure you are in the `mcp-security/run-with-google-adk` directory).
 
 ```bash
-   # Authenticate to use SecOps APIs
-   # Skip if running in Google Cloud Shell
-   gcloud auth application-default login
+# Authenticate to use Google Cloud / SecOps APIs
+# Skip if running in Google Cloud Shell
+gcloud auth application-default login
+
+# Start interactive terminal chat
+uv run mcp-security-agent chat
+
+# Or start the ADK Web interface
+adk web src/mcp_security_agent
 ```
+
+Access the agent interface by navigating to `http://localhost:8000`.
+
+> **NOTE:**  
+> First response usually takes a moment as the agent connects to the configured MCP server(s) and initializes tool schemas.
+
+> **CAUTION:**  
+> In case an investigation seems stuck or an error occurs on the console, you can ask a follow-up question like `Are you still there?` or `Can you retry that?`. You can also enable token streaming in the ADK UI.
+
+#### Running Agent with Custom Session and Artifact Services
+
+Google ADK provides persistent [sessions](https://google.github.io/adk-docs/sessions/) and [artifacts](https://google.github.io/adk-docs/artifacts/).
+
+You can run the agent with the session and artifact service of your choice:
 
 ```bash
-   # Run the agent again
-   ./run-adk-agent.sh adk_web
+# Run with SQLite session storage and GCS artifact bucket
+adk web src/mcp_security_agent --session_service_uri sqlite:///./app_data.db --artifact_service_uri gs://<your_bucket_name>
+
+# Run with SQLite session storage only
+adk web src/mcp_security_agent --session_service_uri sqlite:///./app_data.db
 ```
 
-You should get an output like following
-
-```bash
-# Sample output
-$./run-adk-agent.sh adk_web
-Contents of .env (with masked values):
-# Please do not use quotes / double quotes for values except for DEFAULT_PROMPT (use single quotes there)
-# SecOps MCP
-LOAD_SECOPS_MCP=Y
-.
-(output cropped)
-.
-
-Running ADK Web for local agent...
-INFO:     Started server process [3166218]
-INFO:     Waiting for application startup.
-
-+-----------------------------------------------------------------------------+
-| ADK Web Server started                                                      |
-|                                                                             |
-| For local testing, access at http://localhost:8000.                         |
-+-----------------------------------------------------------------------------+
-
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-
-```
-
-Access the Agent 🤖 interface by going to `http://localhost:8000`. Make sure you select `google_mcp_security_agent` in the UI.
-
-> 🪧 **NOTE:**  
-> First response usually takes a bit longer as the agent is loading the tools from the MCP server(s).
-
-> ⚠️ **CAUTION:**  
-> In case the response seems stuck and/or there is an error on the console, create a new session in the ADK Web UI by clicking `+ New Session` in the top right corner. You can also ask a follow up question in the same session like `Are you still there?` or `Can you retry that?`. You can also try switching `Token Streaming` on.
-
-
-
-> 🪧 **NOTE:**  
-> When exiting, shut down the browser tab first and then use `ctrl+c` to exit on the console. 
-
-
-#### Running agent with session and artifact service of your choice
-
-ADK provides persistent [sessions](https://google.github.io/adk-docs/sessions/) and [artifacts](https://google.github.io/adk-docs/artifacts/) (files etc.).
-
-You can run the agent with session and artifact service of your choice.
-
-Sample command
-
-```
-
-$./run-adk-agent.sh adk_web sqlite:///./app_data.db gs://<your_bucket_name>
-
-```
-
-This command will run the agent with session stored in `app_data.db` and any artifacts stored in <your_bucket>.
-
-You can also just use persisten storage (and in memory artifacts)
-
-```
-
-$./run-adk-agent.sh adk_web sqlite:///./app_data.db
-
-```
-
-When the artifact service is backed by GCS - you can get signed URLs for your files to share them easily. Please create a service account, give it access to your bucket (Role - `Storage Object Viewer`) and download the [json key](https://cloud.google.com/iam/docs/keys-create-delete) associated with it. Name the key `object-viewer-sa.json`. Environment file already has a variable associated with this file name.
+When the artifact service is backed by GCS, signed URLs allow easy file sharing. Grant the runtime service account the `roles/storage.objectViewer` role.
 
 
 ## 2. Running Agent as a Cloud Run Service
@@ -252,68 +203,20 @@ In addition to Gemini/ Vertex API costs, running agent will incur cloud costs. P
 > It is not recommended to run the a Cloud Run service with unauthenticated invocations enabled (we do that initially for verification). Please follow steps to enable [IAM authentication](https://cloud.google.com/run/docs/authenticating/developers) on your service. You could also deploy it behind the [Identity Aware Proxy (IAP)](https://cloud.google.com/iap/docs/enabling-cloud-run) - but that is out of scope for this documentation.
 
 ### Deployment Steps
-> 🪧 **NOTE:**  
-> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying
+
+> **NOTE:**  
+> It is recommended to switch to Vertex AI (with `GOOGLE_GENAI_USE_VERTEXAI=True`) when deploying to Cloud Run.
 
 ```bash
-# Please run these commands from the mcp-security directory
-chmod +x ./run-with-google-adk/cloudrun_deploy_run.sh
-
-bash ./run-with-google-adk/cloudrun_deploy_run.sh deploy
+# Build and deploy the container directly to Cloud Run
+gcloud run deploy mcp-security-agent-service \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars="LOAD_SECOPS_MCP=Y,LOAD_SCC_MCP=Y,LOAD_GTI_MCP=Y,GOOGLE_GENAI_USE_VERTEXAI=True"
 ```
-Sample output is provided below
 
-```bash
-# Sample output
-$ bash ./run-with-google-adk/cloudrun_deploy_run.sh deploy
-Starting deployment process...
-Adding environment variable: LOAD_SECOPS_MCP
-Adding environment variable: CHRONICLE_PROJECT_ID
-Adding environment variable: CHRONICLE_CUSTOMER_ID
-Adding environment variable: CHRONICLE_REGION
-Adding environment variable: LOAD_GTI_MCP
-Adding environment variable: VT_APIKEY
-Adding environment variable: LOAD_SECOPS_SOAR_MCP
-Adding environment variable: SOAR_URL
-Adding environment variable: SOAR_APP_KEY
-Adding environment variable: LOAD_SCC_MCP
-Adding environment variable: GOOGLE_GENAI_USE_VERTEXAI
-Adding environment variable: GOOGLE_API_KEY
-Adding environment variable: GOOGLE_MODEL
-Adding environment variable: DEFAULT_PROMPT
-Adding environment variable: MINIMAL_LOGGING
-Adding environment variable: GOOGLE_CLOUD_PROJECT
-Adding environment variable: GOOGLE_CLOUD_LOCATION
-Using environment variables: LOAD_SECOPS_MCP=Y,
-.
-.
-[REDACTED]
-.
-.
-Temporarily copying files in the top level directory for image creation.
-Building using Dockerfile and deploying container to Cloud Run service [mcp-security-agent-service] in project [REDACTED] region [us-central1]
-⠛ Building and deploying... Uploading sources.                                                                                                                                               
-⠏ Building and deploying... Uploading sources.                                                                                                                                               
-  ⠏ Uploading sources...                                                                                                                                                                     
-  . Creating Revision...                                                                                                                                                                     
-  . Routing traffic...                                                                                                                                                                       
-  . Setting IAM Policy...                                                                                                                                                                    
-Creating temporary archive of 581 file(s) totalling 11.2 MiB before compression.
-Some files were not included in the source upload.
-✓ Building and deploying... Done.                                                                                                                                                            
-  ✓ Uploading sources...                                                                                                                                                                     
-  ✓ Building Container... Logs are available at [REDACTED].          
-  ✓ Creating Revision...                                                                                                                                                                     
-  ✓ Routing traffic...                                                                                                                                                                       
-  ✓ Setting IAM Policy...                                                                                                                                                                    
-Done.                                                                                                                                                                                        
-Service [mcp-security-agent-service] revision [mcp-security-agent-[REDACTED]] has been deployed and is serving 100 percent of traffic.
-Service URL: [REDACTED]
-Deleting temporarily copied files in the top level directory for image creation.
-Successfully deployed the service.
-
-```
-Now, you can verify the service by browsing to the service endpoint.
+Now, you can verify the service by browsing to the service endpoint URL.
 
 ### IAM access to use Chronicle and SCC
 
@@ -363,150 +266,99 @@ Since the entire context and response from the LLM is printed as logs. You might
 
 ## 3. Deploying and Running Agent on Agent Engine
 
-The agent can also be deployed on [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview).
-
-> 🪧 **NOTE:**  
+The agent can also be deployed on [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview> **NOTE:**  
 > Currently the GCS backed artifact service is not available on Agent Engine.
 
-Here are the steps - 
+Here are the deployment steps:
 
-1. Test at least once locally 
-2. Create a bucket (one time activity) and update the env variable - `AE_STAGING_BUCKET` with the bucket name.
-3. Make sure the envvariables - `GOOGLE_CLOUD_PROJECT` and `GOOGLE_CLOUD_LOCATION` are updated.
-4. `cd run-with-google-adk`
-5. `chmod +x ae_deploy_run.sh`
-6. `./ae_deploy_run.sh`
-7. Please note the output where it says - 
+1. Test locally at least once using `mcp-security-agent chat` or `mcp-security-agent serve`.
+2. Ensure environment variables `GOOGLE_CLOUD_PROJECT` and `GOOGLE_CLOUD_LOCATION` are configured.
+3. Deploy the agent to Vertex AI Agent Engine using the Google Cloud SDK or ADK CLI.
+4. Verify the agent on the [Vertex AI Agent Engine Console](https://console.cloud.google.com/vertex-ai/agents/agent-engines).
 
-   `AgentEngine created. Resource name: projects/********/locations/****/reasoningEngines/**********`.
-8. This creates an Agent engine Agent called `google_security_agent`
-9. Verify it [here](https://console.cloud.google.com/vertex-ai/agents/agent-engines) on the Google Cloud Console.
+### How to Test
 
-How to test?
+You can interact with the deployed backend via the bundled web interface:
 
-Agent Engine as such does not come with any UI, but we have provided one rudimentary (but very usable) UI with this repo.
+1. Update the environment variable `AGENT_ENGINE_RESOURCE_NAME` with your reasoning engine resource path.
+2. Start the local server: `uv run mcp-security-agent serve`
+3. Access the UI locally at `http://localhost:8080` (or configured port).
 
-1. Update the environment variable `AGENT_ENGINE_RESOURCE_NAME` with the output from 6 above.
-2. `./run-adk-agent.sh custom_ui_ae`
-3. Access the UI locally on http://localhost:8000
-4. You can provide a username on the UI and then use the same username to load your previous session.
+---
 
-### Redeploying Agent
-You might need to redeploy the agent. In which case please use the same steps as deployment but when calling `./ae_deploy_run.sh`, please provide the agent engine resource name from previous deployment as an additional parameter (shown below).
+## 4. Improving Performance and Optimizing Costs
 
-```bash
-# replace with your agent engine agent resource name.
-./ae_deploy_run.sh projects/********/locations/****/reasoningEngines/**********
+By default, the agent sends the active conversation context to the LLM.
 
-```
+A user interaction involves:
+1. User query (e.g., `Let's investigate case 146`)
+2. Initial LLM call with System Prompt, User Query, and Tool definitions resulting in function call requests (e.g., `get_case_details`)
+3. Agent executing MCP tool requests
+4. LLM processing tool outputs and generating the final response
 
-> 🪧 **NOTE:**  
-> First response takes time.
+By tweaking the environment variable `MAX_PREV_USER_INTERACTIONS` (default: 3), you can control the conversation history sent to the LLM to optimize latency and token costs.
 
+---
 
-## 4. Improving performance and optimizing costs.
-By default the agent sends the entire context to the LLM everytime.
+## 5. Integrating Custom MCP Servers
 
-This has 2 consequences 
+If your organization uses additional security products (such as identity providers or third-party EDRs), integrating them with Google Security MCP servers provides:
 
-1. LLM takes longer to respond with a very large context (e.g. more than 100K tokens)
-2. LLM costs go up with the context sent.
+1. A unified investigation interface breaking down organizational silos.
+2. Automated cross-tool correlation between SIEM alerts, SCC findings, GTI threat intelligence, and IDP accounts.
 
+### Reference Integration Templates
 
-A user interaction involves
+Reference templates are provided in `run-with-google-adk/sample_servers_to_integrate/`:
 
-1. User query (e.g. Let's investigate case 146)
-2. Initial LLM call with System Prompt, User Query, Tool information which results in a function call request (e.g. `get_case_details`)
-3. Agent running the `get_case_details`
-4. LLM call with Initial System PRompt, User Query, Tool Information, Tool Request, Tool Response
-5. Final LLM response
-
-Now the subsequent interaction might need all of the above (e.g. User query - let's investigate all IPs from this response)
-
-But generally after a few user interactions - only the recent interactions (user query and responses to that query) are required.
-
-By tweaking an environment variable `MAX_PREV_USER_INTERACTIONS` which is set to 3 by default - you can control the number of such conversations sent to the LLM thereby limiting the context size, improving performance and optimizing costs.
-
-## 5. Integrating your own MCP servers with Google Security MCP servers
-
-You/your customers might be using other security products (like EDR/XDR providers, IDPs or even non security prodcuts) with Google Security products. If those products also have published MCP servers, integrating them with Google Security MCP servers provides 
-
-1. One stop shop which breaks information silos for the analysts
-2. Reducing communication gaps across teams managing these products separately
-
-You can use one agent to access functionality of all these products.
-
-#### Reference MCP servers -
-Since this repository provides and opiniated, prebuilt agent - we are providing sample MCP servers and agents (as templates) for you to try out integrations and then use your own MCP servers to integrate (and deploy to Cloud Run or Agent Engine)
-
-Here are the steps 
-
-1. Copy the contents of `run-with-google-adk/sample_servers_to_integrate/mcp_servers` to `server` (at the top level)
-2. Copy `run-with-google-adk/sample_servers_to_integrate/agents/demo_xdr_agent.py` and `run-with-google-adk/sample_servers_to_integrate/agents/demo_idp_agent.py` to `run-with-google-adk/google_mcp_security_agent`
-3. Import the agents from `demo_xdr_agent.py` and `demo_idp_agent.py` and add them as `sub agents` into `agent.py` in `run-with-google-adk/google_mcp_security_agent/`
-4. Add following to the the default prompt -  "You have following sub agents - demo_xdr_agent and demo_idp_agent, delegeate when you are asked to check about a host from XDR and a user from IDP."
-
-Here's the updated code (only additional lines are shown in \<add/> tag)
+1. Inspect sample MCP servers in `run-with-google-adk/sample_servers_to_integrate/mcp_servers/` (`demo_idp` and `demo_xdr`).
+2. Inspect sample sub-agents in `run-with-google-adk/sample_servers_to_integrate/agents/` (`demo_idp_agent.py` and `demo_xdr_agent.py`).
+3. Connect sub-agents into `src/mcp_security_agent/agent.py` using native ADK `sub_agents`:
 
 ```python
-# agent.py in google_mcp_security_agent
+# src/mcp_security_agent/agent.py
+from sample_servers_to_integrate.agents.demo_idp_agent import create_demo_idp_agent
+from sample_servers_to_integrate.agents.demo_xdr_agent import create_demo_xdr_agent
 
-# rest of the imports
-# <add>
-from .demo_idp_agent import demo_idp_agent
-from .demo_xdr_agent import demo_xdr_agent
-# </add>
-# rest of the file
+idp_agent = create_demo_idp_agent()
+xdr_agent = create_demo_xdr_agent()
 
-# check value of the input variable sub_agents in the agent creation below.
-def create_agent():
-
-# rest of the code 
-
-  agent = LlmAgent(
-      # <add>
-      sub_agents=[demo_xdr_agent.root_agent, demo_idp_agent.root_agent],
-      # </add> 
-
-  )
-  return agent
-
+# Add to sub_agents list when instantiating LlmAgent
+agent = LlmAgent(
+    name="SecurityOperationsAgent",
+    model=settings.google_model,
+    instruction=settings.default_prompt or SOC_AGENT_SYSTEM_PROMPT,
+    tools=toolsets,
+    sub_agents=[sub for sub in [idp_agent, xdr_agent] if sub is not None],
+    before_model_callback=bmc_trim_llm_request,
+)
 ```
 
-Also make sure that the .env file has the required variables uncommented
+Configure corresponding environment variables in `.env`:
 
 ```properties
-# rest of the .env file
-
-# Add Your MCP server variables here, sample provided, please check the documentation
-# MCP-1
 LOAD_XDR_MCP=Y
-XDR_CLIENT_ID=abc123
-XDR_CLIENT_SECRET=xyz456
-# MCP-2
-LOAD_IDP_MCP=Y
-IDP_CLIENT_ID=abc123
-IDP_CLIENT_SECRET=xyz456
+XDR_CLIENT_ID=demo_client_id
+XDR_CLIENT_SECRET=demo_client_secret
 
+LOAD_IDP_MCP=Y
+IDP_CLIENT_ID=demo_client_id
+IDP_CLIENT_SECRET=demo_client_secret
 ```
 
-And now you can run the agent locally as before and ask it questions like
+You can now query the agent locally:
+* `Check alerts for web-server-iowa in demo xdr`
+* `Find recent logins for user oleg in IDP`
 
-1. `let's check alerts for web-server-iowa in demo xdr`  
-2. `Ok let's find recent logins for the user oleg in the IDP`
+> **NOTE:**  
+> Once tested, you can attach production MCP servers following this modular pattern.
 
-And notice how the agent transfers control to the sub agents for these reference subagents and through the sample MCP servers you get the response.
-Screenshots provided below.
+Reference architecture screenshots:
 
-> 🪧 **NOTE:**  
-> Now you can use your own MCP servers, create subagents the way you did for the reference servers and test and deploy the agent with your sub agents. You can delete the reference implementation (servers, sub agents and env variables) after testing and understanding the overall process.
-
-Screenshots using sample / reference MCP servers that are integrated with Google Security MCP servers under the prebuilt agent.
-
-Sample XDR
+Sample XDR:
 ![](./static/demo-xdr.png)
 
-Sample IDP
+Sample IDP:
 ![](./static/demo-idp.png)
 
 

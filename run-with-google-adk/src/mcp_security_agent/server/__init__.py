@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""FastAPI web and Cloud Run REST server for MCP Security Agent."""
 
-from . import utils
-from . import extensions
+from mcp_security_agent.server.app import create_app
+
+__all__ = ["create_app"]
