@@ -133,7 +133,9 @@ celerybeat.pid
 
 # Environments
 .env
+.envrc
 .venv
+.gcloud/
 env/
 venv/
 ENV/

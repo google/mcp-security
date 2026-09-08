@@ -38,3 +38,8 @@ When executing a skill, the agent should first check which tools are available i
 | | Create Rule | `create_rule` | `create_rule` | |
 | | Validate Rule | `validate_rule` | `validate_rule` | |
 | | Test/Run Rule | `list_rule_detections` | `list_rule_detections` | Use to see historical detections. |
+| **Detection Engineering** | Generate TDO | `generate_threat_detection_opportunity` | `generate_threat_detection_opportunity` | Extracts MITRE info, observables, and log types. |
+| | Generate Synthetic Events | `generate_synthetic_events` | `generate_synthetic_events` | Simulates raw logs and UDM events from a TDO. |
+| | Evaluate Rule Coverage | `evaluate_rule_coverage_long_running` | `evaluate_rule_coverage_long_running` | Asynchronous evaluation returning an Operation. |
+| | Poll Operation | `get_operation` | `get_operation` | Polls LRO status until done: true. |
+| | Generate Draft Rules | `generate_rules` | `generate_rules` | Drafts YARA-L 2.0 detection rules to close gaps. |
