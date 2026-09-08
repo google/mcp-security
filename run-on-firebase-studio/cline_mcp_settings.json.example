@@ -1,0 +1,65 @@
+{
+  "_comment": "Replace YOUR-WORKSPACE-NAME with your Firebase Studio workspace name (e.g., security-mcp-demo) and YOUR-PROJECT-DIR with your project directory name (e.g., tier1-demo)",
+  "mcpServers": {
+    "secops": {
+      "autoApprove": [],
+      "disabled": false,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "/home/user/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/server/secops/secops_mcp",
+        "run",
+        "--env-file",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/.env",
+        "server.py"
+      ]
+    },
+    "secops-soar": {
+      "autoApprove": [],
+      "disabled": false,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "/home/user/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/server/secops-soar/secops_soar_mcp",
+        "run",
+        "--env-file",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/.env",
+        "server.py"
+      ]
+    },
+    "gti": {
+      "autoApprove": [],
+      "disabled": false,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "/home/user/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/server/gti/gti_mcp",
+        "run",
+        "--env-file",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/.env",
+        "server.py"
+      ]
+    },
+    "scc-mcp": {
+      "autoApprove": [],
+      "disabled": false,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "/home/user/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/server/scc",
+        "run",
+        "--env-file",
+        "/home/user/YOUR-WORKSPACE-NAME/YOUR-PROJECT-DIR/mcp-security/.env",
+        "scc_mcp.py"
+      ]
+    }
+  }
+}
