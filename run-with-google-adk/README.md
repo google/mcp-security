@@ -124,28 +124,30 @@ GOOGLE_GENAI_USE_VERTEXAI=False
 GOOGLE_API_KEY=your-gemini-api-key
 GOOGLE_MODEL=gemini-2.5-flash
 
-# MCP Server Enablement Flags (Y/N or True/False)
-LOAD_SECOPS_MCP=Y
+# MCP Server Enablement Flags
+# (SCC uses Google Cloud ADC. SecOps, GTI, and SOAR auto-enable when credentials below are populated.
+# You can explicitly set LOAD_*_MCP to Y or N to override auto-detection.)
 LOAD_SCC_MCP=Y
-LOAD_GTI_MCP=N
-LOAD_SECOPS_SOAR_MCP=N
+# LOAD_SECOPS_MCP=
+# LOAD_GTI_MCP=
+# LOAD_SECOPS_SOAR_MCP=
 
 # Credentials & Service Account Impersonation
 SECOPS_SA_PATH=
 GOOGLE_APPLICATION_CREDENTIALS=
 SECOPS_IMPERSONATE_SERVICE_ACCOUNT=
 
-# Google SecOps (Chronicle SIEM) Settings
+# Google SecOps (Chronicle SIEM) Settings - Populating enables SecOps MCP
 CHRONICLE_PROJECT_ID=your-chronicle-project-id
 CHRONICLE_CUSTOMER_ID=your-chronicle-customer-id
 CHRONICLE_REGION=us
 
-# Google Threat Intelligence (GTI / VirusTotal)
-VT_APIKEY=your-virustotal-api-key
+# Google Threat Intelligence (GTI / VirusTotal) - Populating enables GTI MCP
+VT_APIKEY=
 
-# SecOps SOAR Settings
-SOAR_URL=https://your-soar-tenant.siemplify-soar.com
-SOAR_APP_KEY=your-soar-app-key
+# SecOps SOAR Settings - Populating enables SOAR MCP
+SOAR_URL=
+SOAR_APP_KEY=
 
 # Runtime Settings
 STDIO_PARAM_TIMEOUT=60.0
@@ -161,15 +163,15 @@ MINIMAL_LOGGING=N
 | `GOOGLE_GENAI_USE_VERTEXAI`| `False` | Set `True` to route LLM requests through Vertex AI (uses ADC). Set `False` to use Gemini API (requires `GOOGLE_API_KEY`). |
 | `GOOGLE_API_KEY` | None | Gemini API Key (required when `GOOGLE_GENAI_USE_VERTEXAI=False`). |
 | `GOOGLE_MODEL` | `gemini-2.5-flash` | Gemini model name (e.g. `gemini-2.5-flash`, `gemini-2.5-pro`). |
-| `LOAD_SECOPS_MCP` | `False` | Enables Chronicle SIEM MCP (`server/secops`). |
-| `LOAD_SCC_MCP` | `False` | Enables Security Command Center MCP (`server/scc`). |
-| `LOAD_GTI_MCP` | `False` | Enables Google Threat Intelligence MCP (`server/gti`). |
-| `LOAD_SECOPS_SOAR_MCP` | `False` | Enables SecOps SOAR MCP (`server/secops-soar`). |
+| `LOAD_SCC_MCP` | `False` | Enables Security Command Center MCP (`server/scc`). Uses ADC. |
+| `LOAD_SECOPS_MCP` | Auto | Enables Chronicle SIEM MCP. Auto-enables if `CHRONICLE_PROJECT_ID` and `CUSTOMER_ID` are set. |
+| `LOAD_GTI_MCP` | Auto | Enables Google Threat Intelligence MCP. Auto-enables if `VT_APIKEY` is set. |
+| `LOAD_SECOPS_SOAR_MCP` | Auto | Enables SecOps SOAR MCP. Auto-enables if `SOAR_URL` and `SOAR_APP_KEY` are set. |
 | `CHRONICLE_PROJECT_ID` | None | GCP project ID hosting Chronicle SIEM. |
 | `CHRONICLE_CUSTOMER_ID` | None | Chronicle Customer ID (UUID). |
 | `CHRONICLE_REGION` | `us` | Chronicle regional gateway (`us`, `europe`, `asia`). |
-| `VT_APIKEY` | None | VirusTotal / GTI API Key. |
-| `SOAR_URL` | None | Instance URL for SecOps SOAR (Siemplify). |
+| `VT_APIKEY` | None | VirusTotal / GTI API Key (presence auto-activates GTI tools). |
+| `SOAR_URL` | None | Instance URL for SecOps SOAR (presence auto-activates SOAR tools). |
 | `SOAR_APP_KEY` | None | API Key for SecOps SOAR. |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Auto-detected | Path to service account key file or local `.gcloud/application_default_credentials.json`. |
 | `STDIO_PARAM_TIMEOUT` | `60.0` | Timeout in seconds for MCP subprocess initialization and tool execution. |

@@ -15,7 +15,7 @@
 
 from pathlib import Path
 from typing import Optional
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _pkg_dir = Path(__file__).resolve().parents[2]
@@ -24,6 +24,14 @@ _env_files = (
     str(_pkg_dir / ".env"),
     str(_pkg_dir.parent / ".env"),
 )
+
+
+def _is_configured(val: Optional[str]) -> bool:
+    """Checks if a configuration string is non-empty and not a placeholder like NOT_SET."""
+    if not val:
+        return False
+    clean = val.strip()
+    return bool(clean and clean.upper() not in ("NOT_SET", "NONE", "NULL", ""))
 
 
 def _discover_local_adc() -> Optional[str]:
@@ -56,11 +64,11 @@ class AgentSettings(BaseSettings):
     google_api_key: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY")
     google_model: str = Field(default="gemini-2.5-flash", alias="GOOGLE_MODEL")
 
-    # MCP Server Enablement Flags
-    load_secops_mcp: bool = Field(default=False, alias="LOAD_SECOPS_MCP")
+    # MCP Server Enablement Flags (Optional; auto-detected from credentials if None)
+    load_secops_mcp: Optional[bool] = Field(default=None, alias="LOAD_SECOPS_MCP")
     load_scc_mcp: bool = Field(default=False, alias="LOAD_SCC_MCP")
-    load_gti_mcp: bool = Field(default=False, alias="LOAD_GTI_MCP")
-    load_secops_soar_mcp: bool = Field(default=False, alias="LOAD_SECOPS_SOAR_MCP")
+    load_gti_mcp: Optional[bool] = Field(default=None, alias="LOAD_GTI_MCP")
+    load_secops_soar_mcp: Optional[bool] = Field(default=None, alias="LOAD_SECOPS_SOAR_MCP")
 
     # Remote MCP URLs (for SSE/HTTP remote endpoints)
     secops_mcp_url: Optional[str] = Field(default=None, alias="SECOPS_MCP_URL")
@@ -78,6 +86,20 @@ class AgentSettings(BaseSettings):
     def __init__(self, **values):
         super().__init__(**values)
         self.bootstrap_environment()
+
+    @model_validator(mode="after")
+    def resolve_tool_enablement(self) -> "AgentSettings":
+        """Auto-detects MCP tool enablement based on presence of API keys and credentials."""
+        if self.load_gti_mcp is None:
+            self.load_gti_mcp = _is_configured(self.vt_apikey)
+
+        if self.load_secops_soar_mcp is None:
+            self.load_secops_soar_mcp = _is_configured(self.soar_url) and _is_configured(self.soar_app_key)
+
+        if self.load_secops_mcp is None:
+            self.load_secops_mcp = _is_configured(self.chronicle_project_id) and _is_configured(self.chronicle_customer_id)
+
+        return self
 
     def bootstrap_environment(self) -> None:
         """Configures environment variables for Google Cloud authentication and Cloudtop compatibility."""
@@ -117,12 +139,31 @@ class AgentSettings(BaseSettings):
     default_prompt: Optional[str] = Field(default=None, alias="DEFAULT_PROMPT")
 
     @field_validator(
-        "load_secops_mcp", "load_scc_mcp", "load_gti_mcp", "load_secops_soar_mcp",
-        "use_vertex_ai", "minimal_logging",
+        "load_secops_mcp", "load_gti_mcp", "load_secops_soar_mcp",
+        mode="before"
+    )
+    @classmethod
+    def parse_optional_bool_env(cls, value: object) -> Optional[bool]:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            val_clean = value.strip().upper()
+            if not val_clean:
+                return None
+            return val_clean in ("Y", "YES", "TRUE", "1")
+        return bool(value)
+
+    @field_validator(
+        "load_scc_mcp", "use_vertex_ai", "minimal_logging",
         mode="before"
     )
     @classmethod
     def parse_bool_env(cls, value: object) -> bool:
+        if value is None:
+            return False
         if isinstance(value, str):
-            return value.strip().upper() in ("Y", "YES", "TRUE", "1")
+            val_clean = value.strip().upper()
+            if not val_clean:
+                return False
+            return val_clean in ("Y", "YES", "TRUE", "1")
         return bool(value)

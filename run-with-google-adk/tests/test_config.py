@@ -40,3 +40,61 @@ def test_env_override_settings():
         assert settings.load_scc_mcp is True
         assert settings.secops_impersonate_service_account == "test-sa@proj.iam.gserviceaccount.com"
         assert settings.stdio_timeout_seconds == 120.5
+
+
+def test_tool_auto_detection_from_credentials():
+    with patch.dict(
+        os.environ,
+        {
+            "VT_APIKEY": "valid_virustotal_api_key_12345",
+            "SOAR_URL": "https://tenant.siemplify-soar.com",
+            "SOAR_APP_KEY": "valid_soar_key_67890",
+            "CHRONICLE_PROJECT_ID": "my-chronicle-project",
+            "CHRONICLE_CUSTOMER_ID": "my-chronicle-customer-uuid",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.load_gti_mcp is True
+        assert settings.load_secops_soar_mcp is True
+        assert settings.load_secops_mcp is True
+        assert settings.load_scc_mcp is False
+
+
+def test_tool_auto_detection_ignores_placeholders():
+    with patch.dict(
+        os.environ,
+        {
+            "VT_APIKEY": "NOT_SET",
+            "SOAR_URL": "NOT_SET",
+            "SOAR_APP_KEY": "NOT_SET",
+            "CHRONICLE_PROJECT_ID": "NOT_SET",
+            "CHRONICLE_CUSTOMER_ID": "NOT_SET",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.load_gti_mcp is False
+        assert settings.load_secops_soar_mcp is False
+        assert settings.load_secops_mcp is False
+
+
+def test_tool_explicit_override_overrules_credentials():
+    with patch.dict(
+        os.environ,
+        {
+            "VT_APIKEY": "valid_virustotal_api_key_12345",
+            "LOAD_GTI_MCP": "N",
+            "SOAR_URL": "https://tenant.siemplify-soar.com",
+            "SOAR_APP_KEY": "valid_soar_key_67890",
+            "LOAD_SECOPS_SOAR_MCP": "False",
+            "CHRONICLE_PROJECT_ID": "my-chronicle-project",
+            "CHRONICLE_CUSTOMER_ID": "my-chronicle-customer-uuid",
+            "LOAD_SECOPS_MCP": "0",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.load_gti_mcp is False
+        assert settings.load_secops_soar_mcp is False
+        assert settings.load_secops_mcp is False
