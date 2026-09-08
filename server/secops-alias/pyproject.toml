@@ -1,7 +1,7 @@
 [project]
-name = "google-secops-mcp"
+name = "secops-mcp"
 version = "0.7.1"
-description = "Google SecOps MCP server"
+description = "Google SecOps MCP server (official alias for google-secops-mcp)"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,25 +14,14 @@ classifiers = [
     "Topic :: Security",
 ]
 dependencies = [
-    "httpx>=0.28.1",
-    "mcp[cli]>=1.26.0,<2.0",
-    "secops>=0.35.1",
-    "google-auth>=2.48.0",
-    "google-auth-httplib2>=0.3.0",
-    "google-api-python-client>=2.190.0"
+    "google-secops-mcp==0.7.1"
 ]
 
 [project.urls]
 Homepage = "https://github.com/google/mcp-security"
 Documentation = "https://github.com/google/mcp-security/tree/main/server/secops#readme"
-Repository = "https://github.com/google/mcp-security/tree/main/server/secops"
+Repository = "https://github.com/google/mcp-security"
 Issues = "https://github.com/google/mcp-security/issues"
-
-[project.optional-dependencies]
-test = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0"
-]
 
 [project.scripts]
 secops_mcp = "secops_mcp.server:main"
@@ -46,7 +35,3 @@ secops-mcp = "secops_mcp.server:main"
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["secops_mcp*"]
