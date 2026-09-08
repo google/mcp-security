@@ -139,16 +139,26 @@ def test_static_assets():
         assert "no-store" in response.headers.get("cache-control", "")
 
 
-def test_index_html_no_emojis():
+def test_no_emojis_in_web_app_and_stream():
     client = TestClient(create_app())
-    response = client.get("/index.html")
-    assert response.status_code == 200
-    html = response.text
-    for char in html:
-        code = ord(char)
-        if (code > 0x2000 and unicodedata.category(char) in ("So", "Sk", "Sm", "Cn")) or code > 0x1F000 or (0x2600 <= code <= 0x27BF):
-            assert char in ("`", "^", "~", "<", ">", "+", "=", "|", "•"), f"Unexpected emoji/symbol: {char!r} (U+{code:04X})"
-    assert "<svg" in html
+    for path in ["/", "/index.html", "/static/app.js", "/static/app.css"]:
+        resp = client.get(path)
+        assert resp.status_code == 200
+        for char in resp.text:
+            code = ord(char)
+            if (code > 0x2000 and unicodedata.category(char) in ("So", "Sk", "Sm", "Cn")) or code > 0x1F000 or (0x2600 <= code <= 0x27BF):
+                assert char in ("`", "^", "~", "<", ">", "+", "=", "|", "•"), f"Unexpected emoji/symbol in {path}: {char!r} (U+{code:04X})"
+
+    from unittest.mock import patch
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=None):
+        resp = client.get("/chat", params={"message": "hello"})
+        assert resp.status_code == 200
+        assert "[Warning]" in resp.text
+        for char in resp.text:
+            code = ord(char)
+            if (code > 0x2000 and unicodedata.category(char) in ("So", "Sk", "Sm", "Cn")) or code > 0x1F000 or (0x2600 <= code <= 0x27BF):
+                assert char in ("`", "^", "~", "<", ">", "+", "=", "|", "•"), f"Unexpected emoji/symbol in stream: {char!r}"
+
 
 
 

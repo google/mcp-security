@@ -151,7 +151,7 @@ async def sse_event_generator(
 
     if runner is None:
         err_msg = json.dumps({
-            "text": "⚠️ Agent runner is unavailable in this environment.",
+            "text": "[Warning] Agent runner is unavailable in this environment.",
             "last_msg": False,
             "session_id": session_id,
         })
@@ -192,14 +192,14 @@ async def sse_event_generator(
                         yield f"data: {data}\n\n"
                     elif part.function_call:
                         call_info = json.dumps({
-                            "text": f"🔧 **Calling tool `{part.function_call.name}`**\n```json\n{json.dumps(part.function_call.args, indent=2)}\n```",
+                            "text": f"[Tool] **Calling tool `{part.function_call.name}`**\n```json\n{json.dumps(part.function_call.args, indent=2)}\n```",
                             "last_msg": False,
                             "session_id": session_id,
                         })
                         yield f"data: {call_info}\n\n"
                     elif part.function_response:
                         resp_info = json.dumps({
-                            "text": f"📊 **Received tool response from `{part.function_response.name}`**",
+                            "text": f"[Tool] **Received tool response from `{part.function_response.name}`**",
                             "last_msg": False,
                             "session_id": session_id,
                         })
@@ -207,7 +207,7 @@ async def sse_event_generator(
     except Exception as e:
         logger.error(f"Error during agent execution: {e}", exc_info=True)
         err_data = json.dumps({
-            "text": f"⚠️ **Error during investigation:** {str(e)}",
+            "text": f"[Error] **Error during investigation:** {str(e)}",
             "last_msg": False,
             "session_id": session_id,
         })
