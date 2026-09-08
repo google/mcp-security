@@ -34,6 +34,8 @@ def test_info():
     data = response.json()
     assert data["version"] == "0.2.0"
     assert "tools" in data
+    assert "user" in data
+    assert bool(data["user"])
 
 
 def test_root():
@@ -49,7 +51,9 @@ def test_get_session_default():
     data = response.json()
     assert "session_id" in data
     assert len(data["session_id"]) > 10
-    assert data["user_id"] == "default_user"
+    assert "user_id" in data
+    assert bool(data["user_id"])
+
 
 
 def test_get_session_with_username():

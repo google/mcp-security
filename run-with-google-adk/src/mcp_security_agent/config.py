@@ -44,6 +44,94 @@ def _discover_local_adc() -> Optional[str]:
     return None
 
 
+def discover_user_identity() -> str:
+    """Discovers the active user identity from ADC, gcloud config, or system environment.
+
+    Returns:
+        The detected username or service account email, falling back to 'secops_user'.
+    """
+    import os
+    import json
+    import getpass
+    import shutil
+    import subprocess
+
+    # 1. Explicit user override from environment
+    explicit = os.getenv("SECOPS_USER") or os.getenv("AGENT_USER")
+    if explicit and explicit.strip():
+        return explicit.strip()
+
+    # 2. Impersonated service account
+    impersonate_sa = os.getenv("SECOPS_IMPERSONATE_SERVICE_ACCOUNT")
+    if impersonate_sa and impersonate_sa.strip():
+        return impersonate_sa.strip()
+
+    # 3. Discovered ADC file (check for account or client_email)
+    adc_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or _discover_local_adc()
+    if not adc_path:
+        cloudsdk_config = os.getenv("CLOUDSDK_CONFIG")
+        if cloudsdk_config:
+            p = Path(cloudsdk_config) / "application_default_credentials.json"
+            if p.is_file():
+                adc_path = str(p)
+    if not adc_path:
+        p = Path.home() / ".config" / "gcloud" / "application_default_credentials.json"
+        if p.is_file():
+            adc_path = str(p)
+
+    if adc_path and Path(adc_path).is_file():
+        try:
+            with open(adc_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                acct = data.get("account") or data.get("client_email")
+                if acct and isinstance(acct, str) and acct.strip():
+                    return acct.strip()
+        except Exception:
+            pass
+
+    # 4. google.auth.default() credentials inspection
+    try:
+        import google.auth
+        creds, _ = google.auth.default()
+        sa_email = getattr(creds, "service_account_email", None)
+        if sa_email and isinstance(sa_email, str) and sa_email.strip() and sa_email != "default":
+            return sa_email.strip()
+        acct = getattr(creds, "account", None)
+        if acct and isinstance(acct, str) and acct.strip():
+            return acct.strip()
+    except Exception:
+        pass
+
+    # 5. gcloud active account
+    if shutil.which("gcloud"):
+        try:
+            res = subprocess.run(
+                ["gcloud", "config", "get-value", "account"],
+                capture_output=True,
+                text=True,
+                timeout=2,
+            )
+            if res.returncode == 0:
+                acct = res.stdout.strip()
+                if acct and acct != "(unset)":
+                    return acct
+        except Exception:
+            pass
+
+    # 6. System username (LDAP / OS user)
+    system_user = os.getenv("USER") or os.getenv("USERNAME")
+    if not system_user:
+        try:
+            system_user = getpass.getuser()
+        except Exception:
+            system_user = None
+    if system_user and system_user.strip():
+        return system_user.strip()
+
+    return "secops_user"
+
+
+
 
 class AgentSettings(BaseSettings):
     """Configuration settings loaded from environment variables or .env file."""

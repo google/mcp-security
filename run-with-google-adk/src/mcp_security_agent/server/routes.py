@@ -22,7 +22,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from mcp_security_agent import __version__
-from mcp_security_agent.config import AgentSettings
+from mcp_security_agent.config import AgentSettings, discover_user_identity
 
 router = APIRouter()
 
@@ -75,19 +75,22 @@ def get_app_name() -> Dict[str, str]:
 @router.get("/get_session")
 def get_session(username: Optional[str] = Query(None, description="Username for session")) -> Dict[str, str]:
     """Generates a session ID and returns user context for chat sessions."""
+    detected_user = discover_user_identity()
+    user = username if (username and username.strip() and username != "secops_user") else detected_user
     return {
         "session_id": str(uuid.uuid4()),
-        "user_id": username or "default_user",
+        "user_id": user,
     }
 
 
 @router.get("/info")
 def get_info() -> Dict[str, Any]:
-    """Provides server runtime metadata and enabled MCP server status."""
+    """Provides server runtime metadata, active user identity, and enabled MCP server status."""
     settings = AgentSettings()
     return {
         "version": __version__,
         "model": settings.google_model,
+        "user": discover_user_identity(),
         "tools": {
             "secops": settings.load_secops_mcp,
             "scc": settings.load_scc_mcp,

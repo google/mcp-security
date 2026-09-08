@@ -33,7 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Application State
   let currentSessionId = null;
-  let currentUserId = localStorage.getItem('username') || 'secops_user';
+  const savedUser = localStorage.getItem('username');
+  let currentUserId = (savedUser && savedUser !== 'secops_user') ? savedUser : null;
   let isStreaming = false;
   let activeAbortController = null;
   let requestStartTime = 0;
@@ -95,6 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update User UI
   function updateUserUI() {
+    if (!currentUserId) {
+      currentUserDisplay.textContent = 'secops_user';
+      userAvatar.textContent = 'S';
+      return;
+    }
     currentUserDisplay.textContent = currentUserId;
     userAvatar.textContent = currentUserId.charAt(0).toUpperCase();
     localStorage.setItem('username', currentUserId);
@@ -122,7 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`${API_BASE_URL}/info`);
       if (res.ok) {
         const data = await res.json();
-        const mcp = data.mcp_servers || {};
+        if (data.user && !currentUserId) {
+          currentUserId = data.user;
+          updateUserUI();
+        }
+        const mcp = data.tools || data.mcp_servers || {};
         updatePill(pillSecops, mcp.secops);
         updatePill(pillScc, mcp.scc);
         updatePill(pillGti, mcp.gti);
@@ -150,17 +160,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch / Initialize Session
   async function initSession(startNew = false) {
     try {
-      let url = `${API_BASE_URL}/get_session?username=${encodeURIComponent(currentUserId)}`;
+      let url = `${API_BASE_URL}/get_session`;
+      if (currentUserId) {
+        url += `?username=${encodeURIComponent(currentUserId)}`;
+      }
       if (startNew) {
-        url += '&start_new_session=Y';
+        url += (currentUserId ? '&' : '?') + 'start_new_session=Y';
       }
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       currentSessionId = data.session_id;
+      if (data.user_id) {
+        currentUserId = data.user_id;
+        updateUserUI();
+      }
       currentSessionDisplay.textContent = currentSessionId.slice(0, 8) + '...';
       currentSessionDisplay.title = currentSessionId;
-      console.log('Active session initialized:', currentSessionId);
+      console.log('Active session initialized:', currentSessionId, 'User:', currentUserId);
     } catch (err) {
       console.error('Session initialization failed:', err);
       showToast('Could not initialize session with backend', 'error');

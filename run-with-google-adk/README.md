@@ -295,7 +295,7 @@ Run the hermetic test suite:
 uv run --extra test pytest tests/
 ```
 
-All 35 unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
+All 37 unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
 
 
 

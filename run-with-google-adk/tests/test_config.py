@@ -120,3 +120,30 @@ def test_env_files_precedence_order():
     # Local .env must come after parent .env so pydantic-settings gives it higher precedence
     assert _env_files[-1] == ".env"
 
+
+def test_discover_user_identity():
+    from mcp_security_agent.config import discover_user_identity
+
+    # 1. Explicit user
+    with patch.dict(os.environ, {"SECOPS_USER": "analyst_alice"}, clear=True):
+        assert discover_user_identity() == "analyst_alice"
+
+    # 2. Impersonated SA
+    with patch.dict(os.environ, {"SECOPS_IMPERSONATE_SERVICE_ACCOUNT": "sa@proj.iam.gserviceaccount.com"}, clear=True):
+        assert discover_user_identity() == "sa@proj.iam.gserviceaccount.com"
+
+    # 3. gcloud active account
+    mock_res = type("SubprocessResult", (), {"returncode": 0, "stdout": "gcloud_user@example.com\n"})
+    with patch.dict(os.environ, {}, clear=True), patch("shutil.which", return_value="/bin/gcloud"), patch("subprocess.run", return_value=mock_res):
+        assert discover_user_identity() == "gcloud_user@example.com"
+
+    # 4. System user (when gcloud returns unset or not found)
+    with patch.dict(os.environ, {"USER": "test_dev"}, clear=True), patch("shutil.which", return_value=None), patch("google.auth.default", side_effect=Exception("no auth")):
+        assert discover_user_identity() == "test_dev"
+
+    # 5. Generic fallback
+    with patch.dict(os.environ, {}, clear=True), patch("shutil.which", return_value=None), patch("google.auth.default", side_effect=Exception("no auth")), patch("getpass.getuser", side_effect=Exception("no user")):
+        assert discover_user_identity() == "secops_user"
+
+
+
