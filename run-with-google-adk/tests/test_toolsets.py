@@ -10,23 +10,11 @@ src_dir = str(Path(__file__).resolve().parents[1] / "src")
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
-# Mock google.adk.tools.mcp_tool.mcp_toolset
-mock_mcp_toolset_mod = MagicMock()
-mock_adk = MagicMock()
-mock_adk_tools = MagicMock()
-mock_adk_tools_mcp = MagicMock()
-
-sys.modules["google.adk"] = mock_adk
-sys.modules["google.adk.tools"] = mock_adk_tools
-sys.modules["google.adk.tools.mcp_tool"] = mock_adk_tools_mcp
-sys.modules["google.adk.tools.mcp_tool.mcp_toolset"] = mock_mcp_toolset_mod
-
 from mcp_security_agent.config import AgentSettings
 from mcp_security_agent.toolsets import build_mcp_toolsets
 
 
 def test_build_toolsets_none_enabled():
-    mock_mcp_toolset_mod.reset_mock()
     with patch.dict(os.environ, {}, clear=True):
         settings = AgentSettings(_env_file=None)
         toolsets = build_mcp_toolsets(settings)
@@ -34,11 +22,11 @@ def test_build_toolsets_none_enabled():
 
 
 def test_build_toolsets_stdio_secops_and_scc():
-    mock_mcp_toolset_mod.reset_mock()
-    mock_mcp_toolset_mod.McpToolset = MagicMock(side_effect=lambda connection_params: f"Toolset({connection_params})")
-    
     with patch.dict(os.environ, {}, clear=True):
-        settings = AgentSettings(_env_file=None, LOAD_SECOPS_MCP="Y", LOAD_SCC_MCP="Y")
-        toolsets = build_mcp_toolsets(settings)
-        assert len(toolsets) == 2
-        assert mock_mcp_toolset_mod.StdioConnectionParams.call_count == 2
+        with patch("google.adk.tools.mcp_tool.mcp_toolset.McpToolset", side_effect=lambda connection_params: f"Toolset({connection_params})"), \
+             patch("google.adk.tools.mcp_tool.mcp_toolset.StdioConnectionParams") as mock_params:
+            settings = AgentSettings(_env_file=None, LOAD_SECOPS_MCP="Y", LOAD_SCC_MCP="Y")
+            toolsets = build_mcp_toolsets(settings)
+            assert len(toolsets) == 2
+            assert mock_params.call_count == 2
+

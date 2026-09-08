@@ -14,6 +14,8 @@
 """Command-line interface for the MCP Security Agent."""
 
 import asyncio
+import os
+import sys
 from pathlib import Path
 from typing import Optional
 import typer
@@ -70,8 +72,6 @@ def chat(
     soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
 ):
     """Start an interactive terminal chat session with the SOC agent powered by ADK v2."""
-    import os
-
     if secops is not None:
         os.environ["LOAD_SECOPS_MCP"] = "Y" if secops else "N"
     if scc is not None:
@@ -83,6 +83,12 @@ def chat(
 
     settings = AgentSettings()
     _display_active_toolsets(settings)
+
+    import mcp_security_agent.agent as agent_mod
+    agent = agent_mod.create_security_agent(settings)
+    agent_mod.root_agent = agent
+    if "mcp_security_agent" in sys.modules:
+        sys.modules["mcp_security_agent"].root_agent = agent
 
     try:
         from google.adk.cli.cli import run_cli, run_once_cli
@@ -124,8 +130,6 @@ def serve(
     soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
 ):
     """Run the FastAPI web server and Cloud Run REST API."""
-    import os
-
     if secops is not None:
         os.environ["LOAD_SECOPS_MCP"] = "Y" if secops else "N"
     if scc is not None:
@@ -137,6 +141,12 @@ def serve(
 
     settings = AgentSettings()
     _display_active_toolsets(settings)
+
+    import mcp_security_agent.agent as agent_mod
+    agent = agent_mod.create_security_agent(settings)
+    agent_mod.root_agent = agent
+    if "mcp_security_agent" in sys.modules:
+        sys.modules["mcp_security_agent"].root_agent = agent
 
     import uvicorn
     from mcp_security_agent.server.app import create_app

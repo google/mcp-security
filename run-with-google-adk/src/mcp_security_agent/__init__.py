@@ -13,7 +13,16 @@
 # limitations under the License.
 """MCP Security Agent powered by Google ADK v2."""
 
-from mcp_security_agent.agent import create_security_agent, root_agent
-
 __version__ = "0.2.0"
 __all__ = ["create_security_agent", "root_agent", "__version__"]
+
+
+def __getattr__(name: str):
+    if name in ("create_security_agent", "root_agent"):
+        import mcp_security_agent.agent as agent_mod
+        return getattr(agent_mod, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return __all__
