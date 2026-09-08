@@ -18,7 +18,7 @@ import uuid
 import asyncio
 from pathlib import Path
 from typing import Dict, Any, Optional, AsyncGenerator
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from mcp_security_agent import __version__
@@ -28,8 +28,10 @@ router = APIRouter()
 
 
 class ChatRequest(BaseModel):
-    prompt: str
+    prompt: Optional[str] = None
+    message: Optional[str] = None
     session_id: Optional[str] = None
+    user_id: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -38,8 +40,10 @@ class ChatResponse(BaseModel):
 
 
 @router.get("/")
+@router.get("/landing.html")
+@router.get("/chat.html")
 def get_root():
-    """Serves the main landing page of the web UI."""
+    """Serves the main investigation console of the web UI."""
     pkg_root = Path(__file__).resolve().parents[3]
     landing_file = pkg_root / "static" / "landing.html"
     index_file = pkg_root / "static" / "index.html"
@@ -48,6 +52,21 @@ def get_root():
         return FileResponse(str(landing_file))
     elif index_file.is_file():
         return FileResponse(str(index_file))
+    return JSONResponse({"status": "ok", "message": "MCP Security Agent API is running."})
+
+
+@router.get("/login")
+@router.get("/index.html")
+def get_login():
+    """Serves the login page."""
+    pkg_root = Path(__file__).resolve().parents[3]
+    index_file = pkg_root / "static" / "index.html"
+    landing_file = pkg_root / "static" / "landing.html"
+    
+    if index_file.is_file():
+        return FileResponse(str(index_file))
+    elif landing_file.is_file():
+        return FileResponse(str(landing_file))
     return JSONResponse({"status": "ok", "message": "MCP Security Agent API is running."})
 
 
@@ -113,11 +132,22 @@ async def chat_sse_stream(
     )
 
 
-@router.post("/chat", response_model=ChatResponse)
-def chat_post(request: ChatRequest) -> ChatResponse:
-    """REST JSON chat endpoint for API clients and automated workflows."""
+@router.post("/chat")
+async def chat_post(request: ChatRequest, http_request: Request):
+    """REST and SSE chat endpoint for API clients, automated workflows, and web UI."""
     sess_id = request.session_id or str(uuid.uuid4())
-    return ChatResponse(
-        response=f"Received query: {request.prompt}",
-        session_id=sess_id,
+    query_text = request.message or request.prompt or ""
+
+    accept_header = http_request.headers.get("accept", "")
+    if "text/event-stream" in accept_header or request.message is not None:
+        return StreamingResponse(
+            sse_event_generator(query_text, sess_id),
+            media_type="text/event-stream",
+        )
+
+    return JSONResponse(
+        content={
+            "response": f"Received query: {query_text}",
+            "session_id": sess_id,
+        }
     )

@@ -64,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loginBtn.addEventListener('click', () => {
         const username = usernameInput.value.trim();
         if (username) {
-            let redirectUrl = `/landing.html?username=${encodeURIComponent(username)}`;
+            localStorage.setItem('username', username);
+            let redirectUrl = `/?username=${encodeURIComponent(username)}`;
 
             // If "Start where we left off" is NOT checked, add the query parameter
             if (!startWhereLeftOffCheckbox.checked) {

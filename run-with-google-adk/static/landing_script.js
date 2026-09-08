@@ -19,17 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let waitingMessageElement = null; // Reference to the "waiting" message element
     // currentAgentResponseBuffer is no longer needed as we are streaming, not buffering.
 
-    // Get username from URL query parameter
+    // Get username from URL query parameter, localStorage, or default
     const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username');
+    let username = urlParams.get('username') || localStorage.getItem('username') || 'secops_user';
+    localStorage.setItem('username', username);
     const startNewSessionParam = urlParams.get('start_new_session'); // This line reads the new parameter
-
-
-    if (!username) {
-        alert('Username not provided. Redirecting to login page.');
-        window.location.href = '/';
-        return;
-    }
 
     // --- Dark Mode Logic ---
     function applyTheme(isDarkMode) {
@@ -266,7 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', () => {
         currentSessionId = null;
         currentUserId = null;
-        window.location.href = '/';
+        localStorage.removeItem('username');
+        window.location.href = '/login';
     });
 
     // Allow sending message with Enter key

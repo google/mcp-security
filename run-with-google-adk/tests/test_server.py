@@ -74,3 +74,19 @@ def test_chat_sse_stream():
     assert response.status_code == 200
     assert "text/event-stream" in response.headers["content-type"]
     assert "data:" in response.text
+
+
+def test_login_and_alias_routes():
+    client = TestClient(create_app())
+    for path in ["/login", "/index.html", "/landing.html", "/chat.html"]:
+        response = client.get(path)
+        assert response.status_code == 200
+
+
+def test_chat_post_sse_streaming():
+    client = TestClient(create_app())
+    response = client.post("/chat", json={"message": "Investigate alert 123", "session_id": "test-sess"})
+    assert response.status_code == 200
+    assert "text/event-stream" in response.headers["content-type"]
+    assert "data:" in response.text
+
