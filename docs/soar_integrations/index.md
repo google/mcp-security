@@ -1,7 +1,7 @@
-# SOAR Integrations
+# SOAR Integrations,
 
 This section provides documentation for the various integrations available with the SecOps SOAR MCP Server. Over 100 integrations are available, allowing interaction with a wide range of security tools and platforms.
-
+mrta.quansat775@gmail.com
 Below is a list of documented integrations. Select an integration to view its specific tools and usage instructions.
 
  * [Active Directory](active_directory.md)
