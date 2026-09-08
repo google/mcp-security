@@ -1,6 +1,7 @@
 """Unit tests for mcp_security_agent.server."""
 
 import sys
+import unicodedata
 from pathlib import Path
 from fastapi.testclient import TestClient
 
@@ -112,5 +113,18 @@ def test_static_assets():
         response = client.get(path)
         assert response.status_code == 200
         assert "no-store" in response.headers.get("cache-control", "")
+
+
+def test_index_html_no_emojis():
+    client = TestClient(create_app())
+    response = client.get("/index.html")
+    assert response.status_code == 200
+    html = response.text
+    for char in html:
+        code = ord(char)
+        if (code > 0x2000 and unicodedata.category(char) in ("So", "Sk", "Sm", "Cn")) or code > 0x1F000 or (0x2600 <= code <= 0x27BF):
+            assert char in ("`", "^", "~", "<", ">", "+", "=", "|", "•"), f"Unexpected emoji/symbol: {char!r} (U+{code:04X})"
+    assert "<svg" in html
+
 
 

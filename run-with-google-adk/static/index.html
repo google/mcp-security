@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Google SecOps AI Assistant</title>
-  <link rel="stylesheet" href="/static/app.css?v=2.1.0">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="/static/app.css?v=2.1.1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a73e8'><path d='M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z'/></svg>">
 </head>
 <body>
   <!-- Application Header -->
@@ -37,7 +37,9 @@
         <span id="currentUserDisplay">secops_user</span>
       </div>
       <button class="icon-btn" id="themeToggleBtn" title="Toggle Dark / Light theme" aria-label="Toggle theme">
-        🌓
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
       </button>
     </div>
   </header>
@@ -54,19 +56,19 @@
         <div class="sidebar-section-title">Quick SOC Workflows</div>
         <div class="quick-prompts-list">
           <button class="quick-prompt-card" data-prompt="Triage Chronicle alert ID 104 and check for true positive indicators.">
-            🚨 <strong>Triage Alert</strong>
+            <strong>Triage Alert</strong>
             <div>Analyze alert & enrich entities</div>
           </button>
           <button class="quick-prompt-card" data-prompt="Hunt for suspicious PowerShell execution and encoded commands in Chronicle SIEM.">
-            🎯 <strong>Threat Hunting</strong>
+            <strong>Threat Hunting</strong>
             <div>Construct UDM queries for TTPs</div>
           </button>
           <button class="quick-prompt-card" data-prompt="Check VirusTotal GTI reputation and threat scores for IP 198.51.100.1.">
-            🔍 <strong>GTI Reputation</strong>
+            <strong>GTI Reputation</strong>
             <div>Lookup threat scores & hashes</div>
           </button>
           <button class="quick-prompt-card" data-prompt="List high-severity Google Cloud Security Command Center (SCC) findings from the last 24 hours.">
-            ☁️ <strong>SCC Audit</strong>
+            <strong>SCC Audit</strong>
             <div>Review cloud security findings</div>
           </button>
         </div>
@@ -82,7 +84,11 @@
     <main class="chat-workspace">
       <div class="messages-container" id="messagesContainer">
         <div class="empty-state" id="emptyState">
-          <div class="empty-icon">🛡️</div>
+          <div class="empty-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
           <h2 class="empty-title">SecOps Investigation Workspace</h2>
           <p class="empty-desc">
             Interact with Google SecOps tools, run UDM searches, inspect Google Cloud SCC findings, and analyze threat intelligence powered by Google ADK v2 and the Model Context Protocol.
@@ -131,6 +137,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="/static/app.js?v=2.1.0"></script>
+  <script src="/static/app.js?v=2.1.1"></script>
 </body>
 </html>
