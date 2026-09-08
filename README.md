@@ -1,5 +1,10 @@
 # Google Security Operations and Threat Intelligence MCP Server
 
+> [!IMPORTANT]
+> **Looking for the easiest way to integrate?**
+>
+> We highly recommend using the new **[Remote MCP Server for Google SecOps](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559)**. This fully managed, enterprise-ready server is significantly easier to configure and maintain than standalone local alternatives, and is the preferred implementation path for all security operations environments.
+
 This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop or the cline.bot VS Code extension) to access Google's security products and services:
 
 1. **Remote MCP Server for Google SecOps** - Fully managed, enterprise-ready MCP server (Recommended)
