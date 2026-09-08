@@ -90,3 +90,18 @@ def test_chat_post_sse_streaming():
     assert "text/event-stream" in response.headers["content-type"]
     assert "data:" in response.text
 
+
+def test_no_cache_headers():
+    client = TestClient(create_app())
+    for path in ["/", "/login", "/landing.html", "/index.html"]:
+        response = client.get(path)
+        assert response.status_code == 200
+        assert "no-store" in response.headers.get("cache-control", "")
+        assert "no-cache" in response.headers.get("pragma", "")
+
+
+def test_favicon():
+    client = TestClient(create_app())
+    response = client.get("/favicon.ico")
+    assert response.status_code == 204
+

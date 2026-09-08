@@ -76,6 +76,12 @@ def health_check() -> Dict[str, str]:
     return {"status": "ok"}
 
 
+@router.get("/favicon.ico")
+def get_favicon():
+    """Returns 204 No Content for browser favicon requests."""
+    return JSONResponse(content={}, status_code=204)
+
+
 @router.get("/app_name")
 def get_app_name() -> Dict[str, str]:
     """Returns the application display name for the Web UI navbar."""
