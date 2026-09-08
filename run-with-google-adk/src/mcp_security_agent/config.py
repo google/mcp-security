@@ -27,11 +27,8 @@ _env_files = (
 
 
 def _is_configured(val: Optional[str]) -> bool:
-    """Checks if a configuration string is non-empty and not a placeholder like NOT_SET."""
-    if not val:
-        return False
-    clean = val.strip()
-    return bool(clean and clean.upper() not in ("NOT_SET", "NONE", "NULL", ""))
+    """Checks if a configuration string is set and non-empty."""
+    return bool(val and val.strip())
 
 
 def _discover_local_adc() -> Optional[str]:

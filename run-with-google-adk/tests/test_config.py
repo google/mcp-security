@@ -61,15 +61,15 @@ def test_tool_auto_detection_from_credentials():
         assert settings.load_scc_mcp is False
 
 
-def test_tool_auto_detection_ignores_placeholders():
+def test_tool_auto_detection_empty_or_whitespace_values():
     with patch.dict(
         os.environ,
         {
-            "VT_APIKEY": "NOT_SET",
-            "SOAR_URL": "NOT_SET",
-            "SOAR_APP_KEY": "NOT_SET",
-            "CHRONICLE_PROJECT_ID": "NOT_SET",
-            "CHRONICLE_CUSTOMER_ID": "NOT_SET",
+            "VT_APIKEY": "   ",
+            "SOAR_URL": "",
+            "SOAR_APP_KEY": "  ",
+            "CHRONICLE_PROJECT_ID": "",
+            "CHRONICLE_CUSTOMER_ID": "",
         },
         clear=True,
     ):
