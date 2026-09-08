@@ -105,3 +105,12 @@ def test_favicon():
     response = client.get("/favicon.ico")
     assert response.status_code == 204
 
+
+def test_static_assets():
+    client = TestClient(create_app())
+    for path in ["/static/app.css", "/static/app.js"]:
+        response = client.get(path)
+        assert response.status_code == 200
+        assert "no-store" in response.headers.get("cache-control", "")
+
+

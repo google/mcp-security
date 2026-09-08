@@ -40,34 +40,18 @@ class ChatResponse(BaseModel):
 
 
 @router.get("/")
+@router.get("/index.html")
 @router.get("/landing.html")
 @router.get("/chat.html")
-def get_root():
-    """Serves the main investigation console of the web UI."""
-    pkg_root = Path(__file__).resolve().parents[3]
-    landing_file = pkg_root / "static" / "landing.html"
-    index_file = pkg_root / "static" / "index.html"
-    
-    if landing_file.is_file():
-        return FileResponse(str(landing_file))
-    elif index_file.is_file():
-        return FileResponse(str(index_file))
-    return JSONResponse({"status": "ok", "message": "MCP Security Agent API is running."})
-
-
 @router.get("/login")
-@router.get("/index.html")
-def get_login():
-    """Serves the login page."""
+def get_root():
+    """Serves the unified investigation console of the web UI."""
     pkg_root = Path(__file__).resolve().parents[3]
     index_file = pkg_root / "static" / "index.html"
-    landing_file = pkg_root / "static" / "landing.html"
-    
     if index_file.is_file():
         return FileResponse(str(index_file))
-    elif landing_file.is_file():
-        return FileResponse(str(landing_file))
     return JSONResponse({"status": "ok", "message": "MCP Security Agent API is running."})
+
 
 
 @router.get("/healthz")
