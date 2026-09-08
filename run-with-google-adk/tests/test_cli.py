@@ -26,6 +26,9 @@ def test_cli_info():
     assert result.exit_code == 0
     assert "MCP Security Agent v0.2.0" in result.stdout
     assert "Model:" in result.stdout
+    assert "Project:" in result.stdout
+    assert "ADC:" in result.stdout
+
 
 
 def test_cli_chat_query():

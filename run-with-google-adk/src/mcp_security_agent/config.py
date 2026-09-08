@@ -26,6 +26,20 @@ _env_files = (
 )
 
 
+def _discover_local_adc() -> Optional[str]:
+    """Finds local .gcloud/application_default_credentials.json if present."""
+    candidates = [
+        Path.cwd() / ".gcloud" / "application_default_credentials.json",
+        _pkg_dir / ".gcloud" / "application_default_credentials.json",
+        _pkg_dir.parent / ".gcloud" / "application_default_credentials.json",
+    ]
+    for c in candidates:
+        if c.is_file():
+            return str(c)
+    return None
+
+
+
 class AgentSettings(BaseSettings):
     """Configuration settings loaded from environment variables or .env file."""
     model_config = SettingsConfigDict(
@@ -56,8 +70,36 @@ class AgentSettings(BaseSettings):
 
     # Credentials & Impersonation
     secops_sa_path: Optional[str] = Field(default=None, alias="SECOPS_SA_PATH")
-    google_application_credentials: Optional[str] = Field(default=None, alias="GOOGLE_APPLICATION_CREDENTIALS")
+    google_application_credentials: Optional[str] = Field(
+        default_factory=lambda: _discover_local_adc(), alias="GOOGLE_APPLICATION_CREDENTIALS"
+    )
     secops_impersonate_service_account: Optional[str] = Field(default=None, alias="SECOPS_IMPERSONATE_SERVICE_ACCOUNT")
+
+    def __init__(self, **values):
+        super().__init__(**values)
+        self.bootstrap_environment()
+
+    def bootstrap_environment(self) -> None:
+        """Configures environment variables for Google Cloud authentication and Cloudtop compatibility."""
+        import os
+        if self.google_application_credentials and not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.google_application_credentials
+            if not os.environ.get("CLOUDSDK_CONFIG"):
+                os.environ["CLOUDSDK_CONFIG"] = str(Path(self.google_application_credentials).parent)
+
+        if "GOOGLE_API_USE_CLIENT_CERTIFICATE" not in os.environ:
+            os.environ["GOOGLE_API_USE_CLIENT_CERTIFICATE"] = "false"
+        if "GOOGLE_API_USE_MTLS_ENDPOINT" not in os.environ:
+            os.environ["GOOGLE_API_USE_MTLS_ENDPOINT"] = "never"
+        if "CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE" not in os.environ:
+            os.environ["CLOUDSDK_CONTEXT_AWARE_USE_CLIENT_CERTIFICATE"] = "false"
+
+        target_project = self.google_cloud_project or os.environ.get("GCP_PROJECT_ID")
+        if target_project and not os.environ.get("GOOGLE_API_KEY"):
+            os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "TRUE"
+            if not os.environ.get("GOOGLE_CLOUD_PROJECT"):
+                os.environ["GOOGLE_CLOUD_PROJECT"] = target_project
+
     
     # Chronicle SIEM Params
     chronicle_project_id: Optional[str] = Field(default=None, alias="CHRONICLE_PROJECT_ID")
