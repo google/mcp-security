@@ -215,3 +215,6 @@ app_data.db
 
 # devcontainer
 .devcontainer/
+
+# IDE / Project tools
+.cm_project

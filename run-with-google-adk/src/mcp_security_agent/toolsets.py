@@ -104,6 +104,25 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
 
     stdio_env = _build_stdio_env()
 
+    def _get_stdio_cmd_args(server_path: Path, script_relpath: str) -> tuple[str, list[str], dict[str, str]]:
+        import shutil
+        import sys
+        import os
+
+        env = dict(stdio_env)
+        if shutil.which("uv"):
+            return "uv", ["--directory", str(server_path), "run", script_relpath], env
+
+        logger.warning(
+            "uv executable not found in PATH; falling back to sys.executable (%s) for %s",
+            sys.executable,
+            server_path.name,
+        )
+        existing_pp = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = f"{server_path}{os.pathsep}{existing_pp}" if existing_pp else str(server_path)
+        script_full = str(server_path / script_relpath)
+        return sys.executable, [script_full], env
+
     # 1. Google SecOps SIEM MCP
     if settings.load_secops_mcp:
         if settings.secops_mcp_url:
@@ -111,11 +130,12 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
         else:
             secops_dir = server_dir / "secops"
             logger.info("Configuring SecOps SIEM MCP via Stdio subprocess at %s", secops_dir)
+            cmd, args, env = _get_stdio_cmd_args(secops_dir, "secops_mcp/server.py")
             conn = StdioConnectionParams(
                 server_params=StdioServerParameters(
-                    command="uv",
-                    args=["--directory", str(secops_dir), "run", "secops_mcp/server.py"],
-                    env=stdio_env,
+                    command=cmd,
+                    args=args,
+                    env=env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -128,11 +148,12 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
         else:
             scc_dir = server_dir / "scc"
             logger.info("Configuring SCC MCP via Stdio subprocess at %s", scc_dir)
+            cmd, args, env = _get_stdio_cmd_args(scc_dir, "scc_mcp.py")
             conn = StdioConnectionParams(
                 server_params=StdioServerParameters(
-                    command="uv",
-                    args=["--directory", str(scc_dir), "run", "scc_mcp.py"],
-                    env=stdio_env,
+                    command=cmd,
+                    args=args,
+                    env=env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -145,11 +166,12 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
         else:
             gti_dir = server_dir / "gti"
             logger.info("Configuring GTI MCP via Stdio subprocess at %s", gti_dir)
+            cmd, args, env = _get_stdio_cmd_args(gti_dir, "gti_mcp/server.py")
             conn = StdioConnectionParams(
                 server_params=StdioServerParameters(
-                    command="uv",
-                    args=["--directory", str(gti_dir), "run", "gti_mcp/server.py"],
-                    env=stdio_env,
+                    command=cmd,
+                    args=args,
+                    env=env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )
@@ -162,11 +184,12 @@ def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
         else:
             soar_dir = server_dir / "secops-soar"
             logger.info("Configuring SecOps SOAR MCP via Stdio subprocess at %s", soar_dir)
+            cmd, args, env = _get_stdio_cmd_args(soar_dir, "secops_soar_mcp/server.py")
             conn = StdioConnectionParams(
                 server_params=StdioServerParameters(
-                    command="uv",
-                    args=["--directory", str(soar_dir), "run", "secops_soar_mcp/server.py"],
-                    env=stdio_env,
+                    command=cmd,
+                    args=args,
+                    env=env,
                 ),
                 timeout=settings.stdio_timeout_seconds,
             )

@@ -67,3 +67,17 @@ def test_build_toolsets_stdio_env_propagation():
             assert env["GOOGLE_API_USE_MTLS_ENDPOINT"] == "never"
 
 
+def test_build_toolsets_uv_fallback_to_sys_executable():
+    with patch.dict(os.environ, {}, clear=True), patch("shutil.which", return_value=None):
+        with patch("google.adk.tools.mcp_tool.mcp_toolset.McpToolset", side_effect=lambda connection_params: f"Toolset({connection_params})"), \
+             patch("google.adk.tools.mcp_tool.mcp_toolset.StdioConnectionParams") as mock_params:
+            settings = AgentSettings(_env_file=None, LOAD_SECOPS_MCP="Y")
+            toolsets = build_mcp_toolsets(settings)
+            assert len(toolsets) == 1
+            call_kwargs = mock_params.call_args.kwargs
+            server_params = call_kwargs["server_params"]
+            assert server_params.command == sys.executable
+            assert "secops_mcp/server.py" in server_params.args[0]
+            assert "PYTHONPATH" in server_params.env
+
+

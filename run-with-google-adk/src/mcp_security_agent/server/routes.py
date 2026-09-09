@@ -130,6 +130,7 @@ class BoundedSessionService(InMemorySessionService):
         super().__init__()
         self.max_sessions = max_sessions
         self._session_order: OrderedDict = OrderedDict()
+        self._lock = threading.Lock()
 
     def _create_session_impl(
         self,
@@ -139,22 +140,23 @@ class BoundedSessionService(InMemorySessionService):
         state: Optional[Dict[str, Any]] = None,
         session_id: Optional[str] = None,
     ) -> Any:
-        while len(self._session_order) >= self.max_sessions:
-            (old_app, old_user, old_sess), _ = self._session_order.popitem(last=False)
-            if old_app in self.sessions and old_user in self.sessions[old_app]:
-                self.sessions[old_app][old_user].pop(old_sess, None)
-                if not self.sessions[old_app][old_user]:
-                    self.sessions[old_app].pop(old_user, None)
-            if old_app in self.sessions and not self.sessions[old_app]:
-                self.sessions.pop(old_app, None)
-        sess = super()._create_session_impl(
-            app_name=app_name,
-            user_id=user_id,
-            state=state,
-            session_id=session_id,
-        )
-        self._session_order[(app_name, user_id, sess.id)] = True
-        return sess
+        with self._lock:
+            while len(self._session_order) >= self.max_sessions:
+                (old_app, old_user, old_sess), _ = self._session_order.popitem(last=False)
+                if old_app in self.sessions and old_user in self.sessions[old_app]:
+                    self.sessions[old_app][old_user].pop(old_sess, None)
+                    if not self.sessions[old_app][old_user]:
+                        self.sessions[old_app].pop(old_user, None)
+                if old_app in self.sessions and not self.sessions[old_app]:
+                    self.sessions.pop(old_app, None)
+            sess = super()._create_session_impl(
+                app_name=app_name,
+                user_id=user_id,
+                state=state,
+                session_id=session_id,
+            )
+            self._session_order[(app_name, user_id, sess.id)] = True
+            return sess
 
     def _delete_session_impl(
         self,
@@ -163,17 +165,18 @@ class BoundedSessionService(InMemorySessionService):
         user_id: str,
         session_id: str,
     ) -> None:
-        self._session_order.pop((app_name, user_id, session_id), None)
-        super()._delete_session_impl(
-            app_name=app_name,
-            user_id=user_id,
-            session_id=session_id,
-        )
-        if app_name in self.sessions and user_id in self.sessions[app_name]:
-            if not self.sessions[app_name][user_id]:
-                self.sessions[app_name].pop(user_id, None)
-        if app_name in self.sessions and not self.sessions[app_name]:
-            self.sessions.pop(app_name, None)
+        with self._lock:
+            self._session_order.pop((app_name, user_id, session_id), None)
+            super()._delete_session_impl(
+                app_name=app_name,
+                user_id=user_id,
+                session_id=session_id,
+            )
+            if app_name in self.sessions and user_id in self.sessions[app_name]:
+                if not self.sessions[app_name][user_id]:
+                    self.sessions[app_name].pop(user_id, None)
+            if app_name in self.sessions and not self.sessions[app_name]:
+                self.sessions.pop(app_name, None)
 
 
 _runner: Optional[Runner] = None
