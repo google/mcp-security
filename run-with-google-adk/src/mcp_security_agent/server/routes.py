@@ -143,6 +143,10 @@ class BoundedSessionService(InMemorySessionService):
             (old_app, old_user, old_sess), _ = self._session_order.popitem(last=False)
             if old_app in self.sessions and old_user in self.sessions[old_app]:
                 self.sessions[old_app][old_user].pop(old_sess, None)
+                if not self.sessions[old_app][old_user]:
+                    self.sessions[old_app].pop(old_user, None)
+            if old_app in self.sessions and not self.sessions[old_app]:
+                self.sessions.pop(old_app, None)
         sess = super()._create_session_impl(
             app_name=app_name,
             user_id=user_id,
@@ -165,6 +169,11 @@ class BoundedSessionService(InMemorySessionService):
             user_id=user_id,
             session_id=session_id,
         )
+        if app_name in self.sessions and user_id in self.sessions[app_name]:
+            if not self.sessions[app_name][user_id]:
+                self.sessions[app_name].pop(user_id, None)
+        if app_name in self.sessions and not self.sessions[app_name]:
+            self.sessions.pop(app_name, None)
 
 
 _runner: Optional[Runner] = None
@@ -189,10 +198,10 @@ def get_runner() -> Optional[Runner]:
         with _runner_lock:
             if _runner is None:
                 settings = get_settings()
-                agent = getattr(agent_mod, "root_agent", None)
+                agent = getattr(agent_mod, "_root_agent", None)
                 if agent is None:
                     agent = agent_mod.create_security_agent(settings)
-                    agent_mod.root_agent = agent
+                    agent_mod._root_agent = agent
                 if agent is None:
                     return None
                 session_svc = get_session_service()

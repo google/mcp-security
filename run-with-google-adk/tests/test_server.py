@@ -184,24 +184,71 @@ def test_bounded_session_service_eviction():
 
     import asyncio
     async def run_test():
+        # Test eviction within single user
         for i in range(12):
             await service.create_session(
                 app_name="test_app",
                 user_id="user",
                 session_id=f"sess_{i}",
             )
-        # Should have evicted older sessions so total <= max_sessions
         assert len(service._session_order) == 10
         user_sessions = service.sessions["test_app"]["user"]
         assert len(user_sessions) == 10
-        # Oldest sessions (sess_0, sess_1) must have been evicted
         assert "sess_0" not in user_sessions
         assert "sess_1" not in user_sessions
-        # Newest sessions must be present
         assert "sess_10" in user_sessions
         assert "sess_11" in user_sessions
 
+        # Test eviction across distinct users and empty user dict pruning
+        multi_service = BoundedSessionService(max_sessions=5)
+        for i in range(8):
+            await multi_service.create_session(
+                app_name="test_app",
+                user_id=f"user_{i}",
+                session_id=f"sess_{i}",
+            )
+        assert len(multi_service._session_order) == 5
+        # Users 0, 1, 2 should be completely evicted and pruned from test_app dict
+        assert "user_0" not in multi_service.sessions["test_app"]
+        assert "user_1" not in multi_service.sessions["test_app"]
+        assert "user_2" not in multi_service.sessions["test_app"]
+        # Users 3..7 should remain
+        for i in range(3, 8):
+            assert f"user_{i}" in multi_service.sessions["test_app"]
+
+        # Test explicit session deletion and empty dict cleanup
+        await multi_service.delete_session(
+            app_name="test_app",
+            user_id="user_7",
+            session_id="sess_7",
+        )
+        assert "user_7" not in multi_service.sessions["test_app"]
+
     asyncio.run(run_test())
+
+
+def test_get_runner_agent_creation():
+    from unittest.mock import patch, MagicMock
+    import mcp_security_agent.server.routes as server_routes
+    import mcp_security_agent.agent as agent_mod
+
+    # Reset globals for test isolation
+    original_runner = server_routes._runner
+    original_root = getattr(agent_mod, "_root_agent", None)
+    try:
+        server_routes._runner = None
+        agent_mod._root_agent = None
+
+        mock_agent = MagicMock()
+        with patch("mcp_security_agent.agent.create_security_agent", return_value=mock_agent) as mock_create, \
+             patch("mcp_security_agent.server.routes.Runner") as mock_runner_cls:
+            runner = server_routes.get_runner()
+            assert runner is not None
+            mock_create.assert_called_once()
+            assert agent_mod._root_agent is mock_agent
+    finally:
+        server_routes._runner = original_runner
+        agent_mod._root_agent = original_root
 
 
 def test_dompurify_xss_protection():
