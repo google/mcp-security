@@ -17,8 +17,11 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from secops_mcp.tools.security_alerts import get_security_alerts
+from secops_mcp.tools.security_alerts import (
+    do_update_security_alert,
+    get_security_alert_by_id,
+    get_security_alerts,
+)
 
 
 @pytest.fixture
@@ -131,3 +134,78 @@ async def test_get_security_alerts_preserves_unspecified_verdict(chronicle_clien
     )
 
     assert "Verdict: VERDICT_UNSPECIFIED" in output
+
+
+@pytest.mark.asyncio
+async def test_get_security_alerts_empty_returns_str(chronicle_client):
+    chronicle_client.get_alerts.return_value = []
+
+    result = await get_security_alerts(project_id="test", customer_id="test")
+
+    assert isinstance(result, str)
+    assert result == "No security alerts found for the specified time range."
+
+
+@pytest.mark.asyncio
+async def test_get_security_alerts_error_returns_str(chronicle_client):
+    chronicle_client.get_alerts.side_effect = RuntimeError("Chronicle error")
+
+    result = await get_security_alerts(project_id="test", customer_id="test")
+
+    assert isinstance(result, str)
+    assert "Error retrieving security alerts: Chronicle error" in result
+
+
+@pytest.mark.asyncio
+async def test_get_security_alert_by_id_returns_json_string(chronicle_client):
+    mock_alert = {
+        "id": "de_f47e71ca",
+        "detection": [{"ruleName": "Phishing"}],
+        "createdTime": "2026-05-28T18:58:18Z",
+        "status": "OPEN",
+    }
+    chronicle_client.get_alert.return_value = mock_alert
+
+    result = await get_security_alert_by_id(alert_id="de_f47e71ca")
+
+    assert isinstance(result, str)
+    parsed = json.loads(result)
+    assert parsed == mock_alert
+
+
+@pytest.mark.asyncio
+async def test_get_security_alert_by_id_handles_error(chronicle_client):
+    chronicle_client.get_alert.side_effect = Exception("Alert not found")
+
+    result = await get_security_alert_by_id(alert_id="de_invalid")
+
+    assert isinstance(result, str)
+    assert "Error retrieving security alert for de_invalid: Alert not found" in result
+
+
+@pytest.mark.asyncio
+async def test_do_update_security_alert_returns_json_string(chronicle_client):
+    mock_update = {
+        "id": "de_f47e71ca",
+        "status": "CLOSED",
+        "verdict": "FALSE_POSITIVE",
+    }
+    chronicle_client.update_alert.return_value = mock_update
+
+    result = await do_update_security_alert(
+        alert_id="de_f47e71ca", status="CLOSED", verdict="FALSE_POSITIVE"
+    )
+
+    assert isinstance(result, str)
+    parsed = json.loads(result)
+    assert parsed == mock_update
+
+
+@pytest.mark.asyncio
+async def test_do_update_security_alert_handles_error(chronicle_client):
+    chronicle_client.update_alert.side_effect = Exception("Update failed")
+
+    result = await do_update_security_alert(alert_id="de_f47e71ca", status="CLOSED")
+
+    assert isinstance(result, str)
+    assert result == "Error updating security alert for de_f47e71ca: Update failed"
