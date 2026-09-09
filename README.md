@@ -211,6 +211,16 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
 
 ### Using uv (Recommended)
 
+> [!TIP]
+> **Setup Tips for MCP Client Configurations:**
+> - **Absolute path to `uv`:** Desktop clients (Claude Desktop, Cursor, VS Code / Cline) do not inherit shell profile `PATH` additions. If your client reports `spawn uv ENOENT` or command not found, run `which uv` in your terminal and use the full path for `"command"` (e.g., `"/Users/<username>/.local/bin/uv"` on macOS or `"/home/<username>/.local/bin/uv"` on Linux).
+> - **Script Names & Directory Levels (Copy-Paste Trap):**
+>   - `secops`: points to `server/secops/secops_mcp` running `server.py`
+>   - `secops-soar`: points to `server/secops-soar/secops_soar_mcp` running `server.py`
+>   - `gti`: points to `server/gti/gti_mcp` running `server.py`
+>   - **`scc-mcp`:** points to `server/scc` running **`scc_mcp.py`** (**Note:** `scc_mcp.py`, NOT `server.py`!).
+>   - Do not set `--directory` to the top-level `server/` directory or omit the inner `_mcp` folder for SecOps/SOAR/GTI.
+
 ```json
 {
   "mcpServers": {
@@ -270,20 +280,26 @@ If you use multiple MCP clients, you can maintain a **single config file** and s
 }
 ```
 
-NOTE: `uv` also supports passing an `.env` file like so:
-```
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/the/repo/server/...",
-        "run",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
-        "server.py"
-      ]
-```
+#### Passing Environment Variables via `.env` File
 
-`SOAR_APP_KEY` and `VT_APIKEY` are good candidates for `.env`
+`uv` supports passing an `.env` file to load secrets:
+
+> [!WARNING]
+> **`--env-file` Placement:** The `--env-file` flag is an argument to `uv run`. It must be placed **after** `run` in the `args` array:
+> ```json
+>       "command": "uv",
+>       "args": [
+>         "--directory",
+>         "/path/to/the/repo/server/secops/secops_mcp",
+>         "run",
+>         "--env-file",
+>         "/path/to/the/repo/.env",
+>         "server.py"
+>       ]
+> ```
+> Placing `--env-file` before `run` (e.g. `uv --env-file run`) is invalid and causes an unrecognized argument error.
+
+Sensitive keys like `SOAR_APP_KEY` and `VT_APIKEY` are great candidates for `.env`.
 
 
 ### Using pip
@@ -351,36 +367,54 @@ You can also use pip instead of uv to install and run the MCP servers. This appr
 
 ### When to use uv vs pip
 
-- **uv**: Recommended for most users because it offers faster package installation, better dependency resolution, and isolated environments. It also supports loading environment variables from a file.
-- **pip**: Use when you prefer the standard Python package manager or when you have specific environment setup requirements.
+- **uv (Recommended)**: Recommended for most users because it offers faster package installation, reliable dependency resolution, and isolated environments. `uv` handles per-server dependency isolation automatically without requiring you to manually create or activate virtual environments.
+  - **Standalone `uv` vs. Virtual Environment:** A standalone `uv` installation (installed globally via Astral's installer) is recommended. However, running `uv` from within an existing virtual environment or using an existing venv's Python interpreter is also supported.
+- **pip**: Use when you prefer the standard Python package manager or when you have specific environment setup requirements. As shown above, configuring `"command": "/bin/bash"` with `-c "cd ... && pip install -e . && ..."` bypasses `uv` and uses your default environment.
 
 #### `UV_ENV_FILE`
 
-The `--env-file` option allows `uv` to use a .env file for environment variables. You can create this file or use system environment variables as described in the usage guide.
+The `--env-file` option allows `uv` to use a `.env` file for environment variables. You can create this file or use system environment variables as described in the usage guide.
 
-Alternatively, you can set `UV_ENV_FILE` to your `.env` file and omit the `--env-file` portion of the configuration.
+Alternatively, you can set the `UV_ENV_FILE` environment variable to your `.env` file path and omit the `--env-file` argument in the configuration.
 
 Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables) for detailed instructions on how to set up these environment variables.
 
 
-### Troubleshooting
+### Troubleshooting Setup Friction
 
-Running the MCP Server from the CLI (and outside of your MCP client) can reveal issues:
-```
-uv --verbose \
-  --directory "/Users/dandye/Projects/google-mcp-security/server/scc" \
-  run \
-  --env-file "/Users/dandye/Projects/google-mcp-security/.env" \
-  scc_mcp.py
-```
+If you run into issues when setting up the MCP servers, check these common pitfalls:
 
-Check your PATH(s):
+1. **Client Cannot Find `uv` (`spawn uv ENOENT` / Command Not Found):**
+   - **Cause:** Desktop apps (Claude Desktop, Cursor, VS Code / Cline) do not inherit shell profile environment variables (such as `~/.local/bin` in `PATH`).
+   - **Fix:** In your terminal, run `which uv`. Copy the absolute path (e.g. `/Users/<username>/.local/bin/uv` or `/usr/local/bin/uv`) and set `"command": "/absolute/path/to/uv"` in your client config JSON.
 
-```which uv``` # you may need to restart MCP Client after installing uv
+2. **Server Script or Directory Not Found (The SCC Copy-Paste Trap):**
+   - **Cause:** SecOps, SecOps SOAR, and GTI run `server.py` from nested package directories (`secops_mcp`, `secops_soar_mcp`, `gti_mcp`), while SCC runs `scc_mcp.py` directly from `server/scc/`.
+   - **Fix:** Check that your SCC configuration specifies `"scc_mcp.py"`, **not** `"server.py"`. Also verify that `--directory` points to the specific package directory (e.g. `server/secops/secops_mcp`), not the top-level `server/` folder.
 
-```which python || which python3```
+3. **SecOps SOAR SSL Certificate Errors (`CERTIFICATE_VERIFY_FAILED`):**
+   - **Cause:** On macOS, Python installations frequently do not trust system certificates by default.
+   - **Fix:** Run `/Applications/Python\ 3.x/Install\ Certificates.command` (matching your Python version), or set `export SSL_CERT_FILE=$(python3 -m certifi)`.
 
-```python --version || python3 --version```
+4. **`--env-file` Syntax and Argument Order:**
+   - **Fix:** `--env-file` is a flag to `uv run` and must come **after** `run` in the `args` array: `["run", "--env-file", "/path/to/.env", "server.py"]`. Placing it before `run` will produce command syntax errors.
+
+5. **Testing Server Startup via CLI:**
+   Running the MCP server directly in your terminal outside of the client helps reveal exact tracebacks:
+   ```bash
+   uv --verbose \
+     --directory "/path/to/repo/server/scc" \
+     run \
+     --env-file "/path/to/repo/.env" \
+     scc_mcp.py
+   ```
+
+   Check your environment and tools:
+   ```bash
+   which uv      # check uv binary location
+   which python3 # check active python
+   python3 --version
+   ```
 
 
 

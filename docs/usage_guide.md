@@ -25,8 +25,10 @@ Before you begin, make sure you have:
    - [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) based agent (a prebuilt one is provided)
 
 4. **Python environment tools**:
-   - `uv` - [The Python package installer](https://docs.astral.sh/uv/) used to run the MCP servers with isolated environments
-     - See [Installing uv](https://docs.astral.sh/uv/getting-started/installation/) on the [Astral docs site](https://docs.astral.sh/uv/)
+   - `uv` - [The Python package installer and runner](https://docs.astral.sh/uv/) used to run the MCP servers with isolated environments
+     - See [Installing uv](https://docs.astral.sh/uv/getting-started/installation/) on the [Astral docs site](https://docs.astral.sh/uv/) for official installation options (`curl -LsSf https://astral.sh/uv/install.sh | sh` on macOS/Linux or `irm https://astral.sh/uv/install.ps1 | iex` on Windows).
+     - **Is uv from a virtual environment acceptable?** Yes, using `uv` from an existing virtual environment or pointing to a venv's Python binary works. However, installing `uv` standalone globally is strongly recommended because `uv run` handles per-server dependency isolation automatically without requiring you to manually create or manage virtual environments for each server.
+     - **Is an absolute path to uv required?** In terminal shells, `uv` is typically found on your `PATH`. However, desktop GUI clients (Claude Desktop, Cursor, VS Code / Cline launched from desktop shortcuts or OS menus) often do **not** inherit interactive shell `PATH` exports (such as `~/.local/bin`). If your client reports `spawn uv ENOENT` or "command not found", you must specify the absolute path to `uv` (find it by running `which uv` in your terminal, e.g., `/Users/<username>/.local/bin/uv` or `/home/<username>/.local/bin/uv`).
 
 ## Getting Started
 
@@ -87,12 +89,18 @@ Once configured, you can interact with the MCP servers by asking Claude to perfo
 
 ## MCP Server Configuration Reference
 
-Here's a complete reference configuration for all available MCP servers. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys:
+Here's a complete reference configuration for all available MCP servers. However, we strongly recommend using environment variables instead of hardcoding sensitive information like API keys.
 
-**NOTE:** For OSX users, if you used [this one-liner](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) to install uv, use the full path to the uv binary for the "command" value below, as uv will not be placed in the system path for Claude to use! For example: `/Users/yourusername/.local/bin/uv` instead of just `uv`.
-
-Additionally, for the secops-soar MCP server, you will need use the CA list bundled with the certifi package. This can be done via the following command. Change the Python minor version to match whatever version you are currently running. (ex. `Python\ 3.11`):
-`/Applications/Python\ 3.12/Install\ Certificates.command`
+> [!IMPORTANT]
+> **Key Configuration Details to Prevent Common Setup Errors:**
+> 1. **Absolute path to `uv` for GUI clients:** Desktop applications like Claude Desktop, Cursor, or VS Code / Cline often fail to locate `uv` in your shell `PATH` (resulting in `spawn uv ENOENT`). Run `which uv` in your terminal and replace `"command": "uv"` with the full absolute path (e.g., `"/Users/yourusername/.local/bin/uv"` on macOS or `"/home/yourusername/.local/bin/uv"` on Linux).
+> 2. **Directory paths and script entry points (Copy-Paste Trap):**
+>    - **SecOps:** `--directory` points to `/path/to/the/repo/server/secops/secops_mcp` running `server.py`.
+>    - **SecOps SOAR:** `--directory` points to `/path/to/the/repo/server/secops-soar/secops_soar_mcp` running `server.py`.
+>    - **GTI:** `--directory` points to `/path/to/the/repo/server/gti/gti_mcp` running `server.py`.
+>    - **SCC:** `--directory` points to `/path/to/the/repo/server/scc` running `scc_mcp.py` (**Notice:** `scc_mcp.py`, NOT `server.py`!).
+>    - **Do NOT** set `--directory` to `/path/to/the/repo/server/` or omit the nested `_mcp` directory for SecOps/SOAR/GTI. Doing so causes `Failed to run 'server.py': No such file or directory`.
+> 3. **SecOps SOAR CA Certificates:** For `secops-soar`, Python may need CA certificates bundled with `certifi`. On macOS, run `/Applications/Python\ 3.x/Install\ Certificates.command` (matching your Python version), or ensure `SSL_CERT_FILE` points to certifi's CA bundle.
 
 ```json
 {
@@ -152,22 +160,38 @@ Additionally, for the secops-soar MCP server, you will need use the CA list bund
 }
 ```
 
-### Using .env and Env Vars
+### Environment Variables: Inline `"env"` vs. `--env-file`
 
-`uv` supports passing an `.env` file like so:
-```
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/the/repo/server/...",
-        "run",
-        "--env-file",
-        "/path/to/the/repo/server/.env",
-        "server.py"
-      ]
-```
+You can supply environment variables to MCP servers in one of two ways:
 
-The `--env-file` option in the configuration allows `uv` to use a .env file for environment variables. Make sure to create this file with your sensitive information, or use system environment variables as described below.
+1. **Inline via `"env"` block (Standard MCP Client Config):**
+   Set variables directly in your client's JSON configuration under `"env"`:
+   ```json
+   "env": {
+     "CHRONICLE_PROJECT_ID": "your-project-id",
+     "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+     "CHRONICLE_REGION": "us"
+   }
+   ```
+
+2. **Via `.env` file using `uv run --env-file`:**
+   Keep sensitive credentials in an `.env` file on disk rather than hardcoding them in the client JSON config.
+
+> [!WARNING]
+> **`--env-file` Flag Placement:**
+> In `uv`, `--env-file` is a flag for the `run` command. It must be placed **after** `run` in the `args` array:
+> ```json
+>       "command": "uv",
+>       "args": [
+>         "--directory",
+>         "/path/to/the/repo/server/secops/secops_mcp",
+>         "run",
+>         "--env-file",
+>         "/path/to/the/repo/.env",
+>         "server.py"
+>       ]
+> ```
+> **Syntax Error:** Putting `--env-file` before `run` (e.g., `uv --env-file ... run`) is invalid syntax and `uv` will exit with an unrecognized option error. Alternatively, you can set the environment variable `UV_ENV_FILE=/path/to/.env` in your system environment.
 
 ### Setting Up Environment Variables
 
@@ -250,15 +274,66 @@ The LLM will use the SCC server to list high-priority vulnerabilities and provid
 
 ## Troubleshooting
 
-If you encounter issues with the MCP servers:
+If you encounter issues with the MCP servers, review the common setup friction points below:
 
-1. **Check authentication**: Ensure your Google Cloud credentials are properly set up
-2. **Verify API keys**: Make sure all required API keys are correctly configured
-3. **Check server logs**: Look for error messages in the server output
-4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
-5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
+### 1. Desktop Client Cannot Find `uv` (`spawn uv ENOENT` or "Command not found")
 
-### SecOps SOAR: finding the correct SOAR_URL
+**Symptom:**
+When starting Claude Desktop, Cursor, or VS Code, the client console or logs report `spawn uv ENOENT` or indicates that the `uv` executable cannot be found.
+
+**Cause:**
+Desktop GUI applications launched from the macOS Dock, Spotlight, or Linux desktop managers do not run inside an interactive login shell. Therefore, they do not inherit `PATH` modifications added to `~/.bashrc`, `~/.zshrc`, or `~/.profile` (such as `~/.local/bin`).
+
+**Solution:**
+1. In your terminal, find the full absolute path to `uv`:
+   ```bash
+   which uv
+   # macOS/Linux output example: /Users/username/.local/bin/uv or /usr/local/bin/uv
+   # Windows PowerShell: (Get-Command uv).Source
+   ```
+2. Replace `"command": "uv"` with the absolute path in your client configuration JSON:
+   ```json
+   "command": "/Users/username/.local/bin/uv"
+   ```
+
+### 2. Script or Directory Not Found: Common Path & Copy-Paste Gotchas
+
+**Symptom:**
+The server fails to start with errors such as:
+- `error: Failed to run 'server.py': No such file or directory`
+- `error: Failed to run 'scc_mcp.py': No such file or directory`
+
+**Causes & Solutions:**
+- **The SCC Copy-Paste Trap:** SecOps, SecOps SOAR, and GTI all run `server.py` from their nested package directory. SCC runs `scc_mcp.py` directly from `server/scc/`. If you copy-pasted the `secops` block for SCC, verify that the last argument is `"scc_mcp.py"`, **not** `"server.py"`.
+- **Wrong `--directory` Depth:**
+  - `secops`: must point to `<repo>/server/secops/secops_mcp`
+  - `secops-soar`: must point to `<repo>/server/secops-soar/secops_soar_mcp`
+  - `gti`: must point to `<repo>/server/gti/gti_mcp`
+  - `scc`: must point to `<repo>/server/scc`
+  - **Do NOT** set `--directory` to `<repo>/server/` or `<repo>/server/secops` (missing the inner `secops_mcp/`).
+
+### 3. SecOps SOAR: SSL Certificate Verification & `certifi`
+
+**Symptom:**
+SecOps SOAR client fails with SSL certificate verification errors (e.g. `[SSL: CERTIFICATE_VERIFY_FAILED]` or certificate authority unknown) when connecting to the SOAR instance.
+
+**Cause:**
+On macOS, Python installations often do not use the system keychain root certificates by default, requiring certificates from the `certifi` package to be installed.
+
+**Solution:**
+1. Run the Python certificate installation script for your installed Python version:
+   ```bash
+   /Applications/Python\ 3.12/Install\ Certificates.command
+   # or Python 3.11:
+   /Applications/Python\ 3.11/Install\ Certificates.command
+   ```
+2. Alternatively, configure the `SSL_CERT_FILE` environment variable to point to the `certifi` bundle:
+   ```bash
+   export SSL_CERT_FILE=$(python3 -m certifi)
+   ```
+   Or add `SSL_CERT_FILE` directly inside the `"env"` object of your MCP client settings for `secops-soar`.
+
+### 4. SecOps SOAR: Finding the Correct `SOAR_URL`
 
 If the SecOps SOAR server starts and then shuts down with an error like this:
 
@@ -275,3 +350,51 @@ If you are not sure which URL to use, try one of these options:
 2. Open your browser developer tools, go to the **Network** tab, and navigate to **Cases** in the SOAR UI. Look for a request such as `GetCaseCardsByRequest`, open the **Headers** tab, and copy the base URL from that request. For example: `https://s4i0z.siemplify-soar.com`.
 
 After updating `SOAR_URL`, restart your MCP client so it picks up the new environment variable.
+
+### 5. Flag Placement Errors with `--env-file`
+
+**Symptom:**
+`uv` rejects the command line with an error about unrecognized or misplaced options.
+
+**Solution:**
+Ensure `--env-file` is placed **after** `run` in the `args` array:
+```json
+"args": [
+  "--directory",
+  "/path/to/server/secops/secops_mcp",
+  "run",
+  "--env-file",
+  "/path/to/.env",
+  "server.py"
+]
+```
+
+### 6. Fallback: Bypassing `uv` Using `/bin/bash`
+
+If you are in an environment where desktop clients cannot find `uv` or you prefer to use a standard Python virtual environment, you can bypass `uv` and execute via `/bin/bash -c`:
+
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "cd /path/to/repo/server/secops && pip install -e . && secops_mcp"
+      ],
+      "env": {
+        "CHRONICLE_PROJECT_ID": "your-project-id",
+        "CHRONICLE_CUSTOMER_ID": "01234567-abcd-4321-1234-0123456789ab",
+        "CHRONICLE_REGION": "us"
+      }
+    }
+  }
+}
+```
+Alternatively, if you already have a virtual environment created:
+```json
+"args": [
+  "-c",
+  "source /path/to/repo/.venv/bin/activate && cd /path/to/repo/server/secops/secops_mcp && python server.py"
+]
+```
