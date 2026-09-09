@@ -829,6 +829,39 @@ The service account or user credentials need the following Chronicle roles:
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
     - **Returns:** Dictionary containing investigation associations grouped by detection ID, with verdict and confidence information.
 
+### Case Management
+
+- **`list_case_close_definitions(page_size=50, page_token=None, filter=None, order_by=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Retrieves configured case close definitions which pair root causes with valid close reasons (e.g., `MALICIOUS`, `NOT_MALICIOUS`, `MAINTENANCE`, `INCONCLUSIVE`). Essential for discovering valid root causes and reasons required to close a case or alert.
+    - **Parameters:**
+        - `page_size` (optional): Number of definitions to return per page (default: 50).
+        - `page_token` (optional): Token for pagination from previous response.
+        - `filter` (optional): CEL or standard filter expression to restrict definitions (e.g., `close_reason='MALICIOUS'`).
+        - `order_by` (optional): Field expression to order results (e.g., `root_cause desc`).
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Dictionary containing list of `caseCloseDefinitions` and pagination tokens, or an `error` message upon failure.
+    - **Return Example:**
+      ```json
+      {
+        "caseCloseDefinitions": [
+          {
+            "name": "projects/123/locations/us/instances/456/caseCloseDefinitions/def-1",
+            "closeReason": "MALICIOUS",
+            "rootCause": "Phishing credential harvest"
+          },
+          {
+            "name": "projects/123/locations/us/instances/456/caseCloseDefinitions/def-2",
+            "closeReason": "NOT_MALICIOUS",
+            "rootCause": "Authorized Security Test"
+          }
+        ],
+        "nextPageToken": "",
+        "totalSize": 2
+      }
+      ```
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
