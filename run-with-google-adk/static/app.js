@@ -184,6 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Safe Markdown Rendering with DOMPurify Sanitization
+  function renderMarkdown(rawText) {
+    if (window.marked && typeof window.marked.parse === 'function') {
+      const rawHtml = window.marked.parse(rawText);
+      if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+        return window.DOMPurify.sanitize(rawHtml);
+      }
+      return rawHtml;
+    }
+    const div = document.createElement('div');
+    div.textContent = rawText;
+    return div.innerHTML;
+  }
+
   // Append Message
   function appendMessage(text, sender, timeElapsed = null, timeDiff = null) {
     if (emptyState && emptyState.style.display !== 'none') {
@@ -223,11 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bubble.className = 'msg-bubble';
 
     if (sender === 'agent') {
-      if (window.marked && typeof window.marked.parse === 'function') {
-        bubble.innerHTML = window.marked.parse(text);
-      } else {
-        bubble.textContent = text;
-      }
+      bubble.innerHTML = renderMarkdown(text);
       addCopyButtonsToPre(bubble);
     } else {
       bubble.textContent = text;
@@ -369,16 +379,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.cancel();
                 break;
               } else if (data.text) {
+                const isBlock = data.event_type === 'tool_call' ||
+                                data.event_type === 'tool_response' ||
+                                data.event_type === 'error' ||
+                                (!data.event_type && (data.text.startsWith('[Tool]') || data.text.startsWith('[Error]') || data.text.startsWith('[Warning]')));
+
                 if (!accumulatedText) {
                   accumulatedText = data.text;
-                } else {
+                } else if (isBlock) {
                   accumulatedText += '\n\n' + data.text;
-                }
-                if (window.marked && typeof window.marked.parse === 'function') {
-                  bubble.innerHTML = window.marked.parse(accumulatedText);
                 } else {
-                  bubble.textContent = accumulatedText;
+                  accumulatedText += data.text;
                 }
+                bubble.innerHTML = renderMarkdown(accumulatedText);
                 addCopyButtonsToPre(bubble);
                 headerInfo.innerHTML = `<span class="streaming-pulse"></span><span>${timeElapsed}ms (${timeDiff}ms)</span>`;
                 scrollToBottom();

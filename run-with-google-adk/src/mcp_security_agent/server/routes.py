@@ -17,6 +17,8 @@ import json
 import uuid
 import asyncio
 import logging
+import threading
+from collections import OrderedDict
 from pathlib import Path
 from typing import Dict, Any, Optional, AsyncGenerator
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -90,10 +92,24 @@ def get_session(username: Optional[str] = Query(None, description="Username for 
     }
 
 
+_settings: Optional[AgentSettings] = None
+_settings_lock = threading.Lock()
+
+
+def get_settings() -> AgentSettings:
+    """Returns cached AgentSettings singleton to avoid redundant env parsing."""
+    global _settings
+    if _settings is None:
+        with _settings_lock:
+            if _settings is None:
+                _settings = AgentSettings()
+    return _settings
+
+
 @router.get("/info")
 def get_info() -> Dict[str, Any]:
     """Provides server runtime metadata, active user identity, and enabled MCP server status."""
-    settings = AgentSettings()
+    settings = get_settings()
     return {
         "version": __version__,
         "model": settings.google_model,
@@ -107,35 +123,84 @@ def get_info() -> Dict[str, Any]:
     }
 
 
+class BoundedSessionService(InMemorySessionService):
+    """InMemorySessionService with FIFO/LRU session eviction to prevent unbounded memory growth."""
+
+    def __init__(self, max_sessions: int = 1000):
+        super().__init__()
+        self.max_sessions = max_sessions
+        self._session_order: OrderedDict = OrderedDict()
+
+    def _create_session_impl(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        state: Optional[Dict[str, Any]] = None,
+        session_id: Optional[str] = None,
+    ) -> Any:
+        while len(self._session_order) >= self.max_sessions:
+            (old_app, old_user, old_sess), _ = self._session_order.popitem(last=False)
+            if old_app in self.sessions and old_user in self.sessions[old_app]:
+                self.sessions[old_app][old_user].pop(old_sess, None)
+        sess = super()._create_session_impl(
+            app_name=app_name,
+            user_id=user_id,
+            state=state,
+            session_id=session_id,
+        )
+        self._session_order[(app_name, user_id, sess.id)] = True
+        return sess
+
+    def _delete_session_impl(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        session_id: str,
+    ) -> None:
+        self._session_order.pop((app_name, user_id, session_id), None)
+        super()._delete_session_impl(
+            app_name=app_name,
+            user_id=user_id,
+            session_id=session_id,
+        )
+
+
 _runner: Optional[Runner] = None
-_session_service: Optional[InMemorySessionService] = None
+_runner_lock = threading.Lock()
+_session_service: Optional[BoundedSessionService] = None
 
 
-def get_session_service() -> InMemorySessionService:
-    """Returns the singleton InMemorySessionService for active chat sessions."""
+def get_session_service() -> BoundedSessionService:
+    """Returns the singleton BoundedSessionService for active chat sessions."""
     global _session_service
     if _session_service is None:
-        _session_service = InMemorySessionService()
+        with _runner_lock:
+            if _session_service is None:
+                _session_service = BoundedSessionService(max_sessions=1000)
     return _session_service
 
 
 def get_runner() -> Optional[Runner]:
-    """Returns or initializes the ADK Runner instance for the security agent."""
+    """Returns or initializes the thread-safe ADK Runner instance for the security agent."""
     global _runner
     if _runner is None:
-        settings = AgentSettings()
-        agent = getattr(agent_mod, "root_agent", None)
-        if agent is None:
-            agent = agent_mod.create_security_agent(settings)
-            agent_mod.root_agent = agent
-        if agent is None:
-            return None
-        session_svc = get_session_service()
-        _runner = Runner(
-            agent=agent,
-            app_name="mcp_security_agent",
-            session_service=session_svc,
-        )
+        with _runner_lock:
+            if _runner is None:
+                settings = get_settings()
+                agent = getattr(agent_mod, "root_agent", None)
+                if agent is None:
+                    agent = agent_mod.create_security_agent(settings)
+                    agent_mod.root_agent = agent
+                if agent is None:
+                    return None
+                session_svc = get_session_service()
+                _runner = Runner(
+                    agent=agent,
+                    app_name="mcp_security_agent",
+                    session_service=session_svc,
+                )
     return _runner
 
 
@@ -188,6 +253,7 @@ async def sse_event_generator(
                             "last_msg": False,
                             "session_id": session_id,
                             "author": event.author or "SecurityOperationsAgent",
+                            "event_type": "content",
                         })
                         yield f"data: {data}\n\n"
                     elif part.function_call:
@@ -195,6 +261,7 @@ async def sse_event_generator(
                             "text": f"[Tool] **Calling tool `{part.function_call.name}`**\n```json\n{json.dumps(part.function_call.args, indent=2)}\n```",
                             "last_msg": False,
                             "session_id": session_id,
+                            "event_type": "tool_call",
                         })
                         yield f"data: {call_info}\n\n"
                     elif part.function_response:
@@ -202,14 +269,19 @@ async def sse_event_generator(
                             "text": f"[Tool] **Received tool response from `{part.function_response.name}`**",
                             "last_msg": False,
                             "session_id": session_id,
+                            "event_type": "tool_response",
                         })
                         yield f"data: {resp_info}\n\n"
+    except asyncio.CancelledError:
+        logger.info(f"SSE client disconnected for session {session_id}")
+        raise
     except Exception as e:
         logger.error(f"Error during agent execution: {e}", exc_info=True)
         err_data = json.dumps({
             "text": f"[Error] **Error during investigation:** {str(e)}",
             "last_msg": False,
             "session_id": session_id,
+            "event_type": "error",
         })
         yield f"data: {err_data}\n\n"
 

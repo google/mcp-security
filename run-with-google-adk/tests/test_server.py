@@ -175,3 +175,43 @@ def test_scroll_and_layout_constraints():
     # Ensure custom scrollbar rules are defined for visibility
     assert "scrollbar-width: thin" in css
     assert "::-webkit-scrollbar" in css
+
+
+def test_bounded_session_service_eviction():
+    from mcp_security_agent.server.routes import BoundedSessionService
+
+    service = BoundedSessionService(max_sessions=10)
+
+    import asyncio
+    async def run_test():
+        for i in range(12):
+            await service.create_session(
+                app_name="test_app",
+                user_id="user",
+                session_id=f"sess_{i}",
+            )
+        # Should have evicted older sessions so total <= max_sessions
+        assert len(service._session_order) == 10
+        user_sessions = service.sessions["test_app"]["user"]
+        assert len(user_sessions) == 10
+        # Oldest sessions (sess_0, sess_1) must have been evicted
+        assert "sess_0" not in user_sessions
+        assert "sess_1" not in user_sessions
+        # Newest sessions must be present
+        assert "sess_10" in user_sessions
+        assert "sess_11" in user_sessions
+
+    asyncio.run(run_test())
+
+
+def test_dompurify_xss_protection():
+    client = TestClient(create_app())
+    html = client.get("/index.html").text
+    js = client.get("/static/app.js").text
+
+    # Verify DOMPurify is loaded in HTML before marked/app.js
+    assert "dompurify" in html
+    # Verify app.js defines renderMarkdown and uses DOMPurify.sanitize
+    assert "DOMPurify.sanitize" in js
+    assert "renderMarkdown" in js
+

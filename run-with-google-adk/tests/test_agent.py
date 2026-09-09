@@ -16,14 +16,12 @@ from mcp_security_agent.agent import create_security_agent, SOC_AGENT_SYSTEM_PRO
 def test_create_security_agent():
     settings = AgentSettings(GOOGLE_MODEL="gemini-2.5-flash")
     mock_agent_instance = MagicMock()
-    mock_llm_agent_mod = MagicMock()
-    mock_llm_agent_mod.LlmAgent = MagicMock(return_value=mock_agent_instance)
 
-    with patch.dict("sys.modules", {"google.adk.agents.llm_agent": mock_llm_agent_mod}):
+    with patch("google.adk.agents.llm_agent.LlmAgent", return_value=mock_agent_instance) as mock_llm_agent_cls:
         agent = create_security_agent(settings)
         assert agent == mock_agent_instance
-        mock_llm_agent_mod.LlmAgent.assert_called_once()
-        _, kwargs = mock_llm_agent_mod.LlmAgent.call_args
+        mock_llm_agent_cls.assert_called_once()
+        _, kwargs = mock_llm_agent_cls.call_args
         assert kwargs["name"] == "SecurityOperationsAgent"
         assert kwargs["model"] == "gemini-2.5-flash"
         assert kwargs["instruction"] == SOC_AGENT_SYSTEM_PROMPT
