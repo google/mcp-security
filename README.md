@@ -159,7 +159,7 @@ You can also use environment files with uvx:
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients
-2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-prebuilt-google-adk-agent-as-client))
+2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-google-adk-autonomous-soc-agent))
 3. [Google SecOps Extension](https://google.github.io/mcp-security/google_secops_extension.html) - Install our example extension for Gemini CLI to get specialized security skills (Triage, Investigate, Hunt).
 
 The configuration for Claude Desktop and Cline is the same (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
@@ -172,7 +172,7 @@ It can be run locally via an interactive CLI REPL or launched as a FastAPI servi
 
 ```bash
 cd run-with-google-adk
-cp sample.env .env
+cp .env.example .env
 
 # Interactive terminal investigation REPL
 uv run mcp-security-agent chat

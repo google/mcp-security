@@ -50,7 +50,7 @@ The repository provides a prebuilt Autonomous Security Operations Center (SOC) A
 
 ```bash
 cd run-with-google-adk
-cp sample.env .env
+cp .env.example .env
 
 # Interactive terminal investigation REPL
 uv run mcp-security-agent chat

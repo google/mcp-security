@@ -132,8 +132,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+.env*
+.envrc
 .venv
+.gcloud/
 env/
 venv/
 ENV/
@@ -213,3 +215,6 @@ app_data.db
 
 # devcontainer
 .devcontainer/
+
+# IDE / Project tools
+.cm_project

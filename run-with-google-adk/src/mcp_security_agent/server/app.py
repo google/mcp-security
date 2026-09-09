@@ -39,4 +39,15 @@ def create_app() -> FastAPI:
     if static_dir.is_dir():
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+    @app.middleware("http")
+    async def add_no_cache_headers(request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if path.startswith("/static") or path in ["/", "/login", "/landing.html", "/index.html", "/chat.html"]:
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+        return response
+
     return app
+
