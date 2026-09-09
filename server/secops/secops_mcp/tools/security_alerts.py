@@ -288,6 +288,6 @@ Next Steps (using MCP-enabled tools):
         chronicle = get_chronicle_client(project_id, customer_id, region)
         response = chronicle.update_alert(alert_id, reason=reason, status=status, verdict=verdict, comment=comment, root_cause=root_cause, priority=priority, severity=severity)
     except Exception as e:
-        return f'Error retrieving security alert for {alert_id}: {str(e)}'
+        return f'Error updating security alert for {alert_id}: {str(e)}'
 
     return json.dumps(response)

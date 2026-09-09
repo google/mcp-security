@@ -14,6 +14,7 @@ To run these tests:
 3. Run: pytest -xvs server/secops/tests/test_secops_mcp.py
 """
 
+import json
 import os
 import uuid
 from typing import Dict
@@ -476,8 +477,9 @@ class TestChronicleSecOpsMCP:
             alert_id=alert_id
         )
         
-        # This should return either a valid response or an error dict
-        assert isinstance(result, dict)
+        # This should return a JSON-encoded string representing the response
+        assert isinstance(result, str)
+        assert isinstance(json.loads(result), dict)
 
     @pytest.mark.asyncio
     async def test_get_security_alert_by_id(self, chronicle_config: Dict[str, str]) -> None:
@@ -498,8 +500,9 @@ class TestChronicleSecOpsMCP:
             alert_id=alert_id
         )
         
-        # This should return either a valid response or an error dict
-        assert isinstance(result, dict)
+        # This should return a JSON-encoded string representing the response
+        assert isinstance(result, str)
+        assert isinstance(json.loads(result), dict)
 
     @pytest.mark.asyncio
     async def test_list_feeds(self, chronicle_config: Dict[str, str]) -> None:
