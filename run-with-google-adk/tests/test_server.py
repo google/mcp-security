@@ -279,3 +279,43 @@ def test_frontend_streaming_abort_on_reset():
     assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    messagesContainer.innerHTML = '';" in js
     assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    currentUserId = newName;" in js
 
+
+def test_bounded_session_service_thread_safe_lookups():
+    from mcp_security_agent.server.routes import BoundedSessionService
+    from google.adk.events import Event
+    from google.genai import types
+
+    service = BoundedSessionService(max_sessions=5)
+
+    import asyncio
+    async def run_test():
+        sess = await service.create_session(
+            app_name="test_app",
+            user_id="alice",
+            session_id="sess_1",
+        )
+        assert sess is not None
+
+        # Test get_session and list_sessions
+        retrieved = await service.get_session(app_name="test_app", user_id="alice", session_id="sess_1")
+        assert retrieved is not None
+        assert retrieved.id == "sess_1"
+
+        sessions_list = await service.list_sessions(app_name="test_app", user_id="alice")
+        assert len(sessions_list.sessions) == 1
+
+        # Test append_event on existing session
+        test_event = Event(
+            author="SecurityOperationsAgent",
+            content=types.Content(role="model", parts=[types.Part(text="Test event")]),
+        )
+        appended = await service.append_event(sess, test_event)
+        assert appended == test_event
+
+        # Test append_event on non-existent / evicted session does not crash
+        dummy_sess = type("DummySession", (), {"app_name": "test_app", "user_id": "bob", "id": "sess_gone"})()
+        result_evicted = await service.append_event(dummy_sess, test_event)
+        assert result_evicted == test_event
+
+    asyncio.run(run_test())
+

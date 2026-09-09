@@ -130,7 +130,7 @@ class BoundedSessionService(InMemorySessionService):
         super().__init__()
         self.max_sessions = max_sessions
         self._session_order: OrderedDict = OrderedDict()
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
 
     def _create_session_impl(
         self,
@@ -157,6 +157,50 @@ class BoundedSessionService(InMemorySessionService):
             )
             self._session_order[(app_name, user_id, sess.id)] = True
             return sess
+
+    def _get_session_impl(
+        self,
+        *,
+        app_name: str,
+        user_id: str,
+        session_id: str,
+        config: Optional[Any] = None,
+    ) -> Optional[Any]:
+        with self._lock:
+            return super()._get_session_impl(
+                app_name=app_name,
+                user_id=user_id,
+                session_id=session_id,
+                config=config,
+            )
+
+    def _list_sessions_impl(
+        self,
+        *,
+        app_name: str,
+        user_id: Optional[str] = None,
+    ) -> Any:
+        with self._lock:
+            return super()._list_sessions_impl(
+                app_name=app_name,
+                user_id=user_id,
+            )
+
+    async def append_event(self, session: Any, event: Any) -> Any:
+        with self._lock:
+            app_name = getattr(session, "app_name", None)
+            user_id = getattr(session, "user_id", None)
+            session_id = getattr(session, "id", None)
+            if (
+                not app_name
+                or not user_id
+                or not session_id
+                or app_name not in self.sessions
+                or user_id not in self.sessions[app_name]
+                or session_id not in self.sessions[app_name][user_id]
+            ):
+                return event
+            return await super().append_event(session=session, event=event)
 
     def _delete_session_impl(
         self,
@@ -319,7 +363,7 @@ async def chat_sse_stream(
     )
 
 
-@router.post("/chat")
+@router.post("/chat", response_model=ChatResponse)
 async def chat_post(request: ChatRequest, http_request: Request):
     """REST and SSE chat endpoint for API clients, automated workflows, and web UI."""
     sess_id = request.session_id or str(uuid.uuid4())
