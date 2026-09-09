@@ -265,4 +265,17 @@ def test_dompurify_xss_protection():
     # Verify app.js defines renderMarkdown and uses DOMPurify.sanitize
     assert "DOMPurify.sanitize" in js
     assert "renderMarkdown" in js
+    # Verify fail-closed behavior if DOMPurify is not available
+    assert "failing closed to escaped text" in js
+
+
+def test_frontend_streaming_abort_on_reset():
+    client = TestClient(create_app())
+    js = client.get("/static/app.js").text
+
+    assert "cancelStreaming" in js
+    # Verify newInvestigationBtn and saveUser call cancelStreaming when isStreaming is true
+    assert "newInvestigationBtn.addEventListener" in js
+    assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    messagesContainer.innerHTML = '';" in js
+    assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    currentUserId = newName;" in js
 

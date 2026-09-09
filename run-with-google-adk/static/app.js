@@ -459,6 +459,9 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Username cannot be empty', 'warning');
       return;
     }
+    if (isStreaming) {
+      cancelStreaming();
+    }
     currentUserId = newName;
     updateUserUI();
     closeUserModal();
@@ -488,6 +491,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   newInvestigationBtn.addEventListener('click', () => {
+    if (isStreaming) {
+      cancelStreaming();
+    }
     messagesContainer.innerHTML = '';
     if (emptyState) {
       emptyState.style.display = 'flex';

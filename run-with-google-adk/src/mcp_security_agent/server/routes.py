@@ -124,7 +124,7 @@ def get_info() -> Dict[str, Any]:
 
 
 class BoundedSessionService(InMemorySessionService):
-    """InMemorySessionService with FIFO/LRU session eviction to prevent unbounded memory growth."""
+    """InMemorySessionService with FIFO session eviction to prevent unbounded memory growth."""
 
     def __init__(self, max_sessions: int = 1000):
         super().__init__()
