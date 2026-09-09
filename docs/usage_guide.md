@@ -275,3 +275,40 @@ If you are not sure which URL to use, try one of these options:
 2. Open your browser developer tools, go to the **Network** tab, and navigate to **Cases** in the SOAR UI. Look for a request such as `GetCaseCardsByRequest`, open the **Headers** tab, and copy the base URL from that request. For example: `https://s4i0z.siemplify-soar.com`.
 
 After updating `SOAR_URL`, restart your MCP client so it picks up the new environment variable.
+
+### Corporate Proxy Configuration
+
+If you are running MCP servers behind an HTTP/HTTPS corporate proxy:
+
+1. **Configure standard proxy variables**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and optionally `NO_PROXY` in your environment.
+2. **Pass proxy variables in MCP client settings**: Ensure your MCP client configuration passes these variables to each server's `env` section:
+
+```json
+{
+  "mcpServers": {
+    "gti": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/server/gti/gti_mcp", "run", "server.py"],
+      "env": {
+        "VT_APIKEY": "${VT_APIKEY}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}"
+      }
+    },
+    "secops-soar": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/server/secops-soar/secops_soar_mcp", "run", "server.py"],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}"
+      }
+    }
+  }
+}
+```
+
+3. **Custom SSL/CA Certificates (SSL Decryption/Inspection)**: If your corporate proxy intercepts SSL traffic, point `SSL_CERT_FILE` to your corporate CA certificate bundle.
+
+
