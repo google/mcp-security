@@ -155,15 +155,17 @@ async def get_security_alerts(
 
 @server.tool()
 async def get_security_alert_by_id(
+    alert_id: str,
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
-    alert_id: Optional[str] = None,
-    include_detections: bool = True
-) -> str:
+    include_detections: bool = True,
+) -> Dict[str, Any]:
     """Get security alert by ID directly from Chronicle SIEM.
 
-    Gets an alert by ID
+    Retrieves the Chronicle alert object as a structured dictionary,
+    including rule metadata, detection fields, outcomes, and (when
+    include_detections=True) collection elements with event samples.
 
     **Workflow Integration:**
     - Use this for direct monitoring of SIEM alert activity, potentially identifying
@@ -180,16 +182,15 @@ async def get_security_alert_by_id(
     - May need to get this so you know which Alert to update
 
     Args:
+        alert_id (str): The unique identifier of the alert to retrieve.
         project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
         customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
         region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
-        alert_id (Optional[str]): The unique identifier of the alert to retrieve.
         include_detections (bool): Whether to include detection details in the response. Defaults to True.
 
     Returns:
-        str: A formatted string summarizing the retrieved security alerts, including rule name,
-             creation time, status, severity, and associated case ID (if available).
-             Returns 'No security alerts found...' if none match the criteria.
+        Dict[str, Any]: The Chronicle alert object as a structured dictionary,
+            or an error dictionary if the retrieval fails.
 
     Next Steps (using MCP-enabled tools):
         - Analyze the returned alerts for priority and relevance.
@@ -199,95 +200,109 @@ async def get_security_alert_by_id(
         - Use SIEM event search tools (like `search_security_events`) to find related raw logs.
         - Correlate alert information with findings from other security tools (EDR, Cloud Posture, TI) via their MCP tools.
     """
+    if not alert_id:
+        return {"error": "alert_id is required"}
 
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        response = chronicle.get_alert(alert_id, include_detections)
+        return chronicle.get_alert(alert_id, include_detections)
     except Exception as e:
-        return f'Error retrieving security alert for {alert_id}: {str(e)}'
+        logger.error(f"Error retrieving alert {alert_id}: {e}", exc_info=True)
+        return {"error": f"Error retrieving security alert for {alert_id}: {e}"}
 
-    return json.dumps(response)
 
 @server.tool()
 async def do_update_security_alert(
+    alert_id: str,
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
-    alert_id: Optional[str] = None,
     reason: Optional[str] = None,
     priority: Optional[str] = None,
     status: Optional[str] = None,
     verdict: Optional[str] = None,
     severity: Optional[int] = None,
     comment: Optional[str] = None,
-    root_cause: Optional[str] = None
-) -> str:
+    root_cause: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Update security alert attributes directly in Chronicle SIEM.
+
+    Modifies specific fields of an existing security alert within Chronicle based on its ID. This function allows for updates to an alert's status, severity, verdict, assigned scores, comments, and other metadata. This is typically performed after an investigation, triage, or automated analysis provides new insights or conclusions about the alert. At least one of the optional fields related to alert attributes (e.g., status, severity, comment) should be provided to perform a meaningful update.
+
+    **Workflow Integration:**
+    - Utilize when SOAR is not a core technology the investigator uses
+    - Utilize after an initial investigation of an alert (e.g., using `get_chronicle_alert_details` or other analytical tools) to record findings or change its state.
+    - Incorporate into automated or semi-automated triage workflows where alert properties are updated based on enrichment data, external threat intelligence, or predefined logic.
+    - Use to reflect the outcome of a manual investigation, such as marking an alert as a false positive, confirming it as a true positive, adjusting its severity, or setting a final verdict.
+    - Can be used to synchronize alert states between Chronicle SIEM and external systems like SOAR platforms or case management tools, if this tool is part of such an integration.
+    - Helps in maintaining an accurate and up-to-date view of alert lifecycle and analyst findings directly within Chronicle.
+
+    **Use Cases:**
+    - SOAR is not used for alert disposition
+    - Change the lifecycle status of an alert (e.g., from "NEW" to "REVIEWED", or to "CLOSED"). Valid statuses include: "STATUS_UNSPECIFIED", "NEW", "REVIEWED", "CLOSED", "OPEN".
+    - Adjust the severity (as an integer value, 0-100) or priority (e.g., "PRIORITY_LOW", "PRIORITY_MEDIUM", "PRIORITY_HIGH") of an alert based on new information or impact assessment. Valid priorities include: "PRIORITY_UNSPECIFIED", "PRIORITY_INFO", "PRIORITY_LOW", "PRIORITY_MEDIUM", "PRIORITY_HIGH", "PRIORITY_CRITICAL".
+    - Set a definitive verdict on an alert (e.g., "TRUE_POSITIVE", "FALSE_POSITIVE") after detailed analysis. Valid verdicts include: "VERDICT_UNSPECIFIED", "TRUE_POSITIVE", "FALSE_POSITIVE".
+    - Add or update investigative comments, root cause analysis details, or reasons for the alert's disposition. Providing an empty string can clear existing comments or root cause.
+    - Update an alert's confidence score or risk score based on corroborating evidence or lack thereof.
+
+    Args:
+        alert_id (str): The unique ID of the Chronicle security alert to update. This is a required identifier.
+        project_id (Optional[str]): Google Cloud project ID associated with the Chronicle instance. Defaults to environment configuration if not provided.
+        customer_id (Optional[str]): The Chronicle customer ID. Defaults to environment configuration if not provided.
+        region (Optional[str]): The Google Cloud region where the Chronicle instance is hosted (e.g., "us", "europe"). Defaults to environment configuration if not provided.
+        reason: Reason for closing an alert. Valid values:
+            - "REASON_UNSPECIFIED"
+            - "REASON_NOT_MALICIOUS"
+            - "REASON_MALICIOUS"
+            - "REASON_MAINTENANCE"
+        priority: Alert priority. Valid values:
+            - "PRIORITY_UNSPECIFIED"
+            - "PRIORITY_INFO"
+            - "PRIORITY_LOW"
+            - "PRIORITY_MEDIUM"
+            - "PRIORITY_HIGH"
+            - "PRIORITY_CRITICAL"
+        status: Alert status. Valid values:
+            - "STATUS_UNSPECIFIED"
+            - "NEW"
+            - "REVIEWED"
+            - "CLOSED"
+            - "OPEN"
+        verdict: Verdict on the alert. Valid values:
+            - "VERDICT_UNSPECIFIED"
+            - "TRUE_POSITIVE"
+            - "FALSE_POSITIVE"
+        risk_score: Risk score [0-100] of the alert
+        severity: Severity score [0-100] of the alert
+        comment: Analyst comment (empty string is valid to clear)
+        root_cause: Alert root cause (empty string is valid to clear)
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the updated alert information,
+            or an error dictionary if the update fails.
+
+    Next Steps (using MCP-enabled tools):
+        - After updating, retrieve the alert again using `get_chronicle_alert_details` with the `alert_id` to verify that the changes have been applied correctly.
+        - If the alert status was changed to indicate resolution or a false positive, consider if any adjustments to detection rules or alert thresholds are needed to improve accuracy or reduce noise. Is there an opportunity to create a rule exclusion?
+        - Ensure that any corresponding ticket or case in an external case management or SOAR system is updated to reflect the changes made in Chronicle.
+        - Communicate significant updates (e.g., confirmed breach, critical false positive) to relevant teams or stakeholders as per incident response procedures.
     """
-        Update security alert attributes directly in Chronicle SIEM.
+    if not alert_id:
+        return {"error": "alert_id is required"}
 
-Modifies specific fields of an existing security alert within Chronicle based on its ID. This function allows for updates to an alert's status, severity, verdict, assigned scores, comments, and other metadata. This is typically performed after an investigation, triage, or automated analysis provides new insights or conclusions about the alert. At least one of the optional fields related to alert attributes (e.g., status, severity, comment) should be provided to perform a meaningful update.
-
-**Workflow Integration:**
--   Utilize when SOAR is not a core technology the investigator uses
--   Utilize after an initial investigation of an alert (e.g., using `get_chronicle_alert_details` or other analytical tools) to record findings or change its state.
--   Incorporate into automated or semi-automated triage workflows where alert properties are updated based on enrichment data, external threat intelligence, or predefined logic.
--   Use to reflect the outcome of a manual investigation, such as marking an alert as a false positive, confirming it as a true positive, adjusting its severity, or setting a final verdict.
--   Can be used to synchronize alert states between Chronicle SIEM and external systems like SOAR platforms or case management tools, if this tool is part of such an integration.
--   Helps in maintaining an accurate and up-to-date view of alert lifecycle and analyst findings directly within Chronicle.
-
-**Use Cases:**
--   SOAR is not used for alert disposition
--   Change the lifecycle status of an alert (e.g., from "NEW" to "REVIEWED", or to "CLOSED"). Valid statuses include: "STATUS_UNSPECIFIED", "NEW", "REVIEWED", "CLOSED", "OPEN".
--   Adjust the severity (as an integer value, 0-100) or priority (e.g., "PRIORITY_LOW", "PRIORITY_MEDIUM", "PRIORITY_HIGH") of an alert based on new information or impact assessment. Valid priorities include: "PRIORITY_UNSPECIFIED", "PRIORITY_INFO", "PRIORITY_LOW", "PRIORITY_MEDIUM", "PRIORITY_HIGH", "PRIORITY_CRITICAL".
--   Set a definitive verdict on an alert (e.g., "TRUE_POSITIVE", "FALSE_POSITIVE") after detailed analysis. Valid verdicts include: "VERDICT_UNSPECIFIED", "TRUE_POSITIVE", "FALSE_POSITIVE".
--   Add or update investigative comments, root cause analysis details, or reasons for the alert's disposition. Providing an empty string can clear existing comments or root cause.
--   Update an alert's confidence score or risk score based on corroborating evidence or lack thereof.
-
-Args:
-    alert_id (str): The unique ID of the Chronicle security alert to update. This is a required identifier.
-    project_id (Optional[str]): Google Cloud project ID associated with the Chronicle instance. Defaults to environment configuration if not provided.
-    customer_id (Optional[str]): The Chronicle customer ID. Defaults to environment configuration if not provided.
-    region (Optional[str]): The Google Cloud region where the Chronicle instance is hosted (e.g., "us", "europe"). Defaults to environment configuration if not provided.
-    reason: Reason for closing an alert. Valid values:
-        - "REASON_UNSPECIFIED"
-        - "REASON_NOT_MALICIOUS"
-        - "REASON_MALICIOUS"
-        - "REASON_MAINTENANCE"
-    priority: Alert priority. Valid values:
-        - "PRIORITY_UNSPECIFIED"
-        - "PRIORITY_INFO"
-        - "PRIORITY_LOW"
-        - "PRIORITY_MEDIUM"
-        - "PRIORITY_HIGH"
-        - "PRIORITY_CRITICAL"
-    status: Alert status. Valid values:
-        - "STATUS_UNSPECIFIED"
-        - "NEW"
-        - "REVIEWED"
-        - "CLOSED"
-        - "OPEN"
-    verdict: Verdict on the alert. Valid values:
-        - "VERDICT_UNSPECIFIED"
-        - "TRUE_POSITIVE"
-        - "FALSE_POSITIVE"
-    risk_score: Risk score [0-100] of the alert
-    severity: Severity score [0-100] of the alert
-    comment: Analyst comment (empty string is valid to clear)
-    root_cause: Alert root cause (empty string is valid to clear)
-
-Returns:
-    str: A confirmation message indicating whether the alert was updated successfully, potentially including a summary of the changes or the updated alert ID. Returns an error message if the update fails.
-
-Next Steps (using MCP-enabled tools):
-    - After updating, retrieve the alert again using `get_chronicle_alert_details` with the `alert_id` to verify that the changes have been applied correctly.
-    - If the alert status was changed to indicate resolution or a false positive, consider if any adjustments to detection rules or alert thresholds are needed to improve accuracy or reduce noise. Is there an opportunity to create a rule exclusion?
-    - Ensure that any corresponding ticket or case in an external case management or SOAR system is updated to reflect the changes made in Chronicle.
-    - Communicate significant updates (e.g., confirmed breach, critical false positive) to relevant teams or stakeholders as per incident response procedures.
-    """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        response = chronicle.update_alert(alert_id, reason=reason, status=status, verdict=verdict, comment=comment, root_cause=root_cause, priority=priority, severity=severity)
+        return chronicle.update_alert(
+            alert_id,
+            reason=reason,
+            status=status,
+            verdict=verdict,
+            comment=comment,
+            root_cause=root_cause,
+            priority=priority,
+            severity=severity,
+        )
     except Exception as e:
-        return f'Error retrieving security alert for {alert_id}: {str(e)}'
+        logger.error(f"Error updating alert {alert_id}: {e}", exc_info=True)
+        return {"error": f"Error updating security alert for {alert_id}: {e}"}
 
-    return json.dumps(response)
