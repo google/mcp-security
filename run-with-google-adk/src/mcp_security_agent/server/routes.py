@@ -21,7 +21,7 @@ import threading
 from collections import OrderedDict
 from pathlib import Path
 from typing import Dict, Any, Optional, AsyncGenerator
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from google.adk.runners import Runner
@@ -72,7 +72,7 @@ def health_check() -> Dict[str, str]:
 @router.get("/favicon.ico")
 def get_favicon():
     """Returns 204 No Content for browser favicon requests."""
-    return JSONResponse(content={}, status_code=204)
+    return Response(status_code=204)
 
 
 @router.get("/app_name")
@@ -324,7 +324,7 @@ async def chat_post(request: ChatRequest, http_request: Request):
     uid = request.user_id or discover_user_identity()
 
     accept_header = http_request.headers.get("accept", "")
-    if "text/event-stream" in accept_header or request.message is not None:
+    if "text/event-stream" in accept_header:
         return StreamingResponse(
             sse_event_generator(query_text, sess_id, uid),
             media_type="text/event-stream",

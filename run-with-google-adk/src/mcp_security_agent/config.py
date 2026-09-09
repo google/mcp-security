@@ -13,6 +13,7 @@
 # limitations under the License.
 """Centralized configuration and settings for MCP Security Agent."""
 
+import functools
 from pathlib import Path
 from typing import Optional
 from pydantic import Field, field_validator, model_validator
@@ -44,6 +45,7 @@ def _discover_local_adc() -> Optional[str]:
     return None
 
 
+@functools.lru_cache(maxsize=1)
 def discover_user_identity() -> str:
     """Discovers the active user identity from ADC, gcloud config, or system environment.
 

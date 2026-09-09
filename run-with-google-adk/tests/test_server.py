@@ -108,7 +108,11 @@ def test_chat_post_sse_streaming():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
         client = TestClient(create_app())
-        response = client.post("/chat", json={"message": "Investigate alert 123", "session_id": "test-sess"})
+        response = client.post(
+            "/chat",
+            json={"message": "Investigate alert 123", "session_id": "test-sess"},
+            headers={"accept": "text/event-stream"},
+        )
         assert response.status_code == 200
         assert "text/event-stream" in response.headers["content-type"]
         assert "Mocked analysis response" in response.text

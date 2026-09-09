@@ -126,8 +126,10 @@ def chat(
 
     import mcp_security_agent.agent as agent_mod
     agent = agent_mod.create_security_agent(settings)
+    agent_mod._root_agent = agent
     agent_mod.root_agent = agent
     if "mcp_security_agent" in sys.modules:
+        sys.modules["mcp_security_agent"]._root_agent = agent
         sys.modules["mcp_security_agent"].root_agent = agent
 
     try:
@@ -191,8 +193,10 @@ def serve(
 
     import mcp_security_agent.agent as agent_mod
     agent = agent_mod.create_security_agent(settings)
+    agent_mod._root_agent = agent
     agent_mod.root_agent = agent
     if "mcp_security_agent" in sys.modules:
+        sys.modules["mcp_security_agent"]._root_agent = agent
         sys.modules["mcp_security_agent"].root_agent = agent
 
     bind_port = port if port is not None else int(os.environ.get("PORT", 8080))

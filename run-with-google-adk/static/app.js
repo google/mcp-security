@@ -191,7 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
         return window.DOMPurify.sanitize(rawHtml);
       }
-      return rawHtml;
+      console.warn('DOMPurify not available, failing closed to escaped text for security.');
+      const div = document.createElement('div');
+      div.textContent = rawText;
+      return `<pre class="fallback-unparsed">${div.innerHTML}</pre>`;
     }
     const div = document.createElement('div');
     div.textContent = rawText;
