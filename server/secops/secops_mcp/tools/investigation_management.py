@@ -76,19 +76,21 @@ async def list_investigations(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        print(f"Listing investigations (page_size={page_size})...")
+        logger.info(f"Listing investigations (page_size={page_size})...")
 
         result = chronicle.list_investigations(
             page_size=page_size, page_token=page_token
         )
 
         investigations = result.get("investigations", [])
-        print(f"Successfully retrieved {len(investigations)} investigation(s)")
+        logger.info(
+            f"Successfully retrieved {len(investigations)} investigation(s)"
+        )
         return result
 
     except Exception as e:
         error_msg = f"Error listing investigations: {str(e)}"
-        print(error_msg)
+        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
 
 
@@ -149,7 +151,7 @@ async def get_investigation(
             }
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        print(f"Retrieving investigation: {investigation_id}...")
+        logger.info(f"Retrieving investigation: {investigation_id}...")
 
         investigation = chronicle.get_investigation(
             investigation_id=investigation_id
@@ -161,14 +163,16 @@ async def get_investigation(
                 "investigation_id": investigation_id,
             }
 
-        print(f"Successfully retrieved investigation: {investigation_id}")
+        logger.info(
+            f"Successfully retrieved investigation: {investigation_id}"
+        )
         return investigation
 
     except Exception as e:
         error_msg = (
             f"Error retrieving investigation {investigation_id}: {str(e)}"
         )
-        print(error_msg)
+        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
 
 
@@ -226,7 +230,7 @@ async def trigger_investigation(
             }
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        print(f"Triggering investigation for alert: {alert_id}...")
+        logger.info(f"Triggering investigation for alert: {alert_id}...")
 
         investigation = chronicle.trigger_investigation(alert_id=alert_id)
 
@@ -250,14 +254,16 @@ async def trigger_investigation(
             },
         }
 
-        print(f"Successfully triggered investigation for alert: {alert_id}")
+        logger.info(
+            f"Successfully triggered investigation for alert: {alert_id}"
+        )
         return result
 
     except Exception as e:
         error_msg = (
             f"Error triggering investigation for alert {alert_id}: {str(e)}"
         )
-        print(error_msg)
+        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
 
 
@@ -361,7 +367,7 @@ async def fetch_associated_investigations(
 
         detection_label = "alert" if is_alert_type else "case"
         ids = alert_ids if is_alert_type else case_ids
-        print(
+        logger.info(
             f"Fetching investigations for {len(ids)} "
             f"{detection_label}(s)..."
         )
@@ -409,7 +415,7 @@ async def fetch_associated_investigations(
             "associations": associations_dict,
         }
 
-        print(
+        logger.info(
             f"Successfully retrieved {total_investigations} "
             f"investigation(s) for {len(associations_dict)} "
             f"{detection_label}(s)"
@@ -418,5 +424,5 @@ async def fetch_associated_investigations(
 
     except Exception as e:
         error_msg = f"Error fetching associated investigations: {str(e)}"
-        print(error_msg)
+        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
