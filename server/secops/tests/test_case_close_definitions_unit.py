@@ -14,9 +14,11 @@
 
 """Unit tests for Chronicle Case Close Definitions MCP tools."""
 
+import importlib.util
 import os
 import sys
 from unittest.mock import MagicMock, patch
+
 import pytest
 
 # Ensure server/secops is in path
@@ -26,9 +28,7 @@ if server_secops_dir not in sys.path:
     sys.path.append(server_secops_dir)
 
 # Mock mcp if not installed
-try:
-    import mcp
-except ImportError:
+if importlib.util.find_spec("mcp") is None:
     mock_mcp = MagicMock()
     sys.modules["mcp"] = mock_mcp
     sys.modules["mcp.server"] = MagicMock()

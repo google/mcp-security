@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from unittest.mock import AsyncMock, patch
+
 import pytest
 from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp import bindings
@@ -80,6 +81,28 @@ async def test_list_case_close_root_causes_handles_none(mock_mcp):
 
     mock_client = AsyncMock()
     mock_client.get.return_value = None
+    with patch.object(bindings, "http_client", mock_client):
+        result = await tool.fn()
+
+        assert isinstance(result, dict)
+        assert "error" in result
+
+
+@pytest.mark.asyncio
+async def test_list_case_close_root_causes_handles_non_list_response(mock_mcp):
+    """Test list_case_close_root_causes handles non-list/error dictionary from http_client."""
+    tool = mock_mcp._tool_manager.get_tool("list_case_close_root_causes")
+    assert tool is not None
+
+    mock_client = AsyncMock()
+    mock_client.get.return_value = {"error": "Unauthorized access"}
+    with patch.object(bindings, "http_client", mock_client):
+        result = await tool.fn()
+
+        assert isinstance(result, dict)
+        assert result == {"error": "Unauthorized access"}
+
+    mock_client.get.return_value = {"message": "Unexpected error format"}
     with patch.object(bindings, "http_client", mock_client):
         result = await tool.fn()
 

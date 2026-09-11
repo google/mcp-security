@@ -17,8 +17,8 @@ import logging
 from typing import Any, Dict, Optional
 
 from secops.chronicle.case import APIVersion, chronicle_paginated_request
-from secops_mcp.server import get_chronicle_client, server
 
+from secops_mcp.server import get_chronicle_client, server
 
 logger = logging.getLogger("secops-mcp")
 
@@ -65,7 +65,7 @@ async def list_case_close_definitions(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        logger.info(f"Listing case close definitions (page_size={page_size})...")
+        logger.info("Listing case close definitions (page_size=%s)...", page_size)
 
         extra_params: Dict[str, Any] = {}
         if filter:
@@ -89,6 +89,6 @@ async def list_case_close_definitions(
         return result
 
     except Exception as e:
-        error_msg = f"Error listing case close definitions: {str(e)}"
-        logger.error(error_msg)
+        error_msg = f"Error listing case close definitions: {e}"
+        logger.error("Error listing case close definitions: %s", e)
         return {"error": error_msg}

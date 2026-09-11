@@ -467,6 +467,16 @@ def register_tools(mcp: FastMCP):
         if response is None:
             return {"error": "Failed to retrieve case close root causes from SOAR API."}
 
+        if not isinstance(response, list):
+            if isinstance(response, dict) and "error" in response:
+                return response
+            return {
+                "error": (
+                    "Failed to retrieve case close root causes from SOAR API: "
+                    f"unexpected response {response}"
+                )
+            }
+
         reason_map = {
             0: "Malicious",
             1: "NotMalicious",
