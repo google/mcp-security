@@ -446,6 +446,51 @@ def register_tools(mcp: FastMCP):
         )
 
     @mcp.tool()
+    async def list_case_close_root_causes() -> dict:
+        """List configured case close root causes and reasons from the SOAR platform.
+
+        Retrieves the tenant's configured case close root causes and their associated
+        close reasons (e.g., Malicious, NotMalicious, Maintenance, Inconclusive).
+        This tool should be called prior to `close_case` to determine valid
+        (reason, root_cause) pairings accepted by the SOAR instance.
+
+        Returns:
+            dict: A dictionary containing 'root_causes', a list of objects with:
+                  - id: The unique identifier of the root cause record
+                  - root_cause: The configured root cause name/string
+                  - close_reason: The mapped close reason ('Malicious', 'NotMalicious',
+                    'Maintenance', or 'Inconclusive')
+        """
+        response = await bindings.http_client.get(
+            Endpoints.GET_ROOT_CAUSE_CLOSE_RECORDS
+        )
+        if response is None:
+            return {"error": "Failed to retrieve case close root causes from SOAR API."}
+
+        reason_map = {
+            0: "Malicious",
+            1: "NotMalicious",
+            2: "Maintenance",
+            3: "Inconclusive",
+        }
+
+        root_causes = []
+        for record in response:
+            close_reason_num = record.get("forCloseReason")
+            close_reason_str = reason_map.get(
+                close_reason_num, str(close_reason_num)
+            )
+            root_causes.append(
+                {
+                    "id": record.get("id"),
+                    "root_cause": record.get("rootCause"),
+                    "close_reason": close_reason_str,
+                }
+            )
+
+        return {"root_causes": root_causes}
+
+    @mcp.tool()
     async def close_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         root_cause: Annotated[
