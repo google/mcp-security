@@ -29,4 +29,5 @@ from .security_events import *
 from .security_rules import *
 from .threat_intel import *
 from .udm_search import *
+from .case_management import *
 from .watchlist_management import *
