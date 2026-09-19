@@ -169,12 +169,12 @@ async def create_or_update_case(
             return {"error": "case_data parameter is required and cannot be empty"}
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        logger.info("Creating or updating case via legacyCreateOrUpdateCase")
+        logger.info("Creating or updating case via legacy:legacyCreateOrUpdateCase")
 
         return chronicle_request(
             chronicle,
             method="POST",
-            endpoint_path="legacyCreateOrUpdateCase",
+            endpoint_path="legacy:legacyCreateOrUpdateCase",
             api_version=APIVersion.V1ALPHA,
             json=case_data,
             error_message="Failed to create or update case",

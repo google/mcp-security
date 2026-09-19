@@ -205,7 +205,7 @@ async def test_create_or_update_case_success(mock_chronicle_client):
         mock_request.assert_called_once_with(
             mock_chronicle_client,
             method="POST",
-            endpoint_path="legacyCreateOrUpdateCase",
+            endpoint_path="legacy:legacyCreateOrUpdateCase",
             api_version=APIVersion.V1ALPHA,
             json=case_payload,
             error_message="Failed to create or update case",
