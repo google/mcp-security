@@ -172,15 +172,19 @@ async def test_entity_investigation(mock_chronicle):
     with patch("secops_mcp.tools.entity_investigation.get_chronicle_client", return_value=mock_chronicle):
         inv_ent = await get_involved_entity(case_id="c1", alert_id="a1", involved_entity_id="e1")
         assert "error" not in inv_ent
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/c1/caseAlerts/a1/involvedEntities/e1" in mock_chronicle.session.get.call_args[0][0]
 
         list_inv = await list_involved_entities(case_id="c1", alert_id="a1")
         assert "error" not in list_inv
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/c1/caseAlerts/a1/involvedEntities" in mock_chronicle.session.get.call_args[0][0]
 
         by_groups = await get_entities_by_alert_group_identifiers(case_id="c1", alert_group_identifiers=["g1"])
         assert "error" not in by_groups
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/c1/caseAlerts/-/involvedEntities" in mock_chronicle.session.get.call_args[0][0]
 
         ent_details = await get_entity_details(entity_identifier="192.168.1.1", entity_type="IP Address")
         assert "error" not in ent_details
+        assert "/v1/projects/test-proj/locations/us/instances/test-cust/uniqueEntities:fetchFull" in mock_chronicle.session.post.call_args[0][0]
 
         search_res = await search_entity(term="corp", is_suspicious=True)
         assert "error" not in search_res
@@ -208,14 +212,17 @@ async def test_integration_management(mock_chronicle):
         assert "error" not in inst_test
 
         exec_action = await execute_manual_action(
-            case_id="c1",
+            case_id="33288",
             action_name="SiemplifyUtilities_Ping",
             properties={"ScriptName": "SiemplifyUtilities_Ping"},
         )
         assert "error" not in exec_action
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/legacyCases:executeManualAction" in mock_chronicle.session.post.call_args[0][0]
 
         action_res = await get_action_result_by_id(action_result_id="res_123")
         assert "error" not in action_res
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/legacyCases:getActionResultById" in mock_chronicle.session.get.call_args[0][0]
+        assert mock_chronicle.session.get.call_args[1]["params"] == {"resultIdStr": "res_123"}
 
 
 # --- Playbook Management Tests ---
@@ -229,14 +236,17 @@ async def test_playbook_management(mock_chronicle):
 
         playbook = await get_playbook(playbook_id="pb_123")
         assert "error" not in playbook
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/legacyPlaybooks:legacyGetWorkflowFullInfoByIdentifier" in mock_chronicle.session.get.call_args[0][0]
 
-        instances = await list_playbook_instances(case_id="c1")
+        instances = await list_playbook_instances(case_id="33288")
         assert "error" not in instances
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/legacyPlaybooks:legacyGetWorkflowInstancesCards" in mock_chronicle.session.post.call_args[0][0]
 
-        exec_pb = await execute_playbook(case_id="c1", playbook_id="pb_123")
+        exec_pb = await execute_playbook(case_id="33288", playbook_id="pb_123")
         assert "error" not in exec_pb
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/33288:attachPlaybook" in mock_chronicle.session.post.call_args[0][0]
 
-        trig_pb = await trigger_playbook(case_id="c1", playbook_id="pb_123")
+        trig_pb = await trigger_playbook(case_id="33288", playbook_id="pb_123")
         assert "error" not in trig_pb
 
 
@@ -248,9 +258,12 @@ async def test_connector_events(mock_chronicle):
     with patch("secops_mcp.tools.connector_event_management.get_chronicle_client", return_value=mock_chronicle):
         events = await list_connector_events(connector_id="conn_1")
         assert "error" not in events
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/-/caseAlerts/-/connectorEvents" in mock_chronicle.session.get.call_args[0][0]
 
-        event = await get_connector_event(connector_event_id="ev_123")
+        event = await get_connector_event(connector_event_id="evt_1", case_id="33288", alert_id="488840")
         assert "error" not in event
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/33288/caseAlerts/488840/connectorEvents/evt_1" in mock_chronicle.session.get.call_args[0][0]
+
 
 
 # All tests are defined above as pytest async test functions

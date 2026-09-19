@@ -33,6 +33,8 @@ def _get_base_endpoint(chronicle: Any, version: str = "v1") -> str:
 
 @server.tool()
 async def list_connector_events(
+    case_id: str = "-",
+    alert_id: str = "-",
     connector_id: Optional[str] = None,
     filter_query: Optional[str] = None,
     order_by: Optional[str] = None,
@@ -45,6 +47,8 @@ async def list_connector_events(
     """List connector events ingested through Chronicle SOAR connectors.
 
     Args:
+        case_id (str): Case ID or '-' wildcard across cases. Defaults to '-'.
+        alert_id (str): CaseAlert ID or '-' wildcard across alerts. Defaults to '-'.
         connector_id (Optional[str]): Optional filter by connector identifier.
         filter_query (Optional[str]): Filter expression.
         order_by (Optional[str]): Sort order (e.g. "create_time desc").
@@ -59,7 +63,12 @@ async def list_connector_events(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        url = f"{_get_base_endpoint(chronicle)}/connectorEvents"
+        short_case = case_id.split("/")[-1] if case_id else "-"
+        short_alert = alert_id.split("/")[-1] if alert_id else "-"
+        url = (
+            f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case}/"
+            f"caseAlerts/{short_alert}/connectorEvents"
+        )
 
         params: Dict[str, Any] = {"pageSize": page_size}
         if connector_id:
@@ -85,6 +94,8 @@ async def list_connector_events(
 @server.tool()
 async def get_connector_event(
     connector_event_id: str,
+    case_id: str = "-",
+    alert_id: str = "-",
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
@@ -92,7 +103,9 @@ async def get_connector_event(
     """Retrieve full details of a specific connector event.
 
     Args:
-        connector_event_id (str): The unique connector event ID or resource name.
+        connector_event_id (str): The unique connector event ID or full resource name.
+        case_id (str): Case ID containing the alert (defaults to '-' if full name not passed).
+        alert_id (str): CaseAlert ID containing the event (defaults to '-' if full name not passed).
         project_id (Optional[str]): Google Cloud project ID.
         customer_id (Optional[str]): Chronicle customer/instance ID.
         region (Optional[str]): Chronicle region.
@@ -105,8 +118,18 @@ async def get_connector_event(
             return {"error": "connector_event_id parameter is required"}
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        short_id = connector_event_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/connectorEvents/{short_id}"
+        if "/connectorEvents/" in connector_event_id:
+            # Extract relative path from full resource name if supplied
+            rel_path = connector_event_id.split("/instances/")[-1].split("/", 1)[-1]
+            url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/{rel_path}"
+        else:
+            short_case = case_id.split("/")[-1] if case_id else "-"
+            short_alert = alert_id.split("/")[-1] if alert_id else "-"
+            short_id = connector_event_id.split("/")[-1]
+            url = (
+                f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case}/"
+                f"caseAlerts/{short_alert}/connectorEvents/{short_id}"
+            )
 
         response = chronicle.session.get(url)
         if response.status_code != 200:

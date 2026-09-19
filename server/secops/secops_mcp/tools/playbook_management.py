@@ -111,8 +111,13 @@ async def get_playbook(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_id = playbook_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/playbooks/{short_id}"
+        v1alpha_base = _get_base_endpoint(chronicle, version="v1alpha")
+        legacy_url = f"{v1alpha_base}/legacyPlaybooks:legacyGetWorkflowFullInfoByIdentifier"
+        legacy_resp = chronicle.session.get(legacy_url, params={"identifier": short_id})
+        if legacy_resp.status_code == 200:
+            return legacy_resp.json()
 
+        url = f"{_get_base_endpoint(chronicle)}/playbooks/{short_id}"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {
@@ -150,13 +155,16 @@ async def list_playbook_instances(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}:listPlaybookInstances"
+        v1alpha_base = _get_base_endpoint(chronicle, version="v1alpha")
+        url = f"{v1alpha_base}/legacyPlaybooks:legacyGetWorkflowInstancesCards"
 
-        params: Dict[str, Any] = {}
+        body: Dict[str, Any] = {
+            "caseId": int(short_case_id) if short_case_id.isdigit() else short_case_id,
+        }
         if alert_group_identifier:
-            params["alertGroupIdentifier"] = alert_group_identifier
+            body["alertGroupIdentifier"] = alert_group_identifier
 
-        response = chronicle.session.get(url, params=params)
+        response = chronicle.session.post(url, json=body)
         if response.status_code != 200:
             return {
                 "error": f"Failed to list playbook instances: {response.status_code} - {response.text}"
@@ -182,7 +190,7 @@ async def execute_playbook(
 
     Args:
         case_id (str): The Case ID to run the playbook on.
-        playbook_id (str): The ID of the playbook to execute.
+        playbook_id (str): The ID or name of the playbook to execute.
         alert_group_identifier (Optional[str]): Optional target alert group identifier.
         scope (Optional[str]): Execution scope (e.g. 'All entities', 'Specific entities').
         target_entities (Optional[List[Dict[str, Any]]]): Entities to pass to the playbook execution.
@@ -200,22 +208,36 @@ async def execute_playbook(
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
         short_playbook_id = playbook_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/playbooks/{short_playbook_id}:execute"
+        v1alpha_base = _get_base_endpoint(chronicle, version="v1alpha")
 
-        body: Dict[str, Any] = {"playbookId": short_playbook_id}
+        # 1. Try native v1alpha Case:attachPlaybook endpoint first
+        attach_url = f"{v1alpha_base}/cases/{short_case_id}:attachPlaybook"
+        attach_body: Dict[str, Any] = {"playbookId": short_playbook_id}
         if alert_group_identifier:
-            body["alertGroupIdentifier"] = alert_group_identifier
+            attach_body["alertGroupIdentifier"] = alert_group_identifier
         if scope:
-            body["scope"] = scope
+            attach_body["scope"] = scope
         if target_entities:
-            body["targetEntities"] = target_entities
+            attach_body["targetEntities"] = target_entities
 
-        response = chronicle.session.post(url, json=body)
-        if response.status_code != 200:
+        response = chronicle.session.post(attach_url, json=attach_body)
+        if response.status_code == 200:
+            return response.json() if response.text else {"status": "SUCCESS", "playbookId": short_playbook_id}
+
+        # 2. Fallback to v1alpha legacyPlaybooks:legacyAttachWorkflowToCase
+        legacy_url = f"{v1alpha_base}/legacyPlaybooks:legacyAttachWorkflowToCase"
+        legacy_body: Dict[str, Any] = {
+            "caseId": int(short_case_id) if short_case_id.isdigit() else short_case_id,
+            "wfName": short_playbook_id,
+        }
+        if alert_group_identifier:
+            legacy_body["alertGroupIdentifier"] = alert_group_identifier
+        legacy_resp = chronicle.session.post(legacy_url, json=legacy_body)
+        if legacy_resp.status_code != 200:
             return {
-                "error": f"Failed to execute playbook: {response.status_code} - {response.text}"
+                "error": f"Failed to execute playbook: {legacy_resp.status_code} - {legacy_resp.text}"
             }
-        return response.json()
+        return legacy_resp.json() if legacy_resp.text else {"status": "SUCCESS", "playbookId": short_playbook_id}
     except Exception as e:
         logger.error("Error executing playbook %s on case %s: %s", playbook_id, case_id, e)
         return {"error": f"Failed to execute playbook: {str(e)}"}

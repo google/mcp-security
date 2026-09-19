@@ -64,7 +64,7 @@ async def get_involved_entity(
         short_entity_id = involved_entity_id.split("/")[-1]
 
         url = (
-            f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/"
+            f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/caseAlerts/"
             f"{short_alert_id}/involvedEntities/{short_entity_id}"
         )
 
@@ -82,7 +82,7 @@ async def get_involved_entity(
 @server.tool()
 async def list_involved_entities(
     case_id: str,
-    alert_id: str,
+    alert_id: str = "-",
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
@@ -94,7 +94,7 @@ async def list_involved_entities(
 
     Args:
         case_id (str): The Case ID or full resource name.
-        alert_id (str): The Alert ID or full resource name.
+        alert_id (str): The Alert ID or '-' wildcard across all alerts in the case. Defaults to '-'.
         project_id (Optional[str]): Google Cloud project ID.
         customer_id (Optional[str]): Chronicle customer/instance ID.
         region (Optional[str]): Chronicle region.
@@ -106,14 +106,14 @@ async def list_involved_entities(
         Dict[str, Any]: List of InvolvedEntity objects and pagination token.
     """
     try:
-        if not case_id or not alert_id:
-            return {"error": "Both case_id and alert_id parameters are required"}
+        if not case_id:
+            return {"error": "case_id parameter is required"}
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
-        short_alert_id = alert_id.split("/")[-1]
+        short_alert_id = alert_id.split("/")[-1] if alert_id else "-"
 
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/{short_alert_id}/involvedEntities"
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/caseAlerts/{short_alert_id}/involvedEntities"
         params: Dict[str, Any] = {"pageSize": page_size}
         if filter_query:
             params["filter"] = filter_query
@@ -157,10 +157,10 @@ async def get_entities_by_alert_group_identifiers(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}:getEntitiesByAlertGroupIdentifiers"
-
-        body = {"caseId": short_case_id, "alertGroupIdentifiers": alert_group_identifiers}
-        response = chronicle.session.post(url, json=body)
+        # Uses wildcard caseAlerts/- collection per involved_entity.proto
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/caseAlerts/-/involvedEntities"
+        group_filter = " OR ".join(f'alert_group_identifier="{gid}"' for gid in alert_group_identifiers)
+        response = chronicle.session.get(url, params={"filter": group_filter, "pageSize": 100})
         if response.status_code != 200:
             return {
                 "error": f"Failed to get entities by alert group identifiers: {response.status_code} - {response.text}"
@@ -198,7 +198,7 @@ async def get_entity_details(
             return {"error": "Both entity_identifier and entity_type parameters are required"}
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        url = f"{_get_base_endpoint(chronicle)}:fetchFullEntityDetails"
+        url = f"{_get_base_endpoint(chronicle)}/uniqueEntities:fetchFull"
 
         body = {
             "entityIdentifier": entity_identifier,

@@ -267,10 +267,10 @@ async def execute_manual_action(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}:executeManualAction"
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/legacyCases:executeManualAction"
 
         body: Dict[str, Any] = {
-            "caseId": short_case_id,
+            "caseId": int(short_case_id) if short_case_id.isdigit() else short_case_id,
             "actionName": action_name,
             "actionProvider": action_provider,
             "isPredefinedScope": is_predefined_scope,
@@ -305,7 +305,7 @@ async def get_action_result_by_id(
     """Retrieve the result and execution logs of an asynchronous SOAR action execution by its result ID.
 
     Args:
-        action_result_id (str): The action result execution ID.
+        action_result_id (str): The action result execution ID (mapped to `resultIdStr`).
         project_id (Optional[str]): Google Cloud project ID.
         customer_id (Optional[str]): Chronicle customer/instance ID.
         region (Optional[str]): Chronicle region.
@@ -318,9 +318,9 @@ async def get_action_result_by_id(
             return {"error": "action_result_id parameter is required"}
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        url = f"{_get_base_endpoint(chronicle)}/actionResults/{action_result_id}"
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/legacyCases:getActionResultById"
 
-        response = chronicle.session.get(url)
+        response = chronicle.session.get(url, params={"resultIdStr": action_result_id})
         if response.status_code != 200:
             return {
                 "error": f"Failed to get action result: {response.status_code} - {response.text}"

@@ -389,7 +389,7 @@ async def add_alert_tag(
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
         short_alert_id = alert_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/{short_alert_id}:addTag"
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/caseAlerts/{short_alert_id}:addTag"
 
         response = chronicle.session.post(url, json={"tag": tag})
         if response.status_code != 200:
@@ -431,7 +431,7 @@ async def remove_alert_tag(
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
         short_alert_id = alert_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/{short_alert_id}:removeTag"
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/caseAlerts/{short_alert_id}:removeTag"
 
         response = chronicle.session.post(url, json={"tag": tag})
         if response.status_code != 200:
@@ -472,28 +472,29 @@ async def list_alert_group_identifiers_by_case(
         if not case_id:
             return {"error": "case_id parameter is required"}
 
-        chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}:listAlertGroupIdentifiers"
-
-        params: Dict[str, Any] = {"pageSize": page_size}
-        if page_token:
-            params["pageToken"] = page_token
-
-        response = chronicle.session.get(url, params=params)
-        if response.status_code != 200:
-            # Fallback to extracting from list_case_alerts if dedicated endpoint is not active
-            alerts_res = await list_case_alerts(case_id=short_case_id, project_id=project_id, customer_id=customer_id, region=region)
-            if "caseAlerts" in alerts_res:
-                group_ids = list({
-                    gid for a in alerts_res["caseAlerts"]
-                    for gid in a.get("alertGroupIdentifiers", [])
-                })
-                return {"alertGroupIdentifiers": group_ids, "caseId": short_case_id}
-            return {
-                "error": f"Failed to list alert group identifiers: {response.status_code} - {response.text}"
-            }
-        return response.json()
+        alerts_res = await list_case_alerts(
+            case_id=short_case_id,
+            project_id=project_id,
+            customer_id=customer_id,
+            region=region,
+            page_size=page_size,
+            page_token=page_token,
+        )
+        if "caseAlerts" in alerts_res:
+            group_ids = []
+            seen = set()
+            for a in alerts_res["caseAlerts"]:
+                single_gid = a.get("alertGroupIdentifier")
+                if single_gid and single_gid not in seen:
+                    seen.add(single_gid)
+                    group_ids.append(single_gid)
+                for gid in a.get("alertGroupIdentifiers", []):
+                    if gid and gid not in seen:
+                        seen.add(gid)
+                        group_ids.append(gid)
+            return {"alertGroupIdentifiers": group_ids, "caseId": short_case_id}
+        return alerts_res
     except Exception as e:
         logger.error("Error listing alert group identifiers for case %s: %s", case_id, e)
         return {"error": f"Failed to list alert group identifiers: {str(e)}"}
@@ -533,22 +534,43 @@ async def list_events_by_alert(
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
         short_alert_id = alert_id.split("/")[-1]
-        url = f"{_get_base_endpoint(chronicle)}/cases/{short_case_id}/caseAlerts/{short_alert_id}:listEvents"
 
+        # 1. Inspect alert details to resolve alertGroupIdentifier for fetchAlertGroupEvents
+        alert_detail = await get_case_alert(
+            case_id=short_case_id,
+            alert_id=short_alert_id,
+            project_id=project_id,
+            customer_id=customer_id,
+            region=region,
+        )
+        if "events" in alert_detail:
+            return {"events": alert_detail["events"], "alertId": short_alert_id}
+
+        alert_group_id = alert_detail.get("alertGroupIdentifier")
+        if alert_group_id:
+            group_events = await fetch_alert_group_events(
+                case_id=short_case_id,
+                alert_group_identifier=alert_group_id,
+                page_size=page_size,
+                page_token=page_token,
+                project_id=project_id,
+                customer_id=customer_id,
+                region=region,
+            )
+            if "error" not in group_events:
+                return group_events
+
+        # 2. Fallback to v1alpha case events filtered by alert
+        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/events"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
-
         response = chronicle.session.get(url, params=params)
-        if response.status_code != 200:
-            # Fallback to get_case_alert with expand=events
-            alert_detail = await get_case_alert(case_id=short_case_id, alert_id=short_alert_id, project_id=project_id, customer_id=customer_id, region=region)
-            if "events" in alert_detail:
-                return {"events": alert_detail["events"], "alertId": short_alert_id}
-            return {
-                "error": f"Failed to list events for alert: {response.status_code} - {response.text}"
-            }
-        return response.json()
+        if response.status_code == 200:
+            return response.json()
+        return {
+            "error": f"Failed to list events for alert: {response.status_code} - {response.text}"
+        }
     except Exception as e:
         logger.error("Error listing events for alert %s: %s", alert_id, e)
         return {"error": f"Failed to list events for alert: {str(e)}"}

@@ -1337,62 +1337,7 @@ async def fetch_wiz_related_issues(
         return {"error": f"Failed to fetch Wiz related issues: {str(e)}"}
 
 
-@server.tool()
-async def execute_manual_action(
-    action_data: Dict[str, Any],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
-    """Execute a manual integration action on a case via legacyCases:executeManualAction (v1alpha)."""
-    try:
-        if not action_data:
-            return {"error": "action_data parameter is required"}
-        from secops.chronicle.client import APIVersion
-        from secops.chronicle.utils.request_utils import chronicle_request
 
-        chronicle = get_chronicle_client(project_id, customer_id, region)
-        return chronicle_request(
-            chronicle,
-            method="POST",
-            endpoint_path="legacyCases:executeManualAction",
-            api_version=APIVersion.V1ALPHA,
-            json=action_data,
-            error_message="Failed to execute manual action",
-        )
-    except Exception as e:
-        logger.error("Error executing manual action: %s", e)
-        return {"error": f"Failed to execute manual action: {str(e)}"}
-
-
-@server.tool()
-async def get_action_result_by_id(
-    action_id: str,
-    case_id: Optional[str] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
-    """Retrieve the result of a manual action by ID via legacyCases:getActionResultById (v1alpha)."""
-    try:
-        from secops.chronicle.client import APIVersion
-        from secops.chronicle.utils.request_utils import chronicle_request
-
-        chronicle = get_chronicle_client(project_id, customer_id, region)
-        params: Dict[str, Any] = {"actionId": action_id}
-        if case_id:
-            params["caseId"] = case_id
-        return chronicle_request(
-            chronicle,
-            method="GET",
-            endpoint_path="legacyCases:getActionResultById",
-            api_version=APIVersion.V1ALPHA,
-            params=params,
-            error_message="Failed to get action result by ID",
-        )
-    except Exception as e:
-        logger.error("Error getting action result by ID: %s", e)
-        return {"error": f"Failed to get action result by ID: {str(e)}"}
 
 
 @server.tool()
