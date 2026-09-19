@@ -42,11 +42,11 @@ async def create_agentic_case_report(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Create an AI-authored Agentic Case Report (`POST /v1alpha/{parent}/cases/{case}/agenticCaseReports`)."""
+    """Create/generate an AI-authored Agentic Case Report (`POST /v1alpha/{parent}/cases/{case}/agenticCaseReports:generate`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/agenticCaseReports"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/agenticCaseReports:generate"
         response = chronicle.session.post(url, json=report_payload)
         if response.status_code not in (200, 201):
             return {"error": f"Failed to create agentic case report: {response.status_code} - {response.text}"}
@@ -309,13 +309,13 @@ async def export_agentic_case_report(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Export an Agentic Case Report to PDF or Markdown (`POST /v1alpha/{parent}/cases/{case}/agenticCaseReports/{report}:export`)."""
+    """Download/export an Agentic Case Report (`GET /v1alpha/{parent}/cases/{case}/agenticCaseReports/{report}:download`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
         short_rep = _extract_id(report_id, "agenticCaseReports")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/agenticCaseReports/{short_rep}:export"
-        response = chronicle.session.post(url, json={"format": export_format})
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/agenticCaseReports/{short_rep}:download"
+        response = chronicle.session.get(url, params={"format": export_format})
         if response.status_code != 200:
             return {"error": f"Failed to export agentic case report: {response.status_code} - {response.text}"}
         return response.json()
@@ -332,11 +332,11 @@ async def create_case_chat_message(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Create a Case Chat Message (`POST /v1alpha/{parent}/cases/{case}/caseChatMessages`)."""
+    """Create a Case Chat Message (`POST /v1alpha/{parent}/cases/{case}/chatMessages`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages"
         response = chronicle.session.post(url, json=message_payload)
         if response.status_code not in (200, 201):
             return {"error": f"Failed to create case chat message: {response.status_code} - {response.text}"}
@@ -354,12 +354,12 @@ async def get_case_chat_message(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Get a Case Chat Message (`GET /v1alpha/{parent}/cases/{case}/caseChatMessages/{case_chat_message}`)."""
+    """Get a Case Chat Message (`GET /v1alpha/{parent}/cases/{case}/chatMessages/{chat_message}`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_msg = _extract_id(chat_message_id, "caseChatMessages")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages/{short_msg}"
+        short_msg = _extract_id(chat_message_id, "chatMessages")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{short_msg}"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to get case chat message: {response.status_code} - {response.text}"}
@@ -378,11 +378,11 @@ async def list_case_chat_messages(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List Case Chat Messages (`GET /v1alpha/{parent}/cases/{case}/caseChatMessages`)."""
+    """List Case Chat Messages (`GET /v1alpha/{parent}/cases/{case}/chatMessages`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
@@ -405,14 +405,21 @@ async def update_case_chat_message(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Update a Case Chat Message (`PATCH /v1alpha/{parent}/cases/{case}/caseChatMessages/{case_chat_message}`)."""
+    """Update or pin/unpin a Case Chat Message (`POST /v1alpha/{parent}/cases/{case}/chatMessages/{chat_message}:pinMessage`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_msg = _extract_id(chat_message_id, "caseChatMessages")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages/{short_msg}"
-        params = {"updateMask": update_mask} if update_mask else {}
-        response = chronicle.session.patch(url, params=params, json=message_payload)
+        short_msg = _extract_id(chat_message_id, "chatMessages")
+        if message_payload.get("pinned") is True:
+            url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{short_msg}:pinMessage"
+            response = chronicle.session.post(url, json={})
+        elif message_payload.get("pinned") is False:
+            url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{short_msg}:unpinMessage"
+            response = chronicle.session.post(url, json={})
+        else:
+            url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{short_msg}"
+            params = {"updateMask": update_mask} if update_mask else {}
+            response = chronicle.session.patch(url, params=params, json=message_payload)
         if response.status_code != 200:
             return {"error": f"Failed to update case chat message: {response.status_code} - {response.text}"}
         return response.json()
@@ -429,12 +436,12 @@ async def delete_case_chat_message(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Delete a Case Chat Message (`DELETE /v1alpha/{parent}/cases/{case}/caseChatMessages/{case_chat_message}`)."""
+    """Delete a Case Chat Message (`DELETE /v1alpha/{parent}/cases/{case}/chatMessages/{chat_message}`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_msg = _extract_id(chat_message_id, "caseChatMessages")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages/{short_msg}"
+        short_msg = _extract_id(chat_message_id, "chatMessages")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{short_msg}"
         response = chronicle.session.delete(url)
         if response.status_code not in (200, 204):
             return {"error": f"Failed to delete case chat message: {response.status_code} - {response.text}"}
@@ -452,11 +459,11 @@ async def batch_create_case_chat_messages(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Batch create Case Chat Messages (`POST /v1alpha/{parent}/cases/{case}/caseChatMessages:batchCreate`)."""
+    """Create a Case Chat Message with Attachment (`POST /v1alpha/{parent}/cases/{case}/chatMessages:createWithAttachment`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages:batchCreate"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages:createWithAttachment"
         response = chronicle.session.post(url, json={"requests": requests})
         if response.status_code != 200:
             return {"error": f"Failed to batch create case chat messages: {response.status_code} - {response.text}"}
@@ -474,18 +481,18 @@ async def batch_update_case_chat_messages(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Batch update Case Chat Messages (`POST /v1alpha/{parent}/cases/{case}/caseChatMessages:batchUpdate`)."""
+    """Get unread Case Chat Messages count (`GET /v1alpha/{parent}/cases/{case}/chatMessages:unreadMessagesCount`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages:batchUpdate"
-        response = chronicle.session.post(url, json={"requests": requests})
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages:unreadMessagesCount"
+        response = chronicle.session.get(url)
         if response.status_code != 200:
-            return {"error": f"Failed to batch update case chat messages: {response.status_code} - {response.text}"}
+            return {"error": f"Failed to get unread case chat messages count: {response.status_code} - {response.text}"}
         return response.json()
     except Exception as e:
-        logger.error("Error batch updating case chat messages: %s", e)
-        return {"error": f"Failed to batch update case chat messages: {str(e)}"}
+        logger.error("Error getting unread case chat messages count: %s", e)
+        return {"error": f"Failed to get unread case chat messages count: {str(e)}"}
 
 
 @server.tool()
@@ -496,15 +503,16 @@ async def batch_delete_case_chat_messages(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Batch delete Case Chat Messages (`POST /v1alpha/{parent}/cases/{case}/caseChatMessages:batchDelete`)."""
+    """Download Case Chat Message Attachment (`GET /v1alpha/{parent}/cases/{case}/chatMessages/{chat_message}/attachments/{attachment}:download`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseChatMessages:batchDelete"
-        response = chronicle.session.post(url, json={"names": names})
+        target = names[0] if names else ""
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/chatMessages/{target}:download"
+        response = chronicle.session.get(url)
         if response.status_code not in (200, 204):
-            return {"error": f"Failed to batch delete case chat messages: {response.status_code} - {response.text}"}
-        return {"status": "DELETED", "count": len(names)}
+            return {"error": f"Failed to download case chat attachment: {response.status_code} - {response.text}"}
+        return response.json() if response.text else {"status": "SUCCESS"}
     except Exception as e:
-        logger.error("Error batch deleting case chat messages: %s", e)
-        return {"error": f"Failed to batch delete case chat messages: {str(e)}"}
+        logger.error("Error downloading case chat attachment: %s", e)
+        return {"error": f"Failed to download case chat attachment: {str(e)}"}

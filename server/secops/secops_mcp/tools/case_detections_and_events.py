@@ -45,11 +45,11 @@ async def list_case_detections(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List SIEM detections linked to a Case (`GET /v1alpha/{parent}/cases/{case}/caseDetections`)."""
+    """List SIEM detections linked to a Case (`GET /v1alpha/{parent}/cases/{case}/detections`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseDetections"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/detections"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
@@ -74,12 +74,12 @@ async def get_case_detection(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Get details of a specific SIEM detection in a Case (`GET /v1alpha/{parent}/cases/{case}/caseDetections/{case_detection}`)."""
+    """Get details of a specific SIEM detection in a Case (`GET /v1alpha/{parent}/cases/{case}/detections/{detection}`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_det = _extract_id(detection_id, "caseDetections")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseDetections/{short_det}"
+        short_det = _extract_id(detection_id, "detections")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/detections/{short_det}"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to get case detection: {response.status_code} - {response.text}"}
@@ -99,12 +99,12 @@ async def list_case_detection_events(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List underlying UDM events for a specific Case Detection (`GET /v1alpha/{parent}/cases/{case}/caseDetections/{case_detection}:listCaseDetectionEvents`)."""
+    """List underlying UDM events for a specific Case Detection (`GET /v1alpha/{parent}/cases/{case}/detections/{detection}/events`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_det = _extract_id(detection_id, "caseDetections")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseDetections/{short_det}:listCaseDetectionEvents"
+        short_det = _extract_id(detection_id, "detections")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/detections/{short_det}/events"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
@@ -128,11 +128,11 @@ async def list_case_events(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List case-level security events across all alerts in a Case (`GET /v1alpha/{parent}/cases/{case}/caseEvents`)."""
+    """List case-level security events across all alerts in a Case (`GET /v1alpha/{parent}/cases/{case}/events`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvents"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/events"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
@@ -157,12 +157,12 @@ async def get_case_event(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Get a single case-level security event (`GET /v1alpha/{parent}/cases/{case}/caseEvents/{case_event}`)."""
+    """Get a single case-level security event (`GET /v1alpha/{parent}/cases/{case}/events/{event}`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_evt = _extract_id(event_id, "caseEvents")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvents/{short_evt}"
+        short_evt = _extract_id(event_id, "events")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/events/{short_evt}"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to get case event: {response.status_code} - {response.text}"}
@@ -182,11 +182,11 @@ async def list_case_evidence_data(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List evidentiary attachments, artifacts, and blobs on a Case (`GET /v1alpha/{parent}/cases/{case}/caseEvidenceData`)."""
+    """List evidentiary attachments, artifacts, and blobs on a Case (`GET /v1alpha/{parent}/cases/{case}/caseEvidenceDatas`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvidenceData"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvidenceDatas"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
@@ -209,12 +209,12 @@ async def get_case_evidence_data(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Get a single Case Evidence Data resource (`GET /v1alpha/{parent}/cases/{case}/caseEvidenceData/{case_evidence_data}`)."""
+    """Get a single Case Evidence Data resource (`GET /v1alpha/{parent}/cases/{case}/caseEvidenceDatas/{case_evidence_data}`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        short_ev = _extract_id(evidence_id, "caseEvidenceData")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvidenceData/{short_ev}"
+        short_ev = _extract_id(evidence_id, "caseEvidenceDatas")
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseEvidenceDatas/{short_ev}"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to get case evidence data: {response.status_code} - {response.text}"}

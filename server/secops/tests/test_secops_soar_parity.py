@@ -13,10 +13,8 @@
 # limitations under the License.
 """Unit tests for SOAR Parity MCP tools in secops."""
 
-import asyncio
 import os
 import sys
-import unittest
 from unittest.mock import MagicMock, patch
 
 # Ensure server/secops is in sys.path
@@ -27,7 +25,7 @@ if server_secops_dir not in sys.path:
 
 # Mock secops if not installed
 try:
-    import secops
+    import secops  # noqa: F401
 except ImportError:
     mock_secops = MagicMock()
     sys.modules["secops"] = mock_secops
@@ -36,8 +34,8 @@ except ImportError:
 
 # Mock mcp if not installed
 try:
-    import mcp
-    import mcp.server.fastmcp
+    import mcp  # noqa: F401
+    import mcp.server.fastmcp  # noqa: F401
 except ImportError:
     mock_mcp = MagicMock()
     sys.modules["mcp"] = mock_mcp
@@ -153,12 +151,21 @@ async def test_get_case_full_details(mock_chronicle):
 
 @pytest.mark.asyncio
 async def test_alert_group_and_events(mock_chronicle):
-    with patch("secops_mcp.tools.case_alert_management.get_chronicle_client", return_value=mock_chronicle):
+    with (
+        patch("secops_mcp.tools.case_alert_management.get_chronicle_client", return_value=mock_chronicle),
+        patch("secops_mcp.tools.case_detections_and_events.get_chronicle_client", return_value=mock_chronicle),
+    ):
         groups_res = await list_alert_group_identifiers_by_case(case_id="case_123")
         assert "error" not in groups_res
 
+        # Exercise fallback to v1alpha CaseEventService.ListCaseEvents (/cases/{case}/events)
+        mock_chronicle.session.get.return_value.json.return_value = {
+            "name": "alert_456",
+            "alertGroupIdentifier": "RULE_GROUP_1",
+        }
         events_res = await list_events_by_alert(case_id="case_123", alert_id="alert_456")
         assert "error" not in events_res
+        assert "/v1alpha/projects/test-proj/locations/us/instances/test-cust/cases/case_123/events" in mock_chronicle.session.get.call_args[0][0]
 
         inv_events_res = await list_involved_events(case_id="case_123", alert_id="alert_456")
         assert "error" not in inv_events_res

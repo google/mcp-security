@@ -15,11 +15,9 @@ import asyncio
 from secops_soar_mcp import bindings
 from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
-from secops_soar_mcp.utils.models import CasePriority
 from logger_utils import get_logger
 from typing import Annotated, Optional, List
 from pydantic import Field
-from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 logger = get_logger(__name__)
 

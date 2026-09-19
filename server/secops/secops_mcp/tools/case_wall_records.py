@@ -98,13 +98,13 @@ async def set_favourite_wall_record(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Pin or unpin a Case Wall Record as a favorite (`POST /v1alpha/{parent}/cases/{case}/caseWallRecords/{case_wall_record}:setFavouriteWallRecord`)."""
+    """Pin or unpin a Case Wall Record as a favorite (`PATCH /v1alpha/{parent}/cases/{case}/caseWallRecords/{case_wall_record}:favorite`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
         short_rec = _extract_id(wall_record_id, "caseWallRecords")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseWallRecords/{short_rec}:setFavouriteWallRecord"
-        response = chronicle.session.post(url, json={"isFavourite": is_favourite})
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseWallRecords/{short_rec}:favorite"
+        response = chronicle.session.patch(url, json={"isFavorite": is_favourite})
         if response.status_code != 200:
             return {"error": f"Failed to set favourite wall record: {response.status_code} - {response.text}"}
         return response.json() if response.text else {"status": "SUCCESS"}
@@ -168,11 +168,11 @@ async def fetch_case_activities_count(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Fetch aggregated activity counts by record type for a Case Wall (`GET /v1alpha/{parent}/cases/{case}/caseWallRecords:fetchCaseActivitiesCount`)."""
+    """Fetch aggregated activity counts by record type for a Case Wall (`GET /v1alpha/{parent}/cases/{case}/caseWallRecords:fetchActivitiesCount`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseWallRecords:fetchCaseActivitiesCount"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseWallRecords:fetchActivitiesCount"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to fetch case activities count: {response.status_code} - {response.text}"}
@@ -190,15 +190,15 @@ async def query_available_case_wall_record_tags(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Query available tags for Case Wall Records (`POST /v1alpha/{parent}/cases/{case}/caseWallRecords:queryAvailableCaseWallRecordTags`)."""
+    """Query available tags for Case Wall Records (`GET /v1alpha/{parent}/cases/{case}/caseWallRecords:queryAvailableCaseWallRecordTags`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_id(case_id, "cases")
         url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseWallRecords:queryAvailableCaseWallRecordTags"
-        body: Dict[str, Any] = {}
+        params: Dict[str, Any] = {}
         if query:
-            body["query"] = query
-        response = chronicle.session.post(url, json=body)
+            params["query"] = query
+        response = chronicle.session.get(url, params=params)
         if response.status_code != 200:
             return {"error": f"Failed to query available wall record tags: {response.status_code} - {response.text}"}
         return response.json()

@@ -27,7 +27,7 @@ if server_secops_dir not in sys.path:
 
 # Mock mcp if not installed
 try:
-    import mcp
+    import mcp  # noqa: F401
 except ImportError:
     mock_mcp = MagicMock()
     sys.modules["mcp"] = mock_mcp

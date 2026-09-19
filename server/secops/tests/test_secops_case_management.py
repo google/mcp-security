@@ -15,7 +15,6 @@
 
 import os
 import sys
-import unittest
 from unittest.mock import MagicMock, patch
 
 # Ensure server/secops is in sys.path
@@ -26,7 +25,7 @@ if server_secops_dir not in sys.path:
 
 # Mock secops if not installed
 try:
-    import secops
+    import secops  # noqa: F401
 except ImportError:
     mock_secops = MagicMock()
     sys.modules["secops"] = mock_secops
@@ -35,8 +34,8 @@ except ImportError:
 
 # Mock mcp if not installed
 try:
-    import mcp
-    import mcp.server.fastmcp
+    import mcp  # noqa: F401
+    import mcp.server.fastmcp  # noqa: F401
 except ImportError:
     mock_mcp = MagicMock()
     sys.modules["mcp"] = mock_mcp
@@ -72,7 +71,6 @@ from secops_mcp.tools.case_management import (
     set_custom_case_fields,
     add_case_tag,
     remove_case_tag,
-    add_case_insight,
     pause_case_sla,
     resume_case_sla,
     close_case,
@@ -81,7 +79,6 @@ from secops_mcp.tools.case_management import (
 from secops_mcp.tools.case_alert_management import (
     list_case_alerts,
     get_case_alert,
-    update_case_alert,
     change_alert_priority,
     set_alert_custom_fields,
     move_case_alert,

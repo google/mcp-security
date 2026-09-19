@@ -17,6 +17,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.tools.case_detections_and_events import list_case_events
 
 logger = logging.getLogger("secops-mcp")
 
@@ -531,7 +532,6 @@ async def list_events_by_alert(
         if not case_id or not alert_id:
             return {"error": "Both case_id and alert_id parameters are required"}
 
-        chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case_id = case_id.split("/")[-1]
         short_alert_id = alert_id.split("/")[-1]
 
@@ -546,31 +546,15 @@ async def list_events_by_alert(
         if "events" in alert_detail:
             return {"events": alert_detail["events"], "alertId": short_alert_id}
 
-        alert_group_id = alert_detail.get("alertGroupIdentifier")
-        if alert_group_id:
-            group_events = await fetch_alert_group_events(
-                case_id=short_case_id,
-                alert_group_identifier=alert_group_id,
-                page_size=page_size,
-                page_token=page_token,
-                project_id=project_id,
-                customer_id=customer_id,
-                region=region,
-            )
-            if "error" not in group_events:
-                return group_events
-
-        # 2. Fallback to v1alpha case events filtered by alert
-        url = f"{_get_base_endpoint(chronicle, 'v1alpha')}/cases/{short_case_id}/events"
-        params: Dict[str, Any] = {"pageSize": page_size}
-        if page_token:
-            params["pageToken"] = page_token
-        response = chronicle.session.get(url, params=params)
-        if response.status_code == 200:
-            return response.json()
-        return {
-            "error": f"Failed to list events for alert: {response.status_code} - {response.text}"
-        }
+        # Fallback to v1alpha CaseEventService.ListCaseEvents (GET /v1alpha/{parent}/cases/{case}/events)
+        return await list_case_events(
+            case_id=short_case_id,
+            page_size=page_size,
+            page_token=page_token,
+            project_id=project_id,
+            customer_id=customer_id,
+            region=region,
+        )
     except Exception as e:
         logger.error("Error listing events for alert %s: %s", alert_id, e)
         return {"error": f"Failed to list events for alert: {str(e)}"}
@@ -620,12 +604,12 @@ async def set_alert_sla(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Set the SLA expiration times on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:setAlertSla`)."""
+    """Set the SLA expiration times on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:setSla`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:setAlertSla"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:setSla"
         body: Dict[str, Any] = {"slaExpirationTime": sla_expiration_time}
         if sla_critical_expiration_time:
             body["slaCriticalExpirationTime"] = sla_critical_expiration_time
@@ -646,12 +630,12 @@ async def pause_alert_sla(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Pause the SLA countdown timer on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:pauseAlertSla`)."""
+    """Pause the SLA countdown timer on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:pauseSla`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:pauseAlertSla"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:pauseSla"
         response = chronicle.session.post(url, json={})
         if response.status_code != 200:
             return {"error": f"Failed to pause alert SLA: {response.status_code} - {response.text}"}
@@ -669,12 +653,12 @@ async def resume_alert_sla(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Resume a paused SLA countdown timer on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:resumeAlertSla`)."""
+    """Resume a paused SLA countdown timer on a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:resumeSla`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:resumeAlertSla"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:resumeSla"
         response = chronicle.session.post(url, json={})
         if response.status_code != 200:
             return {"error": f"Failed to resume alert SLA: {response.status_code} - {response.text}"}
@@ -692,12 +676,12 @@ async def get_alert_overview(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Get the dynamic UI overview layout and resolved data for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:getAlertOverview`)."""
+    """Get the dynamic UI overview layout and resolved data for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:alertOverviewData`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:getAlertOverview"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:alertOverviewData"
         response = chronicle.session.get(url)
         if response.status_code != 200:
             return {"error": f"Failed to get alert overview: {response.status_code} - {response.text}"}
@@ -716,13 +700,13 @@ async def resolve_alert_overview_widget(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Resolve data for a dynamic widget on the Case Alert overview tab (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:resolveAlertOverviewWidget`)."""
+    """Resolve data for a dynamic widget on the Case Alert overview tab (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:resolveOverviewWidget`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:resolveAlertOverviewWidget"
-        response = chronicle.session.post(url, json={"widgetDefinition": widget_definition})
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:resolveOverviewWidget"
+        response = chronicle.session.get(url, params=widget_definition)
         if response.status_code != 200:
             return {"error": f"Failed to resolve alert overview widget: {response.status_code} - {response.text}"}
         return response.json()
@@ -739,13 +723,13 @@ async def fetch_alert_recommendation(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Fetch AI/ML triage recommendations and similar alerts for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:fetchAlertRecommendation`)."""
+    """Fetch AI/ML triage recommendations and similar alerts for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts:fetchRecommendation`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:fetchAlertRecommendation"
-        response = chronicle.session.get(url)
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts:fetchRecommendation"
+        response = chronicle.session.get(url, params={"alertId": short_alert})
         if response.status_code != 200:
             return {"error": f"Failed to fetch alert recommendation: {response.status_code} - {response.text}"}
         return response.json()
@@ -762,12 +746,12 @@ async def create_alert_recommendation_long_running(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Trigger an async LRO to generate AI/ML triage recommendations for a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:createAlertRecommendationLongRunning`)."""
+    """Trigger an async LRO to generate AI/ML triage recommendations for a Case Alert (`POST /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:createRecommendationLongRunning`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:createAlertRecommendationLongRunning"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:createRecommendationLongRunning"
         response = chronicle.session.post(url, json={})
         if response.status_code != 200:
             return {"error": f"Failed to create alert recommendation LRO: {response.status_code} - {response.text}"}
@@ -787,12 +771,12 @@ async def list_alert_views(
     customer_id: Optional[str] = None,
     region: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """List customizable alert view configurations for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}/alertViews`)."""
+    """List customizable alert view configurations for a Case Alert (`GET /v1alpha/{parent}/cases/{case}/caseAlerts/{case_alert}:listAlertViews`)."""
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
         short_case = _extract_case_id(case_id)
         short_alert = _extract_alert_id(alert_id)
-        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}/alertViews"
+        url = f"{_v1alpha_base(chronicle)}/{chronicle.instance_id}/cases/{short_case}/caseAlerts/{short_alert}:listAlertViews"
         params: Dict[str, Any] = {"pageSize": page_size}
         if page_token:
             params["pageToken"] = page_token
