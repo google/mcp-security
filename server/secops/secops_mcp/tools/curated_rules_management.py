@@ -23,7 +23,7 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_curated_rules(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -105,7 +105,7 @@ async def list_curated_rules(
         return {"error": str(e), "curatedRules": []}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_curated_rule(
     rule_id: str,
     project_id: Optional[str] = None,
@@ -175,7 +175,7 @@ async def get_curated_rule(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_curated_rule_by_name(
     display_name: str,
     project_id: Optional[str] = None,
@@ -243,7 +243,7 @@ async def get_curated_rule_by_name(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_curated_detections(
     rule_id: str,
     start_time: str,
@@ -357,7 +357,7 @@ async def search_curated_detections(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_curated_rule_sets(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -445,7 +445,7 @@ async def list_curated_rule_sets(
         return {"error": str(e), "curatedRuleSets": []}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_curated_rule_set(
     rule_set_id: str,
     project_id: Optional[str] = None,
@@ -516,7 +516,7 @@ async def get_curated_rule_set(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_curated_rule_set_deployments(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -608,7 +608,12 @@ async def list_curated_rule_set_deployments(
         return {"error": str(e), "curatedRuleSetDeployments": []}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_curated_rule_set_deployment(
     category_id: str,
     rule_set_id: str,

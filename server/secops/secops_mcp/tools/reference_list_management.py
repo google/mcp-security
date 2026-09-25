@@ -22,7 +22,12 @@ from secops_mcp.server import get_chronicle_client, server
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_reference_list(
     name: str,
     description: str,
@@ -154,7 +159,7 @@ async def create_reference_list(
         logger.error(f'Error creating reference list {name}: {str(e)}', exc_info=True)
         return f'Error creating reference list {name}: {str(e)}'
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_reference_list(
     name: str,
     project_id: Optional[str] = None,
@@ -290,7 +295,12 @@ async def get_reference_list(
         logger.error(f'Error getting reference list {name}: {str(e)}', exc_info=True)
         return f'Error getting reference list {name}: {str(e)}'
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_reference_list(
     name: str,
     project_id: Optional[str] = None,

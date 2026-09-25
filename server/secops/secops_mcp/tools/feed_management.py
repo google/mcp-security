@@ -23,7 +23,7 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_feeds(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -102,7 +102,7 @@ async def list_feeds(
         return {"error": f"Error listing feeds: {e}"}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_feed(
     feed_id: str,
     project_id: Optional[str] = None,
@@ -166,7 +166,12 @@ async def get_feed(
         return {"error": f"Error getting feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_feed(
     display_name: str,
     feed_details: Dict[str, Any],
@@ -242,7 +247,12 @@ async def create_feed(
         return {"error": f"Error creating feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_feed(
     feed_id: str,
     display_name: Optional[str] = None,
@@ -317,7 +327,12 @@ async def update_feed(
         return {"error": f"Error updating feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def enable_feed(
     feed_id: str,
     project_id: Optional[str] = None,
@@ -382,7 +397,12 @@ async def enable_feed(
         return {"error": f"Error enabling feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def disable_feed(
     feed_id: str,
     project_id: Optional[str] = None,
@@ -447,7 +467,12 @@ async def disable_feed(
         return {"error": f"Error disabling feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def delete_feed(
     feed_id: str,
     project_id: Optional[str] = None,
@@ -508,7 +533,12 @@ async def delete_feed(
         return {"error": f"Error deleting feed: {e}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def generate_feed_secret(
     feed_id: str,
     project_id: Optional[str] = None,

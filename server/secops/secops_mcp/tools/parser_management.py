@@ -25,7 +25,12 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_parser(
     log_type: str,
     parser_code: str,
@@ -144,7 +149,7 @@ async def create_parser(
         return f"Error creating parser for log type {log_type}: {str(e)}"
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_parser(
     log_type: str,
     parser_id: str,
@@ -242,7 +247,7 @@ async def get_parser(
         return f"Error getting parser {parser_id} for log type {log_type}: {str(e)}"
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_parsers(
     log_type: str = "-",
     page_size: Optional[int] = None,
@@ -345,7 +350,12 @@ async def list_parsers(
         }
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def activate_parser(
     log_type: str,
     parser_id: str,
@@ -424,7 +434,12 @@ async def activate_parser(
         return f"Error activating parser {parser_id} for log type {log_type}: {str(e)}"
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def deactivate_parser(
     log_type: str,
     parser_id: str,
@@ -507,7 +522,7 @@ async def deactivate_parser(
         )
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def run_parser_against_sample_logs(
     log_type: str,
     parser_code: str,

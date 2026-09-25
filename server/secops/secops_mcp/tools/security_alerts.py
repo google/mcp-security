@@ -24,7 +24,7 @@ from secops_mcp.server import get_chronicle_client, server
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_security_alerts(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -153,7 +153,7 @@ async def get_security_alerts(
     except Exception as e:
         return f'Error retrieving security alerts: {str(e)}'
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_security_alert_by_id(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -208,7 +208,12 @@ async def get_security_alert_by_id(
 
     return json.dumps(response)
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def do_update_security_alert(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,

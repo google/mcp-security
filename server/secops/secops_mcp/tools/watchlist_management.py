@@ -22,7 +22,12 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_watchlist(
     name: str,
     display_name: str,
@@ -122,7 +127,12 @@ async def create_watchlist(
         return {"error": f"Error creating watchlist {name}: {str(e)}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_watchlist(
     watchlist_id: str,
     display_name: Optional[str] = None,
@@ -223,7 +233,12 @@ async def update_watchlist(
         return {"error": f"Error updating watchlist {watchlist_id}: {str(e)}"}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def delete_watchlist(
     watchlist_id: str,
     force: bool = False,
@@ -318,7 +333,7 @@ async def delete_watchlist(
         return {"error": f"Error deleting watchlist {watchlist_id}: {str(e)}"}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_watchlist(
     watchlist_id: str,
     project_id: Optional[str] = None,
@@ -399,7 +414,7 @@ async def get_watchlist(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_watchlists(
     page_size: Optional[int] = None,
     page_token: Optional[str] = None,
