@@ -22,7 +22,7 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_investigations(
     page_size: int = 50,
     page_token: Optional[str] = None,
@@ -92,7 +92,7 @@ async def list_investigations(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_investigation(
     investigation_id: str,
     project_id: Optional[str] = None,
@@ -172,7 +172,12 @@ async def get_investigation(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def trigger_investigation(
     alert_id: str,
     project_id: Optional[str] = None,
@@ -261,7 +266,7 @@ async def trigger_investigation(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def fetch_associated_investigations(
     detection_type: str,
     alert_ids: Optional[List[str]] = None,

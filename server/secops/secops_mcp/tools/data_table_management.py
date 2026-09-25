@@ -22,7 +22,12 @@ from secops_mcp.server import get_chronicle_client, server
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_data_table(
     name: str,
     description: str,
@@ -161,7 +166,12 @@ async def create_data_table(
         logger.error(f'Error creating data table {name}: {str(e)}', exc_info=True)
         return f'Error creating data table {name}: {str(e)}'
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def add_rows_to_data_table(
     table_name: str,
     rows: List[List[str]],
@@ -270,7 +280,7 @@ async def add_rows_to_data_table(
         logger.error(f'Error adding rows to data table {table_name}: {str(e)}', exc_info=True)
         return f'Error adding rows to data table {table_name}: {str(e)}'
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_data_table_rows(
     table_name: str,
     project_id: Optional[str] = None,
@@ -373,7 +383,12 @@ async def list_data_table_rows(
         logger.error(f'Error listing rows in data table {table_name}: {str(e)}', exc_info=True)
         return f'Error listing rows in data table {table_name}: {str(e)}'
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+    }
+)
 async def delete_data_table_rows(
     table_name: str,
     row_ids: List[str],

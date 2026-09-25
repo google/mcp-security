@@ -25,7 +25,12 @@ from secops_mcp.server import get_chronicle_client, server
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def ingest_raw_log(
     log_type: str,
     log_message: Union[str, List[str]],
@@ -142,7 +147,12 @@ async def ingest_raw_log(
         logger.error(f'Error ingesting raw log: {str(e)}', exc_info=True)
         return f'Error ingesting raw log: {str(e)}'
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def ingest_udm_events(
     udm_events: Union[Dict[str, Any], List[Dict[str, Any]]],
     project_id: Optional[str] = None,
@@ -291,7 +301,7 @@ async def ingest_udm_events(
         logger.error(f'Error ingesting UDM events: {str(e)}', exc_info=True)
         return f'Error ingesting UDM events: {str(e)}'
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_available_log_types(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,

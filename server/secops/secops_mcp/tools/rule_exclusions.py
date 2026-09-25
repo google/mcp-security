@@ -23,7 +23,12 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_rule_exclusion(
     display_name: str,
     refinement_type: str,
@@ -127,7 +132,7 @@ async def create_rule_exclusion(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_rule_exclusion(
     exclusion_id: str,
     project_id: Optional[str] = None,
@@ -215,7 +220,7 @@ async def get_rule_exclusion(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_rule_exclusions(
     page_size: Optional[int] = None,
     page_token: Optional[str] = None,
@@ -314,7 +319,12 @@ async def list_rule_exclusions(
         return {"error": error_msg}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def patch_rule_exclusion(
     exclusion_id: str,
     display_name: Optional[str] = None,
@@ -416,7 +426,12 @@ async def patch_rule_exclusion(
         }
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_rule_exclusion_deployment(
     exclusion_id: str,
     enabled: bool,
@@ -534,7 +549,7 @@ async def update_rule_exclusion_deployment(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def compute_rule_exclusion_activity(
     exclusion_id: str,
     start_time: datetime,
