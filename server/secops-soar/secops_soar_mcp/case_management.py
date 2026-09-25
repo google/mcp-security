@@ -25,7 +25,12 @@ logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def create_case(
         name: Annotated[str, Field(..., description="The name or title of the case.")],
         priority: Annotated[
@@ -107,7 +112,7 @@ def register_tools(mcp: FastMCP):
             req["Environment"] = environment
         return await bindings.http_client.post(Endpoints.BASE_CASE_URL, req=req)
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def list_cases(
         next_page_token: Annotated[
             Optional[str],
@@ -148,7 +153,12 @@ def register_tools(mcp: FastMCP):
             )
         return await bindings.http_client.get(Endpoints.BASE_CASE_URL)
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def post_case_comment(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         comment: Annotated[
@@ -187,7 +197,7 @@ def register_tools(mcp: FastMCP):
             req={"Comment": comment},
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def list_alerts_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
@@ -237,7 +247,7 @@ def register_tools(mcp: FastMCP):
             Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id)
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def list_alert_group_identifiers_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
@@ -285,7 +295,7 @@ def register_tools(mcp: FastMCP):
             Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id)
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def list_events_by_alert(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_id: Annotated[str, Field(..., description="The ID of the alert.")],
@@ -340,7 +350,12 @@ def register_tools(mcp: FastMCP):
             )
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def change_case_priority(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         case_priority: Annotated[
@@ -394,7 +409,12 @@ def register_tools(mcp: FastMCP):
             req={"Priority": case_priority},
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def update_case_description(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         description: Annotated[
@@ -445,7 +465,12 @@ def register_tools(mcp: FastMCP):
             req={"CaseId": case_id, "Description": description},
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+        }
+    )
     async def close_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         root_cause: Annotated[
@@ -527,7 +552,12 @@ def register_tools(mcp: FastMCP):
             req["Tags"] = tags
         return await bindings.http_client.post(Endpoints.CLOSE_CASE, req=req)
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def assign_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         user: Annotated[
@@ -571,7 +601,12 @@ def register_tools(mcp: FastMCP):
             req={"CaseId": case_id, "User": user},
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def change_case_stage(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         stage: Annotated[
@@ -617,7 +652,12 @@ def register_tools(mcp: FastMCP):
             req={"CaseId": case_id, "Stage": stage},
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+        }
+    )
     async def add_case_tag(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         tag: Annotated[
@@ -662,7 +702,12 @@ def register_tools(mcp: FastMCP):
             req={"CaseId": case_id, "Tag": tag},
         )
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+        }
+    )
     async def remove_case_tag(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         tag: Annotated[
@@ -705,7 +750,7 @@ def register_tools(mcp: FastMCP):
             req={"CaseId": case_id, "Tag": tag},
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def get_entities_by_alert_group_identifiers(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
@@ -749,7 +794,7 @@ def register_tools(mcp: FastMCP):
             req={"caseId": case_id, "alertGroupIdentifiers": alert_group_identifiers},
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def get_entity_details(
         entity_identifier: Annotated[
             str, Field(..., description="The identifier of the entity.")
@@ -802,7 +847,7 @@ def register_tools(mcp: FastMCP):
             },
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def search_entity(
         term: Annotated[
             Optional[str],
@@ -902,7 +947,7 @@ def register_tools(mcp: FastMCP):
             },
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations={"readOnlyHint": True})
     async def get_case_full_details(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
     ):

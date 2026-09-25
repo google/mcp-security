@@ -19,7 +19,7 @@ from .. import utils
 from ..server import server, vt_client
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_threat_profiles(
     ctx: Context, limit: int = 10
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -51,7 +51,7 @@ async def list_threat_profiles(
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_threat_profile(
     profile_id: str, ctx: Context
 ) -> typing.Dict[str, typing.Any]:
@@ -99,7 +99,7 @@ async def get_threat_profile(
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_threat_profile_recommendations(
     profile_id: str, ctx: Context, limit: int = 10
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -144,7 +144,7 @@ async def get_threat_profile_recommendations(
   return utils.sanitize_response(res.get('recommendations', []))
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_threat_profile_associations_timeline(
     profile_id: str, ctx: Context, limit: int = 10
 ) -> typing.List[typing.Dict[str, typing.Any]]:

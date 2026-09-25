@@ -69,7 +69,7 @@ def url_to_base64(url: str) -> str:
   return b.decode('utf-8').rstrip("=")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Get a comprehensive URL analysis report from Google Threat Intelligence.
 
@@ -90,7 +90,7 @@ async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_an_url(
     url: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
 ) -> list[dict[str, typing.Any]]:
