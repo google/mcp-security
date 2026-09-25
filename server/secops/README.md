@@ -6,6 +6,14 @@ Chronicle Security Operations suite.
 
 ## Features
 
+### Tool Annotations & Safety Hints
+
+All tools exposed by the Chronicle SecOps MCP server declare Model Context Protocol `ToolAnnotations` metadata to guide autonomous clients (such as Gemini CLI, Google ADK, Claude, and Cursor) regarding execution safety:
+
+- **Read-Only Tools (`readOnlyHint: true`)**: Telemetry searches, entity lookups, alert retrieval, parser and rule validations, and listing operations that query Chronicle without modifying state. Clients can execute these tools safely without interactive prompts.
+- **Additive / Mutating Tools (`readOnlyHint: false, destructiveHint: false`)**: Operations that create or update resources (such as `create_rule`, `create_data_table`, `add_rows_to_data_table`, `ingest_raw_log`, `create_feed`) without deleting or invalidating data.
+- **Destructive Tools (`readOnlyHint: false, destructiveHint: true`)**: High-impact operations that permanently remove resources or disrupt data collection (such as `delete_data_table_rows`, `delete_feed`, `delete_watchlist`, `disable_feed`, `generate_feed_secret`, `deactivate_parser`). Clients can use this hint to require explicit user confirmation before executing these actions.
+
 ### Security Tools
 
 - **`search_security_events(text, project_id=None, customer_id=None, hours_back=24, max_events=100, region=None)`**

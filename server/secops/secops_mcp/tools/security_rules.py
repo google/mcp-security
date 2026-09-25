@@ -23,7 +23,7 @@ from secops_mcp.server import get_chronicle_client, server
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_security_rules(
     project_id: Optional[str] = None,
     customer_id: Optional[str] = None,
@@ -82,7 +82,7 @@ async def list_security_rules(
         return {"error": str(e), "rules": []}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_security_rules(
     query: str,
     project_id: Optional[str] = None,
@@ -136,7 +136,7 @@ async def search_security_rules(
         return {"error": str(e), "rules": []}
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_detection_rule(
     rule_id: str,
     project_id: Optional[str] = None,
@@ -224,7 +224,7 @@ async def get_detection_rule(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_rule_detections(
     rule_id: str,
     alert_state: Optional[str] = None,
@@ -357,7 +357,7 @@ async def get_rule_detections(
 
 # Example of how list_errors might be defined as an MCP tool, if needed later.
 # This is based on the second function in the first code block provided by the user.
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def list_rule_errors(
     rule_id: str,
     project_id: Optional[str] = None,
@@ -427,7 +427,12 @@ async def list_rule_errors(
         return {"error": f"Unexpected error: {str(e)}", "errors": []}
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_rule(
     rule_text: str,
     project_id: Optional[str] = None,
@@ -540,7 +545,7 @@ async def create_rule(
         return f"Error creating rule: {str(e)}"
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def test_rule(
     rule_text: str,
     project_id: Optional[str] = None,
@@ -734,7 +739,7 @@ async def test_rule(
         return f"Error testing rule: {str(e)}"
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def validate_rule(
     rule_text: str,
     project_id: Optional[str] = None,
@@ -884,7 +889,12 @@ async def validate_rule(
         return f"Error validating rule: {str(e)}"
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_retrohunt(
     rule_id: str,
     start_time: str,
@@ -1044,7 +1054,7 @@ async def create_retrohunt(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_retrohunt(
     rule_id: str,
     operation_id: str,
@@ -1170,7 +1180,7 @@ async def get_retrohunt(
         }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_rule_alerts(
     start_time: str,
     end_time: str,

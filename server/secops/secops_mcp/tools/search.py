@@ -24,7 +24,7 @@ from secops_mcp.utils import parse_time_range
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_udm(
     query: str,
     hours_back: int = 24,

@@ -23,7 +23,7 @@ from secops_mcp.server import get_chronicle_client, server
 # Configure logging
 logger = logging.getLogger('secops-mcp')
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_threat_intel(
     query: str,
     project_id: Optional[str] = None,

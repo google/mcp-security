@@ -24,7 +24,7 @@ HUNTING_RULESET_RELATIONSHIPS = [
 ]
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-") -> typing.List[typing.Dict[str, typing.Any]]:
   """Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform.
 
@@ -69,7 +69,7 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Get a Hunting Ruleset object from Google Threat Intelligence.
 
@@ -103,7 +103,7 @@ async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str,
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
 ) -> list[dict[str, typing.Any]]:
