@@ -4,6 +4,13 @@ This is an MCP (Model Context Protocol) server for interacting with Google Cloud
 
 ## Features
 
+### Tool Annotations & Safety Hints
+
+All tools exposed by the Security Command Center MCP server declare Model Context Protocol `ToolAnnotations` metadata to guide autonomous clients (such as Gemini CLI, Google ADK, Claude, and Cursor) regarding execution safety:
+
+- **Read-Only Tools (`readOnlyHint: true`)**: Finding search, finding details inspection, compliance evaluation, vulnerability ranking, and remediation step retrieval (`search_findings`, `get_finding_details`, `search_findings_by_compliance`, `top_vulnerability_findings`, `get_finding_remediation`).
+- **Additive / Mutating Tools (`readOnlyHint: false, destructiveHint: false`)**: Operations that mutate finding states without deleting data (`set_finding_mute`).
+
 ### Available Tools
 
 - **`search_findings(project_id, finding_class=None, severity=None, state="ACTIVE", category=None, ...)`**

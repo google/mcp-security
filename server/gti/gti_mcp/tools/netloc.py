@@ -88,7 +88,7 @@ IP_KEY_RELATIONSHIPS = [
 ]
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Get a comprehensive domain analysis report from Google Threat Intelligence.
 
@@ -108,7 +108,7 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_a_domain(
     domain: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
 ) -> list[dict[str, typing.Any]]:
@@ -174,7 +174,7 @@ async def get_entities_related_to_a_domain(
   return utils.sanitize_response(res.get(relationship_name, []))
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Get a comprehensive IP Address analysis report from Google Threat Intelligence.
 
@@ -193,7 +193,7 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_an_ip_address(
     ip_address: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
 ) -> list[dict[str, typing.Any]]:

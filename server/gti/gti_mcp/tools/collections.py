@@ -54,7 +54,7 @@ COLLECTION_TYPES = {
 }
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """At Google Threat Intelligence, threats are modeled as "collections". This tool retrieves them from the platform.
 
@@ -83,7 +83,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_a_collection(
     id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -173,7 +173,7 @@ async def _search_threats_by_collection_type(
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_threats(
     ctx: Context,
     query: str,
@@ -236,7 +236,7 @@ async def search_threats(
   return utils.sanitize_response([o.to_dict() for o in res])
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_campaigns(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -259,7 +259,7 @@ async def search_campaigns(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_threat_actors(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -282,7 +282,7 @@ async def search_threat_actors(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_malware_families(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -305,7 +305,7 @@ async def search_malware_families(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_software_toolkits(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -328,7 +328,7 @@ async def search_software_toolkits(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_threat_reports(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -353,7 +353,7 @@ async def search_threat_reports(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_vulnerabilities(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -376,7 +376,7 @@ async def search_vulnerabilities(
   return res
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collection_timeline_events(id: str, ctx: Context):
   """Retrieves timeline events from the given collection, when available.
 
@@ -401,7 +401,7 @@ async def get_collection_timeline_events(id: str, ctx: Context):
   return utils.sanitize_response(data.get("data", []))
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
   """Retrieves the Mitre tactics and techniques associated with a threat.
 
@@ -420,7 +420,12 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
   return utils.sanitize_response(data.get("data", {}))
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def create_collection(
     name: str,
     description: str,
@@ -455,7 +460,12 @@ async def create_collection(
   return utils.sanitize_response(data["data"])
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_collection_attributes(
     id: str,
     ctx: Context,
@@ -483,7 +493,12 @@ async def update_collection_attributes(
   return utils.sanitize_response(data["data"])
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def update_iocs_in_collection(
     id: str,
     ctx: Context,
@@ -535,7 +550,7 @@ async def update_iocs_in_collection(
     return 'Sucesssfully updated collection' if status == 200 else 'Error updating collection'
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collection_feature_matches(
     collection_id: str,
     feature_type: str,
@@ -636,7 +651,7 @@ async def get_collection_feature_matches(
     return utils.sanitize_response(data.get("data", []))
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collections_commonalities(collection_id: str, ctx: Context) -> str:
   """Retrieve the common characteristics or features (attributes / relationships) of the indicators of compromise (IoC) within a collection, identified by its ID.
   Args:
@@ -706,7 +721,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
     logging.exception("Error fetching Sigma ruleset %s: %s", ruleset_id, e)
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
 

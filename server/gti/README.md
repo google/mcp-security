@@ -6,6 +6,13 @@ Threat Intelligence suite.
 
 ## Features
 
+### Tool Annotations & Safety Hints
+
+All tools exposed by the Google Threat Intelligence MCP server declare Model Context Protocol `ToolAnnotations` metadata to guide autonomous clients (such as Gemini CLI, Google ADK, Claude, and Cursor) regarding execution safety:
+
+- **Read-Only Tools (`readOnlyHint: true`)**: Threat reporting, entity lookups, IOC searches, domain and IP intelligence, threat profiles, and ruleset queries (32 tools total).
+- **Additive / Mutating Tools (`readOnlyHint: false, destructiveHint: false`)**: Operations that create or update threat collections or request file analysis (`create_collection`, `update_collection_attributes`, `update_iocs_in_collection`, `analyse_file`).
+
 ### Collections (Threats)
 
 - **`get_collection_report(id)`**: Retrieves a specific collection report by its ID (e.g., `report--<hash>`, `threat-actor--<hash>`).
