@@ -14,6 +14,7 @@
 """ADK v2.x Agent definition and factory for MCP Security Agent."""
 
 import logging
+import threading
 from typing import Optional, Any
 from mcp_security_agent.config import AgentSettings
 from mcp_security_agent.toolsets import build_mcp_toolsets
@@ -61,5 +62,22 @@ def create_security_agent(settings: Optional[AgentSettings] = None) -> Any:
     return agent
 
 
-# Expose root_agent for standard ADK CLI discovery (adk run, adk web)
-root_agent = create_security_agent()
+# Lazy root_agent instantiation for standard ADK CLI discovery (adk run, adk web)
+_root_agent: Optional[Any] = None
+_root_agent_lock = threading.Lock()
+
+
+def __getattr__(name: str) -> Any:
+    global _root_agent
+    if name == "root_agent":
+        if _root_agent is None:
+            with _root_agent_lock:
+                if _root_agent is None:
+                    _root_agent = create_security_agent()
+        return _root_agent
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return ["create_security_agent", "root_agent", "SOC_AGENT_SYSTEM_PROMPT"]
+
