@@ -84,6 +84,56 @@ FILE_KEY_RELATIONSHIPS = [
     "associations",
 ]
 
+# Fields excluded (via the `exclude_attributes` API param) from "behaviours"
+# relationship results returned by `get_entities_related_to_a_file`. These
+# are either too verbose/noisy or too large for regular consumption.
+FILE_BEHAVIOUR_EXCLUDED_ATTRS = [
+    "memory_dumps",
+    "processes_terminated",
+    "registry_keys_opened",
+    "files_written",
+    "files_deleted",
+    "files_opened",
+    "files_dropped",
+    "processes_tree",
+    "processes_created",
+    "signature_matches",
+]
+
+# Fields stripped client-side from the response of `get_file_behavior_summary`.
+# The `behaviour_summary` endpoint doesn't support `exclude_attributes` (its
+# fields aren't nested under `attributes`), so these can't be filtered via the
+# API and are removed after the fact instead. They are either too
+# verbose/noisy or too large for regular consumption.
+FILE_BEHAVIOR_SUMMARY_EXCLUDED_ATTRS = [
+    "files_opened",
+    "modules_loaded",
+    "mutexes_created",
+    "mutexes_opened",
+    "processes_terminated",
+    "processes_tree",
+    "registry_keys_opened",
+    "tags",
+    "text_highlighted",
+    "registry_keys_deleted",
+    "signature_matches",
+    "files_written",
+    "memory_dumps",
+    "http_conversations",
+    "files_deleted",
+    "files_copied",
+    "files_dropped",
+    "ids_alerts",
+    "registry_keys_set",
+    "processes_created",
+    "command_executions",
+    "ip_traffic",
+    "attack_techniques",
+    "memory_pattern_urls",
+    "memory_pattern_domains",
+    "processes_injected"
+]
+
 
 @server.tool()
 async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
@@ -109,8 +159,8 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
 
 @server.tool()
 async def get_entities_related_to_a_file(
-    hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10, 
-) -> list[dict[str, typing.Any]]:
+    hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10,
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
     """Retrieve entities related to the the given file hash.
 
     The following table shows a summary of available relationships for file objects.
@@ -179,14 +229,17 @@ async def get_entities_related_to_a_file(
             f"Available relationships are: {','.join(FILE_RELATIONSHIPS)}"
         }
 
+    params = {"exclude_attributes": ",".join(FILE_BEHAVIOUR_EXCLUDED_ATTRS)}
     async with vt_client(ctx) as client:
       res = await utils.fetch_object_relationships(
-          client, 
+          client,
           "files",
-          hash, 
+          hash,
           relationships=[relationship_name],
           descriptors_only=descriptors_only,
-          limit=limit)
+          limit=limit,
+          params=params)
+
     return utils.sanitize_response(res.get(relationship_name, []))
 
 
@@ -245,7 +298,8 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
       logging.warning(f"Unexpected response format from VirusTotal API: {res}")
       return {"error": f"Unexpected response format from VirusTotal API: {res}"}
 
-  return utils.sanitize_response(res["data"])
+  data = utils.remove_fields(res["data"], FILE_BEHAVIOR_SUMMARY_EXCLUDED_ATTRS)
+  return utils.sanitize_response(data)
 
 
 @server.tool()
