@@ -839,7 +839,7 @@ async def set_finding_mute(
         full_name = finding.name
         mute_enum = securitycenter_v2.Finding.Mute[mute_upper]
 
-        request = securitycenter_v2.SetMuteFindingRequest(
+        request = securitycenter_v2.SetMuteRequest(
             name=full_name,
             mute=mute_enum,
         )
