@@ -273,10 +273,10 @@ async def search_digital_threat_monitoring(
     query: str,
     ctx: Context,
     size: int = 10,
-    since: str = None,
-    until: str = None,
-    page: str = None,
-    truncate: str = None,
+    since: typing.Optional[str] = None,
+    until: typing.Optional[str] = None,
+    page: typing.Optional[str] = None,
+    truncate: typing.Optional[str] = None,
     sanitize: bool = True,
 ) -> dict:
   """Search for historical data in Digital Threat Monitoring (DTM) using Lucene syntax.

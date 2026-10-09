@@ -1400,3 +1400,44 @@ async def test_get_collection_rules_partial_error():
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
     assert result == []
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_none_default_params_accept_null():
+    """Params defaulting to None must accept an explicit null.
+
+    Some MCP clients send every optional argument, using the advertised
+    default (null). If the schema type excludes null, the call is rejected
+    at argument validation instead of falling back to the default.
+    """
+
+    async with client_session(server._mcp_server) as client:
+        tools_result = await client.list_tools()
+
+    offenders = []
+    for tool in tools_result.tools:
+        for name, prop in tool.inputSchema.get("properties", {}).items():
+            if "default" not in prop or prop["default"] is not None:
+                continue
+            types = [prop.get("type")] + [
+                option.get("type") for option in prop.get("anyOf", [])
+            ]
+            if "null" not in types:
+                offenders.append(f"{tool.name}.{name}")
+
+    assert offenders == []
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_search_threats_accepts_null_collection_type():
+    """An explicit null `collection_type` behaves like omitting it."""
+
+    with patch("gti_mcp.tools.collections.utils.consume_vt_iterator",
+               new=AsyncMock(return_value=[])) as mock_iterator:
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_threats",
+                arguments={"query": "apt", "collection_type": None},
+            )
+
+    assert not result.isError, result.content[0].text
+    mock_iterator.assert_awaited_once()
