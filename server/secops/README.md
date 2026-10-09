@@ -271,6 +271,65 @@ These tools help you leverage Google-curated detection content:
 - **Investigation**: Use `search_curated_detections` to analyze threats detected by curated rules
 - **Configuration**: Manage alerting settings and precision tuning for optimal detection coverage
 
+### Case Management & SOAR Trigger Tools
+These tools provide complete 1P Case lifecycle operations, automated reaction triggers, and multi-resource aggregation:
+- **`list_cases`**: List cases with filtering by stage, priority, assignee, status, or tags
+- **`get_case`**: Retrieve complete case resource metadata
+- **`get_case_full_details`**: Perform high-performance parallel triage by concurrently retrieving case details, attached alerts, and analyst comments in a unified payload
+- **`update_case`**: Update case metadata with automatic FieldMask generation
+- **`change_case_priority`**: Update priority, firing the Chronicle SOAR *Case Priority Changed* automated reaction trigger
+- **`change_case_stage`**: Update stage, firing the Chronicle SOAR *Case Stage Changed* reaction trigger
+- **`assign_case`**: Assign case owner, firing the Chronicle SOAR *Case Assignee Changed* reaction trigger
+- **`set_custom_case_fields`**: Set custom fields, firing the Chronicle SOAR *Custom Case Field Changed* reaction trigger
+- **`add_case_tag` / `remove_case_tag`**: Add or remove categorization tags
+- **`add_case_insight`**: Record analyst insights and evidence notes in the case journal
+- **`pause_case_sla` / `resume_case_sla`**: Pause or resume the active SLA countdown timer
+- **`close_case` / `reopen_case`**: Close or reopen case investigations with resolution reasoning
+- **`list_case_comments`**: Retrieve analyst notes and discussion threads
+- **`create_case_comment` (alias: `post_case_comment`)**: Post comments to the case wall
+
+### Case Alert Management & Forensics Tools
+These tools manage security alerts within cases, grouping, and raw telemetry inspection:
+- **`list_case_alerts`**: List alerts attached to a specific case
+- **`get_case_alert`**: Get full alert details and metadata
+- **`update_case_alert`**: Update alert fields with FieldMask support
+- **`change_alert_priority`**: Update alert priority, firing the Chronicle SOAR *Alert Priority Changed* reaction trigger
+- **`set_alert_custom_fields`**: Set custom fields on an alert, firing the Chronicle SOAR *Alert Custom Field Changed* reaction trigger
+- **`move_case_alert`**: Move an alert between cases to consolidate or split incident investigations
+- **`add_alert_tag` / `remove_alert_tag`**: Add or remove categorization tags on an alert
+- **`list_alert_group_identifiers_by_case`**: List alert group identifiers associated with a case
+- **`list_events_by_alert` (alias: `list_involved_events`)**: Query and stream raw security telemetry events and forensic logs that triggered the alert
+
+### Entity Investigation Tools
+These tools provide SOAR-context entity analysis and search:
+- **`get_involved_entity`**: Retrieve specific entity details in SOAR alert context
+- **`list_involved_entities`**: List all entities (hosts, users, IPs, domains, hashes) involved in a case or alert
+- **`get_entities_by_alert_group_identifiers`**: Fetch entities associated with specific alert group IDs
+- **`get_entity_details`**: Retrieve rich threat intelligence and asset context for an entity
+- **`search_entity`**: Search entities across the Chronicle SOAR platform matching specific attributes and flags
+
+### Integration Management & Action Execution Tools
+These tools manage third-party and custom SOAR integrations and action execution:
+- **`list_integrations`**: Discover all configured integrations (e.g. VirusTotal, SentinelOne, Slack, Jira)
+- **`list_integration_actions`**: List executable manual and automated actions supported by an integration
+- **`list_integration_instances`**: List configured environment instances and instance GUIDs
+- **`execute_integration_instance_test`**: Execute a live connectivity test ('ping') to verify credentials and connectivity
+- **`execute_manual_action`**: Execute manual actions (e.g. enrich IOC, block IP, isolate host) on a case or alert
+- **`get_action_result_by_id`**: Retrieve execution status, logs, and output data for an action run
+
+### Playbook Lifecycle & Execution Tools
+These tools manage automated SOAR workflow playbooks:
+- **`list_playbooks`**: List automated playbooks (regular and nested workflows)
+- **`get_playbook`**: Retrieve workflow definitions, step graphs, and trigger configurations
+- **`list_playbook_instances`**: List historical playbook execution runs and instance tracking data
+- **`execute_playbook` (alias: `trigger_playbook`)**: Manually trigger a playbook workflow on a case or alert
+
+### Connector Event Tools
+These tools inspect raw connector ingestion events:
+- **`list_connector_events`**: List raw events ingested via security data connectors
+- **`get_connector_event`**: Retrieve raw payload and processing status for a connector event
+
+
 ## Configuration
 
 ### MCP Server Configuration
