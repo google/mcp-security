@@ -177,7 +177,7 @@ async def _search_threats_by_collection_type(
 async def search_threats(
     ctx: Context,
     query: str,
-    collection_type: str = None,
+    collection_type: typing.Optional[str] = None,
     limit: int = 5,
     order_by: str = "relevance-",
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -459,7 +459,7 @@ async def create_collection(
 async def update_collection_attributes(
     id: str,
     ctx: Context,
-    attributes: typing.Dict[str, typing.Any] = None,
+    attributes: typing.Optional[typing.Dict[str, typing.Any]] = None,
 ) -> typing.Dict[str, typing.Any]:
   """Allows updating a collection's attributes (such as name or description)
   Args:
@@ -707,7 +707,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.Optional[typing.List[str]] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
 
   Note:
