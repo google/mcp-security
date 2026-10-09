@@ -18,6 +18,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from secops_mcp.server import get_chronicle_client, server
+from secops_mcp.utils import parse_iso_datetime
 
 
 logger = logging.getLogger("secops-mcp")
@@ -318,8 +319,8 @@ async def search_curated_detections(
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
-        start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
-        end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+        start_dt = parse_iso_datetime(start_time)
+        end_dt = parse_iso_datetime(end_time)
 
         result = chronicle.search_curated_detections(
             rule_id=rule_id,
