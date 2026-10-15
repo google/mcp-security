@@ -1,0 +1,50 @@
+name: Check Trailing Spaces
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+jobs:
+  trailing-spaces:
+    name: Check for trailing spaces
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for trailing spaces
+        run: |
+          echo "Checking for trailing whitespace in code files..."
+
+          # Find files with trailing spaces, excluding binary files and common non-code directories
+          # File types to check: source code, config, docs, scripts
+          TRAILING_FILES=$(grep -rIl '[[:blank:]]$' \
+            --exclude-dir=.git \
+            --exclude-dir=node_modules \
+            --exclude-dir=vendor \
+            --exclude-dir=dist \
+            --exclude-dir=build \
+            --exclude-dir=__pycache__ \
+            --exclude-dir=.venv \
+            --exclude-dir=venv \
+            --exclude='*.lock' \
+            --exclude='*.min.js' \
+            --exclude='*.min.css' \
+            . 2>/dev/null || true)
+
+          if [ -n "$TRAILING_FILES" ]; then
+            echo ""
+            echo "❌ Trailing whitespace found in the following files:"
+            echo ""
+            echo "$TRAILING_FILES"
+            echo ""
+            echo "Please remove trailing whitespace from these files."
+            echo "You can use: sed -i 's/[[:blank:]]*$//' <file>"
+            echo ""
+            exit 1
+          else
+            echo "✅ No trailing whitespace found. All clean!"
+          fi
