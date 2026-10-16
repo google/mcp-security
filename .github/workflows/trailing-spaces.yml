@@ -1,0 +1,37 @@
+name: Trailing Spaces Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check-trailing-spaces:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for trailing spaces
+        run: |
+          # Find all files with trailing spaces (excluding .git, caches, and binary files)
+          trailing_files=$(grep -rnl '[[:blank:]]$' . \
+            --exclude-dir=.git \
+            --exclude-dir=__pycache__ \
+            --exclude-dir=.venv \
+            --exclude-dir=venv \
+            --exclude-dir=env \
+            --exclude-dir=node_modules \
+            --exclude=\*.png \
+            --exclude=\*.jpg \
+            --exclude=\*.jpeg \
+            --exclude=\*.gif \
+            --exclude=\*.ico \
+            --exclude=\*.pyc || true)
+            
+          if [ -n "$trailing_files" ]; then
+            echo "::error::Trailing spaces found in the following files:"
+            echo "$trailing_files"
+            exit 1
+          else
+            echo "No trailing spaces found. Great job!"
+          fi
