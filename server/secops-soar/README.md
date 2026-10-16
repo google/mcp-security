@@ -109,6 +109,7 @@ Set up these environment variables in your system:
 ```bash
 export SOAR_URL="your-soar-url"
 export SOAR_APP_KEY="your-soar-app-key"
+export SOAR_PROXY="http://proxy.example.com:8080"  # Optional
 export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```
 
@@ -116,10 +117,14 @@ export SOAR_INTEGRATIONS="ServiceNow,CSV,Siemplify"
 ```powershell
 $Env:SOAR_URL = "your-soar-url"
 $Env:SOAR_APP_KEY = "your-soar-app-key"
+$Env:SOAR_PROXY = "http://proxy.example.com:8080"  # Optional
 $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
 ## Troubleshooting
+
+Set `SOAR_PROXY` to a proxy URL if requests to SOAR must pass through a proxy.
+Leave it unset to connect directly. TLS certificate verification remains enabled.
 
 If the server shuts down at startup with an error like `Failed to fetch valid
 scopes from SOAR due to an SSL certificate verification error`, this is a

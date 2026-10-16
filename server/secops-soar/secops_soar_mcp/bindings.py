@@ -58,7 +58,9 @@ async def bind():
     """Binds global variables."""
     global http_client, valid_scopes
     http_client = HttpClient(
-        os.getenv(consts.ENV_SOAR_URL), os.getenv(consts.ENV_SOAR_APP_KEY)
+        os.getenv(consts.ENV_SOAR_URL),
+        os.getenv(consts.ENV_SOAR_APP_KEY),
+        proxy=os.getenv(consts.ENV_SOAR_PROXY),
     )
     valid_scopes = await _get_valid_scopes()
 
