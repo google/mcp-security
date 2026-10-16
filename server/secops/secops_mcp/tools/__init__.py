@@ -13,6 +13,7 @@
 # limitations under the License.
 """Security Operations MCP tools package."""
 
+from .case_close_definitions import *
 from .curated_rules_management import *
 from .data_table_management import *
 from .entity_lookup import *
