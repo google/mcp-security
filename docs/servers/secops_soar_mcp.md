@@ -309,6 +309,28 @@ These tools are always available.
       }
       ```
 
+- **`list_case_close_root_causes()`**
+    - **Description:** Lists configured case close root causes and their associated close reasons from the SOAR platform (configured under Settings > Case Close Root Causes). Call this tool prior to `close_case` to determine valid (reason, root_cause) pairings accepted by the SOAR tenant.
+    - **Parameters:** None.
+    - **Returns:** A dictionary containing a list of `root_causes` with `id`, `root_cause`, and `close_reason`.
+    - **Return Example:**
+      ```json
+      {
+        "root_causes": [
+          {
+            "id": 1,
+            "root_cause": "Phishing email with credential harvester",
+            "close_reason": "Malicious"
+          },
+          {
+            "id": 2,
+            "root_cause": "Authorized penetration testing",
+            "close_reason": "Maintenance"
+          }
+        ]
+      }
+      ```
+
 - **`close_case(case_id, root_cause, comment, reason, tags=None)`**
     - **Description:** Closes a specific case by setting its root cause, close reason, and a closing comment. Marks the end of the investigation lifecycle.
     - **Parameters:**

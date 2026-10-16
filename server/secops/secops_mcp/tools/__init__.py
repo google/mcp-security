@@ -13,14 +13,24 @@
 # limitations under the License.
 """Security Operations MCP tools package."""
 
+from .case_alert_management import *
+from .case_close_definitions import *
+from .case_detections_and_events import *
+from .case_management import *
+from .case_reporting_and_chat import *
+from .case_wall_records import *
+from .connector_event_management import *
 from .curated_rules_management import *
 from .data_table_management import *
+from .entity_investigation import *
 from .entity_lookup import *
 from .feed_management import *
+from .integration_management import *
 from .investigation_management import *
 from .ioc_matches import *
 from .log_ingestion import *
 from .parser_management import *
+from .playbook_management import *
 from .reference_list_management import *
 from .rule_exclusions import *
 from .search import *
