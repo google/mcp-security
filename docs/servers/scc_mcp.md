@@ -38,6 +38,19 @@ Add the following configuration to your MCP client's settings file:
 
 This server relies primarily on Google Cloud Authentication, which is typically set up system-wide rather than through environment variables in the configuration.
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTPS_PROXY`, `HTTP_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `GRPC_DEFAULT_SSL_ROOTS_FILE_PATH` (for gRPC calls) and `REQUESTS_CA_BUNDLE` (for Google Cloud authentication) to the path of your corporate CA certificate bundle. See the [usage guide](../usage_guide.md#corporate-proxy-configuration) for details.
+
 ## Tools
 
 - **`top_vulnerability_findings(project_id, max_findings=20)`**
