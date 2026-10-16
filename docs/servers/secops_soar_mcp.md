@@ -82,6 +82,21 @@ For more detailed instructions on setting up environment variables, refer to the
 
 If the server closes with a `Failed to fetch valid scopes from SOAR` error, confirm that `SOAR_URL` points to your SOAR base URL rather than your Backstory URL. The [usage guide](../usage_guide.md) includes steps for finding the correct value.
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "SOAR_URL": "https://your-soar-instance.example.com",
+  "SOAR_APP_KEY": "your-soar-api-key",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `SSL_CERT_FILE` to the path of your corporate CA certificate bundle. See the [usage guide](../usage_guide.md#corporate-proxy-configuration) for details.
+
 ### Available Integrations
 
 The `--integrations` flag in the server configuration allows you to enable specific integrations. The integration modules are located in the `marketplace/` directory. Here's a subset of the available integrations:
