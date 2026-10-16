@@ -133,6 +133,21 @@ Install the certifi CA bundle:
   `export SSL_CERT_FILE=$(python -m certifi)` (or the PowerShell equivalent
   `$Env:SSL_CERT_FILE = (python -m certifi)`).
 
+### Corporate Proxy Configuration
+
+The server automatically honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`). If running behind a corporate proxy, set these variables in your environment or within your MCP client configuration (`cline_mcp_settings.json`, `claude_desktop_config.json`):
+
+```json
+"env": {
+  "SOAR_URL": "https://your-soar-instance",
+  "SOAR_APP_KEY": "your-key",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy performs SSL decryption/inspection, point `SSL_CERT_FILE` to your corporate CA bundle.
+
 See `docs/usage_guide.md` for further details.
 
 ## Requirements

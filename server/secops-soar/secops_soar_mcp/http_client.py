@@ -33,7 +33,7 @@ class HttpClient:
 
     def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None:
-            self._session = aiohttp.ClientSession()
+            self._session = aiohttp.ClientSession(trust_env=True)
         return self._session
 
     async def _get_headers(self):
