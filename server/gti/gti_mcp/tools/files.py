@@ -273,10 +273,10 @@ async def search_digital_threat_monitoring(
     query: str,
     ctx: Context,
     size: int = 10,
-    since: str = None,
-    until: str = None,
-    page: str = None,
-    truncate: str = None,
+    since: typing.Optional[str] = None,
+    until: typing.Optional[str] = None,
+    page: typing.Optional[str] = None,
+    truncate: typing.Optional[str] = None,
     sanitize: bool = True,
 ) -> dict:
   """Search for historical data in Digital Threat Monitoring (DTM) using Lucene syntax.
@@ -400,7 +400,7 @@ async def search_digital_threat_monitoring(
         "truncate": truncate,
         "sanitize": str(sanitize).lower(),
     }
-    params = {k: v for k, v in params.items() if v is not None}
+    params = {k: v for k, v in params.items() if v is not None and v != ""}
     path = f"/dtm/docs/search?{urllib.parse.urlencode(params)}"
 
     try:
