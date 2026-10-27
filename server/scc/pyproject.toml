@@ -1,6 +1,6 @@
 [project]
 name = "scc-mcp"
-version = "0.1.1"
+version = "0.2.0"
 description = "Security Command Center MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
