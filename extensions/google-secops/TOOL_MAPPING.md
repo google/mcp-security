@@ -36,5 +36,6 @@ When executing a skill, the agent should first check which tools are available i
 | **Rules** | List Rules | `list_rules` | `list_rules` | |
 | | Get Rule | `get_rule` | `get_rule` | |
 | | Create Rule | `create_rule` | `create_rule` | |
+| | Update Rule | *(No direct equivalent)* | `update_rule` | Local tool updates rule text in place via `PATCH /v1/{instance}/rules/{rule_id}?update_mask=text`. |
 | | Validate Rule | `validate_rule` | `validate_rule` | |
 | | Test/Run Rule | `list_rule_detections` | `list_rule_detections` | Use to see historical detections. |

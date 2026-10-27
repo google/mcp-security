@@ -14,6 +14,7 @@
 """Security Operations MCP tools for security rules."""
 
 import logging
+import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
@@ -577,13 +578,14 @@ async def update_rule(
     - Update the `last_modified` date in the rule's metadata section to reflect the change.
 
     Args:
-        rule_id (str): Unique ID of the rule to update, in the format "ru_<UUID>".
-            Obtain this from `list_security_rules` or `get_detection_rule`.
+        rule_id (str): Unique ID of the rule to update, in the format "ru_<UUID>"
+            (or a full resource name / versioned rule ID). Obtain this from
+            `list_security_rules` or `get_detection_rule`.
         rule_text (str): Complete, updated YARA-L 2.0 rule definition. This replaces
             the existing rule text in full.
-        project_id (str): Google Cloud project ID (required).
-        customer_id (str): Chronicle customer ID (required).
-        region (str): Chronicle region (e.g., "us", "europe") (required).
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
 
     Returns:
         str: Success message with the rule ID, rule name, and new version information.
@@ -620,39 +622,45 @@ async def update_rule(
         - Run `test_rule` with the same rule text to validate detection behavior post-update.
         - Monitor alerts with `get_security_alerts` to confirm the rule is performing as expected.
     """
+    clean_rule_id = rule_id.split("/")[-1].split("@")[0] if rule_id else rule_id
     try:
-        logger.info(f"Updating detection rule {rule_id}")
+        logger.info("Updating detection rule %s", clean_rule_id)
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
 
-        rule = chronicle.update_rule(rule_id, rule_text)
+        rule = chronicle.update_rule(clean_rule_id, rule_text)
 
-        # Chronicle returns the versioned resource name: .../rules/ru_<UUID>@v_<sec>_<ns>
-        rule_id_out = rule.get("name", "").split("/")[-1]
+        resource_name = rule.get("name", "") if isinstance(rule, dict) else ""
+        version_id = resource_name.split("/")[-1] if resource_name else ""
+        revision_id = rule.get("revisionId", "") if isinstance(rule, dict) else ""
 
         result = "Successfully updated detection rule.\n"
-        result += f"Rule ID: {rule_id}\n"
-        if "@" in rule_id_out:
-            result += f"New version: {rule_id_out}\n"
+        result += f"Rule ID: {clean_rule_id}\n"
+        if "@" in version_id:
+            result += f"New version: {version_id}\n"
+        elif revision_id:
+            result += f"New version: {clean_rule_id}@{revision_id}\n"
 
-        for line in rule_text.strip().split("\n"):
-            if line.strip().startswith("rule "):
-                rule_name = (
-                    line.strip().replace("rule ", "").replace(" {", "").strip()
-                )
-                result += f"Rule Name: {rule_name}\n"
-                break
+        display_name = rule.get("displayName", "") if isinstance(rule, dict) else ""
+        if display_name:
+            result += f"Rule Name: {display_name}\n"
+        else:
+            match = re.search(
+                r"^\s*rule\s+([A-Za-z0-9_]+)", rule_text, re.MULTILINE
+            )
+            if match:
+                result += f"Rule Name: {match.group(1)}\n"
 
         result += (
-            "Rule updated successfully. Deployment state (enabled/alerting) is unchanged. "
+            "Deployment state (enabled/alerting) is unchanged. "
             "Use test_rule to validate the updated rule before relying on new alerts."
         )
 
         return result
 
     except Exception as e:
-        logger.error(f"Error updating rule {rule_id}: {str(e)}", exc_info=True)
-        return f"Error updating rule: {str(e)}"
+        logger.error("Error updating rule %s: %s", clean_rule_id, e, exc_info=True)
+        return f"Error updating rule: {e}"
 
 
 @server.tool()

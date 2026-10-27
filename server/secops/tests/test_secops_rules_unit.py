@@ -13,10 +13,12 @@
 # limitations under the License.
 """Unit tests for security rule management tools."""
 
-import sys
+import logging
 import os
-import pytest
+import sys
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Ensure server/secops is in path to import secops_mcp
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -240,6 +242,103 @@ async def test_update_rule_empty_name_response(mock_get_client):
 
     assert isinstance(result, str)
     assert SAMPLE_RULE_ID in result
+    assert "Rule updated successfully." not in result
+
+
+@pytest.mark.asyncio
+async def test_update_rule_revision_id_field(mock_get_client):
+    """update_rule surfaces revisionId from the Chronicle v1 Rule response."""
+    mock_get_client.update_rule.return_value = {
+        "name": f"projects/my-project/locations/us/instances/my-customer/rules/{SAMPLE_RULE_ID}",
+        "revisionId": "v_1700000000_123456789",
+        "displayName": "suspicious_powershell_download",
+    }
+
+    result = await update_rule(
+        rule_id=SAMPLE_RULE_ID,
+        rule_text=SAMPLE_RULE_TEXT,
+        project_id="my-project",
+        customer_id="my-customer",
+        region="us",
+    )
+
+    assert f"New version: {SAMPLE_RULE_ID}@v_1700000000_123456789" in result
+    assert "Rule Name: suspicious_powershell_download" in result
+
+
+@pytest.mark.asyncio
+async def test_update_rule_regex_preserves_rule_substring_and_comments(mock_get_client):
+    """update_rule regex extraction preserves 'rule_' substrings and skips comments."""
+    mock_get_client.update_rule.return_value = {
+        "name": f"projects/my-project/locations/us/instances/my-customer/rules/{SAMPLE_RULE_ID}",
+    }
+    rule_text = (
+        "// Leading comment mentioning rule foo\n"
+        "  rule   rule_execution_detected {\n"
+        "    condition: true\n"
+        "}\n"
+    )
+
+    result = await update_rule(
+        rule_id=SAMPLE_RULE_ID,
+        rule_text=rule_text,
+        project_id="my-project",
+        customer_id="my-customer",
+        region="us",
+    )
+
+    assert "Rule Name: rule_execution_detected" in result
+
+
+@pytest.mark.asyncio
+async def test_update_rule_normalizes_resource_name_and_version_suffix(mock_get_client):
+    """update_rule strips resource path prefixes and @v_ suffixes before calling update_rule."""
+    await update_rule(
+        rule_id=VERSIONED_RULE_NAME,
+        rule_text=SAMPLE_RULE_TEXT,
+        project_id="my-project",
+        customer_id="my-customer",
+        region="us",
+    )
+
+    mock_get_client.update_rule.assert_called_once_with(
+        SAMPLE_RULE_ID, SAMPLE_RULE_TEXT
+    )
+
+
+@pytest.mark.asyncio
+async def test_update_rule_uses_lazy_logging(mock_get_client, caplog):
+    """update_rule uses lazy %s logging formatting on info and error paths."""
+    with caplog.at_level(logging.INFO, logger="secops-mcp"):
+        await update_rule(
+            rule_id=SAMPLE_RULE_ID,
+            rule_text=SAMPLE_RULE_TEXT,
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us",
+        )
+
+    info_records = [r for r in caplog.records if r.name == "secops-mcp"]
+    assert len(info_records) == 1
+    assert info_records[0].args == (SAMPLE_RULE_ID,)
+    assert info_records[0].getMessage() == f"Updating detection rule {SAMPLE_RULE_ID}"
+
+    caplog.clear()
+    mock_get_client.update_rule.side_effect = RuntimeError("quota exceeded")
+
+    with caplog.at_level(logging.ERROR, logger="secops-mcp"):
+        await update_rule(
+            rule_id=SAMPLE_RULE_ID,
+            rule_text=SAMPLE_RULE_TEXT,
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us",
+        )
+
+    err_records = [r for r in caplog.records if r.name == "secops-mcp"]
+    assert len(err_records) == 1
+    assert err_records[0].args and err_records[0].args[0] == SAMPLE_RULE_ID
+    assert err_records[0].exc_info[0] is RuntimeError
 
 
 # ---------------------------------------------------------------------------
