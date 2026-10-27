@@ -31,3 +31,18 @@ All submissions, including submissions by project members, require review. We
 use GitHub pull requests for this purpose. Consult
 [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
 information on using pull requests.
+
+### Code quality checks
+
+All pull requests must pass automated code quality checks, including:
+
+- **Trailing spaces check**: Our CI pipeline automatically checks for trailing whitespace in **changed lines only** (using `git diff --check`). If trailing whitespace is detected in lines you added or modified, the check will fail with the exact file and line numbers. To check your changes locally before submitting:
+  ```bash
+  # Check uncommitted local changes (staged and unstaged):
+  git diff --check HEAD
+
+  # Check all commits on your branch against main:
+  git diff --check origin/main...HEAD
+  ```
+
+  **Note**: Our CI only checks the lines you have modified, not the entire file. Remove trailing whitespace only from the lines you touched so your pull request stays focused and avoids unrelated formatting diffs.

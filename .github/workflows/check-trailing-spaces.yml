@@ -1,0 +1,38 @@
+name: Check Trailing Spaces
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  check-trailing-spaces:
+    runs-on: ubuntu-latest
+    name: Check for trailing spaces
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check for trailing spaces in changed lines
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo "Checking added/modified lines against origin/${BASE_BRANCH}..."
+          if ! OUTPUT=$(git diff --check "origin/${BASE_BRANCH}...HEAD"); then
+            echo "${OUTPUT}"
+            while IFS= read -r line; do
+              if [[ "${line}" =~ ^([^:]+):([0-9]+):[[:space:]]*(.*)$ ]]; then
+                echo "::error file=${BASH_REMATCH[1]},line=${BASH_REMATCH[2]}::${BASH_REMATCH[3]}"
+              fi
+            done <<< "${OUTPUT}"
+            echo ""
+            echo "Run 'git diff --check origin/${BASE_BRANCH}...HEAD' locally to inspect the exact file and line numbers, and remove trailing whitespace from the lines you modified."
+            exit 1
+          fi
+          echo "No trailing spaces found in changed lines."
