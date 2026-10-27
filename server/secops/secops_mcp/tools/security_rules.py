@@ -14,6 +14,7 @@
 """Security Operations MCP tools for security rules."""
 
 import logging
+import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
@@ -538,6 +539,128 @@ async def create_rule(
     except Exception as e:
         logger.error(f"Error creating rule: {str(e)}", exc_info=True)
         return f"Error creating rule: {str(e)}"
+
+
+@server.tool()
+async def update_rule(
+    rule_id: str,
+    rule_text: str,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
+) -> str:
+    """Update an existing detection rule in Chronicle SIEM.
+
+    Replaces the text of an existing YARA-L 2.0 detection rule in place. Chronicle
+    preserves the full version history of the rule, so the previous version remains
+    accessible for audit purposes. The rule's deployment state (enabled/disabled,
+    alerting on/off) is not affected by this operation.
+
+    Use this tool instead of `create_rule` when iterating on an existing rule, to
+    avoid accumulating orphaned rule versions that must be manually cleaned up.
+
+    **Workflow Integration:**
+    - Preferred over `create_rule` for rule edits — same rule ID, same deployment state.
+    - Use after `test_rule` confirms the revised rule text behaves as expected.
+    - Follows the same development lifecycle as `create_rule`: edit → test → update → monitor.
+
+    **Use Cases:**
+    - Fix a false-positive condition in a deployed rule without disabling it first.
+    - Tighten detection logic based on alert review findings.
+    - Add new event types or conditions to an existing rule.
+    - Update rule metadata (description, severity, MITRE mappings) without changing detection logic.
+    - Apply YARA-L syntax corrections identified during rule validation.
+
+    **Rule Update Best Practices:**
+    - Validate the updated rule text with `validate_rule` or `test_rule` before applying.
+    - Retrieve the current rule text with `get_detection_rule` to use as a baseline.
+    - Supply the complete rule text — the API replaces the entire rule body, not a diff.
+    - Update the `last_modified` date in the rule's metadata section to reflect the change.
+
+    Args:
+        rule_id (str): Unique ID of the rule to update, in the format "ru_<UUID>"
+            (or a full resource name / versioned rule ID). Obtain this from
+            `list_security_rules` or `get_detection_rule`.
+        rule_text (str): Complete, updated YARA-L 2.0 rule definition. This replaces
+            the existing rule text in full.
+        project_id (Optional[str]): Google Cloud project ID. Defaults to environment configuration.
+        customer_id (Optional[str]): Chronicle customer ID. Defaults to environment configuration.
+        region (Optional[str]): Chronicle region (e.g., "us", "europe"). Defaults to environment configuration.
+
+    Returns:
+        str: Success message with the rule ID, rule name, and new version information.
+             Returns an error message if the update fails.
+
+    Example Usage:
+        update_rule(
+            rule_id="ru_12345678-1234-1234-1234-123456789012",
+            rule_text='''
+            rule suspicious_powershell_download {
+                meta:
+                    description = "Detects PowerShell downloading files"
+                    author = "Security Team"
+                    severity = "High"
+                    yara_version = "YL2.0"
+                    rule_version = "1.1"
+                    mitre_attack_tactic = "TA0011"
+                    mitre_attack_technique = "T1059.001"
+                events:
+                    $process.metadata.event_type = "PROCESS_LAUNCH"
+                    $process.principal.process.command_line = /powershell.*downloadfile/i
+                    $process.principal.hostname != ""
+                condition:
+                    $process
+            }
+            ''',
+            project_id="my-project",
+            customer_id="my-customer",
+            region="us"
+        )
+
+    Next Steps (using MCP-enabled tools):
+        - Verify the update with `get_detection_rule` to confirm the new rule text is live.
+        - Run `test_rule` with the same rule text to validate detection behavior post-update.
+        - Monitor alerts with `get_security_alerts` to confirm the rule is performing as expected.
+    """
+    clean_rule_id = rule_id.split("/")[-1].split("@")[0] if rule_id else rule_id
+    try:
+        logger.info("Updating detection rule %s", clean_rule_id)
+
+        chronicle = get_chronicle_client(project_id, customer_id, region)
+
+        rule = chronicle.update_rule(clean_rule_id, rule_text)
+
+        resource_name = rule.get("name", "") if isinstance(rule, dict) else ""
+        version_id = resource_name.split("/")[-1] if resource_name else ""
+        revision_id = rule.get("revisionId", "") if isinstance(rule, dict) else ""
+
+        result = "Successfully updated detection rule.\n"
+        result += f"Rule ID: {clean_rule_id}\n"
+        if "@" in version_id:
+            result += f"New version: {version_id}\n"
+        elif revision_id:
+            result += f"New version: {clean_rule_id}@{revision_id}\n"
+
+        display_name = rule.get("displayName", "") if isinstance(rule, dict) else ""
+        if display_name:
+            result += f"Rule Name: {display_name}\n"
+        else:
+            match = re.search(
+                r"^\s*rule\s+([A-Za-z0-9_]+)", rule_text, re.MULTILINE
+            )
+            if match:
+                result += f"Rule Name: {match.group(1)}\n"
+
+        result += (
+            "Deployment state (enabled/alerting) is unchanged. "
+            "Use test_rule to validate the updated rule before relying on new alerts."
+        )
+
+        return result
+
+    except Exception as e:
+        logger.error("Error updating rule %s: %s", clean_rule_id, e, exc_info=True)
+        return f"Error updating rule: {e}"
 
 
 @server.tool()
