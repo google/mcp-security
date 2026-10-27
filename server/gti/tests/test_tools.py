@@ -1161,6 +1161,32 @@ async def test_search_digital_threat_monitoring_errors(
             assert "error" in content
             assert content["error"] == expected_error
 
+@pytest.mark.asyncio
+async def test_search_digital_threat_monitoring_drops_empty_params():
+    """None or "" for unused filters must not add empty query parameters."""
+    with patch('gti_mcp.tools.files.vt_client') as mock_vt_client:
+        mock_response = MagicMock()
+
+        async def json_async():
+            return {"docs": []}
+
+        mock_response.json_async = json_async
+        mock_client_instance = MagicMock()
+        mock_client_instance.post_async = AsyncMock(return_value=mock_response)
+        mock_cm = MagicMock()
+        mock_cm.__aenter__.return_value = mock_client_instance
+        mock_vt_client.return_value = mock_cm
+
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_digital_threat_monitoring",
+                arguments={"query": "test", "since": "", "until": None, "page": ""},
+            )
+
+    assert not result.isError, result.content[0].text
+    path = mock_client_instance.post_async.await_args.kwargs["path"]
+    assert path == "/dtm/docs/search?size=10&sanitize=true"
+
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[

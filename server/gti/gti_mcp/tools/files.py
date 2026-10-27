@@ -400,7 +400,7 @@ async def search_digital_threat_monitoring(
         "truncate": truncate,
         "sanitize": str(sanitize).lower(),
     }
-    params = {k: v for k, v in params.items() if v is not None}
+    params = {k: v for k, v in params.items() if v is not None and v != ""}
     path = f"/dtm/docs/search?{urllib.parse.urlencode(params)}"
 
     try:

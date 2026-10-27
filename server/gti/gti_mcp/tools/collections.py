@@ -459,7 +459,7 @@ async def create_collection(
 async def update_collection_attributes(
     id: str,
     ctx: Context,
-    attributes: typing.Optional[typing.Dict[str, typing.Any]] = None,
+    attributes: typing.Dict[str, typing.Any],
 ) -> typing.Dict[str, typing.Any]:
   """Allows updating a collection's attributes (such as name or description)
   Args:
