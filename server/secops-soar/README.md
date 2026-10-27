@@ -6,6 +6,14 @@ Chronicle Security Operations SOAR suite.
 
 ## Features
 
+### Tool Annotations & Safety Hints
+
+All case management tools exposed by the Chronicle SecOps SOAR MCP server declare Model Context Protocol `ToolAnnotations` metadata to guide autonomous clients (such as Gemini CLI, Google ADK, Claude, and Cursor) regarding execution safety:
+
+- **Read-Only Tools (`readOnlyHint: true`)**: Case listing, alert retrieval, event inspection, entity details, entity searches, and full case detail queries (`list_cases`, `list_alerts_by_case`, `list_alert_group_identifiers_by_case`, `list_events_by_alert`, `get_entities_by_alert_group_identifiers`, `get_entity_details`, `search_entity`, `get_case_full_details`).
+- **Additive / Mutating Tools (`readOnlyHint: false, destructiveHint: false`)**: Operations that create cases, post comments, update priority/description, assign analysts, transition stage, or attach tags (`create_case`, `post_case_comment`, `change_case_priority`, `update_case_description`, `assign_case`, `change_case_stage`, `add_case_tag`).
+- **Destructive Tools (`readOnlyHint: false, destructiveHint: true`)**: Operations that conclude incident lifecycles or remove tags (`close_case`, `remove_case_tag`).
+
 ### Core Tools (Case Management & Entities)
 
 - **`list_cases()`** - Lists available cases in the SOAR platform.

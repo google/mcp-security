@@ -25,7 +25,7 @@ from secops_mcp.utils import parse_time_range
 logger = logging.getLogger("secops-mcp")
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def export_udm_search_csv(
     query: str,
     fields: List[str],
@@ -199,7 +199,7 @@ async def export_udm_search_csv(
         return f"Error exporting UDM search results: {str(e)}"
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def find_udm_field_values(
     query: str,
     page_size: Optional[int] = None,

@@ -97,7 +97,7 @@ def _build_or_filter(field: str, value: str) -> str:
 
 # --- Security Command Center Tools ---
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def search_findings(
     project_id: str = None,
     organization_id: str = None,
@@ -222,7 +222,7 @@ async def search_findings(
         return {"error": "An unexpected error occurred", "details": str(e)}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def get_finding_details(
     project_id: str = None,
     organization_id: str = None,
@@ -331,7 +331,7 @@ async def get_finding_details(
         return {"error": "An unexpected error occurred", "details": str(e)}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def search_findings_by_compliance(
     project_id: str = None,
     organization_id: str = None,
@@ -517,7 +517,7 @@ async def search_findings_by_compliance(
         return {"error": "An unexpected error occurred", "details": str(e)}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def top_vulnerability_findings(
     project_id: str = None,
     organization_id: str = None,
@@ -610,7 +610,7 @@ async def top_vulnerability_findings(
         return {"error": "An unexpected error occurred", "details": str(e)}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def get_finding_remediation(
     project_id: str = None,
     organization_id: str = None,
@@ -771,7 +771,12 @@ async def get_finding_remediation(
         return {"error": "An unexpected error occurred", "details": str(e)}
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def set_finding_mute(
     project_id: str = None,
     organization_id: str = None,

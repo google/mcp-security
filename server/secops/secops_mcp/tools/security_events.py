@@ -25,7 +25,7 @@ from secops_mcp.utils import parse_time_range
 logger = logging.getLogger('secops-mcp')
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_security_events(
     text: str,
     project_id: Optional[str] = None,

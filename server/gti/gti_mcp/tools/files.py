@@ -85,7 +85,7 @@ FILE_KEY_RELATIONSHIPS = [
 ]
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Get a comprehensive file analysis report using its hash (MD5/SHA-1/SHA-256).
 
@@ -107,7 +107,7 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_entities_related_to_a_file(
     hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10, 
 ) -> list[dict[str, typing.Any]]:
@@ -190,7 +190,7 @@ async def get_entities_related_to_a_file(
     return utils.sanitize_response(res.get(relationship_name, []))
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_file_behavior_report(
     file_behaviour_id: str, ctx: Context
 ) -> typing.Dict[str, typing.Any]:
@@ -225,7 +225,7 @@ async def get_file_behavior_report(
   return utils.sanitize_response(res)
 
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
   """Retrieve a summary of all the file behavior reports from all the sandboxes.
 
@@ -248,7 +248,12 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
   return utils.sanitize_response(res["data"])
 
 
-@server.tool()
+@server.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+    }
+)
 async def analyse_file(file_path: str, ctx: Context):
   """Upload and analyse the file in VirusTotal.
 
@@ -268,7 +273,7 @@ async def analyse_file(file_path: str, ctx: Context):
     logging.info(f"Analysis has completed with ID %s", res.id)
     return utils.sanitize_response(res.to_dict())
 
-@server.tool()
+@server.tool(annotations={"readOnlyHint": True})
 async def search_digital_threat_monitoring(
     query: str,
     ctx: Context,
