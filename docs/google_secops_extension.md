@@ -81,6 +81,11 @@ You will be prompted for two environment variables for the MCP configuration:
 *   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
 *   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
 
+### 6. Detection Engineering (`detection-engineering-coverage-evaluation`)
+*   **Trigger**: "Develop detections for [Threat]", "Evaluate coverage for [URL/Text]", `/security:detect`.
+*   **Function**: Orchestrates the end-to-end Detection Engineering lifecycle: extracts TDOs from threat intelligence, simulates synthetic UDM events, evaluates existing rule coverage with long-running operations, generates draft YARA-L 2.0 rules to close coverage gaps, and deploys approved rules.
+*   **Guide**: See [Agentic Detection Engineering Guide](agentic_detection_engineering.md).
+
 ## How it Works
 
 These skills act as **Driver Agents** that:
@@ -96,7 +101,7 @@ The skills employ an **Adaptive Execution** strategy to ensure robustness:
 2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
 3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
 
-For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
+For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](https://github.com/google/mcp-security/blob/main/extensions/google-secops/TOOL_MAPPING.md).
 
 
 ## Cross-Compatibility
