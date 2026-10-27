@@ -107,6 +107,19 @@ Appropriate IAM permissions are required on the target Google Cloud project(s):
 - Security Command Center: `roles/securitycenter.adminViewer` (read-only tools) or `roles/securitycenter.adminEditor` (required for `set_finding_mute`)
 - Cloud Asset Inventory: `roles/cloudasset.viewer`
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `GRPC_DEFAULT_SSL_ROOTS_FILE_PATH` (for gRPC calls) and `REQUESTS_CA_BUNDLE` (for Google Cloud authentication) to the path of your corporate CA certificate bundle. See `docs/usage_guide.md` for details.
+
 ## License
 
 Apache 2.0

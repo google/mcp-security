@@ -71,6 +71,20 @@ $Env:VT_APIKEY = "your-vt-api-key"
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "VT_APIKEY": "your-vt-api-key",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `SSL_CERT_FILE` to the path of your corporate CA certificate bundle. See the [usage guide](../usage_guide.md#corporate-proxy-configuration) for details.
+
 ## Tools
 
 ### Collections (Threats)

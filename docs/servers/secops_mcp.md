@@ -149,6 +149,22 @@ The service account or user credentials need the following Chronicle roles:
 - `roles/chronicle.viewer` - For read-only operations
 - `roles/chronicle.admin` - For administrative operations
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "CHRONICLE_PROJECT_ID": "your-gcp-project-id",
+  "CHRONICLE_CUSTOMER_ID": "your-chronicle-customer-id",
+  "CHRONICLE_REGION": "us",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `REQUESTS_CA_BUNDLE` to the path of your corporate CA certificate bundle. See the [usage guide](../usage_guide.md#corporate-proxy-configuration) for details.
+
 ## Tools
 
 - **`search_security_events(text, project_id=None, customer_id=None, hours_back=24, max_events=100, region=None)`**
