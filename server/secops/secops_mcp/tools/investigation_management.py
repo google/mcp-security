@@ -76,7 +76,7 @@ async def list_investigations(
     """
     try:
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        logger.info(f"Listing investigations (page_size={page_size})...")
+        logger.info("Listing investigations (page_size=%s)...", page_size)
 
         result = chronicle.list_investigations(
             page_size=page_size, page_token=page_token
@@ -84,13 +84,13 @@ async def list_investigations(
 
         investigations = result.get("investigations", [])
         logger.info(
-            f"Successfully retrieved {len(investigations)} investigation(s)"
+            "Successfully retrieved %s investigation(s)", len(investigations)
         )
         return result
 
     except Exception as e:
-        error_msg = f"Error listing investigations: {str(e)}"
-        logger.error(error_msg, exc_info=True)
+        error_msg = f"Error listing investigations: {e}"
+        logger.error("Error listing investigations: %s", e, exc_info=True)
         return {"error": error_msg}
 
 
@@ -151,7 +151,7 @@ async def get_investigation(
             }
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        logger.info(f"Retrieving investigation: {investigation_id}...")
+        logger.info("Retrieving investigation: %s...", investigation_id)
 
         investigation = chronicle.get_investigation(
             investigation_id=investigation_id
@@ -164,15 +164,18 @@ async def get_investigation(
             }
 
         logger.info(
-            f"Successfully retrieved investigation: {investigation_id}"
+            "Successfully retrieved investigation: %s", investigation_id
         )
         return investigation
 
     except Exception as e:
-        error_msg = (
-            f"Error retrieving investigation {investigation_id}: {str(e)}"
+        error_msg = f"Error retrieving investigation {investigation_id}: {e}"
+        logger.error(
+            "Error retrieving investigation %s: %s",
+            investigation_id,
+            e,
+            exc_info=True,
         )
-        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
 
 
@@ -230,7 +233,7 @@ async def trigger_investigation(
             }
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
-        logger.info(f"Triggering investigation for alert: {alert_id}...")
+        logger.info("Triggering investigation for alert: %s...", alert_id)
 
         investigation = chronicle.trigger_investigation(alert_id=alert_id)
 
@@ -255,15 +258,18 @@ async def trigger_investigation(
         }
 
         logger.info(
-            f"Successfully triggered investigation for alert: {alert_id}"
+            "Successfully triggered investigation for alert: %s", alert_id
         )
         return result
 
     except Exception as e:
-        error_msg = (
-            f"Error triggering investigation for alert {alert_id}: {str(e)}"
+        error_msg = f"Error triggering investigation for alert {alert_id}: {e}"
+        logger.error(
+            "Error triggering investigation for alert %s: %s",
+            alert_id,
+            e,
+            exc_info=True,
         )
-        logger.error(error_msg, exc_info=True)
         return {"error": error_msg}
 
 
@@ -368,8 +374,9 @@ async def fetch_associated_investigations(
         detection_label = "alert" if is_alert_type else "case"
         ids = alert_ids if is_alert_type else case_ids
         logger.info(
-            f"Fetching investigations for {len(ids)} "
-            f"{detection_label}(s)..."
+            "Fetching investigations for %s %s(s)...",
+            len(ids),
+            detection_label,
         )
 
         result = chronicle.fetch_associated_investigations(
@@ -416,13 +423,18 @@ async def fetch_associated_investigations(
         }
 
         logger.info(
-            f"Successfully retrieved {total_investigations} "
-            f"investigation(s) for {len(associations_dict)} "
-            f"{detection_label}(s)"
+            "Successfully retrieved %s investigation(s) for %s %s(s)",
+            total_investigations,
+            len(associations_dict),
+            detection_label,
         )
         return response
 
     except Exception as e:
-        error_msg = f"Error fetching associated investigations: {str(e)}"
-        logger.error(error_msg, exc_info=True)
+        error_msg = f"Error fetching associated investigations: {e}"
+        logger.error(
+            "Error fetching associated investigations: %s",
+            e,
+            exc_info=True,
+        )
         return {"error": error_msg}

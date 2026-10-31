@@ -43,12 +43,16 @@ def chronicle_client():
 
 
 def logs(caplog):
-    """Return (level, message) pairs emitted by the secops-mcp logger."""
-    return [
-        (record.levelname, record.getMessage())
-        for record in caplog.records
-        if record.name == LOGGER_NAME
+    """Return (level, message) pairs emitted by the secops-mcp logger.
+
+    Fails if any record was pre-formatted instead of logged lazily with a
+    %s pattern string and separate arguments.
+    """
+    records = [
+        record for record in caplog.records if record.name == LOGGER_NAME
     ]
+    assert all(record.args for record in records)
+    return [(record.levelname, record.getMessage()) for record in records]
 
 
 @pytest.mark.asyncio
