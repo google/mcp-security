@@ -341,23 +341,25 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
 
 
 def test_tools_init_explicit_exports_without_splat_imports():
-    """Verify secops_mcp.tools.__init__ has no wildcard imports and exports all tools."""
+    """Verify secops_mcp.tools.__init__ and server.py have no wildcard imports and export all tools."""
     import ast
     import glob
+    import secops_mcp.server as server_mod
     import secops_mcp.tools as tools_pkg
 
     init_path = os.path.abspath(tools_pkg.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
     tools_dir = os.path.dirname(init_path)
 
-    with open(init_path, encoding="utf-8") as f:
-        init_tree = ast.parse(f.read(), filename=init_path)
-
-    for node in ast.walk(init_tree):
-        if isinstance(node, ast.ImportFrom):
-            names = [alias.name for alias in node.names]
-            assert "*" not in names, (
-                f"Wildcard import found in {init_path} for module {node.module}"
-            )
+    for check_path in (init_path, server_path):
+        with open(check_path, encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=check_path)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                names = [alias.name for alias in node.names]
+                assert "*" not in names, (
+                    f"Wildcard import found in {check_path} for module {node.module}"
+                )
 
     expected_tools = set()
     for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):

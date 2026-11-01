@@ -56,8 +56,8 @@ server = FastMCP(
     dependencies=["vt-py"],
     stateless_http=stateless)
 
-# Load tools.
-from gti_mcp.tools import *
+# Load tools to register them with the FastMCP server.
+from gti_mcp import tools  # noqa: E402, F401
 
 # Run the server
 def main():

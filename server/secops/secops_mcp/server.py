@@ -80,8 +80,8 @@ def get_chronicle_client(
     return chronicle
 
 
-# Import all tools
-from secops_mcp.tools import *
+# Import all tools to register them with the FastMCP server
+from secops_mcp import tools  # noqa: E402, F401
 
 
 def main() -> None:

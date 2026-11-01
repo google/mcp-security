@@ -1467,3 +1467,46 @@ async def test_search_threats_accepts_null_collection_type():
 
     assert not result.isError, result.content[0].text
     mock_iterator.assert_awaited_once()
+
+
+def test_gti_tools_explicit_exports_without_splat_imports():
+    """Verify gti_mcp.tools.__init__ and server.py have no wildcard imports and export all public symbols."""
+    import ast
+    import glob
+    import os
+    import gti_mcp.server as server_mod
+
+    init_path = os.path.abspath(tools.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
+    tools_dir = os.path.dirname(init_path)
+
+    for check_path in (init_path, server_path):
+        with open(check_path, encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=check_path)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                names = [alias.name for alias in node.names]
+                assert "*" not in names, (
+                    f"Wildcard import found in {check_path} for module {node.module}"
+                )
+
+    expected_exports = set()
+    for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+        if os.path.basename(path) == "__init__.py":
+            continue
+        with open(path, encoding="utf-8") as f:
+            mod_tree = ast.parse(f.read(), filename=path)
+        for node in mod_tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if not node.name.startswith("_"):
+                    expected_exports.add(node.name)
+            elif isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and not target.id.startswith("_"):
+                        expected_exports.add(target.id)
+
+    assert hasattr(tools, "__all__")
+    assert set(tools.__all__) == expected_exports
+    assert tools.__all__ == sorted(tools.__all__)
+    for name in expected_exports:
+        assert hasattr(tools, name)
