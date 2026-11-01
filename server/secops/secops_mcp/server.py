@@ -19,6 +19,7 @@ security operations tasks using Chronicle, including natural language search.
 
 import logging
 import os
+import sys
 from typing import Any, Optional
 
 from mcp.server.fastmcp import FastMCP
@@ -79,6 +80,12 @@ def get_chronicle_client(
     )
     return chronicle
 
+
+import secops_mcp
+
+# Ensure running server.py directly as __main__ reuses this module instance
+sys.modules.setdefault('secops_mcp.server', sys.modules[__name__])
+secops_mcp.server = sys.modules['secops_mcp.server']
 
 # Import all tools to register them with the FastMCP server
 from secops_mcp import tools  # noqa: E402, F401

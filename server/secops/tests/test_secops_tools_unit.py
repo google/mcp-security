@@ -380,3 +380,38 @@ def test_tools_init_explicit_exports_without_splat_imports():
     for leaked_symbol in ("logger", "logging", "datetime", "get_chronicle_client"):
         assert not hasattr(tools_pkg, leaked_symbol)
 
+
+def test_server_main_script_execution_registers_all_tools():
+    """Verify running secops_mcp/server.py as __main__ registers all tools on the started server."""
+    import runpy
+    import secops_mcp.server as server_mod
+    import secops_mcp.tools as tools_pkg
+
+    server_path = os.path.abspath(server_mod.__file__)
+    expected_tools = set(tools_pkg.__all__)
+
+    saved_modules = {
+        name: mod
+        for name, mod in list(sys.modules.items())
+        if name == "secops_mcp" or name.startswith("secops_mcp.")
+    }
+    started_servers = []
+
+    def fake_run(self, *args, **kwargs):
+        started_servers.append(self)
+
+    try:
+        for name in saved_modules:
+            sys.modules.pop(name, None)
+        with patch("mcp.server.fastmcp.FastMCP.run", new=fake_run):
+            ns = runpy.run_path(server_path, run_name="__main__")
+    finally:
+        for name in list(sys.modules):
+            if name == "secops_mcp" or name.startswith("secops_mcp."):
+                sys.modules.pop(name, None)
+        sys.modules.update(saved_modules)
+
+    assert len(started_servers) == 1
+    assert started_servers[0] is ns["server"]
+    assert set(ns["server"]._tool_manager._tools.keys()) == expected_tools
+
