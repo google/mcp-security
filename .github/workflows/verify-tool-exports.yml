@@ -1,0 +1,176 @@
+name: Verify MCP Tool Exports and Imports
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-tool-exports:
+    runs-on: ubuntu-latest
+    name: Verify explicit tool imports and exports
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Verify no wildcard imports and all tools are explicitly exported
+        run: |
+          python3 - << 'EOF'
+          import ast
+          import glob
+          import os
+          import subprocess
+          import sys
+
+          errors = []
+
+          def record_error(filepath: str, lineno: int, message: str) -> None:
+              rel = os.path.relpath(filepath)
+              print(f"::error file={rel},line={lineno}::{message}")
+              errors.append(f"{rel}:{lineno}: {message}")
+
+          def is_server_tool_decorator(decorator: ast.AST) -> bool:
+              target = decorator.func if isinstance(decorator, ast.Call) else decorator
+              return (
+                  isinstance(target, ast.Attribute)
+                  and target.attr == "tool"
+                  and isinstance(target.value, ast.Name)
+                  and target.value.id == "server"
+              )
+
+          tracked_py = subprocess.check_output(
+              ["git", "ls-files", "*.py"], text=True
+          ).splitlines()
+          for py_path in tracked_py:
+              if not os.path.exists(py_path):
+                  continue
+              with open(py_path, encoding="utf-8") as f:
+                  tree = ast.parse(f.read(), filename=py_path)
+              for node in ast.walk(tree):
+                  if isinstance(node, ast.ImportFrom):
+                      names = [alias.name for alias in node.names]
+                      if "*" in names:
+                          record_error(
+                              py_path,
+                              node.lineno,
+                              f"Wildcard import 'from {node.module} import *' is not allowed; use explicit imports.",
+                          )
+
+          packages = [
+              ("server/secops/secops_mcp/tools", True, False),
+              ("server/gti/gti_mcp/tools", False, True),
+          ]
+
+          for tools_dir, require_tool_decorator_on_public_funcs, include_public_constants in packages:
+              init_path = os.path.join(tools_dir, "__init__.py")
+              with open(init_path, encoding="utf-8") as f:
+                  init_tree = ast.parse(f.read(), filename=init_path)
+
+              imported_by_submodule = {}
+              all_list = None
+              all_lineno = 1
+              for node in init_tree.body:
+                  if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module:
+                      bucket = imported_by_submodule.setdefault(node.module, set())
+                      for alias in node.names:
+                          bucket.add(alias.asname or alias.name)
+                  elif isinstance(node, ast.Assign):
+                      for target in node.targets:
+                          if isinstance(target, ast.Name) and target.id == "__all__":
+                              all_lineno = node.lineno
+                              if isinstance(node.value, (ast.List, ast.Tuple)):
+                                  all_list = [
+                                      elt.value
+                                      for elt in node.value.elts
+                                      if isinstance(elt, ast.Constant)
+                                      and isinstance(elt.value, str)
+                                  ]
+
+              if all_list is None:
+                  record_error(init_path, 1, "Missing static __all__ list assignment.")
+                  all_set = set()
+              else:
+                  all_set = set(all_list)
+                  if all_list != sorted(all_list):
+                      record_error(
+                          init_path,
+                          all_lineno,
+                          "__all__ must be sorted alphabetically.",
+                      )
+                  if len(all_list) != len(all_set):
+                      record_error(
+                          init_path,
+                          all_lineno,
+                          "__all__ contains duplicate entries.",
+                      )
+
+              defined_symbols = set()
+              for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+                  basename = os.path.basename(path)
+                  if basename == "__init__.py":
+                      continue
+                  submodule = os.path.splitext(basename)[0]
+                  with open(path, encoding="utf-8") as f:
+                      mod_tree = ast.parse(f.read(), filename=path)
+
+                  for node in mod_tree.body:
+                      if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                          has_tool_dec = any(
+                              is_server_tool_decorator(d) for d in node.decorator_list
+                          )
+                          if not node.name.startswith("_") or has_tool_dec:
+                              defined_symbols.add(node.name)
+                              if require_tool_decorator_on_public_funcs and not has_tool_dec:
+                                  record_error(
+                                      path,
+                                      node.lineno,
+                                      f"Public function '{node.name}' is missing @server.tool() decorator (prefix internal helpers with '_').",
+                                  )
+                              if node.name not in imported_by_submodule.get(submodule, set()):
+                                  record_error(
+                                      path,
+                                      node.lineno,
+                                      f"Function '{node.name}' is not imported via 'from .{submodule} import ...' in {init_path}.",
+                                  )
+                              if node.name not in all_set:
+                                  record_error(
+                                      path,
+                                      node.lineno,
+                                      f"Function '{node.name}' is missing from __all__ in {init_path}.",
+                                  )
+                      elif include_public_constants and isinstance(node, ast.Assign):
+                          for target in node.targets:
+                              if isinstance(target, ast.Name) and not target.id.startswith("_"):
+                                  defined_symbols.add(target.id)
+                                  if target.id not in imported_by_submodule.get(submodule, set()):
+                                      record_error(
+                                          path,
+                                          node.lineno,
+                                          f"Symbol '{target.id}' is not imported via 'from .{submodule} import ...' in {init_path}.",
+                                      )
+                                  if target.id not in all_set:
+                                      record_error(
+                                          path,
+                                          node.lineno,
+                                          f"Symbol '{target.id}' is missing from __all__ in {init_path}.",
+                                      )
+
+              stale_in_all = sorted(all_set - defined_symbols)
+              if stale_in_all:
+                  record_error(
+                      init_path,
+                      all_lineno,
+                      f"__all__ lists symbols not defined in {tools_dir}/*.py: {stale_in_all}",
+                  )
+
+          if errors:
+              print(f"\nFound {len(errors)} tool import/export issue(s).", file=sys.stderr)
+              sys.exit(1)
+
+          print("Verified 0 wildcard imports and complete explicit tool exports across secops and gti.")
+          EOF
