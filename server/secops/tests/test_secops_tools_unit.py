@@ -339,3 +339,42 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
     assert "Total Detections: 1" in result
     assert "Rule successfully detected 1 event(s)" in result
 
+
+def test_tools_init_explicit_exports_without_splat_imports():
+    """Verify secops_mcp.tools.__init__ has no wildcard imports and exports all tools."""
+    import ast
+    import glob
+    import secops_mcp.tools as tools_pkg
+
+    init_path = os.path.abspath(tools_pkg.__file__)
+    tools_dir = os.path.dirname(init_path)
+
+    with open(init_path, encoding="utf-8") as f:
+        init_tree = ast.parse(f.read(), filename=init_path)
+
+    for node in ast.walk(init_tree):
+        if isinstance(node, ast.ImportFrom):
+            names = [alias.name for alias in node.names]
+            assert "*" not in names, (
+                f"Wildcard import found in {init_path} for module {node.module}"
+            )
+
+    expected_tools = set()
+    for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+        if os.path.basename(path) == "__init__.py":
+            continue
+        with open(path, encoding="utf-8") as f:
+            mod_tree = ast.parse(f.read(), filename=path)
+        for node in mod_tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if not node.name.startswith("_"):
+                    expected_tools.add(node.name)
+
+    assert hasattr(tools_pkg, "__all__")
+    assert set(tools_pkg.__all__) == expected_tools
+    assert tools_pkg.__all__ == sorted(tools_pkg.__all__)
+    for name in expected_tools:
+        assert callable(getattr(tools_pkg, name))
+    for leaked_symbol in ("logger", "logging", "datetime", "get_chronicle_client"):
+        assert not hasattr(tools_pkg, leaked_symbol)
+
