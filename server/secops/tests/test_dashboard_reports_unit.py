@@ -99,7 +99,7 @@ async def test_create_dashboard_scheduled_report_builds_body(api):
     assert (method, path) == ("POST", REPORTS)
     assert kwargs["json_body"] == {
         "displayName": "Weekly",
-        "dashboard": {"name": f"{INSTANCE}/nativeDashboards/dash1"},
+        "dashboard": {"name": "dash1"},
         "cronDetails": {"cron": "0 8 * * 1", "timeZone": "UTC"},
         "deliveryDetails": {
             "emailDelivery": {"recipients": ["a@example.com"], "subject": "Subj"}
@@ -120,7 +120,7 @@ async def test_create_dashboard_scheduled_report_parses_json_strings(api):
     )
     _, _, kwargs = _call(api)
     body = kwargs["json_body"]
-    assert body["dashboard"] == {"name": f"{INSTANCE}/nativeDashboards/full"}
+    assert body["dashboard"] == {"name": "full"}
     assert body["deliveryDetails"]["emailDelivery"]["recipients"] == [
         "x@example.com",
         "y@example.com",

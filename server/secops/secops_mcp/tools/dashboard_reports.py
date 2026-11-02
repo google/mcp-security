@@ -46,10 +46,16 @@ def _resource_id(value: str) -> str:
 
 
 def _dashboard_name(chronicle: Any, dashboard: str) -> str:
-    """Expand a bare native dashboard ID to its full resource name."""
-    if "/" in dashboard:
-        return dashboard
-    return f"{chronicle.instance_id}/nativeDashboards/{dashboard}"
+    """Return the bare native dashboard ID expected in ``dashboard.name``.
+
+    The scheduled-report backend stores and resolves ``dashboard.name`` as the
+    bare dashboard ID (verified live: a full
+    ``projects/.../nativeDashboards/{id}`` name fails with ``INTERNAL: failed
+    to fetch native dashboard details``), so full names are reduced to their
+    last path segment.
+    """
+    del chronicle  # kept for signature stability; no expansion needed
+    return _resource_id(dashboard)
 
 
 def _merge(base: Dict[str, Any], extra: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -227,7 +233,8 @@ async def create_dashboard_scheduled_report(
     Args:
         display_name (str): Report name shown in the UI (required).
         dashboard_id (str): Native dashboard ID or full resource name
-            (`projects/.../nativeDashboards/{id}`); becomes `dashboard.name`.
+            (`projects/.../nativeDashboards/{id}`); sent as the bare ID in
+            `dashboard.name`, which is what the API expects.
         cron (str): Crontab schedule, 5 fields `min hour dom month dow`
             (e.g. "0 8 * * 1" = Mondays 08:00).
         recipients (Optional[Union[List[str], str]]): Email recipients
