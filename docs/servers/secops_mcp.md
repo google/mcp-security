@@ -1129,18 +1129,7 @@ The service account or user credentials need the following Chronicle roles:
         - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
     - **Returns:** `{"nativeDashboard": "projects/.../nativeDashboards/{id}"}` or an error.
 
-### Legacy (Looker) Dashboard and Migration Tools
-
-- **`create_legacy_dashboard(display_name=None, dashboard_type=None, lookml=None, default_dashboard=None, dashboard=None, project_id=None, customer_id=None, region=None)`**
-    - **Description:** Create a legacy (Looker/LookML) Chronicle dashboard. v1alpha-only.
-    - **Parameters:**
-        - `display_name` (optional): User-visible dashboard name.
-        - `dashboard_type` (optional): ``DASHBOARD_TYPE_USER`` (private to the caller) or ``DASHBOARD_TYPE_CUSTOMER`` (visible to all users). ``DASHBOARD_TYPE_PREDEFINED`` dashboards cannot be created.
-        - `lookml` (optional): LookML YAML defining the dashboard.
-        - `default_dashboard` (optional): Show this dashboard by default (only one dashboard may be the default).
-        - `dashboard` (optional): Full Dashboard resource as a dict or JSON string, e.g. ``{"displayName": "SOC Overview", "type": "DASHBOARD_TYPE_USER", "lookml": "..."}``. Explicit args above override matching keys.
-        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
-    - **Returns:** The created Dashboard resource (``name``, ``displayName``, ``type``, ``uri``, ...), or an error message.
+### Legacy (Looker) Dashboard Tools
 
 - **`get_legacy_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
     - **Description:** Get a legacy (Looker) Chronicle dashboard by ID. v1alpha-only.
@@ -1177,33 +1166,7 @@ The service account or user credentials need the following Chronicle roles:
         - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
     - **Returns:** The newly created Dashboard resource, or an error.
 
-- **`fetch_migratable_dashboards(page_size=None, page_token=None, view=None, project_id=None, customer_id=None, region=None)`**
-    - **Description:** List legacy (Looker) dashboards eligible for migration to native. v1alpha-only.
-    - **Parameters:**
-        - `page_size` (optional): Maximum dashboards per page.
-        - `page_token` (optional): ``nextPageToken`` from a previous call.
-        - `view` (optional): ``DASHBOARD_VIEW_BASIC`` (default), ``DASHBOARD_VIEW_EXPORT`` or ``DASHBOARD_VIEW_FULL``.
-        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
-    - **Returns:** ``{"dashboards": [...], "nextPageToken": "...", "total_dashboards": N}`` or an error message.
-
-- **`batch_migrate_dashboards(dashboards, project_id=None, customer_id=None, region=None)`**
-    - **Description:** Migrate legacy (Looker) dashboards to native dashboards. v1alpha-only.
-    - **Parameters:**
-        - `dashboards` (required): Legacy dashboard IDs or full resource names, as a list or JSON array string. Bare IDs are expanded to ``projects/.../instances/.../dashboards/{id}``.
-        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
-    - **Returns:** ``{"migrationJobId": "...", "jobMigrationStatus": "JOB_MIGRATION_STATE_IN_PROGRESS" | "..._SUCCESS" | "..._PARTIAL_SUCCESS" | "..._FAILURE", "endTime": "..."}`` plus ``dashboards_requested``, or an error message.
-
-- **`fetch_dashboard_migration_metrics(project_id=None, customer_id=None, region=None)`**
-    - **Description:** Get instance-wide legacy-to-native dashboard migration metrics. v1alpha-only.
-    - **Returns:** ``{"totalMigrations", "successRate", "hitlCount", "lookerDashboardCount", "migratedDashboardsCount", "pendingDashboardsCount", "processingDashboardsCount", "failedDashboardsCount"}`` or an error message.
-
-- **`fetch_dashboard_migration_jobs(migration_job_id=None, dashboard_id=None, project_id=None, customer_id=None, region=None)`**
-    - **Description:** Get legacy-to-native dashboard migration jobs and results. v1alpha-only.
-    - **Parameters:**
-        - `migration_job_id` (optional): Migration job ID to fetch.
-        - `dashboard_id` (optional): Legacy dashboard ID or full resource name; restricts results to that dashboard.
-        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
-    - **Returns:** ``{"migrationJobs": [{"migrationJobId", "jobMigrationStatus", "startedBy", "startTime", "endTime", "results": [{"dashboard", "title", "status", "errorMessage", "nativeDashboard"}]}], "total_jobs": N}`` or an error message. Result ``status`` values: DASHBOARD_MIGRATION_STATE_PENDING, _IN_PROGRESS, _SUCCESS, _NEEDS_REVIEW, _FAILED.
+> **Future work (not included):** the Looker-to-native migration endpoints (`dashboards:fetchMigratable`, `dashboards:batchMigrate`, `dashboards:fetchMigrationMetrics`, `dashboards:fetchMigrationJobs`) and legacy dashboard creation (`POST /dashboards`) are intentionally not exposed yet. Migration is gated by a Chronicle feature flag that is still under development (`403 Looker migration wizard is not enabled for the customer`), and legacy creation currently fails server-side, so neither could be verified against a live tenant. Tools for them can be added once the APIs are generally available.
 
 ### Legacy SOAR Dashboard Tools
 

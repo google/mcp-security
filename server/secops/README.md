@@ -300,10 +300,7 @@ Chronicle Security Operations suite.
 - **`install_featured_content_dashboard(featured_dashboard_id, featured_dashboard=None, project_id=None, customer_id=None, region=None)`**
     - Install a Content Hub curated dashboard as a native dashboard.
 
-### Legacy (Looker) Dashboard and Migration Tools
-
-- **`create_legacy_dashboard(display_name=None, dashboard_type=None, lookml=None, default_dashboard=None, dashboard=None, project_id=None, customer_id=None, region=None)`**
-    - Create a legacy (Looker/LookML) Chronicle dashboard. v1alpha-only.
+### Legacy (Looker) Dashboard Tools
 
 - **`get_legacy_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
     - Get a legacy (Looker) Chronicle dashboard by ID. v1alpha-only.
@@ -317,17 +314,7 @@ Chronicle Security Operations suite.
 - **`copy_legacy_dashboard(dashboard_id, dashboard_type=None, display_name=None, default_dashboard=None, destination=None, project_id=None, customer_id=None, region=None)`**
     - Copy a legacy (Looker) dashboard to another dashboard type. v1alpha-only.
 
-- **`fetch_migratable_dashboards(page_size=None, page_token=None, view=None, project_id=None, customer_id=None, region=None)`**
-    - List legacy (Looker) dashboards eligible for migration to native. v1alpha-only.
-
-- **`batch_migrate_dashboards(dashboards, project_id=None, customer_id=None, region=None)`**
-    - Migrate legacy (Looker) dashboards to native dashboards. v1alpha-only.
-
-- **`fetch_dashboard_migration_metrics(project_id=None, customer_id=None, region=None)`**
-    - Get instance-wide legacy-to-native dashboard migration metrics. v1alpha-only.
-
-- **`fetch_dashboard_migration_jobs(migration_job_id=None, dashboard_id=None, project_id=None, customer_id=None, region=None)`**
-    - Get legacy-to-native dashboard migration jobs and results. v1alpha-only.
+> **Future work (not included):** the Looker-to-native migration endpoints (`dashboards:fetchMigratable`, `dashboards:batchMigrate`, `dashboards:fetchMigrationMetrics`, `dashboards:fetchMigrationJobs`) and legacy dashboard creation (`POST /dashboards`) are intentionally not exposed yet. Migration is gated by a Chronicle feature flag that is still under development (`403 Looker migration wizard is not enabled for the customer`), and legacy creation currently fails server-side, so neither could be verified against a live tenant. Tools for them can be added once the APIs are generally available.
 
 ### Legacy SOAR Dashboard Tools
 
@@ -403,7 +390,7 @@ The MCP server provides the following capabilities:
 15. **Rule Exclusions Management**: Create, manage, and monitor rule exclusions to filter false positives and tune detection rules
 16. **Watchlist Management**: Create, update, delete, and list watchlists for entity risk scoring
 17. **Investigation Management**: Manage cases and investigations, trigger investigations, and fetch associated investigations
-18. **Dashboard Management**: Create, update, duplicate, export/import native SIEM dashboards, manage charts and run dashboard (stats) queries, schedule dashboard reports, install Content Hub dashboards, migrate legacy (Looker) dashboards, and query legacy SOAR dashboards
+18. **Dashboard Management**: Create, update, duplicate, export/import native SIEM dashboards, manage charts and run dashboard (stats) queries, schedule dashboard reports, install Content Hub dashboards, inspect and copy legacy (Looker) dashboards, and manage legacy SOAR dashboards
 18. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
@@ -425,7 +412,7 @@ These tools focus on core security operations tasks:
 - **Rule Exclusions Management**: Use `create_rule_exclusion`, `get_rule_exclusion`, `list_rule_exclusions`, `patch_rule_exclusion`, `update_rule_exclusion_deployment`, and `compute_rule_exclusion_activity` to manage false positive filtering and detection rule tuning
 - **Watchlist Management**: Use `create_watchlist`, `update_watchlist`, `list_watchlists`, `get_watchlist`, and `delete_watchlist` to manage entity watchlists with risk score multipliers for prioritizing high-risk entities
 - **Investigation Management**: Use `list_investigations`, `get_investigation`, `trigger_investigation`, and `fetch_associated_investigations` to manage investigations and cases
-- **Dashboard Management**: Use `list_dashboards`, `get_dashboard`, `create_dashboard`, `add_dashboard_chart`, `execute_dashboard_query`, `export_dashboards`/`import_dashboards`, `create_dashboard_scheduled_report`, `install_featured_content_dashboard`, `batch_migrate_dashboards`, and `legacy_soar_get_dashboard_cards` to build, query, report on, migrate, and audit SIEM and SOAR dashboards
+- **Dashboard Management**: Use `list_dashboards`, `get_dashboard`, `create_dashboard`, `add_dashboard_chart`, `execute_dashboard_query`, `export_dashboards`/`import_dashboards`, `create_dashboard_scheduled_report`, `install_featured_content_dashboard`, `copy_legacy_dashboard`, and `legacy_soar_get_dashboard_cards` to build, query, report on, and audit SIEM and SOAR dashboards
 - **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools

@@ -21,7 +21,7 @@ from .entity_lookup import *
 from .feed_management import *
 from .investigation_management import *
 from .ioc_matches import *
-from .legacy_dashboard_migration import *
+from .legacy_dashboards import *
 from .legacy_soar_dashboard import *
 from .log_ingestion import *
 from .parser_management import *
