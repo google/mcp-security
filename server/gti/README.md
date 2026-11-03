@@ -54,6 +54,28 @@ Threat Intelligence suite.
 - **`get_threat_profile_recommendations(profile_id, limit=10)`**: Returns the list of objects associated to the given Threat Profile.
 - **`get_threat_profile_associations_timeline(profile_id)`**: Retrieves the associations timeline for the given Threat Profile.
 
+### Scanning, Reanalysis & Analysis Status
+
+- **`submit_file(file_path)`**: Uploads a local file to VirusTotal for scanning (sending only the file basename) and returns the queued analysis descriptor immediately without blocking on completion. Note: standard VirusTotal file submissions are shared with the security community.
+- **`reanalyze_file(hash)`**: Triggers a fresh reanalysis of a file already known to VirusTotal by MD5, SHA-1, or SHA-256 hash.
+- **`submit_url(url)`**: Submits a URL for scanning and returns the queued analysis descriptor immediately.
+- **`reanalyze_url(url)`**: Triggers a fresh reanalysis of an existing URL.
+- **`reanalyze_domain(domain)`**: Triggers a fresh reanalysis and reputation refresh for a domain.
+- **`reanalyze_ip(ip_address)`**: Triggers a fresh reanalysis and reputation refresh for an IPv4 or IPv6 address.
+- **`get_analysis(analysis_id, include_engine_results=False)`**: Retrieves analysis status (`queued`, `in-progress`, `completed`), summary `stats`, and `meta` (`file_info` / `url_info`). Per-engine AV results are omitted by default to keep responses concise.
+
+### GTI Agentic Investigation Sessions
+
+Requires a Google Threat Intelligence API key with GTI Agentic entitlement (`ENT`, `ENT+`, or active PoC).
+
+- **`ask_gti_agent(message)`**: Starts a new autonomous investigation session with GTI specialist agents and returns the synthesized markdown response, citations, structured widgets, and `session_id`.
+- **`continue_chat(session_id, message)`**: Sends a follow-up question to an existing GTI Agentic session while preserving prior turn context.
+- **`list_sessions(limit=5, order=None, filter=None, cursor=None)`**: Lists recent GTI Agentic investigation sessions for the authenticated user.
+- **`get_session_history(session_id, include_intermediate_events=False)`**: Retrieves the turn-by-turn conversation history for a session (omitting internal thought and tool call trace events unless `include_intermediate_events=True`).
+- **`delete_session(session_id)`**: Deletes a GTI Agentic session by ID.
+- **`share_session(session_id)`**: Generates a share token for a session so another analyst can import a copy.
+- **`copy_shared_session(share_token)`**: Clones a shared GTI Agentic session into the caller's workspace using a share token.
+
 ## Configuration
 
 ### MCP Server Configuration

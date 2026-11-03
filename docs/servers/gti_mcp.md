@@ -140,6 +140,28 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
   - `redirecting_urls`: URLs that redirect to this URL
   - `redirected_urls`: URLs that this URL redirects to
 
+### Scanning, Reanalysis & Analysis Status
+
+- **`submit_file(file_path)`**: Uploads a local file to VirusTotal for scanning (sending only the file basename) and returns the queued analysis descriptor immediately without blocking on completion. Standard VirusTotal submissions are shared with the security community, so confirm authorization before uploading sensitive files.
+- **`reanalyze_file(hash)`**: Requests a fresh reanalysis of a file already present in VirusTotal by MD5, SHA-1, or SHA-256 hash.
+- **`submit_url(url)`**: Submits a URL for scanning and returns the queued analysis descriptor (`id` and `type`).
+- **`reanalyze_url(url)`**: Requests a fresh reanalysis of an existing URL.
+- **`reanalyze_domain(domain)`**: Triggers a fresh reanalysis and reputation refresh for a domain.
+- **`reanalyze_ip(ip_address)`**: Triggers a fresh reanalysis and reputation refresh for an IPv4 or IPv6 address.
+- **`get_analysis(analysis_id, include_engine_results=False)`**: Retrieves the status (`queued`, `in-progress`, or `completed`), aggregate detection `stats`, and `meta` (`file_info` / `url_info`) for an analysis returned by `submit_*` or `reanalyze_*`. Per-engine AV entries are omitted by default (`include_engine_results=False`) to keep responses compact.
+
+### GTI Agentic Investigation Sessions
+
+These tools delegate multi-step threat intelligence and malware investigations to Google Threat Intelligence specialist agents via `/api/v3/agentspace/sessions` (requires a `VT_APIKEY` with GTI Enterprise, GTI Enterprise+, or PoC Agentic entitlement):
+
+- **`ask_gti_agent(message)`**: Starts a new autonomous investigation session and returns the synthesized markdown answer, citations, structured widgets, and `session_id`.
+- **`continue_chat(session_id, message)`**: Continues an existing investigation session while preserving conversation history and context.
+- **`list_sessions(limit=5, order=None, filter=None, cursor=None)`**: Lists GTI Agentic sessions for the authenticated user with cursor-based pagination.
+- **`get_session_history(session_id, include_intermediate_events=False)`**: Retrieves the turn-by-turn session history (`USER_MESSAGE` and `AGENT_FINAL_RESPONSE` turns by default; set `include_intermediate_events=True` to include internal thought and function call trace events).
+- **`delete_session(session_id)`**: Deletes a GTI Agentic session by ID.
+- **`share_session(session_id)`**: Generates a share token so another user can import a copy of the session.
+- **`copy_shared_session(share_token)`**: Clones a shared session into the authenticated user's workspace from a `share_token`.
+
 ## Query Syntax Examples
 
 GTI tools that accept a query parameter use specific syntax:
