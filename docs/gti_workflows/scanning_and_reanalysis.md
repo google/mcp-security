@@ -17,6 +17,10 @@ Standard VirusTotal file submissions are shared with the public VirusTotal corpu
 - **Use `submit_file(file_path)` by default.** It uploads only the file basename (`os.path.basename`), avoids leaking your local directory path in the multipart `Content-Disposition` header, and returns the queued analysis descriptor (`id` and `type`) right away. You can run other SIEM or SOAR queries while VirusTotal scans the file, then check status with `get_analysis(analysis_id)`.
 - **Use `analyse_file(file_path)` only when you want a single blocking call.** It uploads the file and holds the tool call open until VirusTotal finishes scanning, which can hit client tool-call timeouts on large binaries or busy sandbox queues.
 
+The following diagram shows the full decision path, including the hash check that lets you skip the upload and the `get_analysis` polling loop.
+
+![Flow chart: get_file_report first; if no recent report and sharing is authorized, submit_file returns an analysis id, get_analysis polls until status is completed, then the analyst pivots on the SHA-256 into behavior and relationship tools. analyse_file is shown as the blocking alternative.](../img/gti_workflows/scan_flow.svg)
+
 ## Triage a suspicious local file without blocking
 
 Follow this sequence when an analyst or playbook isolates an unknown binary on disk.

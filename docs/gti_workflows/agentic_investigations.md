@@ -8,7 +8,9 @@ GTI Agentic requires a `VT_APIKEY` belonging to an organization with **GTI Enter
 
 ## Choose between local `gti-mcp` and the hosted endpoint
 
-You can call the seven GTI Agentic session tools in two ways:
+You can call the seven GTI Agentic session tools in two ways. Both paths authenticate with the same `VT_APIKEY` value and talk to the same Google Threat Intelligence backend.
+
+![Topology diagram: an MCP client connects either to the local gti-mcp server over stdio (50 tools) or to the hosted GTI Agentic MCP endpoint over Streamable HTTP with an x-apikey header (7 session tools). Both reach the VirusTotal API v3 with a GTI Enterprise, Enterprise+, or PoC Agentic entitlement.](../img/gti_workflows/hosted_vs_local.svg)
 
 1. **Local `gti-mcp` server (recommended when combining raw tools and agentic sessions).** Running `server/gti` gives your MCP client all 50 GTI tools in one server, including `ask_gti_agent`, non-blocking `submit_file` and `reanalyze_*` tools, custom collection CRUD, and deterministic indicator lookups. See [Google Threat Intelligence (GTI) MCP Server](../servers/gti_mcp.md).
 2. **Hosted GTI Agentic remote MCP server (zero local runtime, 7 session tools only).** If your client only needs the seven GTI Agentic session tools (`ask_gti_agent`, `continue_chat`, `list_sessions`, `get_session_history`, `delete_session`, `share_session`, `copy_shared_session`), point a Streamable HTTP MCP client directly at `https://www.virustotal.com/api/v3/agentspace/mcp/` with an `x-apikey` header:
@@ -39,7 +41,9 @@ You can call the seven GTI Agentic session tools in two ways:
 
 ## Start an investigation and pivot across turns
 
-Use `ask_gti_agent` when a question spans multiple entity types, campaigns, or behavioral reports, then pass the returned `session_id` to `continue_chat` for follow-up pivots.
+Use `ask_gti_agent` when a question spans multiple entity types, campaigns, or behavioral reports, then pass the returned `session_id` to `continue_chat` for follow-up pivots. The diagram below shows the whole session lifecycle, including the handoff to a second analyst described later on this page.
+
+![Swimlane diagram: Analyst A calls ask_gti_agent, repeats continue_chat, reviews get_session_history, then calls share_session to get a share_token. Analyst B calls copy_shared_session with that token and gets a new session_id to continue independently. Analyst A lists sessions and deletes finished ones.](../img/gti_workflows/agentic_session_lifecycle.svg)
 
 1. Open a new investigation session with `ask_gti_agent`:
 
