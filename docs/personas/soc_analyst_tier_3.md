@@ -36,7 +36,10 @@ The Tier 3 Security Operations Center (SOC) Analyst is the highest level of tech
     *   `list_security_rules`: For reviewing and understanding existing detections.
     *   *(Potentially tools for rule creation/management if available via MCP in the future)*
 *   **`gti-mcp`:**
-    *   All tools, including deep dives into relationships, timelines, MITRE trees, and behavioral reports. Used extensively for proactive hunting and incident context.
+    *   All 50 GTI tools, including relationship pivots, timelines, MITRE ATT&CK trees, sandbox behavior reports, and custom IOC collection management (`create_collection`, `update_iocs_in_collection`, `update_collection_attributes`).
+    *   `ask_gti_agent`, `continue_chat`, `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, `delete_session`: Multi-turn autonomous investigations with intermediate tool-trace auditing (`include_intermediate_events=True`) and cross-analyst handoffs.
+    *   `submit_file`, `submit_url`, `reanalyze_file`, `reanalyze_url`, `reanalyze_domain`, `reanalyze_ip`, `get_analysis`: Non-blocking artifact submission, fresh verdict reanalysis, and per-engine detection inspection (`include_engine_results=True`).
+    *   `get_collections_commonalities`, `get_collection_feature_matches`, `get_collection_rules`, `get_hunting_ruleset`, `search_digital_threat_monitoring`: Pivoting on shared malware features, extracting standard YARA file-matching and Sigma rules, and searching external leak sources.
 *   **`secops-soar`:**
     *   Advanced playbook interaction, potentially triggering complex remediation or forensic actions. Tools like `google_chronicle_execute_udm_query` are frequently used.
 *   **`scc-mcp`:**

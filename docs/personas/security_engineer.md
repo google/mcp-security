@@ -39,8 +39,9 @@ The Security Engineer is responsible for designing, implementing, managing, and 
     *   `list_cases`, `get_case_full_details`: To understand how tools are being used in practice and identify automation opportunities.
 *   **`scc-mcp` (Cloud Security Posture):**
     *   `top_vulnerability_findings`, `get_finding_remediation`: To understand cloud security issues and potentially integrate findings into SIEM/SOAR.
-*   **`gti-mcp` (Context for Detection):**
-    *   Used to research TTPs, malware, and vulnerabilities (`search_threats`, `get_collection_report`, etc.) to inform detection rule creation.
+*   **`gti-mcp` (Context for Detection & Controls):**
+    *   `search_threats`, `get_collection_report`, `get_collection_mitre_tree`, `get_collection_rules`: Research TTPs, malware families, vulnerabilities, and reference standard YARA (file pattern matching) or Sigma rules when building detections and defensive controls.
+    *   `ask_gti_agent`, `continue_chat`: Query GTI specialist agents for concise technical breakdowns of emerging CVEs, toolkits, and exploit behavior.
 *   **`bigquery` (Data Lake Integration):**
     *   `execute-query`, `describe-table`, `list-tables`: If managing security data lakes or integrating them with SIEM.
 *   **(Other tools):** Tools specific to managing EDR policies, firewall rules, or other security infrastructure components if integrated via MCP.

@@ -35,9 +35,11 @@ The Detection Engineer, sometimes referred to as a Content Developer, is respons
     *   `lookup_entity`: To quickly gather context on entities involved in test alerts or potential FPs/FNs.
     *   *(Potentially tools for rule creation/modification/deployment if available via MCP, e.g., `create_detection_rule`, `update_detection_rule`)*
     *   *(Potentially `validate_udm_query` if available)*
-*   **`gti-mcp` (For Context & Rule Ideas):**
-    *   `search_threats`, `get_collection_report`, `get_collection_mitre_tree`, `get_threat_intel`: To research threats, TTPs, and vulnerabilities that require detection coverage.
-    *   `get_file_report`, `get_domain_report`, etc.: To understand IOC characteristics for rule development.
+*   **`gti-mcp` (For Threat Context & Rule Research):**
+    *   `search_threats`, `get_collection_report`, `get_collection_mitre_tree`, `get_entities_related_to_a_collection`: Research threat actors, campaigns, MITRE ATT&CK techniques, and vulnerabilities that require Chronicle YARA-L 2.0 detection coverage.
+    *   `get_collection_rules`, `get_hunting_ruleset`, `get_collections_commonalities`, `get_collection_feature_matches`: Inspect curated and crowdsourced standard YARA rules (file and payload pattern matching), Sigma rules, IDS signatures, and shared indicator features to inform SIEM rule logic.
+    *   `get_file_report`, `get_file_behavior_summary`, `get_file_behavior_report`, `get_domain_report`, `get_ip_address_report`, `get_url_report`: Examine sandbox process trees, command lines, mutexes, registry modifications, and network telemetry before authoring YARA-L 2.0 UDM rules.
+    *   `ask_gti_agent`, `continue_chat`, `get_session_history`, `copy_shared_session`: Query GTI specialist agents for behavioral summaries across malware families or import research sessions shared by Threat Hunters and CTI Researchers.
 *   **`secops-soar` (For Context & Workflow):**
     *   `get_case_full_details`, `list_alerts_by_case`, `list_events_by_alert`: To understand how existing detections perform in real incidents and gather feedback/tuning requests from analysts' comments.
     *   May interact with SOAR playbooks related to detection deployment or validation if they exist.

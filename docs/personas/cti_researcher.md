@@ -40,23 +40,30 @@ The CTI Researcher primarily utilizes the **`Google Threat Intelligence MCP serv
         *   `search_software_toolkits`: Searches for tools associated with threats.
         *   `search_threat_reports`: Find detailed analytical reports.
         *   `search_vulnerabilities`: Research specific CVEs and vulnerabilities.
-    *   **Detailed Threat Analysis:**
-        *   `get_collection_report`: Retrieve comprehensive reports on specific collections (actors, malware, campaigns, etc.).
-        *   `get_entities_related_to_a_collection`: Explore relationships and pivot between threats, IOCs, and other entities (domains, files, IPs, URLs).
-        *   `get_collection_timeline_events`: Understand the historical activity and evolution of a threat.
-        *   `get_collection_mitre_tree`: Map threats to MITRE ATT&CK TTPs.
-    *   **IOC Analysis & Enrichment:**
-        *   `get_file_report`: Analyze file hashes (MD5, SHA1, SHA256).
-        *   `get_domain_report`: Analyze domain names.
-        *   `get_ip_address_report`: Analyze IP addresses.
-        *   `get_url_report`: Analyze URLs.
-        *   `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Pivot from specific IOCs to discover related infrastructure, malware, or actors.
-        *   `get_file_behavior_summary` / `get_file_behavior_report`: Understand malware behavior from sandbox analysis.
-        *   `analyse_file`: Submit files for analysis.
-        *   `search_iocs`: Search for specific IOC patterns or characteristics across different entity types.
-    *   **Hunting & Organizational Context:**
-        *   `get_hunting_ruleset` / `get_entities_related_to_a_hunting_ruleset`: Work with Yara rulesets.
-        *   `list_threat_profiles`, `get_threat_profile`, `get_threat_profile_recommendations`, `get_threat_profile_associations_timeline`: Understand and utilize organization-specific threat profiles and recommendations.
+    *   **Detailed Threat Analysis & Collection Curation:**
+        *   `get_collection_report`: Retrieve reports on specific collections (`threat-actor`, `malware-family`, `campaign`, `report`, `vulnerability`, or `collection`).
+        *   `get_entities_related_to_a_collection`: Explore relationships and pivot between threats, IOCs, and attack techniques.
+        *   `get_collection_timeline_events`: Track historical activity and analyst-curated timeline events for a threat.
+        *   `get_collection_mitre_tree`: Map threats to MITRE ATT&CK tactics and techniques.
+        *   `get_collections_commonalities` / `get_collection_feature_matches`: Identify shared attributes across IOCs in a collection and pivot across the VirusTotal dataset.
+        *   `get_collection_rules`: Retrieve curated standard YARA hunting rules (for file and payload pattern matching) and crowdsourced YARA, Sigma, and IDS rules linked to a collection.
+        *   `create_collection`, `update_collection_attributes`, `update_iocs_in_collection`: Create and maintain custom IOC collections for tracked campaigns or investigations.
+    *   **GTI Agentic Investigation Sessions:**
+        *   `ask_gti_agent` / `continue_chat`: Delegate multi-step threat actor, campaign, and malware assessments to GTI specialist agents across stateful turns.
+        *   `list_sessions` / `get_session_history` / `delete_session`: Review prior agentic research transcripts and internal tool call traces, and remove completed test sessions.
+        *   `share_session` / `copy_shared_session`: Share or import stateful investigation sessions when collaborating with other CTI researchers, Threat Hunters, or Incident Responders.
+    *   **IOC Analysis, Scanning & Reanalysis:**
+        *   `get_file_report`, `get_domain_report`, `get_ip_address_report`, `get_url_report`: Retrieve indicator analysis reports.
+        *   `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Pivot from specific IOCs to related infrastructure, malware, or actors.
+        *   `get_file_behavior_summary` / `get_file_behavior_report`: Inspect dynamic malware behavior from sandbox execution.
+        *   `submit_file`, `submit_url`, `get_analysis`: Submit files (once authorized for community sharing) or URLs asynchronously and poll scan completion without blocking.
+        *   `reanalyze_file`, `reanalyze_url`, `reanalyze_domain`, `reanalyze_ip`: Trigger fresh scans and reputation refreshes on stale indicators.
+        *   `analyse_file`: Upload a file and wait synchronously for scan completion when a single blocking call is required.
+        *   `search_iocs`: Search for specific IOC patterns or modifiers across files, URLs, domains, and IP addresses.
+    *   **Hunting, Threat Profiles & Digital Threat Monitoring:**
+        *   `get_hunting_ruleset` / `get_entities_related_to_a_hunting_ruleset`: Inspect GTI Livehunt standard YARA rulesets (file pattern matching) and matched notification files.
+        *   `list_threat_profiles`, `get_threat_profile`, `get_threat_profile_recommendations`, `get_threat_profile_associations_timeline`: Filter intelligence using organization-specific Threat Profiles and timelines.
+        *   `search_digital_threat_monitoring`: Query surface, deep, and dark web forums, Telegram channels, paste sites, and leak listings via Lucene syntax.
 
 *   **`secops-mcp` (Chronicle SIEM & Security Operations):**
     *   **General Security Knowledge:**
