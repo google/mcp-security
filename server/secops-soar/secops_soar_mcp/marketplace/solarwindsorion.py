@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SolarWindsOrion: {e}")
+            logger.error(f"Error fetching instance for SolarWindsOrion: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SolarWindsOrion_Execute Query for SolarWindsOrion: {e}")
+                logger.error(f"Error executing action SolarWindsOrion_Execute Query for SolarWindsOrion: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SolarWindsOrion")
+            logger.warning(f"Warning: No active integration instance found for SolarWindsOrion")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SolarWindsOrion: {e}")
+            logger.error(f"Error fetching instance for SolarWindsOrion: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SolarWindsOrion_Enrich Endpoint for SolarWindsOrion: {e}")
+                logger.error(f"Error executing action SolarWindsOrion_Enrich Endpoint for SolarWindsOrion: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SolarWindsOrion")
+            logger.warning(f"Warning: No active integration instance found for SolarWindsOrion")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SolarWindsOrion: {e}")
+            logger.error(f"Error fetching instance for SolarWindsOrion: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SolarWindsOrion_Ping for SolarWindsOrion: {e}")
+                logger.error(f"Error executing action SolarWindsOrion_Ping for SolarWindsOrion: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SolarWindsOrion")
+            logger.warning(f"Warning: No active integration instance found for SolarWindsOrion")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SolarWindsOrion: {e}")
+            logger.error(f"Error fetching instance for SolarWindsOrion: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -324,8 +327,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SolarWindsOrion_Execute Entity Query for SolarWindsOrion: {e}")
+                logger.error(f"Error executing action SolarWindsOrion_Execute Entity Query for SolarWindsOrion: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SolarWindsOrion")
+            logger.warning(f"Warning: No active integration instance found for SolarWindsOrion")
             return {"Status": "Failed", "Message": "No active instance found."}

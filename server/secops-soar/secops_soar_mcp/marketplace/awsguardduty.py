@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Get Detector Details for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Get Detector Details for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Delete a Trusted IP list for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Delete a Trusted IP list for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Create Sample Findings for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Create Sample Findings for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -321,10 +324,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Delete a Detector for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Delete a Detector for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -362,7 +365,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +403,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Get all Trusted IP lists for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Get all Trusted IP lists for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -441,7 +444,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -476,10 +479,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Get a Trusted IP List for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Get a Trusted IP List for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -517,7 +520,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -557,10 +560,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Update Threat Intelligence Set for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Update Threat Intelligence Set for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -598,7 +601,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -635,10 +638,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Get Threat Intelligence Set Details for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Get Threat Intelligence Set Details for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -676,7 +679,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -713,10 +716,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Archive Findings for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Archive Findings for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -754,7 +757,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -789,10 +792,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Unarchive Findings for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Unarchive Findings for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -830,7 +833,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -872,10 +875,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Update a Trusted IP List for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Update a Trusted IP List for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -913,7 +916,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -948,10 +951,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_List Detectors for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_List Detectors for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -989,7 +992,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1022,10 +1025,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Ping for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Ping for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1063,7 +1066,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1103,10 +1106,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Update Findings Feedback for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Update Findings Feedback for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1144,7 +1147,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1184,10 +1187,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Create Threat Intelligence Set for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Create Threat Intelligence Set for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1225,7 +1228,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1263,10 +1266,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_List Threat Intelligence Sets for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_List Threat Intelligence Sets for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1304,7 +1307,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1340,10 +1343,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Update a Detector for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Update a Detector for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1381,7 +1384,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1421,10 +1424,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Create a Trusted IP List for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Create a Trusted IP List for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1462,7 +1465,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1496,10 +1499,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Create a Detector for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Create a Detector for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1537,7 +1540,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1574,10 +1577,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Get Finding Details for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Get Finding Details for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1615,7 +1618,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1657,10 +1660,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_List Findings for a Detector for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_List Findings for a Detector for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1698,7 +1701,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSGuardDuty: {e}")
+            logger.error(f"Error fetching instance for AWSGuardDuty: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1733,8 +1736,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSGuardDuty_Delete Threat Intelligence Set for AWSGuardDuty: {e}")
+                logger.error(f"Error executing action AWSGuardDuty_Delete Threat Intelligence Set for AWSGuardDuty: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSGuardDuty")
+            logger.warning(f"Warning: No active integration instance found for AWSGuardDuty")
             return {"Status": "Failed", "Message": "No active instance found."}

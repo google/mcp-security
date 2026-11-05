@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +110,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Send Vote Email for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Send Vote Email for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +151,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,10 +187,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Mark Email as Not Junk for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Mark Email as Not Junk for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +228,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -269,10 +272,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Send Thread Reply for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Send Thread Reply for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -310,7 +313,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -356,10 +359,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Wait For Email From User for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Wait For Email From User for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -397,7 +400,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -444,10 +447,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Forward Email for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Forward Email for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -485,7 +488,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -537,10 +540,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Move Email To Folder for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Move Email To Folder for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -578,7 +581,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -623,10 +626,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Wait For Vote Email Results for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Wait For Vote Email Results for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -664,7 +667,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -711,10 +714,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Send Email HTML for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Send Email HTML for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -752,7 +755,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -785,10 +788,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Ping for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Ping for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -826,7 +829,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -879,10 +882,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Search Emails for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Search Emails for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -920,7 +923,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -965,10 +968,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Save Email to the Case for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Save Email to the Case for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1006,7 +1009,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1054,10 +1057,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Send Email for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Send Email for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1095,7 +1098,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1128,10 +1131,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Get Mailbox Account Out Of Facility Settings for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Get Mailbox Account Out Of Facility Settings for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1169,7 +1172,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1219,10 +1222,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Download Attachments from Email for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Download Attachments from Email for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1260,7 +1263,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1311,10 +1314,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Delete Email for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Delete Email for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1352,7 +1355,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1388,10 +1391,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Mark Email as Junk for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Mark Email as Junk for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1429,7 +1432,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphMail: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphMail: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1468,8 +1471,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphMail_Extract Data from Attached EML for MicrosoftGraphMail: {e}")
+                logger.error(f"Error executing action MicrosoftGraphMail_Extract Data from Attached EML for MicrosoftGraphMail: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphMail")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphMail")
             return {"Status": "Failed", "Message": "No active instance found."}

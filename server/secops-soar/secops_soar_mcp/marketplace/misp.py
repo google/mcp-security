@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -118,10 +121,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create network-connection Misp Object for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create network-connection Misp Object for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -162,7 +165,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -198,10 +201,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_List Event Objects for MISP: {e}")
+                logger.error(f"Error executing action MISP_List Event Objects for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -242,7 +245,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -276,10 +279,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Unpublish Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Unpublish Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -320,7 +323,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -364,10 +367,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -408,7 +411,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -456,10 +459,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Remove Tag from an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Remove Tag from an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -497,7 +500,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -530,10 +533,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Ping for MISP: {e}")
+                logger.error(f"Error executing action MISP_Ping for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -574,7 +577,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -619,10 +622,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Set IDS Flag for an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Set IDS Flag for an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -663,7 +666,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -699,10 +702,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Get Event Details for MISP: {e}")
+                logger.error(f"Error executing action MISP_Get Event Details for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -743,7 +746,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -778,10 +781,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Add Tag to an Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Add Tag to an Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -822,7 +825,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -857,10 +860,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Remove Tag from an Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Remove Tag from an Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -901,7 +904,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -935,10 +938,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Delete an Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Delete an Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -979,7 +982,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1029,10 +1032,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create IP-Port Misp Object for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create IP-Port Misp Object for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1073,7 +1076,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1118,10 +1121,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create Virustotal-Report Object for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create Virustotal-Report Object for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1159,7 +1162,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1211,10 +1214,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Add Sighting to an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Add Sighting to an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1255,7 +1258,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1294,10 +1297,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Enrich Entities for MISP: {e}")
+                logger.error(f"Error executing action MISP_Enrich Entities for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1338,7 +1341,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1390,10 +1393,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create Url Misp Object for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create Url Misp Object for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1434,7 +1437,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1473,10 +1476,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Download File for MISP: {e}")
+                logger.error(f"Error executing action MISP_Download File for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1517,7 +1520,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1562,10 +1565,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Unset IDS Flag for an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Unset IDS Flag for an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1606,7 +1609,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1648,10 +1651,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Upload File for MISP: {e}")
+                logger.error(f"Error executing action MISP_Upload File for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1692,7 +1695,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1739,10 +1742,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Add Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Add Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1783,7 +1786,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1831,10 +1834,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Add Tag to an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Add Tag to an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1875,7 +1878,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1921,10 +1924,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Create File Misp Object for MISP: {e}")
+                logger.error(f"Error executing action MISP_Create File Misp Object for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1965,7 +1968,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2002,10 +2005,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Get Related Events for MISP: {e}")
+                logger.error(f"Error executing action MISP_Get Related Events for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2046,7 +2049,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2080,10 +2083,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Publish Event for MISP: {e}")
+                logger.error(f"Error executing action MISP_Publish Event for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2124,7 +2127,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2169,10 +2172,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_List Sightings of an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_List Sightings of an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2213,7 +2216,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MISP: {e}")
+            logger.error(f"Error fetching instance for MISP: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2260,8 +2263,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MISP_Delete an Attribute for MISP: {e}")
+                logger.error(f"Error executing action MISP_Delete an Attribute for MISP: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MISP")
+            logger.warning(f"Warning: No active integration instance found for MISP")
             return {"Status": "Failed", "Message": "No active instance found."}

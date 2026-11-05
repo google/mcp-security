@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Add IP To Data Group for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Add IP To Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Create Data Group for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Create Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -244,10 +247,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Add IP To Address List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Add IP To Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -285,7 +288,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -320,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Add Port To Port List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Add Port To Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -361,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -396,10 +399,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Remove Port From Port List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Remove Port From Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -437,7 +440,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -472,10 +475,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Create iRule for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Create iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -513,7 +516,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -552,10 +555,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_List Address Lists for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_List Address Lists for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -593,7 +596,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -628,10 +631,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Update iRule for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Update iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -669,7 +672,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -703,10 +706,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Remove IP From Address List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Remove IP From Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -744,7 +747,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -778,10 +781,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Delete iRule for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Delete iRule for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -819,7 +822,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -852,10 +855,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Ping for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Ping for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -893,7 +896,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -927,10 +930,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Delete Data Group for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Delete Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -968,7 +971,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1002,10 +1005,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Create Address List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Create Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1043,7 +1046,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1082,10 +1085,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_List Port Lists for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_List Port Lists for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1123,7 +1126,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1158,10 +1161,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Create Port List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Create Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1199,7 +1202,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1233,10 +1236,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Delete Port List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Delete Port List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1274,7 +1277,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1308,10 +1311,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Delete Address List for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Delete Address List for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1349,7 +1352,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1388,10 +1391,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_List iRules for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_List iRules for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1429,7 +1432,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1468,10 +1471,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_List Data Groups for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_List Data Groups for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1509,7 +1512,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
+            logger.error(f"Error fetching instance for F5BIGIPiControlAPI: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1543,8 +1546,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action F5BIGIPiControlAPI_Remove IP From Data Group for F5BIGIPiControlAPI: {e}")
+                logger.error(f"Error executing action F5BIGIPiControlAPI_Remove IP From Data Group for F5BIGIPiControlAPI: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
+            logger.warning(f"Warning: No active integration instance found for F5BIGIPiControlAPI")
             return {"Status": "Failed", "Message": "No active instance found."}

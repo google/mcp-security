@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +101,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Scan Hash for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Scan Hash for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +142,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +175,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Ping for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Ping for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +216,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +257,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Upload And Scan Files for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Upload And Scan Files for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -298,7 +301,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -334,10 +337,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Scan URL for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Scan URL for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -378,7 +381,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -413,10 +416,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Scan IP for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Scan IP for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -457,7 +460,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for VirusTotal: {e}")
+            logger.error(f"Error fetching instance for VirusTotal: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -490,8 +493,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action VirusTotal_Get Domain Report for VirusTotal: {e}")
+                logger.error(f"Error executing action VirusTotal_Get Domain Report for VirusTotal: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for VirusTotal")
+            logger.warning(f"Warning: No active integration instance found for VirusTotal")
             return {"Status": "Failed", "Message": "No active instance found."}

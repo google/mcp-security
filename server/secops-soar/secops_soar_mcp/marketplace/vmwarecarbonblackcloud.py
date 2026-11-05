@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Execute Entity Processes Search for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Execute Entity Processes Search for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Device Background Scan for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Device Background Scan for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -256,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_List Reputation Overrides for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_List Reputation Overrides for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -297,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -336,10 +339,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Create a Reputation Override for SHA-256 Hash for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Create a Reputation Override for SHA-256 Hash for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -377,7 +380,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -416,10 +419,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Create a Reputation Override for Certificate for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Create a Reputation Override for Certificate for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -457,7 +460,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -490,10 +493,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Quarantine Device for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Quarantine Device for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -531,7 +534,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -564,10 +567,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Ping for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Ping for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -605,7 +608,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -638,10 +641,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Enable Bypass Mode for Device for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Enable Bypass Mode for Device for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -679,7 +682,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -720,10 +723,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Create a Reputation Override for IT Tool for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Create a Reputation Override for IT Tool for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -761,7 +764,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -794,10 +797,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Enrich Entities for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Enrich Entities for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -835,7 +838,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -869,10 +872,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Update a Policy for Device by Policy ID for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Update a Policy for Device by Policy ID for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -910,7 +913,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -948,10 +951,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Dismiss VMware Carbon Black Cloud Alert for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Dismiss VMware Carbon Black Cloud Alert for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -989,7 +992,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1026,10 +1029,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_List Host Vulnerabilities for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_List Host Vulnerabilities for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1067,7 +1070,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1101,10 +1104,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Delete a Reputation Override for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Delete a Reputation Override for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1142,7 +1145,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1175,10 +1178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Unquarantine Device for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Unquarantine Device for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1216,7 +1219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBCloud: {e}")
+            logger.error(f"Error fetching instance for CBCloud: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1249,8 +1252,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBCloud_Disable Bypass Mode for Device for CBCloud: {e}")
+                logger.error(f"Error executing action CBCloud_Disable Bypass Mode for Device for CBCloud: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBCloud")
+            logger.warning(f"Warning: No active integration instance found for CBCloud")
             return {"Status": "Failed", "Message": "No active instance found."}

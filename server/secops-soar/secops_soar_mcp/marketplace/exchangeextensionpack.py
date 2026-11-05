@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Add Senders to Exchange-Siemplify Mail Flow Rule for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Add Senders to Exchange-Siemplify Mail Flow Rule for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -178,10 +181,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Fetch Compliance Search Results for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Fetch Compliance Search Results for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +222,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -255,10 +258,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Remove Domains from Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Remove Domains from Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -296,7 +299,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -330,10 +333,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Delete Compliance Search for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Delete Compliance Search for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -371,7 +374,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -409,10 +412,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Purge Compliance Search Results for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Purge Compliance Search Results for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -450,7 +453,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -486,10 +489,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Add Domains to Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Add Domains to Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -527,7 +530,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -565,10 +568,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Remove Senders from Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Remove Senders from Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -606,7 +609,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -639,10 +642,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Ping for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Ping for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -680,7 +683,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -733,10 +736,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Run Compliance Search for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Run Compliance Search for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -774,7 +777,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -808,10 +811,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_List Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_List Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -849,7 +852,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ExchangeExtensionPack: {e}")
+            logger.error(f"Error fetching instance for ExchangeExtensionPack: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -883,8 +886,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ExchangeExtensionPack_Delete Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
+                logger.error(f"Error executing action ExchangeExtensionPack_Delete Exchange-Siemplify Mail Flow Rules for ExchangeExtensionPack: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ExchangeExtensionPack")
+            logger.warning(f"Warning: No active integration instance found for ExchangeExtensionPack")
             return {"Status": "Failed", "Message": "No active instance found."}

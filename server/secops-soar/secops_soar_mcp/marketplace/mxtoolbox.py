@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_A Record Lookup for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_A Record Lookup for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -166,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_Reverse DNS Lookup for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_Reverse DNS Lookup for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -207,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -241,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_TCP Port Status for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_TCP Port Status for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -282,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -315,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_Ping for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_Ping for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -356,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -389,10 +392,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_HTTPS Information Lookup for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_HTTPS Information Lookup for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -430,7 +433,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -464,10 +467,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_SPF Lookup for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_SPF Lookup for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -505,7 +508,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -538,10 +541,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_MX Record Lookup for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_MX Record Lookup for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -579,7 +582,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -613,10 +616,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_Blacklist Check for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_Blacklist Check for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -654,7 +657,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MXToolBox: {e}")
+            logger.error(f"Error fetching instance for MXToolBox: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -687,8 +690,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MXToolBox_Ping External IP for MXToolBox: {e}")
+                logger.error(f"Error executing action MXToolBox_Ping External IP for MXToolBox: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MXToolBox")
+            logger.warning(f"Warning: No active integration instance found for MXToolBox")
             return {"Status": "Failed", "Message": "No active instance found."}

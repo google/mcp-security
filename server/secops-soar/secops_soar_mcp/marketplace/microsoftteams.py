@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -102,10 +105,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_List Chats for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_List Chats for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +146,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Create Chat for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Create Chat for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +220,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -257,10 +260,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Wait For Reply for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Wait For Reply for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -298,7 +301,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -336,10 +339,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Create Channel for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Create Channel for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -377,7 +380,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -413,10 +416,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_List Channels for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_List Channels for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -454,7 +457,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -496,10 +499,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Send User Message for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Send User Message for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -537,7 +540,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -572,10 +575,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Remove Users From Channel for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Remove Users From Channel for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -613,7 +616,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -652,10 +655,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Send Message Reply for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Send Message Reply for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -693,7 +696,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -727,10 +730,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Generate Token for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Generate Token for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -768,7 +771,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -803,10 +806,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Add Users To Channel for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Add Users To Channel for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -844,7 +847,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -877,10 +880,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Ping for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Ping for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -918,7 +921,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -952,10 +955,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Get User Details for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Get User Details for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -993,7 +996,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1028,10 +1031,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Delete Channel for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Delete Channel for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1069,7 +1072,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1104,10 +1107,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_List Teams for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_List Teams for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1145,7 +1148,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1179,10 +1182,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Get Team Details for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Get Team Details for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1220,7 +1223,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1253,10 +1256,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Get Authorization for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Get Authorization for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1294,7 +1297,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1331,10 +1334,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Send Chat Message for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Send Chat Message for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1372,7 +1375,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1408,10 +1411,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_Send Message for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_Send Message for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1449,7 +1452,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftTeams: {e}")
+            logger.error(f"Error fetching instance for MicrosoftTeams: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1484,8 +1487,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftTeams_List Users for MicrosoftTeams: {e}")
+                logger.error(f"Error executing action MicrosoftTeams_List Users for MicrosoftTeams: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftTeams")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftTeams")
             return {"Status": "Failed", "Message": "No active instance found."}

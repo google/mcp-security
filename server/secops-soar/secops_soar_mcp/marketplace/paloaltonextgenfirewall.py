@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +102,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Edit Blocked Applications for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Edit Blocked Applications for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -177,10 +180,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Block ips in policy for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Block ips in policy for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -218,7 +221,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,10 +261,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Add Ips to group for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Add Ips to group for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -299,7 +302,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -333,10 +336,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Commit Changes for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Commit Changes for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -374,7 +377,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -407,10 +410,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Ping for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Ping for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -448,7 +451,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -488,10 +491,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Unblock Urls for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Unblock Urls for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -529,7 +532,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -569,10 +572,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Block Urls for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Block Urls for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -610,7 +613,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -650,10 +653,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Remove Ips from group for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Remove Ips from group for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -691,7 +694,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -728,10 +731,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Unblock ips in policy for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Unblock ips in policy for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -769,7 +772,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoNGFW: {e}")
+            logger.error(f"Error fetching instance for PaloAltoNGFW: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -805,8 +808,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoNGFW_Get Blocked Applications for PaloAltoNGFW: {e}")
+                logger.error(f"Error executing action PaloAltoNGFW_Get Blocked Applications for PaloAltoNGFW: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoNGFW")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoNGFW")
             return {"Status": "Failed", "Message": "No active instance found."}

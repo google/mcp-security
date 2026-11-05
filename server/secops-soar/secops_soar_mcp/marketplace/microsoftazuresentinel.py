@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +102,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Run KQL Query for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Run KQL Query for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +177,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Get Alert Rule Details for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Get Alert Rule Details for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +257,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_List Custom Hunting Rules for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_List Custom Hunting Rules for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -295,7 +298,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -330,10 +333,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Get Incident Statistic for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Get Incident Statistic for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -371,7 +374,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -418,10 +421,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Create Alert Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Create Alert Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -459,7 +462,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -517,10 +520,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Alert Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Alert Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -558,7 +561,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -599,10 +602,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_List Incidents for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_List Incidents for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -640,7 +643,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -675,10 +678,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Add Comment to Incident for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Add Comment to Incident for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -716,7 +719,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -766,10 +769,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Incident Details v2 for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Incident Details v2 for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -807,7 +810,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -840,10 +843,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Ping for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Ping for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -881,7 +884,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -915,10 +918,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Get Custom Hunting Rule Details for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Get Custom Hunting Rule Details for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -956,7 +959,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -995,10 +998,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Create Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Create Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1036,7 +1039,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1070,10 +1073,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Delete Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Delete Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1111,7 +1114,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1150,10 +1153,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Incident Labels for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Incident Labels for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1191,7 +1194,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1243,10 +1246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Incident Details for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Incident Details for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1284,7 +1287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1321,10 +1324,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Incident Labels v2 for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Incident Labels v2 for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1362,7 +1365,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1405,10 +1408,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_List Alert Rules for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_List Alert Rules for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1446,7 +1449,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1480,10 +1483,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Delete Alert Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Delete Alert Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1521,7 +1524,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1563,10 +1566,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Update Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Update Custom Hunting Rule for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1604,7 +1607,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
+            logger.error(f"Error fetching instance for MicrosoftAzureSentinel: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1640,8 +1643,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftAzureSentinel_Run Custom Hunting Rule Query for MicrosoftAzureSentinel: {e}")
+                logger.error(f"Error executing action MicrosoftAzureSentinel_Run Custom Hunting Rule Query for MicrosoftAzureSentinel: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftAzureSentinel")
             return {"Status": "Failed", "Message": "No active instance found."}

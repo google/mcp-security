@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +104,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List Reputation Items for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List Reputation Items for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -145,7 +148,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -182,10 +185,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Execute Custom Investigation Search for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Execute Custom Investigation Search for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -223,7 +226,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -256,10 +259,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Prevent File for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Prevent File for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -300,7 +303,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -335,10 +338,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Get Sensor Details for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Get Sensor Details for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -379,7 +382,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -414,10 +417,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Add Comment To Malop for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Add Comment To Malop for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -455,7 +458,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -488,10 +491,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Unisolate Machine for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Unisolate Machine for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -532,7 +535,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -566,10 +569,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Set Reputation for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Set Reputation for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -607,7 +610,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -640,10 +643,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Is Probe Connected for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Is Probe Connected for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -681,7 +684,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -715,10 +718,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List Malop Remediations for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List Malop Remediations for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -756,7 +759,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -789,10 +792,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Allow File for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Allow File for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -830,7 +833,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -863,10 +866,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Clear Reputation for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Clear Reputation for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -904,7 +907,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -937,10 +940,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Ping for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Ping for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -981,7 +984,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1018,10 +1021,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List Malop Affected Machines for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List Malop Affected Machines for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1062,7 +1065,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1116,10 +1119,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List Processes for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List Processes for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1157,7 +1160,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1192,10 +1195,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Remediate Malop for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Remediate Malop for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1236,7 +1239,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1276,10 +1279,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Execute Simple Investigation Search for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Execute Simple Investigation Search for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1320,7 +1323,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1357,10 +1360,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Enrich Entities for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Enrich Entities for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1401,7 +1404,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1439,10 +1442,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List files for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List files for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1483,7 +1486,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1517,10 +1520,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Get Malop for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Get Malop for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1561,7 +1564,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1596,10 +1599,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_List Malop Processes for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_List Malop Processes for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1637,7 +1640,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1670,10 +1673,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Isolate Machine for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Isolate Machine for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1714,7 +1717,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cybereason: {e}")
+            logger.error(f"Error fetching instance for Cybereason: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1749,8 +1752,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cybereason_Update Malop Status for Cybereason: {e}")
+                logger.error(f"Error executing action Cybereason_Update Malop Status for Cybereason: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cybereason")
+            logger.warning(f"Warning: No active integration instance found for Cybereason")
             return {"Status": "Failed", "Message": "No active instance found."}

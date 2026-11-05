@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +103,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_List Incidents for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_List Incidents for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +144,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Kill User Session for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Kill User Session for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -262,10 +265,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Update Alert for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Update Alert for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -303,7 +306,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -337,10 +340,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Get Alert for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Get Alert for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -378,7 +381,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -419,10 +422,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_List Alerts for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_List Alerts for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -460,7 +463,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -493,10 +496,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Ping for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Ping for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -534,7 +537,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -569,10 +572,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Add Alert Comment for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Add Alert Comment for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -610,7 +613,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -644,10 +647,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Get Administrator Consent for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Get Administrator Consent for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -685,7 +688,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
+            logger.error(f"Error fetching instance for MicrosoftGraphSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -719,8 +722,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action MicrosoftGraphSecurity_Get Incident for MicrosoftGraphSecurity: {e}")
+                logger.error(f"Error executing action MicrosoftGraphSecurity_Get Incident for MicrosoftGraphSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
+            logger.warning(f"Warning: No active integration instance found for MicrosoftGraphSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}

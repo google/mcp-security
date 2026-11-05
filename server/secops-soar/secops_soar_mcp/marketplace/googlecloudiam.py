@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Enable Service Account for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Enable Service Account for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -173,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Create Service Account for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Create Service Account for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -247,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Get Service Account IAM Policy for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Get Service Account IAM Policy for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -288,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -321,10 +324,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Ping for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Ping for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -362,7 +365,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -399,10 +402,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Create Role for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Create Role for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -440,7 +443,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -476,10 +479,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Delete Role for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Delete Role for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -517,7 +520,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -550,10 +553,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Enrich Entities for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Enrich Entities for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -591,7 +594,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -624,10 +627,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Disable Service Account for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Disable Service Account for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -665,7 +668,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -698,10 +701,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Delete Service Account for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Delete Service Account for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -739,7 +742,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -782,10 +785,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_List Roles for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_List Roles for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -823,7 +826,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -864,10 +867,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_List Service Accounts for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_List Service Accounts for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -905,7 +908,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudIAM: {e}")
+            logger.error(f"Error fetching instance for GoogleCloudIAM: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -939,8 +942,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudIAM_Set Service Account IAM Policy for GoogleCloudIAM: {e}")
+                logger.error(f"Error executing action GoogleCloudIAM_Set Service Account IAM Policy for GoogleCloudIAM: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudIAM")
+            logger.warning(f"Warning: No active integration instance found for GoogleCloudIAM")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Index Search for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Index Search for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -171,10 +174,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Enrich User for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Enrich User for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -212,7 +215,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +251,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Close Alert for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Close Alert for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -289,7 +292,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -322,10 +325,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Enrich Endpoint for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Enrich Endpoint for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -363,7 +366,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +403,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Archive Search for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Archive Search for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -441,7 +444,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -474,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Ping for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Ping for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -515,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -559,10 +562,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Get List Items for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Get List Items for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -600,7 +603,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -636,10 +639,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Get Alert Details for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Get Alert Details for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -677,7 +680,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -712,10 +715,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Suppress Alert for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Suppress Alert for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -753,7 +756,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -802,10 +805,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Get Lists for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Get Lists for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -843,7 +846,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -878,10 +881,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Add Note To Alert for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Add Note To Alert for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -919,7 +922,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FireEyeHelix: {e}")
+            logger.error(f"Error fetching instance for FireEyeHelix: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -957,8 +960,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FireEyeHelix_Add Entities To a List for FireEyeHelix: {e}")
+                logger.error(f"Error executing action FireEyeHelix_Add Entities To a List for FireEyeHelix: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FireEyeHelix")
+            logger.warning(f"Warning: No active integration instance found for FireEyeHelix")
             return {"Status": "Failed", "Message": "No active instance found."}

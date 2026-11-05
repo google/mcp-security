@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroDDAN: {e}")
+            logger.error(f"Error fetching instance for TrendMicroDDAN: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -105,10 +108,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroDDAN_Submit File URL for TrendMicroDDAN: {e}")
+                logger.error(f"Error executing action TrendMicroDDAN_Submit File URL for TrendMicroDDAN: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroDDAN")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroDDAN")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -146,7 +149,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroDDAN: {e}")
+            logger.error(f"Error fetching instance for TrendMicroDDAN: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +182,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroDDAN_Ping for TrendMicroDDAN: {e}")
+                logger.error(f"Error executing action TrendMicroDDAN_Ping for TrendMicroDDAN: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroDDAN")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroDDAN")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +223,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroDDAN: {e}")
+            logger.error(f"Error fetching instance for TrendMicroDDAN: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -266,8 +269,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroDDAN_Submit File for TrendMicroDDAN: {e}")
+                logger.error(f"Error executing action TrendMicroDDAN_Submit File for TrendMicroDDAN: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroDDAN")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroDDAN")
             return {"Status": "Failed", "Message": "No active instance found."}

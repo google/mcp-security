@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Add Entities To Blocklist for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Add Entities To Blocklist for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -168,10 +171,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Mitigate Accounts for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Mitigate Accounts for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -209,7 +212,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -242,10 +245,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Ping for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Ping for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -283,7 +286,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -319,10 +322,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Mitigate Emails for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Mitigate Emails for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -360,7 +363,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -393,10 +396,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Enrich Entities for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Enrich Entities for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -434,7 +437,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
+            logger.error(f"Error fetching instance for TrendMicroCloudAppSecurity: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -471,8 +474,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroCloudAppSecurity_Entity Email Search for TrendMicroCloudAppSecurity: {e}")
+                logger.error(f"Error executing action TrendMicroCloudAppSecurity_Entity Email Search for TrendMicroCloudAppSecurity: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
+            logger.warning(f"Warning: No active integration instance found for TrendMicroCloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Get Findings for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Get Findings for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +184,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_List Findings for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_List Findings for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +225,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -256,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Delete Custom Data Identifier for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Delete Custom Data Identifier for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -297,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -330,10 +333,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Disable Macie for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Disable Macie for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -371,7 +374,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -404,10 +407,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Ping for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Ping for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -445,7 +448,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -478,10 +481,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Enable Macie for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Enable Macie for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -519,7 +522,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AmazonMacie: {e}")
+            logger.error(f"Error fetching instance for AmazonMacie: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -562,8 +565,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AmazonMacie_Create Custom Data Identifier for AmazonMacie: {e}")
+                logger.error(f"Error executing action AmazonMacie_Create Custom Data Identifier for AmazonMacie: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AmazonMacie")
+            logger.warning(f"Warning: No active integration instance found for AmazonMacie")
             return {"Status": "Failed", "Message": "No active instance found."}

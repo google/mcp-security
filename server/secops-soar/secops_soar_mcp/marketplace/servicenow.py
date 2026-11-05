@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -111,10 +114,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Update Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Update Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -152,7 +155,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -189,10 +192,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Update Record for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Update Record for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -233,7 +236,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -270,10 +273,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get Record Details for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get Record Details for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -314,7 +317,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -350,10 +353,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get Child Incident Details for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get Child Incident Details for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -394,7 +397,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -437,10 +440,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Create Alert Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Create Alert Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -478,7 +481,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -511,10 +514,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get Oauth Token for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get Oauth Token for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -552,7 +555,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -587,10 +590,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Add Comment And Wait For Reply for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Add Comment And Wait For Reply for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -631,7 +634,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -669,10 +672,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Add Attachment for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Add Attachment for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -713,7 +716,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -746,10 +749,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Ping for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Ping for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -787,7 +790,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -824,10 +827,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get CMDB Record Details for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get CMDB Record Details for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -868,7 +871,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -903,10 +906,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Add Comment for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Add Comment for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -947,7 +950,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -984,10 +987,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get User Details for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get User Details for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1028,7 +1031,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1065,10 +1068,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Download Attachments for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Download Attachments for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1106,7 +1109,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1143,10 +1146,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Close Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Close Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1187,7 +1190,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1222,10 +1225,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Add Parent Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Add Parent Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1266,7 +1269,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1304,10 +1307,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Add Comment To Record for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Add Comment To Record for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1348,7 +1351,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1382,10 +1385,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Get Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Get Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1423,7 +1426,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1460,10 +1463,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Create Record for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Create Record for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1504,7 +1507,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1543,10 +1546,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Wait For Comments for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Wait For Comments for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1584,7 +1587,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1621,10 +1624,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Wait For Field Update for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Wait For Field Update for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1665,7 +1668,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1711,10 +1714,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Create Incident for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Create Incident for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1755,7 +1758,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1793,10 +1796,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_List Records Related To User for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_List Records Related To User for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1834,7 +1837,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1872,10 +1875,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_List Record Comments for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_List Record Comments for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1913,7 +1916,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1951,10 +1954,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_List CMDB Records for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_List CMDB Records for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1995,7 +1998,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceNow: {e}")
+            logger.error(f"Error fetching instance for ServiceNow: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2030,8 +2033,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceNow_Wait For Status Update for ServiceNow: {e}")
+                logger.error(f"Error executing action ServiceNow_Wait For Status Update for ServiceNow: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceNow")
+            logger.warning(f"Warning: No active integration instance found for ServiceNow")
             return {"Status": "Failed", "Message": "No active instance found."}

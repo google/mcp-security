@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +102,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Assign Issue for Jira: {e}")
+                logger.error(f"Error executing action Jira_Assign Issue for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +146,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -180,10 +183,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Upload Attachment for Jira: {e}")
+                logger.error(f"Error executing action Jira_Upload Attachment for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -224,7 +227,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,10 +261,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Get Issues for Jira: {e}")
+                logger.error(f"Error executing action Jira_Get Issues for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -302,7 +305,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -355,10 +358,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_List Issues for Jira: {e}")
+                logger.error(f"Error executing action Jira_List Issues for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -399,7 +402,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -432,10 +435,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Ping for Jira: {e}")
+                logger.error(f"Error executing action Jira_Ping for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -473,7 +476,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -508,10 +511,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Add Comment for Jira: {e}")
+                logger.error(f"Error executing action Jira_Add Comment for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -552,7 +555,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -604,10 +607,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Update Issue for Jira: {e}")
+                logger.error(f"Error executing action Jira_Update Issue for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -648,7 +651,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -686,10 +689,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Download Attachments for Jira: {e}")
+                logger.error(f"Error executing action Jira_Download Attachments for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -730,7 +733,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -766,10 +769,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Link Issues for Jira: {e}")
+                logger.error(f"Error executing action Jira_Link Issues for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -810,7 +813,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -849,10 +852,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Search Users for Jira: {e}")
+                logger.error(f"Error executing action Jira_Search Users for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -893,7 +896,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -941,10 +944,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Create Issue for Jira: {e}")
+                logger.error(f"Error executing action Jira_Create Issue for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -985,7 +988,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1026,10 +1029,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_List Relation Types for Jira: {e}")
+                logger.error(f"Error executing action Jira_List Relation Types for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1070,7 +1073,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1104,10 +1107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Delete Issue for Jira: {e}")
+                logger.error(f"Error executing action Jira_Delete Issue for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1148,7 +1151,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Jira: {e}")
+            logger.error(f"Error fetching instance for Jira: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1184,8 +1187,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Jira_Create Alert Issue for Jira: {e}")
+                logger.error(f"Error executing action Jira_Create Alert Issue for Jira: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Jira")
+            logger.warning(f"Warning: No active integration instance found for Jira")
             return {"Status": "Failed", "Message": "No active instance found."}

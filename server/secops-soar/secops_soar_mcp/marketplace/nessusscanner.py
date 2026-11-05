@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Get Scan Templates for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Get Scan Templates for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +139,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +173,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Get Scan Report for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Get Scan Report for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +217,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +251,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Launch Scan for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Launch Scan for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -292,7 +295,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -329,10 +332,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Create Scan for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Create Scan for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -370,7 +373,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -403,10 +406,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Ping for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Ping for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -444,7 +447,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for NessusScanner: {e}")
+            logger.error(f"Error fetching instance for NessusScanner: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -477,8 +480,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action NessusScanner_Get Scans for NessusScanner: {e}")
+                logger.error(f"Error executing action NessusScanner_Get Scans for NessusScanner: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for NessusScanner")
+            logger.warning(f"Warning: No active integration instance found for NessusScanner")
             return {"Status": "Failed", "Message": "No active instance found."}

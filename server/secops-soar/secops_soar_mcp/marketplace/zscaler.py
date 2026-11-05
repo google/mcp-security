@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Get Url Categories for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Get Url Categories for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -167,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Add To Blacklist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Add To Blacklist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -208,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -241,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Ping for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Ping for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -282,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -315,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Get Whitelist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Get Whitelist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -356,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -389,10 +392,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Add To Whitelist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Add To Whitelist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -430,7 +433,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -463,10 +466,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Remove From Blacklist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Remove From Blacklist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -504,7 +507,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -537,10 +540,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Get Blacklist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Get Blacklist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -578,7 +581,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -611,10 +614,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Lookup Entity for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Lookup Entity for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -652,7 +655,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -685,10 +688,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Remove From Whitelist for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Remove From Whitelist for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -726,7 +729,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Zscaler: {e}")
+            logger.error(f"Error fetching instance for Zscaler: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -759,8 +762,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Zscaler_Get Sandbox Report for Zscaler: {e}")
+                logger.error(f"Error executing action Zscaler_Get Sandbox Report for Zscaler: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Zscaler")
+            logger.warning(f"Warning: No active integration instance found for Zscaler")
             return {"Status": "Failed", "Message": "No active instance found."}

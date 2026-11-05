@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_Enrich Endpoint for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_Enrich Endpoint for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -166,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_Ping for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_Ping for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -207,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -241,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_Add Tag To Device for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_Add Tag To Device for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -282,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -317,10 +320,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_List Devices for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_List Devices for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -358,7 +361,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -393,10 +396,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_List Tags for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_List Tags for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -434,7 +437,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
+            logger.error(f"Error fetching instance for McAfeeMvisionEPOV2: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -468,8 +471,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action McAfeeMvisionEPOV2_Remove Tag From Device for McAfeeMvisionEPOV2: {e}")
+                logger.error(f"Error executing action McAfeeMvisionEPOV2_Remove Tag From Device for McAfeeMvisionEPOV2: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
+            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEPOV2")
             return {"Status": "Failed", "Message": "No active instance found."}

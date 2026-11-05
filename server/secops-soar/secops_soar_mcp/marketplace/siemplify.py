@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -104,10 +107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Get Similar Cases for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Get Similar Cases for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +151,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +184,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Mark As Important for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Mark As Important for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +228,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -260,10 +263,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Create Or Update Entity Properties for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Create Or Update Entity Properties for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -304,7 +307,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -338,10 +341,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Change Priority for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Change Priority for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -379,7 +382,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -412,10 +415,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Create Gemini Case Summary for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Create Gemini Case Summary for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -456,7 +459,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -490,10 +493,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Set Risk Score for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Set Risk Score for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -534,7 +537,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -570,10 +573,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Set Custom Fields for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Set Custom Fields for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -614,7 +617,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -651,10 +654,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Set Case SLA for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Set Case SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -695,7 +698,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -729,10 +732,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Is In Custom List for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Is In Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -770,7 +773,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -808,10 +811,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_TestSiemplifyProxy for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_TestSiemplifyProxy for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -852,7 +855,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -886,10 +889,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Case Tag for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Case Tag for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -930,7 +933,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -970,10 +973,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Close Alert for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Close Alert for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1014,7 +1017,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1048,10 +1051,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Add to Custom List for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Add to Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1092,7 +1095,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1126,10 +1129,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Case Comment for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Case Comment for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1170,7 +1173,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1220,10 +1223,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Permitted Alert Time for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Permitted Alert Time for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1264,7 +1267,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1299,10 +1302,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Open Web Url for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Open Web Url for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1343,7 +1346,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1377,10 +1380,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Change Case Stage for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Change Case Stage for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1421,7 +1424,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1458,10 +1461,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Add General Insight for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Add General Insight for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1499,7 +1502,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1532,10 +1535,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Resume Alert SLA for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Resume Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1576,7 +1579,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1610,10 +1613,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Instruction for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Instruction for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1654,7 +1657,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1687,10 +1690,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Ping for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Ping for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1728,7 +1731,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1765,10 +1768,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Get Case Details for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Get Case Details for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1806,7 +1809,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1842,10 +1845,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Set Scope Context Value for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Set Scope Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1886,7 +1889,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1925,10 +1928,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Add Tags To Similar Cases for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Add Tags To Similar Cases for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1969,7 +1972,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2003,10 +2006,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Add Entity Insight for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Add Entity Insight for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2047,7 +2050,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2083,10 +2086,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Attach Playbook to Alert for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Attach Playbook to Alert for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2127,7 +2130,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2163,10 +2166,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Close Case for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Close Case for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2207,7 +2210,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2241,10 +2244,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Assign Case for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Assign Case for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2285,7 +2288,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2319,10 +2322,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Wait For Custom Fields for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Wait For Custom Fields for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2363,7 +2366,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2402,10 +2405,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Create Entity for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Create Entity for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2446,7 +2449,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2480,10 +2483,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Update Case Description for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Update Case Description for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2524,7 +2527,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2559,10 +2562,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Raise Incident for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Raise Incident for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2600,7 +2603,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2642,10 +2645,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Run Remote for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Run Remote for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2683,7 +2686,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2718,10 +2721,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Pause Alert SLA for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Pause Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2762,7 +2765,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2796,10 +2799,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Remove from Custom List for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Remove from Custom List for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2840,7 +2843,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2874,10 +2877,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Change Alert Priority for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Change Alert Priority for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2918,7 +2921,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2955,10 +2958,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Set Alert SLA for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Set Alert SLA for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2999,7 +3002,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -3036,10 +3039,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Get Connector Context Value for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Get Connector Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -3080,7 +3083,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -3117,10 +3120,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Get Scope Context Value for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Get Scope Context Value for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -3161,7 +3164,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Siemplify: {e}")
+            logger.error(f"Error fetching instance for Siemplify: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -3195,8 +3198,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Siemplify_Remove Tag for Siemplify: {e}")
+                logger.error(f"Error executing action Siemplify_Remove Tag for Siemplify: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Siemplify")
+            logger.warning(f"Warning: No active integration instance found for Siemplify")
             return {"Status": "Failed", "Message": "No active instance found."}

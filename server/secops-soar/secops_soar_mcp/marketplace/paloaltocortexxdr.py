@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -94,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Add Hashes to Block List for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Add Hashes to Block List for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -135,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Update an Incident for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Update an Incident for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +252,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Ping for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Ping for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +293,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +326,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Get Endpoint Agent Report for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Get Endpoint Agent Report for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +367,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -398,10 +401,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Query for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Query for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -439,7 +442,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -476,10 +479,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Resolve an Incident for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Resolve an Incident for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -517,7 +520,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -550,10 +553,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Enrich Entities for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Enrich Entities for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -591,7 +594,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -624,10 +627,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Isolate Endpoint for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Isolate Endpoint for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -665,7 +668,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for PaloAltoCortexXDR: {e}")
+            logger.error(f"Error fetching instance for PaloAltoCortexXDR: {e}")
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -698,8 +701,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action PaloAltoCortexXDR_Unisolate Endpoint for PaloAltoCortexXDR: {e}")
+                logger.error(f"Error executing action PaloAltoCortexXDR_Unisolate Endpoint for PaloAltoCortexXDR: {e}")
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for PaloAltoCortexXDR")
+            logger.warning(f"Warning: No active integration instance found for PaloAltoCortexXDR")
             return {"Status": "Failed", "Message": "No active instance found."}
