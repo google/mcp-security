@@ -80,18 +80,20 @@ async def get_threat_intel(
         # Handle GeminiResponse object
         if hasattr(response, 'get_text_content'):
             # This is a GeminiResponse object, extract text content
-            return response.get_text_content()
+            text = response.get_text_content()
+            return text if isinstance(text, str) else json.dumps(text)
         elif hasattr(response, 'blocks') and isinstance(response.blocks, list):
             # Handle direct access to blocks if get_text_content isn't available
             text_content = []
             for block in response.blocks:
                 if hasattr(block, 'block_type') and hasattr(block, 'content'):
                     if block.block_type == "TEXT":
-                        text_content.append(block.content)
+                        text_content.append(str(block.content))
             return "\n\n".join(text_content) if text_content else "No text content found in response."
         elif isinstance(response, dict) and 'answer' in response:
             # Legacy format or different API response
-            return response.get('answer', 'No answer was provided by the model.')
+            answer = response.get('answer', 'No answer was provided by the model.')
+            return answer if isinstance(answer, str) else json.dumps(answer)
         elif isinstance(response, str):
             # Direct string response
             return response
