@@ -632,7 +632,9 @@ async def test_get_simple_tools(
                 "filter": "collection_type:vulnerability APT44", 
                 "order": "relevance-",
                 "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
-                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+                "exclude_attributes": ",".join(
+                    [tools.COLLECTION_EXCLUDED_ATTRS, *tools.VULNERABILITY_EXCLUDED_ATTRS]
+                ),
             },
             {
                 "data": [{
@@ -1317,6 +1319,13 @@ async def test_get_collection_rules_all_types():
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_filter_types():
+    """Unrequested rule types with non-empty aggregations must be skipped.
+
+    Regression for the `rule_type not in rule_type and not rules` bug: the
+    self-compare is always False, and `and not rules` still lets non-empty
+    unrequested types through. Sigma is mocked to succeed so a leak would
+    show up in the result (not be masked by a detail-lookup failure).
+    """
     mock_ctx = AsyncMock()
     mock_client_instance = AsyncMock()
 
@@ -1331,16 +1340,52 @@ async def test_get_collection_rules_filter_types():
                         "crowdsourced_sigma_results": [
                             {"id": "sigma1", "count": 8, "value": {"id": "sigma1", "title": "Sigma Rule 1"}},
                         ],
+                        "crowdsourced_yara_results": [
+                            {"id": "yara1", "count": 12, "value": {"ruleset_id": "yara1"}},
+                        ],
                     }
                 }
             }
         }
     }
 
+    sigma_lookups = []
+    yara_lookups = []
+
     async def mock_get_async(url, **kwargs):
         mock_resp = MagicMock()
         if url.startswith("/collections/test_id?attributes=aggregations"):
             async def json_async(): return mock_aggregations_data
+            mock_resp.json_async = json_async
+        elif url.startswith("/sigma_rules/"):
+            sigma_lookups.append(url)
+            async def json_async():
+                return {
+                    "data": {
+                        "id": "sigma1",
+                        "attributes": {
+                            "source_url": "http://sigma1.com",
+                            "rule": "sigma rule content 1",
+                        },
+                    }
+                }
+            mock_resp.json_async = json_async
+        elif url.startswith("/yara_rulesets/"):
+            yara_lookups.append(url)
+            async def json_async():
+                return {
+                    "data": {
+                        "id": "yara1",
+                        "attributes": {
+                            "name": "Yara Rule 1",
+                            "source": "source1",
+                            "rules": "yara rule content 1",
+                        },
+                    }
+                }
+            mock_resp.json_async = json_async
+        else:
+            async def json_async(): return {"data": []}
             mock_resp.json_async = json_async
         return mock_resp
 
@@ -1350,12 +1395,19 @@ async def test_get_collection_rules_filter_types():
     mock_vt_client.__aenter__.return_value = mock_client_instance
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, rule_types=["crowdsourced_ids"])
+        result = await collections.get_collection_rules(
+            collection_id="test_id",
+            ctx=mock_ctx,
+            rule_types=["crowdsourced_ids"],
+        )
 
     expected_result = [
         {"rule_id": "ids1", "rule_name": "IDS Rule 1", "rule_source": "http://ids1.com", "rule_content": "ids rule content 1", "count": 10, "rule_type": "crowdsourced_ids"},
     ]
     assert result == expected_result
+    assert sigma_lookups == [], "unrequested sigma rules must not be fetched"
+    assert yara_lookups == [], "unrequested yara rules must not be fetched"
+    assert all(r.get("rule_type") == "crowdsourced_ids" for r in result)
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_empty():
