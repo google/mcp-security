@@ -14,11 +14,15 @@
 """Security Operations MCP tools package."""
 
 from .curated_rules_management import *
+from .dashboard_management import *
+from .dashboard_reports import *
 from .data_table_management import *
 from .entity_lookup import *
 from .feed_management import *
 from .investigation_management import *
 from .ioc_matches import *
+from .legacy_dashboards import *
+from .legacy_soar_dashboard import *
 from .log_ingestion import *
 from .parser_management import *
 from .reference_list_management import *

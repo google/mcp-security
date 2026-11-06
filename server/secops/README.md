@@ -212,6 +212,163 @@ Chronicle Security Operations suite.
 - **`fetch_associated_investigations(detection_type, alert_ids=None, case_ids=None, association_limit_per_detection=5, project_id=None, customer_id=None, region=None)`**
     - Retrieve investigations associated with alerts or cases. Supports filtering by detection type (ALERT or CASE). Returns investigation associations with verdict information.
 
+### Dashboard Management Tools (Native SIEM Dashboards, Charts, Queries)
+
+- **`list_dashboards(view=None, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - List native SIEM dashboards in the Chronicle instance.
+
+- **`get_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
+    - Get a native SIEM dashboard by ID or resource name.
+
+- **`create_dashboard(display_name, description=None, access_type="DASHBOARD_PRIVATE", filters=None, dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - Create a new (empty) native SIEM dashboard.
+
+- **`update_dashboard(dashboard_id, display_name=None, description=None, filters=None, dashboard=None, update_mask=None, etag=None, project_id=None, customer_id=None, region=None)`**
+    - Update fields of a native SIEM dashboard (PATCH with update mask).
+
+- **`duplicate_dashboard(dashboard_id, display_name, description=None, access_type="DASHBOARD_PRIVATE", dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - Duplicate a native SIEM dashboard (including its charts and queries).
+
+- **`delete_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - Delete a custom native SIEM dashboard.
+
+- **`add_dashboard_chart(dashboard_id, display_name, query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, visualization=None, description=None, tile_type=None, start_x=None, start_y=None, span_x=None, span_y=None, data_sources=None, chart=None, dashboard_query=None, chart_layout=None, project_id=None, customer_id=None, region=None)`**
+    - Add a chart (and its UDM stats query) to a native SIEM dashboard.
+
+- **`edit_dashboard_chart(dashboard_id, chart_id, edit_mask, display_name=None, description=None, query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, visualization=None, chart=None, dashboard_query=None, etag=None, language_features=None, project_id=None, customer_id=None, region=None)`**
+    - Edit an existing chart and/or its query on a native SIEM dashboard.
+
+- **`remove_dashboard_chart(dashboard_id, chart_id, project_id=None, customer_id=None, region=None)`**
+    - Remove a chart from a native SIEM dashboard.
+
+- **`duplicate_dashboard_chart(dashboard_id, chart_id, project_id=None, customer_id=None, region=None)`**
+    - Duplicate a chart within a native SIEM dashboard.
+
+- **`export_dashboards(dashboard_ids, project_id=None, customer_id=None, region=None)`**
+    - Export native SIEM dashboards (with charts and queries) as JSON.
+
+- **`import_dashboards(dashboards, project_id=None, customer_id=None, region=None)`**
+    - Import native SIEM dashboards from an inline export payload.
+
+- **`execute_dashboard_query(query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, query_id=None, dialect=None, filters=None, clear_cache=None, use_previous_time_range=None, dashboard_query=None, project_id=None, customer_id=None, region=None)`**
+    - Execute a dashboard (UDM stats) query ad hoc and return tabular results.
+
+- **`get_dashboard_query(query_id, project_id=None, customer_id=None, region=None)`**
+    - Get a saved dashboard query by ID or resource name.
+
+- **`get_dashboard_chart(chart_id, project_id=None, customer_id=None, region=None)`**
+    - Get a dashboard chart by ID or resource name.
+
+- **`list_dashboard_charts(filter=None, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - List dashboard charts in the instance (v1alpha only).
+
+- **`batch_get_dashboard_charts(chart_ids, project_id=None, customer_id=None, region=None)`**
+    - Get several dashboard charts in one call.
+
+### Dashboard Scheduled Report and Content Hub Tools
+
+- **`list_dashboard_scheduled_reports(page_size=None, page_token=None, filter_query=None, view=None, project_id=None, customer_id=None, region=None)`**
+    - List scheduled email/GCS reports configured for native dashboards.
+
+- **`get_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - Get a single dashboard scheduled report configuration.
+
+- **`create_dashboard_scheduled_report(display_name, dashboard_id, cron, recipients=None, time_zone=None, file_format=None, description=None, email_subject=None, email_body=None, delivery_type=None, data_access_scopes=None, scheduled_report=None, project_id=None, customer_id=None, region=None)`**
+    - Create a scheduled report that emails a native dashboard on a cron.
+
+- **`update_dashboard_scheduled_report(report_id, update_mask=None, display_name=None, description=None, dashboard_id=None, cron=None, time_zone=None, recipients=None, email_subject=None, email_body=None, delivery_type=None, file_format=None, pinned=None, scheduled_report=None, project_id=None, customer_id=None, region=None)`**
+    - Update fields of an existing dashboard scheduled report (PATCH).
+
+- **`delete_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - Delete a dashboard scheduled report.
+
+- **`fetch_dashboard_scheduled_report_history(report_id, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - Fetch the run history of a dashboard scheduled report (last year).
+
+- **`duplicate_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - Duplicate an existing dashboard scheduled report.
+
+- **`trigger_instant_dashboard_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - Send a dashboard scheduled report immediately, outside its schedule.
+
+- **`list_featured_content_dashboards(page_size=None, page_token=None, filter_query=None, project_id=None, customer_id=None, region=None)`**
+    - List Google-curated dashboards available in the Content Hub.
+
+- **`get_featured_content_dashboard(featured_dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - Get one Content Hub featured (curated) native dashboard.
+
+- **`install_featured_content_dashboard(featured_dashboard_id, featured_dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - Install a Content Hub curated dashboard as a native dashboard.
+
+### Legacy (Looker) Dashboard Tools
+
+- **`get_legacy_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
+    - Get a legacy (Looker) Chronicle dashboard by ID. v1alpha-only.
+
+- **`list_legacy_dashboards(page_size=None, page_token=None, view=None, project_id=None, customer_id=None, region=None)`**
+    - List legacy (Looker) Chronicle dashboards. v1alpha-only.
+
+- **`delete_legacy_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - Delete a legacy (Looker) Chronicle dashboard. v1alpha-only.
+
+- **`copy_legacy_dashboard(dashboard_id, dashboard_type=None, display_name=None, default_dashboard=None, destination=None, project_id=None, customer_id=None, region=None)`**
+    - Copy a legacy (Looker) dashboard to another dashboard type. v1alpha-only.
+
+> **Future work (not included):** the Looker-to-native migration endpoints (`dashboards:fetchMigratable`, `dashboards:batchMigrate`, `dashboards:fetchMigrationMetrics`, `dashboards:fetchMigrationJobs`) and legacy dashboard creation (`POST /dashboards`) are intentionally not exposed yet. Migration is gated by a Chronicle feature flag that is still under development (`403 Looker migration wizard is not enabled for the customer`), and legacy creation currently fails server-side, so neither could be verified against a live tenant. Tools for them can be added once the APIs are generally available.
+
+### Legacy SOAR Dashboard Tools
+
+- **`legacy_soar_get_dashboard_cards(project_id=None, customer_id=None, region=None)`**
+    - List legacy SOAR dashboards (ID to name map) visible to the caller.
+
+- **`legacy_soar_get_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - Get a legacy SOAR dashboard with its configuration and widgets.
+
+- **`legacy_soar_get_dashboard_widget_definitions(project_id=None, customer_id=None, region=None)`**
+    - List the predefined widget definitions available for SOAR dashboards.
+
+- **`legacy_soar_get_dashboard_playbooks(project_id=None, customer_id=None, region=None)`**
+    - List SOAR playbooks that have data available for dashboard reporting.
+
+- **`legacy_soar_add_or_update_dashboard(dashboard_id, name=None, creator=None, default_time_range=None, environments=None, allowed_users=None, allowed_users_json=None, widgets=None, project_id=None, customer_id=None, region=None)`**
+    - Create or update a legacy SOAR (case management) dashboard.
+
+- **`legacy_soar_delete_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - Delete a legacy SOAR dashboard and all of its widgets.
+
+- **`legacy_soar_import_dashboard(dashboard=None, name=None, creator=None, default_time_range=None, environments=None, allowed_users=None, widgets=None, project_id=None, customer_id=None, region=None)`**
+    - Import a legacy SOAR dashboard from an exported JSON definition.
+
+- **`legacy_soar_save_dashboard_as_report_template(name, template_id=None, category=None, report_widgets=None, is_system=None, has_scheduler=None, template=None, project_id=None, customer_id=None, region=None)`**
+    - Save a legacy SOAR dashboard's widgets as a SOAR report template.
+
+- **`legacy_soar_add_or_update_dashboard_widget(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - Create or update a widget on a legacy SOAR dashboard.
+
+- **`legacy_soar_delete_dashboard_widget(widget_id, project_id=None, customer_id=None, region=None)`**
+    - Delete a single widget from a legacy SOAR dashboard.
+
+- **`legacy_soar_get_dashboard_widget_values(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - Compute the data series for a legacy SOAR dashboard widget.
+
+- **`legacy_soar_get_dashboard_widget_case_ids(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - List the SOAR case IDs behind a legacy dashboard widget.
+
+- **`legacy_soar_get_dashboard_custom_widget_case_ids(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - List the SOAR case IDs behind a CUSTOM legacy dashboard widget.
+
+- **`legacy_soar_get_dashboard_playbook_runs(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - List recent SOAR playbook runs behind a legacy dashboard widget.
+
+- **`legacy_soar_get_playbook_monitoring(workflow_identifier=None, time_filter=None, project_id=None, customer_id=None, region=None)`**
+    - Get the monitoring dashboard for a SOAR playbook.
+
+- **`legacy_soar_get_cases_time_to_respond(time_range_filter=None, project_id=None, customer_id=None, region=None)`**
+    - Get the average time-to-respond for SOAR cases in a time range.
+
+- **`legacy_soar_get_opened_and_closed_cases_trends(time_range_type, project_id=None, customer_id=None, region=None)`**
+    - Get opened vs. closed SOAR case trends over a time range.
+
 ### API Capabilities
 
 The MCP server provides the following capabilities:
@@ -233,6 +390,7 @@ The MCP server provides the following capabilities:
 15. **Rule Exclusions Management**: Create, manage, and monitor rule exclusions to filter false positives and tune detection rules
 16. **Watchlist Management**: Create, update, delete, and list watchlists for entity risk scoring
 17. **Investigation Management**: Manage cases and investigations, trigger investigations, and fetch associated investigations
+18. **Dashboard Management**: Create, update, duplicate, export/import native SIEM dashboards, manage charts and run dashboard (stats) queries, schedule dashboard reports, install Content Hub dashboards, inspect and copy legacy (Looker) dashboards, and manage legacy SOAR dashboards
 18. **UDM Search & Export**: Direct UDM querying, field value autocomplete, and CSV export
 
 ### Example
@@ -254,6 +412,7 @@ These tools focus on core security operations tasks:
 - **Rule Exclusions Management**: Use `create_rule_exclusion`, `get_rule_exclusion`, `list_rule_exclusions`, `patch_rule_exclusion`, `update_rule_exclusion_deployment`, and `compute_rule_exclusion_activity` to manage false positive filtering and detection rule tuning
 - **Watchlist Management**: Use `create_watchlist`, `update_watchlist`, `list_watchlists`, `get_watchlist`, and `delete_watchlist` to manage entity watchlists with risk score multipliers for prioritizing high-risk entities
 - **Investigation Management**: Use `list_investigations`, `get_investigation`, `trigger_investigation`, and `fetch_associated_investigations` to manage investigations and cases
+- **Dashboard Management**: Use `list_dashboards`, `get_dashboard`, `create_dashboard`, `add_dashboard_chart`, `execute_dashboard_query`, `export_dashboards`/`import_dashboards`, `create_dashboard_scheduled_report`, `install_featured_content_dashboard`, `copy_legacy_dashboard`, and `legacy_soar_get_dashboard_cards` to build, query, report on, and audit SIEM and SOAR dashboards
 - **UDM Analysis & Export**: Use `search_udm`, `export_udm_search_csv`, and `find_udm_field_values` for direct UDM querying, data export, and field discovery
 
 ### Data Ingestion & Parsing Tools

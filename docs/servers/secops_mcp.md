@@ -839,6 +839,547 @@ The service account or user credentials need the following Chronicle roles:
         - `region` (optional): Chronicle region (defaults to environment config or 'us').
     - **Returns:** Dictionary containing investigation associations grouped by detection ID, with verdict and confidence information.
 
+### Dashboard Management Tools (Native SIEM Dashboards, Charts, Queries)
+
+- **`list_dashboards(view=None, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List native SIEM dashboards in the Chronicle instance.
+    - **Parameters:**
+        - `view` (optional): NATIVE_DASHBOARD_VIEW_BASIC (default) or NATIVE_DASHBOARD_VIEW_FULL (includes `definition`).
+        - `page_size` (optional): Maximum dashboards per page.
+        - `page_token` (optional): `nextPageToken` from a previous call.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"nativeDashboards": [...], "nextPageToken": ..., "total_dashboards": N}` or `{"error": ...}`.
+
+- **`get_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a native SIEM dashboard by ID or resource name.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name (`projects/.../nativeDashboards/{id}`).
+        - `view` (optional): NATIVE_DASHBOARD_VIEW_BASIC or NATIVE_DASHBOARD_VIEW_FULL.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The NativeDashboard resource or `{"error": ...}`.
+
+- **`create_dashboard(display_name, description=None, access_type="DASHBOARD_PRIVATE", filters=None, dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create a new (empty) native SIEM dashboard.
+    - **Parameters:**
+        - `display_name` (required): Title shown to users.
+        - `description` (optional): Free-text description.
+        - `access_type` (optional): DASHBOARD_PRIVATE (default) or DASHBOARD_PUBLIC; the API rejects requests without it.
+        - `filters` (optional): DashboardFilter list placed under `definition.filters`, e.g. `[{"id": "f1", "displayName": "Hostname", "dataSource": "EVENTS", "fieldPath": "principal.hostname", "filterOperatorAndFieldValues": [{"filterOperator": "EQUAL", "fieldValues": ["host-1"]}]}]`.
+        - `dashboard` (optional): Additional NativeDashboard fields (camelCase) merged over the generated body, e.g. `{"definition": {...}}`.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The created NativeDashboard (with `name`) or `{"error": ...}`.
+
+- **`update_dashboard(dashboard_id, display_name=None, description=None, filters=None, dashboard=None, update_mask=None, etag=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update fields of a native SIEM dashboard (PATCH with update mask).
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `display_name` (optional): New title.
+        - `description` (optional): New description.
+        - `filters` (optional): Replacement DashboardFilter list for `definition.filters`.
+        - `dashboard` (optional): Raw NativeDashboard fields (camelCase) merged over the generated body.
+        - `update_mask` (optional): Comma-separated camelCase field paths (e.g. "displayName,definition.charts"). Merged with the auto-derived mask.
+        - `etag` (optional): Optimistic-concurrency etag from `get_dashboard`.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The updated NativeDashboard or `{"error": ...}`.
+
+- **`duplicate_dashboard(dashboard_id, display_name, description=None, access_type="DASHBOARD_PRIVATE", dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Duplicate a native SIEM dashboard (including its charts and queries).
+    - **Parameters:**
+        - `dashboard_id` (required): Source dashboard ID or full resource name.
+        - `display_name` (required): Title for the copy.
+        - `description` (optional): Description for the copy.
+        - `access_type` (optional): DASHBOARD_PRIVATE (default) or DASHBOARD_PUBLIC; the API rejects requests without it.
+        - `dashboard` (optional): Extra NativeDashboard fields (camelCase) merged into the `nativeDashboard` body.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The new NativeDashboard or `{"error": ...}`.
+
+- **`delete_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete a custom native SIEM dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"status": "deleted", "dashboard_id": ...}` or `{"error": ...}`.
+
+- **`add_dashboard_chart(dashboard_id, display_name, query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, visualization=None, description=None, tile_type=None, start_x=None, start_y=None, span_x=None, span_y=None, data_sources=None, chart=None, dashboard_query=None, chart_layout=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Add a chart (and its UDM stats query) to a native SIEM dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Target dashboard ID or full resource name.
+        - `display_name` (required): Chart title.
+        - `query` (optional): YARA-L 2.0 UDM stats query, e.g. `metadata.event_type = "USER_LOGIN" match: principal.user.userid outcome: $count = count(metadata.id) order: $count desc`.
+        - `time_unit` (optional): Relative window unit: SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR (default DAY when a query is given).
+        - `start_time_val` (optional): Relative window length (default 1).
+        - `start_time` (optional): Absolute window start (RFC 3339); with `end_time` replaces the relative window.
+        - `end_time` (optional): Absolute window end (RFC 3339).
+        - `visualization` (optional): DashboardChart `visualization` config (ECharts-style), e.g. `{"series": [{"chartType": "TABLE"}]}`.
+        - `description` (optional): Chart description.
+        - `tile_type` (optional): TILE_TYPE_VISUALIZATION (default), TILE_TYPE_BUTTON or TILE_TYPE_MARKDOWN.
+        - `data_sources` (optional): `chartDatasource. dataSources` for query-backed charts; defaults to `["UDM"]` when a query is given (the API rejects charts without it).
+        - `chart` (optional): Raw DashboardChart fields merged over the generated `dashboardChart`.
+        - `dashboard_query` (optional): Raw DashboardQuery fields merged over the generated `dashboardQuery`.
+        - `chart_layout` (optional): Raw ChartLayout (`{"startX":0,"startY":0,"spanX":48,"spanY":26}`).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"nativeDashboard": {...}, "dashboardChart": {...}}` or `{"error": ...}`.
+
+- **`edit_dashboard_chart(dashboard_id, chart_id, edit_mask, display_name=None, description=None, query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, visualization=None, chart=None, dashboard_query=None, etag=None, language_features=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Edit an existing chart and/or its query on a native SIEM dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `chart_id` (required): Chart ID or full `dashboardCharts/{id}` name.
+        - `edit_mask` (required): Comma-separated camelCase paths, e.g. "dashboardChart.displayName,dashboardQuery.query,dashboardQuery.input".
+        - `display_name` (optional): New chart title.
+        - `description` (optional): New chart description.
+        - `query` (optional): New YARA-L 2.0 stats query.
+        - `time_unit` (optional): Relative window unit (SECOND..YEAR).
+        - `start_time_val` (optional): Relative window length.
+        - `start_time` (optional): Absolute window start (RFC 3339).
+        - `end_time` (optional): Absolute window end (RFC 3339).
+        - `visualization` (optional): New `visualization`.
+        - `chart` (optional): Raw DashboardChart fields merged over the generated `dashboardChart` (`name` and `etag` are set automatically from the current chart).
+        - `dashboard_query` (optional): Raw DashboardQuery fields merged over the generated `dashboardQuery` (`name` is set automatically from `chartDatasource.dashboardQuery`).
+        - `etag` (optional): Current chart etag; fetched automatically when omitted.
+        - `language_features` (optional): JOINS, STAGES, DATA_TABLES used by the query.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"nativeDashboard": {...}, "dashboardChart": {...}}` or `{"error": ...}`.
+
+- **`remove_dashboard_chart(dashboard_id, chart_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Remove a chart from a native SIEM dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `chart_id` (required): Chart ID or full `dashboardCharts/{id}` name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The updated NativeDashboard or `{"error": ...}`.
+
+- **`duplicate_dashboard_chart(dashboard_id, chart_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Duplicate a chart within a native SIEM dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `chart_id` (required): Chart ID or full `dashboardCharts/{id}` name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"nativeDashboard": {...}, "dashboardChart": {...}}` (the new chart) or `{"error": ...}`.
+
+- **`export_dashboards(dashboard_ids, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Export native SIEM dashboards (with charts and queries) as JSON.
+    - **Parameters:**
+        - `dashboard_ids` (required): One or more dashboard IDs or full resource names. A JSON-array string is accepted.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"inlineDestination": {"dashboards": [...]}}` or `{"error": ...}`.
+
+- **`import_dashboards(dashboards, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Import native SIEM dashboards from an inline export payload.
+    - **Parameters:**
+        - `dashboards` (required): Either the list of NativeDashboardWithChartsAndQueries items, a single item, or the full `export_dashboards` response. JSON strings are accepted.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"results": [{"dashboard": "projects/.../nativeDashboards/<new-id>", "status": {"message": "Dashboard Imported Successfully"}}]}` or `{"error": ...}`.
+
+- **`execute_dashboard_query(query=None, time_unit=None, start_time_val=None, start_time=None, end_time=None, query_id=None, dialect=None, filters=None, clear_cache=None, use_previous_time_range=None, dashboard_query=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Execute a dashboard (UDM stats) query ad hoc and return tabular results.
+    - **Parameters:**
+        - `query` (optional): YARA-L 2.0 stats query (`match:` / `outcome:` sections) or SQL when `dialect="SQL"`.
+        - `time_unit` (optional): SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR.
+        - `start_time_val` (optional): Relative window length (e.g. 7).
+        - `start_time` (optional): Absolute window start (RFC 3339); with `end_time` replaces the relative window.
+        - `end_time` (optional): Absolute window end (RFC 3339).
+        - `query_id` (optional): Saved DashboardQuery ID or resource name to execute instead of an inline query.
+        - `dialect` (optional): YL2 (default) or SQL.
+        - `filters` (optional): DashboardFilter list, e.g. `[{"fieldPath": "principal.hostname", "dataSource": "EVENTS", "filterOperatorAndFieldValues": [{"filterOperator": "EQUAL", "fieldValues": ["host-1"]}]}]`.
+        - `clear_cache` (optional): Bypass the result cache.
+        - `use_previous_time_range` (optional): Run against the preceding window of the same length (for comparisons).
+        - `dashboard_query` (optional): Raw DashboardQuery fields merged over the generated `query` object.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"results": [{"column": ..., "values": [...]}], "timeWindow": {...}, "queryRuntimeErrors": [...]}` or `{"error": ...}`.
+
+- **`get_dashboard_query(query_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a saved dashboard query by ID or resource name.
+    - **Parameters:**
+        - `query_id` (required): Query ID or full `dashboardQueries/{id}` name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The DashboardQuery resource or `{"error": ...}`.
+
+- **`get_dashboard_chart(chart_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a dashboard chart by ID or resource name.
+    - **Parameters:**
+        - `chart_id` (required): Chart ID or full `dashboardCharts/{id}` name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The DashboardChart resource or `{"error": ...}`.
+
+- **`list_dashboard_charts(filter=None, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List dashboard charts in the instance (v1alpha only).
+    - **Parameters:**
+        - `filter` (optional): Server-side filter expression (e.g. `native_dashboard = "projects/.../nativeDashboards/{id}"`).
+        - `page_size` (optional): Maximum charts per page (<= 1000).
+        - `page_token` (optional): `nextPageToken` from a previous call.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"dashboardCharts": [...], "nextPageToken": ..., "totalSize": N, "total_charts": N}` or `{"error": ...}`.
+
+- **`batch_get_dashboard_charts(chart_ids, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get several dashboard charts in one call.
+    - **Parameters:**
+        - `chart_ids` (required): Chart IDs or full resource names. A JSON-array string is accepted.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"dashboardCharts": [...], "total_charts": N}` or `{"error": ...}`.
+
+### Dashboard Scheduled Report and Content Hub Tools
+
+- **`list_dashboard_scheduled_reports(page_size=None, page_token=None, filter_query=None, view=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List scheduled email/GCS reports configured for native dashboards.
+    - **Parameters:**
+        - `page_size` (optional): Maximum number of reports to return.
+        - `page_token` (optional): `nextPageToken` from a previous call.
+        - `filter_query` (optional): Case-insensitive substring match applied to `display_name` and `description`.
+        - `view` (optional): `DASHBOARD_SCHEDULED_REPORT_VIEW_BASIC` (default) or `DASHBOARD_SCHEDULED_REPORT_VIEW_FULL`.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** API response with `dashboardScheduledReports`, `nextPageToken`, plus `total_reports` for the page, or an error.
+
+- **`get_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a single dashboard scheduled report configuration.
+    - **Parameters:**
+        - `report_id` (required): Scheduled report ID or full resource name (`projects/.../dashboardScheduledReports/{id}`).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The `DashboardScheduledReport` resource or an error.
+
+- **`create_dashboard_scheduled_report(display_name, dashboard_id, cron, recipients=None, time_zone=None, file_format=None, description=None, email_subject=None, email_body=None, delivery_type=None, data_access_scopes=None, scheduled_report=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create a scheduled report that emails a native dashboard on a cron.
+    - **Parameters:**
+        - `display_name` (required): Report name shown in the UI (required).
+        - `dashboard_id` (required): Native dashboard ID or full resource name (`projects/.../nativeDashboards/{id}`); becomes `dashboard.name`.
+        - `cron` (required): Crontab schedule, 5 fields `min hour dom month dow` (e.g. "0 8 * * 1" = Mondays 08:00).
+        - `recipients` (optional): Email recipients (required by the API for email delivery). JSON array string ok.
+        - `time_zone` (optional): IANA time zone for the cron (default UTC).
+        - `file_format` (optional): `FILE_FORMAT_PDF`, `FILE_FORMAT_CSV`, or `FILE_FORMAT_PNG` (required by the API; defaults to PDF here).
+        - `description` (optional): Free-text description.
+        - `email_subject` (optional): Email subject line.
+        - `email_body` (optional): Email body text.
+        - `delivery_type` (optional): `DELIVERY_TYPE_EMAIL_ATTACHMENT` or `DELIVERY_TYPE_GCS_BUCKET`.
+        - `data_access_scopes` (optional): Full `dataAccessScopes` resource names for `scopeInfo`.
+        - `scheduled_report` (optional): Extra `DashboardScheduledReport` JSON (camelCase keys, e.g. `{"userData": {"pinned": true}, "scopeInfo": {...}}`) merged over the body built from the arguments above.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The created `DashboardScheduledReport` or an error.
+
+- **`update_dashboard_scheduled_report(report_id, update_mask=None, display_name=None, description=None, dashboard_id=None, cron=None, time_zone=None, recipients=None, email_subject=None, email_body=None, delivery_type=None, file_format=None, pinned=None, scheduled_report=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Update fields of an existing dashboard scheduled report (PATCH).
+    - **Parameters:**
+        - `report_id` (required): Scheduled report ID or full resource name.
+        - `update_mask` (optional): Field paths to update. Supported: `display_name`, `description`, `cron_details`, `format`, `delivery_details`, `scope_info`, `dashboard.name`, `user_data.pinned`. Comma-separated string, JSON array, or list.
+        - `display_name` (optional): New display name.
+        - `description` (optional): New description.
+        - `dashboard_id` (optional): New native dashboard ID or full name.
+        - `cron` (optional): New crontab string (5 fields).
+        - `time_zone` (optional): New IANA time zone.
+        - `recipients` (optional): Replacement recipient list (whole `delivery_details` is replaced, so pass all fields).
+        - `email_subject` (optional): New email subject.
+        - `email_body` (optional): New email body.
+        - `delivery_type` (optional): `DELIVERY_TYPE_EMAIL_ATTACHMENT` or `DELIVERY_TYPE_GCS_BUCKET`.
+        - `file_format` (optional): `FILE_FORMAT_PDF|CSV|PNG`.
+        - `pinned` (optional): Pin/unpin (`user_data.pinned`).
+        - `scheduled_report` (optional): Extra resource JSON (camelCase) merged over the generated body, e.g. `{"scopeInfo": {"dataAccessScopes": [...]}, "etag": "..."}`.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The updated `DashboardScheduledReport` or an error.
+
+- **`delete_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete a dashboard scheduled report.
+    - **Parameters:**
+        - `report_id` (required): Scheduled report ID or full resource name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"deleted": true, "report_id": ...}` or an error.
+
+- **`fetch_dashboard_scheduled_report_history(report_id, page_size=None, page_token=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Fetch the run history of a dashboard scheduled report (last year).
+    - **Parameters:**
+        - `report_id` (required): Scheduled report ID or full resource name.
+        - `page_size` (optional): Max entries (default 50, max 1000).
+        - `page_token` (optional): `nextPageToken` from a previous call.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `reportGenerationDetails`, `runCounts`, `totalSize`, `nextPageToken`, or an error.
+
+- **`duplicate_dashboard_scheduled_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Duplicate an existing dashboard scheduled report.
+    - **Parameters:**
+        - `report_id` (required): Source scheduled report ID or full resource name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The new `DashboardScheduledReport` or an error.
+
+- **`trigger_instant_dashboard_report(report_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Send a dashboard scheduled report immediately, outside its schedule.
+    - **Parameters:**
+        - `report_id` (required): Scheduled report ID or full resource name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The long-running `Operation` (`name`, `done`, optional `metadata`/`response`) or an error.
+
+- **`list_featured_content_dashboards(page_size=None, page_token=None, filter_query=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List Google-curated dashboards available in the Content Hub.
+    - **Parameters:**
+        - `page_size` (optional): Max results (default and max 100).
+        - `page_token` (optional): `nextPageToken` from a previous call.
+        - `filter_query` (optional): AIP-160 filter over `name` and `content_metadata.description`; a bare literal (e.g. `"okta"`) does a substring match on both.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `featuredContentNativeDashboards`, `nextPageToken`, plus `total_featured_dashboards` for the page, or an error.
+
+- **`get_featured_content_dashboard(featured_dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get one Content Hub featured (curated) native dashboard.
+    - **Parameters:**
+        - `featured_dashboard_id` (required): Featured dashboard ID or full resource name (`projects/.../contentHub/featuredContentNativeDashboards/{id}`).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The `FeaturedContentNativeDashboard` or an error.
+
+- **`install_featured_content_dashboard(featured_dashboard_id, featured_dashboard=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Install a Content Hub curated dashboard as a native dashboard.
+    - **Parameters:**
+        - `featured_dashboard_id` (required): Featured dashboard ID or full resource name.
+        - `featured_dashboard` (optional): Optional `FeaturedContentNativeDashboard` JSON sent as `featuredContentNativeDashboard` in the body, e.g. to override `dashboardContent.dashboard.displayName` before install. Usually omitted.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** `{"nativeDashboard": "projects/.../nativeDashboards/{id}"}` or an error.
+
+### Legacy (Looker) Dashboard Tools
+
+- **`get_legacy_dashboard(dashboard_id, view=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a legacy (Looker) Chronicle dashboard by ID. v1alpha-only.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name ``projects/.../instances/.../dashboards/{id}``.
+        - `view` (optional): ``DASHBOARD_VIEW_BASIC`` (default, no LookML), ``DASHBOARD_VIEW_EXPORT`` (LookML, no URI) or ``DASHBOARD_VIEW_FULL`` (everything).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The Dashboard resource, or an error message.
+
+- **`list_legacy_dashboards(page_size=None, page_token=None, view=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List legacy (Looker) Chronicle dashboards. v1alpha-only.
+    - **Parameters:**
+        - `page_size` (optional): Maximum dashboards per page.
+        - `page_token` (optional): ``nextPageToken`` from a previous call.
+        - `view` (optional): ``DASHBOARD_VIEW_BASIC`` (default), ``DASHBOARD_VIEW_EXPORT`` or ``DASHBOARD_VIEW_FULL``.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"dashboards": [...], "nextPageToken": "...", "total_dashboards": N}`` or an error message.
+
+- **`delete_legacy_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete a legacy (Looker) Chronicle dashboard. v1alpha-only.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID or full resource name.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"status": "deleted", "dashboard_id": ...}`` or an error message.
+
+- **`copy_legacy_dashboard(dashboard_id, dashboard_type=None, display_name=None, default_dashboard=None, destination=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Copy a legacy (Looker) dashboard to another dashboard type. v1alpha-only.
+    - **Parameters:**
+        - `dashboard_id` (required): Source dashboard ID or full resource name.
+        - `dashboard_type` (optional): Destination type, required unless given in ``destination``: ``DASHBOARD_TYPE_USER`` or ``DASHBOARD_TYPE_CUSTOMER``.
+        - `display_name` (optional): Name for the copy.
+        - `default_dashboard` (optional): Make the copy the default.
+        - `destination` (optional): Destination Dashboard resource (dict or JSON string), e.g. ``{"displayName": "My copy", "type": "DASHBOARD_TYPE_USER"}``. Explicit args above override matching keys. The request body sent is ``{"destination": {"parent": <instance>, "dashboard": {...}}}``.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The newly created Dashboard resource, or an error.
+
+> **Future work (not included):** the Looker-to-native migration endpoints (`dashboards:fetchMigratable`, `dashboards:batchMigrate`, `dashboards:fetchMigrationMetrics`, `dashboards:fetchMigrationJobs`) and legacy dashboard creation (`POST /dashboards`) are intentionally not exposed yet. Migration is gated by a Chronicle feature flag that is still under development (`403 Looker migration wizard is not enabled for the customer`), and legacy creation currently fails server-side, so neither could be verified against a live tenant. Tools for them can be added once the APIs are generally available.
+
+### Legacy SOAR Dashboard Tools
+
+- **`legacy_soar_get_dashboard_cards(project_id=None, customer_id=None, region=None)`**
+    - **Description:** List legacy SOAR dashboards (ID to name map) visible to the caller.
+    - **Returns:** ``{"payload": {"<dashboard_id>": "<name>", ...}, "total_dashboards": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get a legacy SOAR dashboard with its configuration and widgets.
+    - **Parameters:**
+        - `dashboard_id` (required): Numeric dashboard ID (from legacy_soar_get_dashboard_cards).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<LegacySoarDashboardDataModel>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_widget_definitions(project_id=None, customer_id=None, region=None)`**
+    - **Description:** List the predefined widget definitions available for SOAR dashboards.
+    - **Returns:** ``{"payload": [<DashboardWidgetDefinitionDataModel>], "total_definitions": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_playbooks(project_id=None, customer_id=None, region=None)`**
+    - **Description:** List SOAR playbooks that have data available for dashboard reporting.
+    - **Returns:** ``{"payload": [<DashboardPlaybookModel>], "total_playbooks": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_add_or_update_dashboard(dashboard_id, name=None, creator=None, default_time_range=None, environments=None, allowed_users=None, allowed_users_json=None, widgets=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create or update a legacy SOAR (case management) dashboard.
+    - **Parameters:**
+        - `dashboard_id` (required): Dashboard ID to update, or 0 to create.
+        - `name` (optional): Dashboard display name.
+        - `creator` (optional): Creator username.
+        - `default_time_range` (optional): One of DASHBOARD_TIME_RANGE_TYPE_UNSPECIFIED, LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `environments` (optional): SOAR environment names the dashboard covers; list or JSON array string.
+        - `allowed_users` (optional): Usernames allowed to view the dashboard; list or JSON array string.
+        - `allowed_users_json` (optional): Legacy JSON-encoded allowed users string, if the backend expects it.
+        - `widgets` (optional): Widget definitions (LegacySoarDashboardWidgetDataModel, camelCase keys) as list or JSON array string.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** The saved dashboard (``id``, ``name``, ``creator``, ``widgets``, ...) or ``{"error": ...}``.
+
+- **`legacy_soar_delete_dashboard(dashboard_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete a legacy SOAR dashboard and all of its widgets.
+    - **Parameters:**
+        - `dashboard_id` (required): Numeric dashboard ID to delete.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"deleted": True, "dashboard_id": ...}`` merged with the (normally empty) API response, or ``{"error": ...}``.
+
+- **`legacy_soar_import_dashboard(dashboard=None, name=None, creator=None, default_time_range=None, environments=None, allowed_users=None, widgets=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Import a legacy SOAR dashboard from an exported JSON definition.
+    - **Parameters:**
+        - `dashboard` (optional): Exported dashboard object with camelCase keys (``id``, ``name``, ``creator``, ``defaultTimeRange``, ``environments``, ``allowedUsers``, ``widgets``, ...). Dict or JSON string.
+        - `name` (optional): Override the dashboard name.
+        - `creator` (optional): Override the creator username.
+        - `default_time_range` (optional): One of DASHBOARD_TIME_RANGE_TYPE_UNSPECIFIED, LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `environments` (optional): Override environments.
+        - `allowed_users` (optional): Override allowed users.
+        - `widgets` (optional): Override widget list.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<imported dashboard>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_save_dashboard_as_report_template(name, template_id=None, category=None, report_widgets=None, is_system=None, has_scheduler=None, template=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Save a legacy SOAR dashboard's widgets as a SOAR report template.
+    - **Parameters:**
+        - `name` (required): Report template name.
+        - `template_id` (optional): Existing template ID to overwrite (``id``); omit to create.
+        - `category` (optional): ``ROI``, ``MANAGEMENT``, ``SLA``, ``TIER1`` or ``GENERAL``.
+        - `report_widgets` (optional): Widget definitions (camelCase) as list or JSON array string.
+        - `is_system` (optional): Mark as a system template.
+        - `has_scheduler` (optional): Whether a schedule is attached.
+        - `template` (optional): Full request object (camelCase keys) used as the base; explicit arguments override.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<ReportTemplateDetails>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_add_or_update_dashboard_widget(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Create or update a widget on a legacy SOAR dashboard.
+    - **Parameters:**
+        - `widget` (optional): Full widget definition (camelCase keys) as returned by legacy_soar_get_dashboard; dict or JSON string. Explicit arguments below override its keys.
+        - `widget_id` (optional): Widget ID (``id``; 0 for new).
+        - `dashboard_id` (optional): Owning dashboard ID (``dashboardId``).
+        - `title` (optional): Widget title.
+        - `widget_type` (optional): ``CUSTOM`` or ``PLAYBOOK_MONITORING``.
+        - `width_size` (optional): ``ONE_BLOCK``, ``TWO_BLOCKS``, ``THREE_BLOCKS``.
+        - `description` (optional): Widget description.
+        - `order` (optional): Position in the dashboard.
+        - `time_filter` (optional): LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `subject` (optional): ``CASES``, ``ALERTS``, ``TASKS``, ``PLAYBOOKS``.
+        - `dimension_a` (optional): Primary grouping (CustomWidgetObjectEnum), e.g. ``ANALYST``, ``TAG``, ``PRIORITY``, ``RULE_NAME``, ``ENVIRONMENT``, ``PLAYBOOK``, ``PRODUCT``, ``CASE_STATUS``, ``CASE_CLOSE_REASON``, ``STAGE``, ``SLA_STATUS``, ``TASK_STATUS``, ``PLAYBOOK_TOTAL_RUNS``, ``CASE_OPEN_AND_CLOSURE_TRENDS``.
+        - `dimension_b` (optional): Secondary grouping, same enum.
+        - `chart_type` (optional): ``PIE``, ``HORIZENTAL_BARS``, ``VERTICAL_BARS``, ``TABLE``, ``TIME_SERIES``, ``TRENDS``, ``SOCS_STATUS``, ``ROI``, ``TEXT``, ``IMAGE``, ``NUMBER_STATUS``.
+        - `results_amount` (optional): Max result buckets.
+        - `results_order` (optional): ``DESCENDING`` or ``ASCENDING``.
+        - `calculate_field` (optional): ``COUNT``, ``HANDLING_AVG_TIME``, ``SLA_AVG_REMAINING_TIME``, ``TASK_DUE_DATE_AVG_TIME``, ``PERCENTAGE``, ``AVG_RUNTIME``.
+        - `extra_fields` (optional): Other camelCase request fields, mainly list filters: ``tagFilters``, ``productFilters``, ``analystFilters``, ``priorityFilter`` (INFORMATIVE/LOW/MEDIUM/ HIGH/CRITICAL), ``environmentFilter``, ``entityTypeFilter``, ``caseStatusesFilter`` (OPENED/CLOSED/ALL/MERGED), ``alertNamesFilter``, ``importanceStatusesFilter`` (bools), ``incidentStatusesFilter`` (bools), ``exceededSlaFilter`` (bools), ``closeReasonsFilter`` (MALICIOUS/NOT_MALICIOUS/MAINTENANCE/ INCONCLUSIVE/UNKNOWN), ``caseRootCauseFilter``, ``caseStageFilter``, ``entityIdentifierFilter``, ``networksFilter``, ``portsFilter``, ``categoryOutcomeFilter``, ``playbooksFilter``, ``integrationsFilter``, ``playbookStatusFilter`` (FINISHED_SUCCESSFULLY/ERROR/ WAITING_FOR_USER_ACTION/DECLINED/PLAYBOOK_CLOSED_ALERT/PENDING/ TERMINATED), ``startStage``, ``endStage``, ``text``, ``groupByField``, ``socAnalystsLoadManagerUsername``.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<saved widget>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_delete_dashboard_widget(widget_id, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Delete a single widget from a legacy SOAR dashboard.
+    - **Parameters:**
+        - `widget_id` (required): Numeric widget ID to delete.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"deleted": True, "widget_id": ...}`` merged with the API response, or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_widget_values(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Compute the data series for a legacy SOAR dashboard widget.
+    - **Parameters:**
+        - `widget` (optional): Full widget definition (camelCase keys) as returned by legacy_soar_get_dashboard; dict or JSON string. Explicit arguments below override its keys.
+        - `widget_id` (optional): Widget ID (``id``; 0 for new).
+        - `dashboard_id` (optional): Owning dashboard ID (``dashboardId``).
+        - `title` (optional): Widget title.
+        - `widget_type` (optional): ``CUSTOM`` or ``PLAYBOOK_MONITORING``.
+        - `width_size` (optional): ``ONE_BLOCK``, ``TWO_BLOCKS``, ``THREE_BLOCKS``.
+        - `description` (optional): Widget description.
+        - `order` (optional): Position in the dashboard.
+        - `time_filter` (optional): LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `subject` (optional): ``CASES``, ``ALERTS``, ``TASKS``, ``PLAYBOOKS``.
+        - `dimension_a` (optional): Primary grouping (CustomWidgetObjectEnum), e.g. ``ANALYST``, ``TAG``, ``PRIORITY``, ``RULE_NAME``, ``ENVIRONMENT``, ``PLAYBOOK``, ``PRODUCT``, ``CASE_STATUS``, ``CASE_CLOSE_REASON``, ``STAGE``, ``SLA_STATUS``, ``TASK_STATUS``, ``PLAYBOOK_TOTAL_RUNS``, ``CASE_OPEN_AND_CLOSURE_TRENDS``.
+        - `dimension_b` (optional): Secondary grouping, same enum.
+        - `chart_type` (optional): ``PIE``, ``HORIZENTAL_BARS``, ``VERTICAL_BARS``, ``TABLE``, ``TIME_SERIES``, ``TRENDS``, ``SOCS_STATUS``, ``ROI``, ``TEXT``, ``IMAGE``, ``NUMBER_STATUS``.
+        - `results_amount` (optional): Max result buckets.
+        - `results_order` (optional): ``DESCENDING`` or ``ASCENDING``.
+        - `calculate_field` (optional): ``COUNT``, ``HANDLING_AVG_TIME``, ``SLA_AVG_REMAINING_TIME``, ``TASK_DUE_DATE_AVG_TIME``, ``PERCENTAGE``, ``AVG_RUNTIME``.
+        - `extra_fields` (optional): Other camelCase request fields, mainly list filters: ``tagFilters``, ``productFilters``, ``analystFilters``, ``priorityFilter`` (INFORMATIVE/LOW/MEDIUM/ HIGH/CRITICAL), ``environmentFilter``, ``entityTypeFilter``, ``caseStatusesFilter`` (OPENED/CLOSED/ALL/MERGED), ``alertNamesFilter``, ``importanceStatusesFilter`` (bools), ``incidentStatusesFilter`` (bools), ``exceededSlaFilter`` (bools), ``closeReasonsFilter`` (MALICIOUS/NOT_MALICIOUS/MAINTENANCE/ INCONCLUSIVE/UNKNOWN), ``caseRootCauseFilter``, ``caseStageFilter``, ``entityIdentifierFilter``, ``networksFilter``, ``portsFilter``, ``categoryOutcomeFilter``, ``playbooksFilter``, ``integrationsFilter``, ``playbookStatusFilter`` (FINISHED_SUCCESSFULLY/ERROR/ WAITING_FOR_USER_ACTION/DECLINED/PLAYBOOK_CLOSED_ALERT/PENDING/ TERMINATED), ``startStage``, ``endStage``, ``text``, ``groupByField``, ``socAnalystsLoadManagerUsername``.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<LegacySoarDashboardWidgetValues>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_widget_case_ids(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List the SOAR case IDs behind a legacy dashboard widget.
+    - **Parameters:**
+        - `widget` (optional): Full widget definition (camelCase keys) as returned by legacy_soar_get_dashboard; dict or JSON string. Explicit arguments below override its keys.
+        - `widget_id` (optional): Widget ID (``id``; 0 for an ad-hoc widget).
+        - `dashboard_id` (optional): Owning dashboard ID (``dashboardId``).
+        - `title` (optional): Widget title.
+        - `widget_type` (optional): ``CUSTOM`` or ``PLAYBOOK_MONITORING``.
+        - `width_size` (optional): ``ONE_BLOCK``, ``TWO_BLOCKS``, ``THREE_BLOCKS``.
+        - `description` (optional): Widget description.
+        - `order` (optional): Position in the dashboard.
+        - `time_filter` (optional): LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `subject` (optional): ``CASES``, ``ALERTS``, ``TASKS``, ``PLAYBOOKS``.
+        - `dimension_a` (optional): Primary grouping, e.g. ``ANALYST``, ``PRIORITY``, ``CASE_STATUS``, ``PLAYBOOK``, ``STAGE``.
+        - `dimension_b` (optional): Secondary grouping, same enum.
+        - `chart_type` (optional): ``PIE``, ``HORIZENTAL_BARS``, ``VERTICAL_BARS``, ``TABLE``, ``TIME_SERIES``, ``TRENDS``, ``NUMBER_STATUS`` and others.
+        - `results_amount` (optional): Max result buckets.
+        - `results_order` (optional): ``DESCENDING`` or ``ASCENDING``.
+        - `calculate_field` (optional): ``COUNT``, ``HANDLING_AVG_TIME``, ``SLA_AVG_REMAINING_TIME``, ``PERCENTAGE``, ``AVG_RUNTIME``.
+        - `extra_fields` (optional): Other camelCase request fields such as ``caseStatusesFilter``, ``priorityFilter``, ``analystFilters``, ``environmentFilter``, ``playbooksFilter``, ``playbookStatusFilter``; full key list in legacy_soar_add_or_update_dashboard_widget.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": [<case_id>, ...], "total_results": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_custom_widget_case_ids(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List the SOAR case IDs behind a CUSTOM legacy dashboard widget.
+    - **Parameters:**
+        - `widget` (optional): Full widget definition (camelCase keys) as returned by legacy_soar_get_dashboard; dict or JSON string. Explicit arguments below override its keys.
+        - `widget_id` (optional): Widget ID (``id``; 0 for an ad-hoc widget).
+        - `dashboard_id` (optional): Owning dashboard ID (``dashboardId``).
+        - `title` (optional): Widget title.
+        - `widget_type` (optional): ``CUSTOM`` or ``PLAYBOOK_MONITORING``.
+        - `width_size` (optional): ``ONE_BLOCK``, ``TWO_BLOCKS``, ``THREE_BLOCKS``.
+        - `description` (optional): Widget description.
+        - `order` (optional): Position in the dashboard.
+        - `time_filter` (optional): LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `subject` (optional): ``CASES``, ``ALERTS``, ``TASKS``, ``PLAYBOOKS``.
+        - `dimension_a` (optional): Primary grouping, e.g. ``ANALYST``, ``PRIORITY``, ``CASE_STATUS``, ``PLAYBOOK``, ``STAGE``.
+        - `dimension_b` (optional): Secondary grouping, same enum.
+        - `chart_type` (optional): ``PIE``, ``HORIZENTAL_BARS``, ``VERTICAL_BARS``, ``TABLE``, ``TIME_SERIES``, ``TRENDS``, ``NUMBER_STATUS`` and others.
+        - `results_amount` (optional): Max result buckets.
+        - `results_order` (optional): ``DESCENDING`` or ``ASCENDING``.
+        - `calculate_field` (optional): ``COUNT``, ``HANDLING_AVG_TIME``, ``SLA_AVG_REMAINING_TIME``, ``PERCENTAGE``, ``AVG_RUNTIME``.
+        - `extra_fields` (optional): Other camelCase request fields such as ``caseStatusesFilter``, ``priorityFilter``, ``analystFilters``, ``environmentFilter``, ``playbooksFilter``, ``playbookStatusFilter``; full key list in legacy_soar_add_or_update_dashboard_widget.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": [<case_id>, ...], "total_results": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_dashboard_playbook_runs(widget=None, widget_id=None, dashboard_id=None, title=None, widget_type=None, width_size=None, description=None, order=None, time_filter=None, subject=None, dimension_a=None, dimension_b=None, chart_type=None, results_amount=None, results_order=None, calculate_field=None, extra_fields=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** List recent SOAR playbook runs behind a legacy dashboard widget.
+    - **Parameters:**
+        - `widget` (optional): Full widget definition (camelCase keys) as returned by legacy_soar_get_dashboard; dict or JSON string. Explicit arguments below override its keys.
+        - `widget_id` (optional): Widget ID (``id``; 0 for an ad-hoc widget).
+        - `dashboard_id` (optional): Owning dashboard ID (``dashboardId``).
+        - `title` (optional): Widget title.
+        - `widget_type` (optional): ``CUSTOM`` or ``PLAYBOOK_MONITORING``.
+        - `width_size` (optional): ``ONE_BLOCK``, ``TWO_BLOCKS``, ``THREE_BLOCKS``.
+        - `description` (optional): Widget description.
+        - `order` (optional): Position in the dashboard.
+        - `time_filter` (optional): LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `subject` (optional): ``CASES``, ``ALERTS``, ``TASKS``, ``PLAYBOOKS``.
+        - `dimension_a` (optional): Primary grouping, e.g. ``ANALYST``, ``PRIORITY``, ``CASE_STATUS``, ``PLAYBOOK``, ``STAGE``.
+        - `dimension_b` (optional): Secondary grouping, same enum.
+        - `chart_type` (optional): ``PIE``, ``HORIZENTAL_BARS``, ``VERTICAL_BARS``, ``TABLE``, ``TIME_SERIES``, ``TRENDS``, ``NUMBER_STATUS`` and others.
+        - `results_amount` (optional): Max result buckets.
+        - `results_order` (optional): ``DESCENDING`` or ``ASCENDING``.
+        - `calculate_field` (optional): ``COUNT``, ``HANDLING_AVG_TIME``, ``SLA_AVG_REMAINING_TIME``, ``PERCENTAGE``, ``AVG_RUNTIME``.
+        - `extra_fields` (optional): Other camelCase request fields such as ``caseStatusesFilter``, ``priorityFilter``, ``analystFilters``, ``environmentFilter``, ``playbooksFilter``, ``playbookStatusFilter``; full key list in legacy_soar_add_or_update_dashboard_widget.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": [<LegacySoarDashboardPlaybookRunDataModel>], "total_results": N}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_playbook_monitoring(workflow_identifier=None, time_filter=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get the monitoring dashboard for a SOAR playbook.
+    - **Parameters:**
+        - `workflow_identifier` (optional): Playbook (workflow) identifier.
+        - `time_filter` (optional): One of DASHBOARD_TIME_RANGE_TYPE_UNSPECIFIED, LAST_DAY, LAST_3_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": {<LegacySoarDashboardDataModel>}}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_cases_time_to_respond(time_range_filter=None, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get the average time-to-respond for SOAR cases in a time range.
+    - **Parameters:**
+        - `time_range_filter` (optional): One of LAST_DAY, LAST_2_DAYS, LAST_3_DAYS, LAST_4_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR, LAST_13_MONTHS (``CUSTOM`` is the proto default and is not useful here).
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"timeToResponseValue": <int>}`` or ``{"error": ...}``.
+
+- **`legacy_soar_get_opened_and_closed_cases_trends(time_range_type, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Get opened vs. closed SOAR case trends over a time range.
+    - **Parameters:**
+        - `time_range_type` (required): Required. One of LAST_DAY, LAST_2_DAYS, LAST_3_DAYS, LAST_4_DAYS, LAST_WEEK, LAST_2_WEEKS, LAST_MONTH, LAST_3_MONTHS, LAST_6_MONTHS, LAST_YEAR, LAST_13_MONTHS.
+        - `project_id`, `customer_id`, `region` (optional): Chronicle instance override (defaults to environment config).
+    - **Returns:** ``{"payload": [<GetOpenedAndClosedCasesTrends>], "total_results": N}`` or ``{"error": ...}``.
+
 ## Usage Examples
 
 ### Example 1: Natural Language Security Event Search
@@ -1131,6 +1672,66 @@ AI uses: delete_watchlist(
 AI: Successfully deleted the "APT Threat Actors 2024" watchlist.
 Entities previously on this watchlist will now use their base risk scores
 without the 4.0x multiplier.
+```
+
+### Example 9: Building and Scheduling a SIEM Dashboard
+
+```
+User: Build a private dashboard showing login activity by user over the past week.
+
+AI uses: create_dashboard(
+  display_name="Login Activity",
+  description="Logins by user, past 7 days"
+)
+
+AI: Created dashboard "Login Activity" (ID: 41fff27d-...). Adding the chart now.
+
+AI uses: add_dashboard_chart(
+  dashboard_id="41fff27d-...",
+  display_name="Logins by user",
+  query="metadata.event_type = \"USER_LOGIN\"\nmatch:\n  principal.user.userid\noutcome:\n  $count = count(metadata.id)\norder:\n  $count desc\nlimit: 20",
+  time_unit="DAY",
+  start_time_val=7
+)
+
+AI: Added the chart. Preview of the data behind it:
+
+AI uses: execute_dashboard_query(
+  query="metadata.event_type = \"USER_LOGIN\"\nmatch:\n  principal.user.userid\noutcome:\n  $count = count(metadata.id)\norder:\n  $count desc\nlimit: 20",
+  time_unit="DAY",
+  start_time_val=7
+)
+
+AI: Top principals: alice (412 logins), svc-backup (288), bob (97).
+
+User: Widen the window to 30 days and email it to the SOC lead every Monday.
+
+AI uses: edit_dashboard_chart(
+  dashboard_id="41fff27d-...",
+  chart_id="8c86e30e-...",
+  edit_mask="dashboardQuery.input",
+  time_unit="DAY",
+  start_time_val=30
+)
+
+AI uses: create_dashboard_scheduled_report(
+  display_name="Weekly login activity",
+  dashboard_id="41fff27d-...",
+  cron="0 9 * * 1",
+  time_zone="America/New_York",
+  recipients=["soc-lead@example.com"]
+)
+
+AI: The chart now covers 30 days and a PDF report is scheduled for 09:00
+every Monday (America/New_York).
+
+User: Back the dashboard up so we can restore it in the EU tenant.
+
+AI uses: export_dashboards(dashboard_ids=["41fff27d-..."])
+AI uses: import_dashboards(dashboards=<export payload>, project_id="eu-project", region="europe")
+
+AI: Exported one dashboard with its chart and query and imported it into the
+EU instance as nativeDashboards/06f7f12a-....
 ```
 
 ## Additional Resources
