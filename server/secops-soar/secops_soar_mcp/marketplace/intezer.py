@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Detonate File for Intezer: {e}")
+                logger.error("Error executing action Intezer_Detonate File for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Get URL Report for Intezer: {e}")
+                logger.error("Error executing action Intezer_Get URL Report for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +257,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Get File Report for Intezer: {e}")
+                logger.error("Error executing action Intezer_Get File Report for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -295,7 +298,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -331,10 +334,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Get Alert for Intezer: {e}")
+                logger.error("Error executing action Intezer_Get Alert for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -372,7 +375,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -407,10 +410,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Unset Index File for Intezer: {e}")
+                logger.error("Error executing action Intezer_Unset Index File for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -448,7 +451,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -483,10 +486,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Detonate URL for Intezer: {e}")
+                logger.error("Error executing action Intezer_Detonate URL for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -527,7 +530,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -560,10 +563,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Ping for Intezer: {e}")
+                logger.error("Error executing action Intezer_Ping for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -601,7 +604,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -636,10 +639,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Detonate Hash for Intezer: {e}")
+                logger.error("Error executing action Intezer_Detonate Hash for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -677,7 +680,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -715,10 +718,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Index File for Intezer: {e}")
+                logger.error("Error executing action Intezer_Index File for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -756,7 +759,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -792,10 +795,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Submit Alert for Intezer: {e}")
+                logger.error("Error executing action Intezer_Submit Alert for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -833,7 +836,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -867,10 +870,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Submit Suspicious Email for Intezer: {e}")
+                logger.error("Error executing action Intezer_Submit Suspicious Email for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -908,7 +911,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -942,10 +945,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Submit File for Intezer: {e}")
+                logger.error("Error executing action Intezer_Submit File for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -986,7 +989,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Intezer: {e}")
+            logger.error("Error fetching instance for Intezer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1019,8 +1022,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Intezer_Submit Hash for Intezer: {e}")
+                logger.error("Error executing action Intezer_Submit Hash for Intezer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Intezer")
+            logger.warning("Warning: No active integration instance found for Intezer")
             return {"Status": "Failed", "Message": "No active instance found."}

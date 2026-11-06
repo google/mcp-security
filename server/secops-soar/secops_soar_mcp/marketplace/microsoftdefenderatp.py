@@ -23,6 +23,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -86,7 +89,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -122,12 +125,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Run Advanced Hunting Query for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -215,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -258,12 +261,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Get Machine Related Alerts for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -326,7 +329,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -362,12 +365,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Wait Task Status for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -453,7 +456,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -500,12 +503,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Get File Related Machines for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -568,7 +571,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -604,12 +607,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Get Current Task Status for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -675,7 +678,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -712,12 +715,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Create Stop And Quarantine File Specific Machine Task for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -781,7 +784,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -818,12 +821,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Create Isolate Machine Task for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -900,7 +903,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -944,12 +947,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Update Alert for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1044,7 +1047,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1089,12 +1092,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_List Alerts for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1154,7 +1157,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1189,12 +1192,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Ping for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1254,7 +1257,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1289,12 +1292,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Get Machine Logon Users for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1387,7 +1390,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1436,12 +1439,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_List Machines for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1536,7 +1539,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1581,12 +1584,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_List Indicators for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1681,7 +1684,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1724,12 +1727,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Submit Entity Indicators for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1817,7 +1820,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1860,12 +1863,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Get File Related Alerts for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -1925,7 +1928,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1960,12 +1963,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Enrich Entities for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -2035,7 +2038,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2072,12 +2075,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Create Run Antivirus Scan Task for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -2140,7 +2143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2176,12 +2179,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Create Unisolate Machine Task for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}
@@ -2241,7 +2244,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2276,12 +2279,12 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(
+                logger.error(
                     f"Error executing action MicrosoftDefenderATP_Delete Entity Indicators for MicrosoftDefenderATP: {e}"
                 )
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(
+            logger.warning(
                 f"Warning: No active integration instance found for MicrosoftDefenderATP"
             )
             return {"Status": "Failed", "Message": "No active instance found."}

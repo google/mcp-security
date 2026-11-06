@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Create File UDSO for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Create File UDSO for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +140,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +173,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Isolate Endpoints for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Isolate Endpoints for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +214,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +252,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Create Entity UDSO for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Create Entity UDSO for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +293,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +326,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Ping for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Ping for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +367,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +400,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Unisolate Endpoints for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Unisolate Endpoints for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +441,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendMicroApexCentral: {e}")
+            logger.error("Error fetching instance for TrendMicroApexCentral: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -479,8 +482,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendMicroApexCentral_Enrich Entities for TrendMicroApexCentral: {e}")
+                logger.error("Error executing action TrendMicroApexCentral_Enrich Entities for TrendMicroApexCentral: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendMicroApexCentral")
+            logger.warning("Warning: No active integration instance found for TrendMicroApexCentral")
             return {"Status": "Failed", "Message": "No active instance found."}

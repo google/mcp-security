@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -105,10 +108,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Enrich Email for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Enrich Email for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -149,7 +152,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -187,10 +190,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Add Source for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Add Source for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -231,7 +234,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -274,10 +277,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Enrich Hash for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Enrich Hash for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -315,7 +318,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -348,10 +351,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Get Indicator Details for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Get Indicator Details for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -392,7 +395,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -435,10 +438,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Enrich CVE for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Enrich CVE for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -479,7 +482,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -513,10 +516,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Update Indicator Status for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Update Indicator Status for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -557,7 +560,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -594,10 +597,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Create Event for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Create Event for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -635,7 +638,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -668,10 +671,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Link Entities for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Link Entities for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -712,7 +715,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -752,10 +755,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_List Related Objects for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_List Related Objects for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -796,7 +799,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -832,10 +835,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_List Entity Related Objects for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_List Entity Related Objects for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -876,7 +879,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -919,10 +922,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Enrich IP for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Enrich IP for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -960,7 +963,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -993,10 +996,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Create Adversary for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Create Adversary for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1034,7 +1037,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1067,10 +1070,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Ping for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Ping for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1111,7 +1114,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1152,10 +1155,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_List Events for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_List Events for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1193,7 +1196,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1228,10 +1231,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Update Indicator Score for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Update Indicator Score for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1272,7 +1275,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1309,10 +1312,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Link Entities To Object for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Link Entities To Object for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1353,7 +1356,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1394,10 +1397,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Add Attribute for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Add Attribute for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1438,7 +1441,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1475,10 +1478,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Create Object for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Create Object for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1519,7 +1522,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1554,10 +1557,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Get Malware Details for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Get Malware Details for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1598,7 +1601,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1635,10 +1638,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Create Indicator for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Create Indicator for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1679,7 +1682,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1720,10 +1723,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Link Objects for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Link Objects for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1764,7 +1767,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ThreatQ: {e}")
+            logger.error("Error fetching instance for ThreatQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1807,8 +1810,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ThreatQ_Enrich URL for ThreatQ: {e}")
+                logger.error("Error executing action ThreatQ_Enrich URL for ThreatQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ThreatQ")
+            logger.warning("Warning: No active integration instance found for ThreatQ")
             return {"Status": "Failed", "Message": "No active instance found."}

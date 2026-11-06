@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Quarantine Hash In Hosts for Cynet: {e}")
+                logger.error("Error executing action Cynet_Quarantine Hash In Hosts for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -166,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Hash Query for Cynet: {e}")
+                logger.error("Error executing action Cynet_Hash Query for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -207,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -241,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Remediation Status for Cynet: {e}")
+                logger.error("Error executing action Cynet_Remediation Status for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -282,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -315,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Ping for Cynet: {e}")
+                logger.error("Error executing action Cynet_Ping for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -356,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -389,10 +392,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Kill Hash In Hosts for Cynet: {e}")
+                logger.error("Error executing action Cynet_Kill Hash In Hosts for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -430,7 +433,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cynet: {e}")
+            logger.error("Error fetching instance for Cynet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -463,8 +466,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cynet_Delete Hash In Hosts for Cynet: {e}")
+                logger.error("Error executing action Cynet_Delete Hash In Hosts for Cynet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cynet")
+            logger.warning("Warning: No active integration instance found for Cynet")
             return {"Status": "Failed", "Message": "No active instance found."}

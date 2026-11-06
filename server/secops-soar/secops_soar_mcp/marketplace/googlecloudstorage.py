@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Download an Object From a Bucket for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Download an Object From a Bucket for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +177,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_List Bucket Objects for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_List Bucket Objects for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -251,10 +254,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Upload an Object To a Bucket for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Upload an Object To a Bucket for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -292,7 +295,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -326,10 +329,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Get a Bucket’s Access Control List for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Get a Bucket’s Access Control List for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -367,7 +370,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +403,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Ping for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Ping for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -441,7 +444,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -477,10 +480,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Update an ACL entry on Bucket for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Update an ACL entry on Bucket for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -518,7 +521,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -555,10 +558,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_List Buckets for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_List Buckets for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -596,7 +599,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleCloudStorage: {e}")
+            logger.error("Error fetching instance for GoogleCloudStorage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -631,8 +634,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleCloudStorage_Remove Public Access From Bucket for GoogleCloudStorage: {e}")
+                logger.error("Error executing action GoogleCloudStorage_Remove Public Access From Bucket for GoogleCloudStorage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleCloudStorage")
+            logger.warning("Warning: No active integration instance found for GoogleCloudStorage")
             return {"Status": "Failed", "Message": "No active instance found."}

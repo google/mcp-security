@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Websense: {e}")
+            logger.error("Error fetching instance for Websense: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +101,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Websense_Block Url API for Websense: {e}")
+                logger.error("Error executing action Websense_Block Url API for Websense: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Websense")
+            logger.warning("Warning: No active integration instance found for Websense")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +142,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Websense: {e}")
+            logger.error("Error fetching instance for Websense: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +178,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Websense_Unblock Url API for Websense: {e}")
+                logger.error("Error executing action Websense_Unblock Url API for Websense: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Websense")
+            logger.warning("Warning: No active integration instance found for Websense")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +222,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Websense: {e}")
+            logger.error("Error fetching instance for Websense: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -253,10 +256,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Websense_Get Category Urls API for Websense: {e}")
+                logger.error("Error executing action Websense_Get Category Urls API for Websense: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Websense")
+            logger.warning("Warning: No active integration instance found for Websense")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -294,7 +297,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Websense: {e}")
+            logger.error("Error fetching instance for Websense: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -327,8 +330,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Websense_Ping for Websense: {e}")
+                logger.error("Error executing action Websense_Ping for Websense: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Websense")
+            logger.warning("Warning: No active integration instance found for Websense")
             return {"Status": "Failed", "Message": "No active instance found."}

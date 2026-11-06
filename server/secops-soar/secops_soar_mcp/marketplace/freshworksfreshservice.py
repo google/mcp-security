@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -108,10 +111,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_List Tickets for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_List Tickets for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -149,7 +152,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -190,10 +193,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_List Requesters for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_List Requesters for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -231,7 +234,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -282,10 +285,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Create Ticket for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Create Ticket for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -323,7 +326,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -358,10 +361,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Add a Ticket Reply for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Add a Ticket Reply for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -399,7 +402,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -433,10 +436,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Deactivate Agent for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Deactivate Agent for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -474,7 +477,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -509,10 +512,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Delete Ticket Time Entry for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Delete Ticket Time Entry for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -550,7 +553,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -602,10 +605,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Create Agent for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Create Agent for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -643,7 +646,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -688,10 +691,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_List Agents for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_List Agents for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -729,7 +732,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -770,10 +773,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_List Ticket Time Entries for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_List Ticket Time Entries for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -811,7 +814,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -853,10 +856,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Add Ticket Time Entry for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Add Ticket Time Entry for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -894,7 +897,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -934,10 +937,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_List Ticket Conversations for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_List Ticket Conversations for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -975,7 +978,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1020,10 +1023,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Update Ticket Time Entry for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Update Ticket Time Entry for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1061,7 +1064,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1117,10 +1120,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Update Agent for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Update Agent for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1158,7 +1161,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1191,10 +1194,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Ping for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Ping for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1232,7 +1235,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1279,10 +1282,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Create Requester for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Create Requester for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1320,7 +1323,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1354,10 +1357,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Deactivate Requester for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Deactivate Requester for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1395,7 +1398,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1453,10 +1456,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Update Ticket for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Update Ticket for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1494,7 +1497,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1544,10 +1547,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Update Requester for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Update Requester for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1585,7 +1588,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FreshworksFreshservice: {e}")
+            logger.error("Error fetching instance for FreshworksFreshservice: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1622,8 +1625,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FreshworksFreshservice_Add a Ticket Note for FreshworksFreshservice: {e}")
+                logger.error("Error executing action FreshworksFreshservice_Add a Ticket Note for FreshworksFreshservice: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FreshworksFreshservice")
+            logger.warning("Warning: No active integration instance found for FreshworksFreshservice")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ProofPointTAP: {e}")
+            logger.error("Error fetching instance for ProofPointTAP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -106,10 +109,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ProofPointTAP_GetCampaign for ProofPointTAP: {e}")
+                logger.error("Error executing action ProofPointTAP_GetCampaign for ProofPointTAP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ProofPointTAP")
+            logger.warning("Warning: No active integration instance found for ProofPointTAP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -147,7 +150,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ProofPointTAP: {e}")
+            logger.error("Error fetching instance for ProofPointTAP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,10 +187,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ProofPointTAP_DecodeURL for ProofPointTAP: {e}")
+                logger.error("Error executing action ProofPointTAP_DecodeURL for ProofPointTAP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ProofPointTAP")
+            logger.warning("Warning: No active integration instance found for ProofPointTAP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +228,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ProofPointTAP: {e}")
+            logger.error("Error fetching instance for ProofPointTAP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,8 +261,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ProofPointTAP_Ping for ProofPointTAP: {e}")
+                logger.error("Error executing action ProofPointTAP_Ping for ProofPointTAP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ProofPointTAP")
+            logger.warning("Warning: No active integration instance found for ProofPointTAP")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -94,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Add IP to Address Group for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Add IP to Address Group for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -135,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +173,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_List URI Groups for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_List URI Groups for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +214,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +251,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_List Address Groups for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_List Address Groups for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -289,7 +292,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -322,10 +325,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Ping for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Ping for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -363,7 +366,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -398,10 +401,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Add URI List to URI Group for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Add URI List to URI Group for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -439,7 +442,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -473,10 +476,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Remove IP from Address Group for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Remove IP from Address Group for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -514,7 +517,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -548,10 +551,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Remove URL from URI List for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Remove URL from URI List for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -589,7 +592,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -633,10 +636,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Create CFS Profile for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Create CFS Profile for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -674,7 +677,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -708,10 +711,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_Add URL to URI List for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_Add URL to URI List for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -749,7 +752,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SonicWall-Beta: {e}")
+            logger.error("Error fetching instance for SonicWall-Beta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -784,8 +787,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SonicWall-Beta_List URI Lists for SonicWall-Beta: {e}")
+                logger.error("Error executing action SonicWall-Beta_List URI Lists for SonicWall-Beta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SonicWall-Beta")
+            logger.warning("Warning: No active integration instance found for SonicWall-Beta")
             return {"Status": "Failed", "Message": "No active instance found."}

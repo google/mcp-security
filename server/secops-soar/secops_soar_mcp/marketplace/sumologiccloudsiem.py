@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -94,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Add Tags To Insight for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Add Tags To Insight for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -135,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -168,10 +171,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Ping for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Ping for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -209,7 +212,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -247,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Update Insight for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Update Insight for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -288,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +326,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Enrich Entities for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Enrich Entities for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +367,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -399,10 +402,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Add Comment To Insight for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Add Comment To Insight for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -440,7 +443,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SumoLogicCloudSIEM: {e}")
+            logger.error("Error fetching instance for SumoLogicCloudSIEM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -483,8 +486,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SumoLogicCloudSIEM_Search Entity Signals for SumoLogicCloudSIEM: {e}")
+                logger.error("Error executing action SumoLogicCloudSIEM_Search Entity Signals for SumoLogicCloudSIEM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SumoLogicCloudSIEM")
+            logger.warning("Warning: No active integration instance found for SumoLogicCloudSIEM")
             return {"Status": "Failed", "Message": "No active instance found."}

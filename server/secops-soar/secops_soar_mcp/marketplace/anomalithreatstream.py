@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Add Tags To Entities for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Add Tags To Entities for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -167,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Ping for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Ping for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -208,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -272,10 +275,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Get Related Entities for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Get Related Entities for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -313,7 +316,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -348,10 +351,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Report As False Positive for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Report As False Positive for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -389,7 +392,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -440,10 +443,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Submit Observables for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Submit Observables for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -481,7 +484,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -558,10 +561,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Get Related Associations for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Get Related Associations for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -599,7 +602,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -633,10 +636,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Remove Tags From Entities for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Remove Tags From Entities for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -674,7 +677,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AnomaliThreatStream: {e}")
+            logger.error("Error fetching instance for AnomaliThreatStream: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -715,8 +718,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AnomaliThreatStream_Enrich Entities for AnomaliThreatStream: {e}")
+                logger.error("Error executing action AnomaliThreatStream_Enrich Entities for AnomaliThreatStream: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AnomaliThreatStream")
+            logger.warning("Warning: No active integration instance found for AnomaliThreatStream")
             return {"Status": "Failed", "Message": "No active instance found."}

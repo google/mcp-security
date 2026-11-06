@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_List Alert Actions for Sophos: {e}")
+                logger.error("Error executing action Sophos_List Alert Actions for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +177,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Add Entities To Blocklist for Sophos: {e}")
+                logger.error("Error executing action Sophos_Add Entities To Blocklist for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +218,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +251,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Get Services Status for Sophos: {e}")
+                logger.error("Error executing action Sophos_Get Services Status for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -289,7 +292,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -322,10 +325,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Ping for Sophos: {e}")
+                logger.error("Error executing action Sophos_Ping for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -363,7 +366,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -396,10 +399,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Scan Endpoints for Sophos: {e}")
+                logger.error("Error executing action Sophos_Scan Endpoints for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -437,7 +440,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -472,10 +475,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Enrich Entities for Sophos: {e}")
+                logger.error("Error executing action Sophos_Enrich Entities for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -516,7 +519,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -550,10 +553,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Add Entities To Allowlist for Sophos: {e}")
+                logger.error("Error executing action Sophos_Add Entities To Allowlist for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -594,7 +597,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -628,10 +631,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Isolate Endpoint for Sophos: {e}")
+                logger.error("Error executing action Sophos_Isolate Endpoint for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -669,7 +672,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -706,10 +709,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Execute Alert Actions for Sophos: {e}")
+                logger.error("Error executing action Sophos_Execute Alert Actions for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -750,7 +753,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -786,10 +789,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Get Events Log for Sophos: {e}")
+                logger.error("Error executing action Sophos_Get Events Log for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -830,7 +833,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Sophos: {e}")
+            logger.error("Error fetching instance for Sophos: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -864,8 +867,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Sophos_Unisolate Endpoint for Sophos: {e}")
+                logger.error("Error executing action Sophos_Unisolate Endpoint for Sophos: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Sophos")
+            logger.warning("Warning: No active integration instance found for Sophos")
             return {"Status": "Failed", "Message": "No active instance found."}

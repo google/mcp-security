@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -123,10 +126,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Create Request for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Create Request for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -164,7 +167,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -226,10 +229,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Create Alert Request for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Create Alert Request for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -267,7 +270,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -303,10 +306,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Add Note And Wait For Reply for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Add Note And Wait For Reply for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -344,7 +347,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -377,10 +380,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Ping for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Ping for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -418,7 +421,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -482,10 +485,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Update Request for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Update Request for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -523,7 +526,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -557,10 +560,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Get Request for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Get Request for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -598,7 +601,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -634,10 +637,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Close Request for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Close Request for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -675,7 +678,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -711,10 +714,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Wait For Field Update for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Wait For Field Update for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -752,7 +755,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -788,10 +791,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Add Note for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Add Note for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -829,7 +832,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for ServiceDeskPlus: {e}")
+            logger.error("Error fetching instance for ServiceDeskPlus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -864,8 +867,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action ServiceDeskPlus_Wait For Status Update for ServiceDeskPlus: {e}")
+                logger.error("Error executing action ServiceDeskPlus_Wait For Status Update for ServiceDeskPlus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for ServiceDeskPlus")
+            logger.warning("Warning: No active integration instance found for ServiceDeskPlus")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Lock Playbook for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Lock Playbook for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -173,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Create SCC Enterprise Cloud Posture Ticket Type SNOW for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Create SCC Enterprise Cloud Posture Ticket Type SNOW for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -247,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Set SCC-FINDINGS-STATE Context Value for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Set SCC-FINDINGS-STATE Context Value for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -288,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -321,10 +324,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_CloudEntityParser for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_CloudEntityParser for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -362,7 +365,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -395,10 +398,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Ping for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Ping for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -436,7 +439,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -474,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Create SCC Enterprise Cloud Posture Ticket Type Jira for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Create SCC Enterprise Cloud Posture Ticket Type Jira for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -515,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -548,10 +551,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Add SCCE Tags for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Add SCCE Tags for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -589,7 +592,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SCCEnterprise: {e}")
+            logger.error("Error fetching instance for SCCEnterprise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -624,8 +627,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SCCEnterprise_Prepare Description for SCCEnterprise: {e}")
+                logger.error("Error executing action SCCEnterprise_Prepare Description for SCCEnterprise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SCCEnterprise")
+            logger.warning("Warning: No active integration instance found for SCCEnterprise")
             return {"Status": "Failed", "Message": "No active instance found."}

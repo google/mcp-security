@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Office365ManagementAPI: {e}")
+            logger.error("Error fetching instance for Office365ManagementAPI: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Office365ManagementAPI_Stop Subscription for Office365ManagementAPI: {e}")
+                logger.error("Error executing action Office365ManagementAPI_Stop Subscription for Office365ManagementAPI: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Office365ManagementAPI")
+            logger.warning("Warning: No active integration instance found for Office365ManagementAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Office365ManagementAPI: {e}")
+            logger.error("Error fetching instance for Office365ManagementAPI: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -167,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Office365ManagementAPI_Ping for Office365ManagementAPI: {e}")
+                logger.error("Error executing action Office365ManagementAPI_Ping for Office365ManagementAPI: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Office365ManagementAPI")
+            logger.warning("Warning: No active integration instance found for Office365ManagementAPI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -208,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Office365ManagementAPI: {e}")
+            logger.error("Error fetching instance for Office365ManagementAPI: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -242,8 +245,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Office365ManagementAPI_Start Subscription for Office365ManagementAPI: {e}")
+                logger.error("Error executing action Office365ManagementAPI_Start Subscription for Office365ManagementAPI: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Office365ManagementAPI")
+            logger.warning("Warning: No active integration instance found for Office365ManagementAPI")
             return {"Status": "Failed", "Message": "No active instance found."}

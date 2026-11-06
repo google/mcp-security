@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for HCLBigFixInventory: {e}")
+            logger.error("Error fetching instance for HCLBigFixInventory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action HCLBigFixInventory_Ping for HCLBigFixInventory: {e}")
+                logger.error("Error executing action HCLBigFixInventory_Ping for HCLBigFixInventory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for HCLBigFixInventory")
+            logger.warning("Warning: No active integration instance found for HCLBigFixInventory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for HCLBigFixInventory: {e}")
+            logger.error("Error fetching instance for HCLBigFixInventory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,8 +173,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action HCLBigFixInventory_Enrich Entities for HCLBigFixInventory: {e}")
+                logger.error("Error executing action HCLBigFixInventory_Enrich Entities for HCLBigFixInventory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for HCLBigFixInventory")
+            logger.warning("Warning: No active integration instance found for HCLBigFixInventory")
             return {"Status": "Failed", "Message": "No active instance found."}

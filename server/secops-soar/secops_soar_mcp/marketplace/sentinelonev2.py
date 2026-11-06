@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +100,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Add Threat Note for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Add Threat Note for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +144,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -177,10 +180,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Resolve Threat for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Resolve Threat for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -221,7 +224,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -268,10 +271,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Blacklist for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Blacklist for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -312,7 +315,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -356,10 +359,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Create Hash Exclusion Record for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Create Hash Exclusion Record for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -400,7 +403,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -433,10 +436,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get System Status for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get System Status for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -477,7 +480,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -510,10 +513,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Disconnect Agent From Network for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Disconnect Agent From Network for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -554,7 +557,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -604,10 +607,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Events For Endpoint Hours Back for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Events For Endpoint Hours Back for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -648,7 +651,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -697,10 +700,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Create Path Exclusion Record for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Create Path Exclusion Record for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -738,7 +741,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -774,10 +777,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Deep Visibility Query Result for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Deep Visibility Query Result for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -815,7 +818,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -853,10 +856,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Initiate Deep Visibility Query for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Initiate Deep Visibility Query for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -897,7 +900,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -944,10 +947,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Threats for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Threats for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -985,7 +988,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1022,10 +1025,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Enrich Endpoint for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Enrich Endpoint for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1066,7 +1069,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1099,10 +1102,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Initiate Full Scan for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Initiate Full Scan for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1143,7 +1146,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1177,10 +1180,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Mark as Threat for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Mark as Threat for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1221,7 +1224,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1254,10 +1257,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Ping for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Ping for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1298,7 +1301,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1339,10 +1342,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Delete Hash Blacklist Record for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Delete Hash Blacklist Record for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1383,7 +1386,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1416,10 +1419,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get System Version for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get System Version for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1460,7 +1463,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1495,10 +1498,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Update Incident Status for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Update Incident Status for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1539,7 +1542,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1574,10 +1577,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Mitigate Threat for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Mitigate Threat for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1618,7 +1621,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1655,10 +1658,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Download Threat File for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Download Threat File for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1699,7 +1702,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1732,10 +1735,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Agent Status for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Agent Status for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1776,7 +1779,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1817,10 +1820,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_List Sites for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_List Sites for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1861,7 +1864,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1904,10 +1907,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Create Hash Blacklist Record for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Create Hash Blacklist Record for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1948,7 +1951,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1981,10 +1984,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Reconnect Agent To The Network for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Reconnect Agent To The Network for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2022,7 +2025,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2057,10 +2060,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Application List For Endpoint for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Application List For Endpoint for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2101,7 +2104,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2140,10 +2143,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Hash Reputation for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Hash Reputation for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2184,7 +2187,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2218,10 +2221,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Get Group Details for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Get Group Details for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2262,7 +2265,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2297,10 +2300,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Update Analyst Verdict for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Update Analyst Verdict for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2341,7 +2344,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for SentinelOneV2: {e}")
+            logger.error("Error fetching instance for SentinelOneV2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2378,8 +2381,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action SentinelOneV2_Move Agents for SentinelOneV2: {e}")
+                logger.error("Error executing action SentinelOneV2_Move Agents for SentinelOneV2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for SentinelOneV2")
+            logger.warning("Warning: No active integration instance found for SentinelOneV2")
             return {"Status": "Failed", "Message": "No active instance found."}

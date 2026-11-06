@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cuckoo: {e}")
+            logger.error("Error fetching instance for Cuckoo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cuckoo_Get Report for Cuckoo: {e}")
+                logger.error("Error executing action Cuckoo_Get Report for Cuckoo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cuckoo")
+            logger.warning("Warning: No active integration instance found for Cuckoo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cuckoo: {e}")
+            logger.error("Error fetching instance for Cuckoo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +177,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cuckoo_Detonate File for Cuckoo: {e}")
+                logger.error("Error executing action Cuckoo_Detonate File for Cuckoo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cuckoo")
+            logger.warning("Warning: No active integration instance found for Cuckoo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +218,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cuckoo: {e}")
+            logger.error("Error fetching instance for Cuckoo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +251,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cuckoo_Ping for Cuckoo: {e}")
+                logger.error("Error executing action Cuckoo_Ping for Cuckoo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cuckoo")
+            logger.warning("Warning: No active integration instance found for Cuckoo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -289,7 +292,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cuckoo: {e}")
+            logger.error("Error fetching instance for Cuckoo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -322,8 +325,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cuckoo_Detonate Url for Cuckoo: {e}")
+                logger.error("Error executing action Cuckoo_Detonate Url for Cuckoo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cuckoo")
+            logger.warning("Warning: No active integration instance found for Cuckoo")
             return {"Status": "Failed", "Message": "No active instance found."}
