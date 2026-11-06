@@ -309,6 +309,6 @@ If you are running MCP servers behind an HTTP/HTTPS corporate proxy:
 }
 ```
 
-3. **Custom SSL/CA Certificates (SSL Decryption/Inspection)**: If your corporate proxy intercepts SSL traffic, point `SSL_CERT_FILE` to your corporate CA certificate bundle.
+3. **Custom SSL/CA Certificates (SSL Decryption/Inspection)**: If your corporate proxy intercepts TLS traffic, point the appropriate certificate variable(s) to your corporate CA bundle (`SSL_CERT_FILE` for `gti` and `secops-soar`, `REQUESTS_CA_BUNDLE` for `secops`, and `GRPC_DEFAULT_SSL_ROOTS_FILE_PATH` plus `REQUESTS_CA_BUNDLE` for `scc-mcp`).
 
 

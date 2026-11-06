@@ -413,6 +413,22 @@ service account for authentication. This is useful for automated
 deployments, CI/CD pipelines, or environments where ADC is not 
 available.
 
+### Corporate Proxy Configuration
+
+The server honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). To run behind a corporate proxy, set these variables in your environment or pass them in the `env` block of your MCP client settings:
+
+```json
+"env": {
+  "CHRONICLE_PROJECT_ID": "${CHRONICLE_PROJECT_ID}",
+  "CHRONICLE_CUSTOMER_ID": "${CHRONICLE_CUSTOMER_ID}",
+  "CHRONICLE_REGION": "${CHRONICLE_REGION}",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy intercepts TLS traffic, set `REQUESTS_CA_BUNDLE` to the path of your corporate CA certificate bundle. See `docs/usage_guide.md` for details.
+
 ## License
 
 Apache 2.0
