@@ -18,6 +18,7 @@ from dataclasses import dataclass
 
 import logging
 import os
+import sys
 import vt
 
 from mcp.server.fastmcp import FastMCP, Context
@@ -56,8 +57,14 @@ server = FastMCP(
     dependencies=["vt-py"],
     stateless_http=stateless)
 
-# Load tools.
-from gti_mcp.tools import *
+import gti_mcp
+
+# Ensure running server.py directly as __main__ reuses this module instance
+sys.modules.setdefault("gti_mcp.server", sys.modules[__name__])
+gti_mcp.server = sys.modules["gti_mcp.server"]
+
+# Load tools to register them with the FastMCP server.
+from gti_mcp import tools  # noqa: E402, F401
 
 # Run the server
 def main():

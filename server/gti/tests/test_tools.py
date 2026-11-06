@@ -1467,3 +1467,219 @@ async def test_search_threats_accepts_null_collection_type():
 
     assert not result.isError, result.content[0].text
     mock_iterator.assert_awaited_once()
+
+
+def _is_gti_server_tool_decorator(decorator) -> bool:
+    """Return True if an AST decorator node is @server.tool or @server.tool(...)."""
+    import ast
+
+    target = decorator.func if isinstance(decorator, ast.Call) else decorator
+    return (
+        isinstance(target, ast.Attribute)
+        and target.attr == "tool"
+        and isinstance(target.value, ast.Name)
+        and target.value.id == "server"
+    )
+
+
+def _audit_gti_tools_exports(
+    tools_dir: str, init_path: str, server_path: str
+) -> tuple[list[str], dict[str, tuple[str, int]], set[str]]:
+    """Audit gti_mcp/tools for wildcard imports, unimported symbols, and missing __all__ entries."""
+    import ast
+    import glob
+    import os
+
+    errors: list[str] = []
+
+    check_paths = [init_path, server_path] + sorted(
+        glob.glob(os.path.join(tools_dir, "*.py"))
+    )
+    for check_path in dict.fromkeys(check_paths):
+        with open(check_path, encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=check_path)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                names = [alias.name for alias in node.names]
+                if "*" in names:
+                    errors.append(
+                        f"{os.path.basename(check_path)}:{node.lineno}: wildcard import 'from {node.module} import *' is not allowed"
+                    )
+
+    with open(init_path, encoding="utf-8") as f:
+        init_tree = ast.parse(f.read(), filename=init_path)
+
+    imported_by_submodule: dict[str, set[str]] = {}
+    all_list: list[str] | None = None
+    for node in init_tree.body:
+        if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module:
+            bucket = imported_by_submodule.setdefault(node.module, set())
+            for alias in node.names:
+                bucket.add(alias.asname or alias.name)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == "__all__":
+                    if isinstance(node.value, (ast.List, ast.Tuple)):
+                        all_list = [
+                            elt.value
+                            for elt in node.value.elts
+                            if isinstance(elt, ast.Constant)
+                            and isinstance(elt.value, str)
+                        ]
+
+    if all_list is None:
+        errors.append("__init__.py: missing static __all__ list assignment")
+        all_set: set[str] = set()
+    else:
+        all_set = set(all_list)
+        if all_list != sorted(all_list):
+            errors.append("__init__.py: __all__ must be sorted alphabetically")
+        if len(all_list) != len(all_set):
+            errors.append("__init__.py: __all__ contains duplicate entries")
+
+    defined_symbols: dict[str, tuple[str, int]] = {}
+    decorated_tools: set[str] = set()
+    for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+        basename = os.path.basename(path)
+        if basename == "__init__.py":
+            continue
+        submodule = os.path.splitext(basename)[0]
+        with open(path, encoding="utf-8") as f:
+            mod_tree = ast.parse(f.read(), filename=path)
+        for node in mod_tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                has_tool_dec = any(
+                    _is_gti_server_tool_decorator(d) for d in node.decorator_list
+                )
+                if has_tool_dec:
+                    decorated_tools.add(node.name)
+                if not node.name.startswith("_"):
+                    defined_symbols[node.name] = (basename, node.lineno)
+                    if node.name not in imported_by_submodule.get(submodule, set()):
+                        errors.append(
+                            f"{basename}:{node.lineno}: function '{node.name}' is not imported via 'from .{submodule} import ...' in gti_mcp/tools/__init__.py"
+                        )
+                    if node.name not in all_set:
+                        errors.append(
+                            f"{basename}:{node.lineno}: function '{node.name}' is missing from __all__ in gti_mcp/tools/__init__.py"
+                        )
+            elif isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and not target.id.startswith("_"):
+                        defined_symbols[target.id] = (basename, node.lineno)
+                        if target.id not in imported_by_submodule.get(submodule, set()):
+                            errors.append(
+                                f"{basename}:{node.lineno}: symbol '{target.id}' is not imported via 'from .{submodule} import ...' in gti_mcp/tools/__init__.py"
+                            )
+                        if target.id not in all_set:
+                            errors.append(
+                                f"{basename}:{node.lineno}: symbol '{target.id}' is missing from __all__ in gti_mcp/tools/__init__.py"
+                            )
+
+    stale_in_all = sorted(all_set - set(defined_symbols.keys()))
+    if stale_in_all:
+        errors.append(
+            f"__init__.py: __all__ lists symbols not defined in tools/*.py: {stale_in_all}"
+        )
+
+    return errors, defined_symbols, decorated_tools
+
+
+def test_gti_tools_explicit_exports_without_splat_imports():
+    """Verify gti_mcp.tools.__init__ and server.py have no wildcard imports and export all public symbols."""
+    import os
+    import gti_mcp.server as server_mod
+
+    init_path = os.path.abspath(tools.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
+    tools_dir = os.path.dirname(init_path)
+
+    errors, defined_symbols, decorated_tools = _audit_gti_tools_exports(
+        tools_dir, init_path, server_path
+    )
+    assert not errors, "GTI tool export audit failed:\n  - " + "\n  - ".join(errors)
+
+    expected_exports = set(defined_symbols.keys())
+    assert hasattr(tools, "__all__")
+    assert set(tools.__all__) == expected_exports
+    for name in expected_exports:
+        assert hasattr(tools, name)
+    assert set(server._tool_manager._tools.keys()) == decorated_tools
+    for leaked_symbol in ("typing", "logging", "Context", "server", "vt_client"):
+        assert not hasattr(tools, leaked_symbol)
+
+
+def test_gti_tools_init_flags_unimported_new_function(tmp_path):
+    """Verify _audit_gti_tools_exports flags a newly added function that is not imported in __init__.py."""
+    import os
+    import shutil
+    import gti_mcp.server as server_mod
+
+    src_tools_dir = os.path.dirname(os.path.abspath(tools.__file__))
+    server_path = os.path.abspath(server_mod.__file__)
+    tmp_tools_dir = tmp_path / "tools"
+    shutil.copytree(src_tools_dir, tmp_tools_dir)
+
+    target_module = tmp_tools_dir / "files.py"
+    with open(target_module, "a", encoding="utf-8") as f:
+        f.write(
+            "\n\n@server.tool()\nasync def unimported_new_gti_tool() -> str:\n    return 'ok'\n"
+        )
+
+    errors, _, _ = _audit_gti_tools_exports(
+        str(tmp_tools_dir),
+        str(tmp_tools_dir / "__init__.py"),
+        server_path,
+    )
+    assert any(
+        "files.py:" in err
+        and "function 'unimported_new_gti_tool' is not imported via 'from .files import ...'"
+        in err
+        for err in errors
+    ), f"Expected unimported function error, got: {errors}"
+    assert any(
+        "files.py:" in err
+        and "function 'unimported_new_gti_tool' is missing from __all__" in err
+        for err in errors
+    ), f"Expected missing __all__ error, got: {errors}"
+
+
+def test_gti_server_main_script_execution_registers_all_tools():
+    """Verify running gti_mcp/server.py as __main__ registers all tools on the started server."""
+    import os
+    import runpy
+    import sys
+    import gti_mcp
+    import gti_mcp.server as server_mod
+
+    init_path = os.path.abspath(tools.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
+    tools_dir = os.path.dirname(init_path)
+    _, _, expected_tools = _audit_gti_tools_exports(
+        tools_dir, init_path, server_path
+    )
+
+    saved_modules = {
+        name: mod
+        for name, mod in list(sys.modules.items())
+        if name == "gti_mcp" or name.startswith("gti_mcp.")
+    }
+    started_servers = []
+
+    def fake_run(self, *args, **kwargs):
+        started_servers.append(self)
+
+    try:
+        for name in saved_modules:
+            sys.modules.pop(name, None)
+        with patch("mcp.server.fastmcp.FastMCP.run", new=fake_run):
+            ns = runpy.run_path(server_path, run_name="__main__")
+    finally:
+        for name in list(sys.modules):
+            if name == "gti_mcp" or name.startswith("gti_mcp."):
+                sys.modules.pop(name, None)
+        sys.modules.update(saved_modules)
+
+    assert len(started_servers) == 1
+    assert started_servers[0] is ns["server"]
+    assert set(ns["server"]._tool_manager._tools.keys()) == expected_tools

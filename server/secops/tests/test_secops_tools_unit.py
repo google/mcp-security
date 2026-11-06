@@ -339,3 +339,209 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
     assert "Total Detections: 1" in result
     assert "Rule successfully detected 1 event(s)" in result
 
+
+def _is_server_tool_decorator(decorator: "ast.AST") -> bool:
+    """Return True if an AST decorator node is @server.tool or @server.tool(...)."""
+    import ast
+
+    target = decorator.func if isinstance(decorator, ast.Call) else decorator
+    return (
+        isinstance(target, ast.Attribute)
+        and target.attr == "tool"
+        and isinstance(target.value, ast.Name)
+        and target.value.id == "server"
+    )
+
+
+def _audit_secops_tools_exports(
+    tools_dir: str, init_path: str, server_path: str
+) -> tuple[list[str], dict[str, tuple[str, int]], set[str]]:
+    """Audit secops_mcp/tools for wildcard imports, unimported functions, and missing __all__ entries."""
+    import ast
+    import glob
+
+    errors: list[str] = []
+
+    check_paths = [init_path, server_path] + sorted(
+        glob.glob(os.path.join(tools_dir, "*.py"))
+    )
+    for check_path in dict.fromkeys(check_paths):
+        with open(check_path, encoding="utf-8") as f:
+            tree = ast.parse(f.read(), filename=check_path)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                names = [alias.name for alias in node.names]
+                if "*" in names:
+                    errors.append(
+                        f"{os.path.basename(check_path)}:{node.lineno}: wildcard import 'from {node.module} import *' is not allowed"
+                    )
+
+    with open(init_path, encoding="utf-8") as f:
+        init_tree = ast.parse(f.read(), filename=init_path)
+
+    imported_by_submodule: dict[str, set[str]] = {}
+    all_list: list[str] | None = None
+    for node in init_tree.body:
+        if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module:
+            bucket = imported_by_submodule.setdefault(node.module, set())
+            for alias in node.names:
+                bucket.add(alias.asname or alias.name)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == "__all__":
+                    if isinstance(node.value, (ast.List, ast.Tuple)):
+                        all_list = [
+                            elt.value
+                            for elt in node.value.elts
+                            if isinstance(elt, ast.Constant)
+                            and isinstance(elt.value, str)
+                        ]
+
+    if all_list is None:
+        errors.append("__init__.py: missing static __all__ list assignment")
+        all_set: set[str] = set()
+    else:
+        all_set = set(all_list)
+        if all_list != sorted(all_list):
+            errors.append("__init__.py: __all__ must be sorted alphabetically")
+        if len(all_list) != len(all_set):
+            errors.append("__init__.py: __all__ contains duplicate entries")
+
+    defined_functions: dict[str, tuple[str, int]] = {}
+    decorated_tools: set[str] = set()
+    for path in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+        basename = os.path.basename(path)
+        if basename == "__init__.py":
+            continue
+        submodule = os.path.splitext(basename)[0]
+        with open(path, encoding="utf-8") as f:
+            mod_tree = ast.parse(f.read(), filename=path)
+        for node in mod_tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                has_tool_dec = any(
+                    _is_server_tool_decorator(d) for d in node.decorator_list
+                )
+                if has_tool_dec:
+                    decorated_tools.add(node.name)
+                if not node.name.startswith("_"):
+                    defined_functions[node.name] = (basename, node.lineno)
+                    if not has_tool_dec:
+                        errors.append(
+                            f"{basename}:{node.lineno}: public function '{node.name}' is missing @server.tool() decorator (prefix internal helpers with '_')"
+                        )
+                    if node.name not in imported_by_submodule.get(submodule, set()):
+                        errors.append(
+                            f"{basename}:{node.lineno}: function '{node.name}' is not imported via 'from .{submodule} import ...' in secops_mcp/tools/__init__.py"
+                        )
+                    if node.name not in all_set:
+                        errors.append(
+                            f"{basename}:{node.lineno}: function '{node.name}' is missing from __all__ in secops_mcp/tools/__init__.py"
+                        )
+
+    stale_in_all = sorted(all_set - set(defined_functions.keys()))
+    if stale_in_all:
+        errors.append(
+            f"__init__.py: __all__ lists symbols not defined in tools/*.py: {stale_in_all}"
+        )
+
+    return errors, defined_functions, decorated_tools
+
+
+def test_tools_init_explicit_exports_without_splat_imports():
+    """Verify secops_mcp.tools.__init__ and server.py have no wildcard imports and export all tools."""
+    import secops_mcp.server as server_mod
+    import secops_mcp.tools as tools_pkg
+
+    init_path = os.path.abspath(tools_pkg.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
+    tools_dir = os.path.dirname(init_path)
+
+    errors, defined_functions, decorated_tools = _audit_secops_tools_exports(
+        tools_dir, init_path, server_path
+    )
+    assert not errors, "Tool export audit failed:\n  - " + "\n  - ".join(errors)
+
+    expected_tools = set(defined_functions.keys())
+    assert expected_tools == decorated_tools
+    assert hasattr(tools_pkg, "__all__")
+    assert set(tools_pkg.__all__) == expected_tools
+    for name in expected_tools:
+        assert callable(getattr(tools_pkg, name))
+    assert set(server_mod.server._tool_manager._tools.keys()) == expected_tools
+    for leaked_symbol in ("logger", "logging", "datetime", "get_chronicle_client"):
+        assert not hasattr(tools_pkg, leaked_symbol)
+
+
+def test_tools_init_flags_unimported_new_function(tmp_path):
+    """Verify _audit_secops_tools_exports flags a newly added function that is not imported in __init__.py."""
+    import shutil
+    import secops_mcp.server as server_mod
+    import secops_mcp.tools as tools_pkg
+
+    src_tools_dir = os.path.dirname(os.path.abspath(tools_pkg.__file__))
+    server_path = os.path.abspath(server_mod.__file__)
+    tmp_tools_dir = tmp_path / "tools"
+    shutil.copytree(src_tools_dir, tmp_tools_dir)
+
+    target_module = tmp_tools_dir / "security_rules.py"
+    with open(target_module, "a", encoding="utf-8") as f:
+        f.write(
+            "\n\n@server.tool()\nasync def unimported_new_secops_tool() -> str:\n    return 'ok'\n"
+        )
+
+    errors, _, _ = _audit_secops_tools_exports(
+        str(tmp_tools_dir),
+        str(tmp_tools_dir / "__init__.py"),
+        server_path,
+    )
+    assert any(
+        "security_rules.py:" in err
+        and "function 'unimported_new_secops_tool' is not imported via 'from .security_rules import ...'"
+        in err
+        for err in errors
+    ), f"Expected unimported function error, got: {errors}"
+    assert any(
+        "security_rules.py:" in err
+        and "function 'unimported_new_secops_tool' is missing from __all__" in err
+        for err in errors
+    ), f"Expected missing __all__ error, got: {errors}"
+
+
+def test_server_main_script_execution_registers_all_tools():
+    """Verify running secops_mcp/server.py as __main__ registers all tools on the started server."""
+    import runpy
+    import secops_mcp.server as server_mod
+    import secops_mcp.tools as tools_pkg
+
+    init_path = os.path.abspath(tools_pkg.__file__)
+    server_path = os.path.abspath(server_mod.__file__)
+    tools_dir = os.path.dirname(init_path)
+    _, _, expected_tools = _audit_secops_tools_exports(
+        tools_dir, init_path, server_path
+    )
+
+    saved_modules = {
+        name: mod
+        for name, mod in list(sys.modules.items())
+        if name == "secops_mcp" or name.startswith("secops_mcp.")
+    }
+    started_servers = []
+
+    def fake_run(self, *args, **kwargs):
+        started_servers.append(self)
+
+    try:
+        for name in saved_modules:
+            sys.modules.pop(name, None)
+        with patch("mcp.server.fastmcp.FastMCP.run", new=fake_run):
+            ns = runpy.run_path(server_path, run_name="__main__")
+    finally:
+        for name in list(sys.modules):
+            if name == "secops_mcp" or name.startswith("secops_mcp."):
+                sys.modules.pop(name, None)
+        sys.modules.update(saved_modules)
+
+    assert len(started_servers) == 1
+    assert started_servers[0] is ns["server"]
+    assert set(ns["server"]._tool_manager._tools.keys()) == expected_tools
+
