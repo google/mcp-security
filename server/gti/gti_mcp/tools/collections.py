@@ -43,6 +43,67 @@ COLLECTION_KEY_RELATIONSHIPS = [
 ]
 COLLECTION_EXCLUDED_ATTRS = ",".join(["aggregations"])
 
+# Fields stripped client-side from the `attributes.aggregations.files`
+# section of `get_collections_commonalities`. The API's `exclude_attributes`
+# param only works at whole-attribute granularity, so nested sub-fields are
+# removed after the fact. Keep hunting pivots (imphash, vhash, tlshhash,
+# crowdsourced_*, itw_urls, embedded_domains, embedded_ips, …); strip only
+# low-signal / bulk administrative metadata.
+COLLECTION_COMMONALITIES_FILES_EXCLUDED_ATTRS = [
+    "main_icon_dhash",
+    "main_icon_raw_md5",
+    "exiftool_authors",
+    "exiftool_create_dates",
+    "exiftool_creators",
+    "exiftool_last_printed",
+    "exiftool_producers",
+    "exiftool_subjects",
+    "exiftool_titles",
+    "office_application_names",
+    "office_authors",
+    "office_creation_datetimes",
+    "office_last_saved",
+    "debug_codeview_guids",
+    "debug_codeview_names",
+    "debug_timestamps",
+    "filecondis_dhash",
+    "netassembly_mvid",
+    "pe_info_imports",
+    "pe_info_exports",
+    "pe_info_section_md5",
+    "pe_info_section_names",
+    "tags",
+    "attributions",
+    "sandbox_verdicts",
+    "execution_parents",
+    "compressed_parents",
+    "pcap_parents",
+    "email_parents",
+    "dropped_files_sha256",
+    "dropped_files_path",
+    "file_types",
+    "behash",
+    "mutexes_opened",
+    "registry_keys_deleted",
+    "registry_keys_opened",
+    "registry_keys_set",
+    "memory_pattern_urls",
+    "parent_contacted_domains",
+]
+
+# Fields excluded (via the `exclude_attributes` API param, on top of
+# COLLECTION_EXCLUDED_ATTRS) from `search_vulnerabilities` results.
+VULNERABILITY_EXCLUDED_ATTRS = [
+    "cpes",
+    "vendor_fix_references",
+    "sources",
+    "version_history",
+    "field_sources",
+    "tags_details",
+    "alt_names_details",
+]
+
+
 COLLECTION_TYPES = {
     "threat-actor",
     "malware-family",
@@ -142,6 +203,7 @@ async def _search_threats_by_collection_type(
     ctx: Context,
     limit: int = 10,
     order_by: str = "relevance-",
+    extra_excluded_attrs: list[str] | None = None,
 ) -> list[dict[str, typing.Any]]:
   """Search a given threat type in the Google Threat Intelligence platform,
 
@@ -150,6 +212,9 @@ async def _search_threats_by_collection_type(
     collection_type (required): Collection type. One of: "threat-actor", "malware-family", "campaign", "report", "vulnerability", "collection".
     limit: Limit the number of threats to retrieve. 10 by default.
     order_by: Order results by the given order key. "relevance-" by default.
+    extra_excluded_attrs: Additional attribute names to exclude, on top of
+      COLLECTION_EXCLUDED_ATTRS, for collection types with their own noisy
+      fields (e.g. vulnerabilities).
 
   Returns:
     List of collections, aka threats.
@@ -157,6 +222,10 @@ async def _search_threats_by_collection_type(
   if collection_type not in COLLECTION_TYPES:
       raise ValueError(
           f"wrong collection_type. Available collection_type are: {','.join(COLLECTION_TYPES)} ")
+
+  exclude_attributes = COLLECTION_EXCLUDED_ATTRS
+  if extra_excluded_attrs:
+    exclude_attributes = ",".join([COLLECTION_EXCLUDED_ATTRS, *extra_excluded_attrs])
 
   async with vt_client(ctx) as client:
     res = await utils.consume_vt_iterator(
@@ -166,7 +235,7 @@ async def _search_threats_by_collection_type(
             "filter": f"collection_type:{collection_type} {query}",
             "order": order_by,
             "relationships": COLLECTION_KEY_RELATIONSHIPS,
-            "exclude_attributes": COLLECTION_EXCLUDED_ATTRS,
+            "exclude_attributes": exclude_attributes,
         },
         limit=limit,
     )
@@ -372,7 +441,8 @@ async def search_vulnerabilities(
     List of collections, aka threats.
   """
   res = await _search_threats_by_collection_type(
-      query, "vulnerability", ctx, limit, order_by)
+      query, "vulnerability", ctx, limit, order_by,
+      extra_excluded_attrs=VULNERABILITY_EXCLUDED_ATTRS)
   return res
 
 
@@ -671,6 +741,11 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
         return f"Error: {message}"
       return "Error: Collection not found or unexpected API response"
     sanitized_data = utils.sanitize_response(data["data"])
+    excluded_paths = [
+        f"attributes.aggregations.files.{attr}"
+        for attr in COLLECTION_COMMONALITIES_FILES_EXCLUDED_ATTRS
+    ]
+    sanitized_data = utils.remove_fields(sanitized_data, excluded_paths)
   return utils.parse_collection_commonalities(sanitized_data)
 
 

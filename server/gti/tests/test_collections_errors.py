@@ -136,3 +136,65 @@ async def test_get_collections_commonalities_missing_data_returns_clean_error(
     assert isinstance(result, str)
     assert result.startswith("Error:")
     assert expected_substring in result
+
+
+@pytest.mark.asyncio
+async def test_get_collections_commonalities_strips_low_signal_keeps_pivots():
+    """Commonalities trim drops exiftool/main_icon noise but keeps hunting pivots."""
+    mock_ctx = MagicMock(spec=Context)
+
+    mock_response = MagicMock()
+    async def json_async():
+        return {
+            "data": {
+                "id": "col-1",
+                "type": "collection",
+                "attributes": {
+                    "aggregations": {
+                        "files": {
+                            "imphash": [
+                                {
+                                    "value": "abcd",
+                                    "count": 2,
+                                    "total_related": 2,
+                                    "prevalence": 1.0,
+                                }
+                            ],
+                            "exiftool_authors": [
+                                {
+                                    "value": "noise",
+                                    "count": 1,
+                                    "total_related": 1,
+                                    "prevalence": 1.0,
+                                }
+                            ],
+                            "main_icon_dhash": [
+                                {
+                                    "value": "icon",
+                                    "count": 1,
+                                    "total_related": 1,
+                                    "prevalence": 1.0,
+                                }
+                            ],
+                        }
+                    }
+                },
+            }
+        }
+    mock_response.json_async = json_async
+
+    mock_client_instance = MagicMock()
+    mock_client_instance.get_async = AsyncMock(return_value=mock_response)
+
+    mock_vt_client = MagicMock()
+    mock_vt_client.__aenter__ = AsyncMock(return_value=mock_client_instance)
+    mock_vt_client.__aexit__ = AsyncMock(return_value=None)
+
+    with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
+        result = await collections.get_collections_commonalities(
+            collection_id="col-1", ctx=mock_ctx
+        )
+    assert "### imphash" in result
+    assert "abcd" in result
+    assert "exiftool" not in result
+    assert "main icon" not in result
