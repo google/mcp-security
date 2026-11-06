@@ -92,29 +92,92 @@ async def get_ioc_matches(
         result = f'Found {len(matches)} IoC matches:\n\n'
 
         for i, match in enumerate(matches, 1):
-            # Get the indicator information
-            indicator_type = 'Unknown'
-            indicator_value = 'Unknown'
+            indicators = []
             sources = []
+            first_seen = 'Unknown'
+            last_seen = 'Unknown'
+            category = 'Unknown'
+            severity = 'Unknown'
+            confidence = 'Unknown'
+            associated = 'Unknown'
 
-            # Try to extract artifactIndicator differently based on response format
             if isinstance(match, dict):
-                if 'artifactIndicator' in match and isinstance(
-                    match['artifactIndicator'], dict
-                ):
-                    # Get the first key-value pair from artifactIndicator
-                    indicator_dict = match.get('artifactIndicator', {})
-                    if indicator_dict:
-                        indicator_type = next(iter(indicator_dict.keys()), 'Unknown')
-                        indicator_value = next(iter(indicator_dict.values()), 'Unknown')
+                # Extract artifact indicator(s)
+                artifact_indicator = (
+                    match.get('artifactIndicator')
+                    or match.get('artifact_indicator')
+                    or {}
+                )
+                if isinstance(artifact_indicator, dict):
+                    for k, v in artifact_indicator.items():
+                        indicators.append(f'{k}={v}')
+                elif isinstance(artifact_indicator, str):
+                    indicators.append(artifact_indicator)
 
-                sources = match.get('sources', [])
+                # Extract sources
+                raw_sources = match.get('sources', [])
+                if isinstance(raw_sources, list):
+                    sources = [str(s) for s in raw_sources if s]
+                elif raw_sources:
+                    sources = [str(raw_sources)]
 
+                # Extract metadata fields (support both camelCase and snake_case)
+                first_seen = (
+                    match.get('firstSeenTime')
+                    or match.get('first_seen_time')
+                    or match.get('firstSeen')
+                    or 'Unknown'
+                )
+                last_seen = (
+                    match.get('lastSeenTime')
+                    or match.get('last_seen_time')
+                    or match.get('lastSeen')
+                    or 'Unknown'
+                )
+                category = (
+                    match.get('category')
+                    or match.get('iocCategory')
+                    or match.get('ioc_category')
+                    or 'Unknown'
+                )
+                severity = (
+                    match.get('severity')
+                    or match.get('iocSeverity')
+                    or match.get('ioc_severity')
+                    or 'Unknown'
+                )
+                confidence = (
+                    match.get('confidence')
+                    or match.get('iocConfidence')
+                    or match.get('ioc_confidence')
+                    or 'Unknown'
+                )
+                raw_associated = (
+                    match.get('associatedEntity')
+                    or match.get('associated_entity')
+                    or match.get('entity')
+                )
+                if isinstance(raw_associated, dict):
+                    associated = (
+                        ', '.join(f'{k}={v}' for k, v in raw_associated.items())
+                        or 'Unknown'
+                    )
+                elif isinstance(raw_associated, list):
+                    associated = ', '.join(str(x) for x in raw_associated) or 'Unknown'
+                elif raw_associated is not None:
+                    associated = str(raw_associated)
+
+            indicators_str = ', '.join(indicators) if indicators else 'Unknown'
             sources_str = ', '.join(sources) if sources else 'Unknown'
 
             result += f'IoC {i}:\n'
-            result += f'Type: {indicator_type}\n'
-            result += f'Value: {indicator_value}\n'
+            result += f'Indicator(s): {indicators_str}\n'
+            result += f'First Seen: {first_seen}\n'
+            result += f'Last Seen: {last_seen}\n'
+            result += f'Category: {category}\n'
+            result += f'Severity: {severity}\n'
+            result += f'Confidence: {confidence}\n'
+            result += f'Associated Entity: {associated}\n'
             result += f'Sources: {sources_str}\n\n'
 
         return result
