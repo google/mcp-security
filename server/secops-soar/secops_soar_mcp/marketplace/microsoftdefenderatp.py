@@ -89,7 +89,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -218,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -329,7 +329,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -456,7 +456,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -571,7 +571,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -678,7 +678,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -784,7 +784,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -903,7 +903,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1047,7 +1047,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1157,7 +1157,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1257,7 +1257,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1390,7 +1390,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1539,7 +1539,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1684,7 +1684,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1820,7 +1820,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -1928,7 +1928,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2038,7 +2038,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2143,7 +2143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:
@@ -2244,7 +2244,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftDefenderATP: {e}")
+            logger.error("Error fetching instance for MicrosoftDefenderATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
 
         if instances:

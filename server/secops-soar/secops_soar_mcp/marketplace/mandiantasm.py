@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MandiantASM: {e}")
+            logger.error("Error fetching instance for MandiantASM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -117,10 +117,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MandiantASM_Search Issues for MandiantASM: {e}")
+                logger.error("Error executing action MandiantASM_Search Issues for MandiantASM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MandiantASM")
+            logger.warning("Warning: No active integration instance found for MandiantASM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -158,7 +158,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MandiantASM: {e}")
+            logger.error("Error fetching instance for MandiantASM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -191,10 +191,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MandiantASM_Ping for MandiantASM: {e}")
+                logger.error("Error executing action MandiantASM_Ping for MandiantASM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MandiantASM")
+            logger.warning("Warning: No active integration instance found for MandiantASM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -232,7 +232,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MandiantASM: {e}")
+            logger.error("Error fetching instance for MandiantASM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -267,10 +267,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MandiantASM_Update Issue for MandiantASM: {e}")
+                logger.error("Error executing action MandiantASM_Update Issue for MandiantASM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MandiantASM")
+            logger.warning("Warning: No active integration instance found for MandiantASM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -308,7 +308,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MandiantASM: {e}")
+            logger.error("Error fetching instance for MandiantASM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -342,10 +342,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MandiantASM_Get ASM Entity Details for MandiantASM: {e}")
+                logger.error("Error executing action MandiantASM_Get ASM Entity Details for MandiantASM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MandiantASM")
+            logger.warning("Warning: No active integration instance found for MandiantASM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -383,7 +383,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MandiantASM: {e}")
+            logger.error("Error fetching instance for MandiantASM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -428,8 +428,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MandiantASM_Search ASM Entities for MandiantASM: {e}")
+                logger.error("Error executing action MandiantASM_Search ASM Entities for MandiantASM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MandiantASM")
+            logger.warning("Warning: No active integration instance found for MandiantASM")
             return {"Status": "Failed", "Message": "No active instance found."}

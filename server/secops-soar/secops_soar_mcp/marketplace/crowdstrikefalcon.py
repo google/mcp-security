@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Add Comment to Detection for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Add Comment to Detection for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -178,10 +178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Submit URL for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Submit URL for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Update Incident for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Update Incident for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -300,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -341,10 +341,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Run Script for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Run Script for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -382,7 +382,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -422,10 +422,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Execute Command for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Execute Command for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -463,7 +463,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -499,10 +499,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Close Detection for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Close Detection for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -540,7 +540,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -575,10 +575,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Add Incident Comment for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Add Incident Comment for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -616,7 +616,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -656,10 +656,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Update Alert for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Update Alert for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -697,7 +697,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -738,10 +738,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_List Hosts for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_List Hosts for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -779,7 +779,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -814,10 +814,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Add Identity Protection Detection Comment for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Add Identity Protection Detection Comment for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -855,7 +855,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -888,10 +888,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Get Hosts by IOC for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Get Hosts by IOC for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -929,7 +929,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -962,10 +962,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Ping for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Ping for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1003,7 +1003,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1040,10 +1040,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Contain Endpoint for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Contain Endpoint for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1081,7 +1081,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1116,10 +1116,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Add Alert Comment for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Add Alert Comment for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1157,7 +1157,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1198,10 +1198,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Update IOC Information for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Update IOC Information for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1239,7 +1239,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1276,10 +1276,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Download File for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Download File for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1317,7 +1317,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1351,10 +1351,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Get Event Offset for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Get Event Offset for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1392,7 +1392,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1433,10 +1433,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Upload IOCs for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Upload IOCs for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1474,7 +1474,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1511,10 +1511,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Get Host Information for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Get Host Information for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1552,7 +1552,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1612,10 +1612,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_On-Demand Scan for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_On-Demand Scan for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1653,7 +1653,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1691,10 +1691,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Update Identity Protection Detection for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Update Identity Protection Detection for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1732,7 +1732,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1766,10 +1766,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Get Process Name By IOC for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Get Process Name By IOC for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1807,7 +1807,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1840,10 +1840,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Delete IOC for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Delete IOC for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1881,7 +1881,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1922,10 +1922,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_List Uploaded IOCs for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_List Uploaded IOCs for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1963,7 +1963,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2011,10 +2011,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Submit File for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Submit File for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2052,7 +2052,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2089,10 +2089,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Update Detection for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Update Detection for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2130,7 +2130,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2171,10 +2171,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_List Host Vulnerabilities for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_List Host Vulnerabilities for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2212,7 +2212,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CrowdStrikeFalcon: {e}")
+            logger.error("Error fetching instance for CrowdStrikeFalcon: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2249,8 +2249,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CrowdStrikeFalcon_Lift Contained Endpoint for CrowdStrikeFalcon: {e}")
+                logger.error("Error executing action CrowdStrikeFalcon_Lift Contained Endpoint for CrowdStrikeFalcon: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CrowdStrikeFalcon")
+            logger.warning("Warning: No active integration instance found for CrowdStrikeFalcon")
             return {"Status": "Failed", "Message": "No active instance found."}

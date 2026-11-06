@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_List Policy Block List Entries for IBoss: {e}")
+                logger.error("Error executing action IBoss_List Policy Block List Entries for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_Remove URL from Policy Block List for IBoss: {e}")
+                logger.error("Error executing action IBoss_Remove URL from Policy Block List for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -223,7 +223,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,10 +258,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_URL Lookup for IBoss: {e}")
+                logger.error("Error executing action IBoss_URL Lookup for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -299,7 +299,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -332,10 +332,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_URL Recategorization for IBoss: {e}")
+                logger.error("Error executing action IBoss_URL Recategorization for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -373,7 +373,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -406,10 +406,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_Ping for IBoss: {e}")
+                logger.error("Error executing action IBoss_Ping for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -447,7 +447,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -485,10 +485,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_Remove IP from Policy Block List for IBoss: {e}")
+                logger.error("Error executing action IBoss_Remove IP from Policy Block List for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -526,7 +526,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -570,10 +570,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_Add IP to Policy Block List for IBoss: {e}")
+                logger.error("Error executing action IBoss_Add IP to Policy Block List for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -611,7 +611,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IBoss: {e}")
+            logger.error("Error fetching instance for IBoss: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -657,8 +657,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IBoss_Add URL to Policy Block List for IBoss: {e}")
+                logger.error("Error executing action IBoss_Add URL to Policy Block List for IBoss: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IBoss")
+            logger.warning("Warning: No active integration instance found for IBoss")
             return {"Status": "Failed", "Message": "No active instance found."}

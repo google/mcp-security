@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Get Report for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Get Report for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Ping for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Ping for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Submit URL for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Submit URL for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Check Hash for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Check Hash for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +397,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Get Analyzer Profiles for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Get Analyzer Profiles for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +438,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeATD: {e}")
+            logger.error("Error fetching instance for McAfeeATD: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -473,8 +473,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeATD_Submit File for McAfeeATD: {e}")
+                logger.error("Error executing action McAfeeATD_Submit File for McAfeeATD: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeATD")
+            logger.warning("Warning: No active integration instance found for McAfeeATD")
             return {"Status": "Failed", "Message": "No active instance found."}

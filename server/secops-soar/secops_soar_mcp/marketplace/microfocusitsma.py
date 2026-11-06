@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicroFocusITSMA: {e}")
+            logger.error("Error fetching instance for MicroFocusITSMA: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -106,10 +106,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicroFocusITSMA_Update Incident for MicroFocusITSMA: {e}")
+                logger.error("Error executing action MicroFocusITSMA_Update Incident for MicroFocusITSMA: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicroFocusITSMA")
+            logger.warning("Warning: No active integration instance found for MicroFocusITSMA")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -147,7 +147,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicroFocusITSMA: {e}")
+            logger.error("Error fetching instance for MicroFocusITSMA: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -180,10 +180,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicroFocusITSMA_Ping for MicroFocusITSMA: {e}")
+                logger.error("Error executing action MicroFocusITSMA_Ping for MicroFocusITSMA: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicroFocusITSMA")
+            logger.warning("Warning: No active integration instance found for MicroFocusITSMA")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -221,7 +221,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicroFocusITSMA: {e}")
+            logger.error("Error fetching instance for MicroFocusITSMA: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicroFocusITSMA_Create Incident for MicroFocusITSMA: {e}")
+                logger.error("Error executing action MicroFocusITSMA_Create Incident for MicroFocusITSMA: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicroFocusITSMA")
+            logger.warning("Warning: No active integration instance found for MicroFocusITSMA")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -300,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicroFocusITSMA: {e}")
+            logger.error("Error fetching instance for MicroFocusITSMA: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -335,8 +335,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicroFocusITSMA_Update Incident External Status for MicroFocusITSMA: {e}")
+                logger.error("Error executing action MicroFocusITSMA_Update Incident External Status for MicroFocusITSMA: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicroFocusITSMA")
+            logger.warning("Warning: No active integration instance found for MicroFocusITSMA")
             return {"Status": "Failed", "Message": "No active instance found."}

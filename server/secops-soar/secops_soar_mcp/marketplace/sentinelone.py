@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get System Status for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get System Status for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Disconnect Agent From Network for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Disconnect Agent From Network for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +219,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +254,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get Events For Endpoint By Time for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get Events For Endpoint By Time for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -298,7 +298,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -331,10 +331,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Enrich Endpoint for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Enrich Endpoint for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -375,7 +375,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,10 +408,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Initiate Full Scan for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Initiate Full Scan for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -452,7 +452,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -485,10 +485,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Ping for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Ping for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -529,7 +529,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -562,10 +562,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get System Version for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get System Version for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -606,7 +606,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -639,10 +639,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get Agent Status for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get Agent Status for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -683,7 +683,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -716,10 +716,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get Process List For Endpoint for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get Process List For Endpoint for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -760,7 +760,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -793,10 +793,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Reconnect Agent To The Network for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Reconnect Agent To The Network for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -837,7 +837,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -870,10 +870,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get Application List For Endpoint for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get Application List For Endpoint for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -914,7 +914,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -947,10 +947,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Get Hash Reputation for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Get Hash Reputation for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -988,7 +988,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SentinelOne: {e}")
+            logger.error("Error fetching instance for SentinelOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1024,8 +1024,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SentinelOne_Update Exclusion List Add Path  for SentinelOne: {e}")
+                logger.error("Error executing action SentinelOne_Update Exclusion List Add Path  for SentinelOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SentinelOne")
+            logger.warning("Warning: No active integration instance found for SentinelOne")
             return {"Status": "Failed", "Message": "No active instance found."}

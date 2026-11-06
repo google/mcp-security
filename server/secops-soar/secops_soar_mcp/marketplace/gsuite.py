@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Create OU for GSuite: {e}")
+                logger.error("Error executing action GSuite_Create OU for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -177,10 +177,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Revoke User Session for GSuite: {e}")
+                logger.error("Error executing action GSuite_Revoke User Session for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -218,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -269,10 +269,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Update User for GSuite: {e}")
+                logger.error("Error executing action GSuite_Update User for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -310,7 +310,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -344,10 +344,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_List OU Of Account for GSuite: {e}")
+                logger.error("Error executing action GSuite_List OU Of Account for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -385,7 +385,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -421,10 +421,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Remove Members From Group for GSuite: {e}")
+                logger.error("Error executing action GSuite_Remove Members From Group for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -462,7 +462,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -497,10 +497,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_List Group Members for GSuite: {e}")
+                logger.error("Error executing action GSuite_List Group Members for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -538,7 +538,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -572,10 +572,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Delete Group for GSuite: {e}")
+                logger.error("Error executing action GSuite_Delete Group for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -613,7 +613,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -648,10 +648,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Delete OU for GSuite: {e}")
+                logger.error("Error executing action GSuite_Delete OU for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -689,7 +689,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -727,10 +727,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Create Group for GSuite: {e}")
+                logger.error("Error executing action GSuite_Create Group for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -768,7 +768,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -801,10 +801,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Ping for GSuite: {e}")
+                logger.error("Error executing action GSuite_Ping for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -842,7 +842,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -876,10 +876,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Delete User for GSuite: {e}")
+                logger.error("Error executing action GSuite_Delete User for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -917,7 +917,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -953,10 +953,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Add Members To Group for GSuite: {e}")
+                logger.error("Error executing action GSuite_Add Members To Group for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -994,7 +994,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1027,10 +1027,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Enrich Entities for GSuite: {e}")
+                logger.error("Error executing action GSuite_Enrich Entities for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1068,7 +1068,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1107,10 +1107,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Update OU for GSuite: {e}")
+                logger.error("Error executing action GSuite_Update OU for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1148,7 +1148,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1193,10 +1193,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_List User Privileges for GSuite: {e}")
+                logger.error("Error executing action GSuite_List User Privileges for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1234,7 +1234,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1280,10 +1280,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Create User for GSuite: {e}")
+                logger.error("Error executing action GSuite_Create User for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1321,7 +1321,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1355,10 +1355,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_Get Group Details for GSuite: {e}")
+                logger.error("Error executing action GSuite_Get Group Details for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1396,7 +1396,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1438,10 +1438,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_List Group Privileges for GSuite: {e}")
+                logger.error("Error executing action GSuite_List Group Privileges for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1479,7 +1479,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GSuite: {e}")
+            logger.error("Error fetching instance for GSuite: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1536,8 +1536,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GSuite_List Users for GSuite: {e}")
+                logger.error("Error executing action GSuite_List Users for GSuite: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GSuite")
+            logger.warning("Warning: No active integration instance found for GSuite")
             return {"Status": "Failed", "Message": "No active instance found."}

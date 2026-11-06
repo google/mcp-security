@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for JuniperVSRX: {e}")
+            logger.error("Error fetching instance for JuniperVSRX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action JuniperVSRX_Add IP To Address Set for JuniperVSRX: {e}")
+                logger.error("Error executing action JuniperVSRX_Add IP To Address Set for JuniperVSRX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for JuniperVSRX")
+            logger.warning("Warning: No active integration instance found for JuniperVSRX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for JuniperVSRX: {e}")
+            logger.error("Error fetching instance for JuniperVSRX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action JuniperVSRX_Remove IP From Address Set for JuniperVSRX: {e}")
+                logger.error("Error executing action JuniperVSRX_Remove IP From Address Set for JuniperVSRX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for JuniperVSRX")
+            logger.warning("Warning: No active integration instance found for JuniperVSRX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for JuniperVSRX: {e}")
+            logger.error("Error fetching instance for JuniperVSRX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,8 +249,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action JuniperVSRX_Ping for JuniperVSRX: {e}")
+                logger.error("Error executing action JuniperVSRX_Ping for JuniperVSRX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for JuniperVSRX")
+            logger.warning("Warning: No active integration instance found for JuniperVSRX")
             return {"Status": "Failed", "Message": "No active instance found."}

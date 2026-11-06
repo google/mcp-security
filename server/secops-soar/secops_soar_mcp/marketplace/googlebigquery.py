@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleBigQuery: {e}")
+            logger.error("Error fetching instance for GoogleBigQuery: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleBigQuery_Run Custom Query for GoogleBigQuery: {e}")
+                logger.error("Error executing action GoogleBigQuery_Run Custom Query for GoogleBigQuery: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleBigQuery")
+            logger.warning("Warning: No active integration instance found for GoogleBigQuery")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleBigQuery: {e}")
+            logger.error("Error fetching instance for GoogleBigQuery: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleBigQuery_Run SQL Query for GoogleBigQuery: {e}")
+                logger.error("Error executing action GoogleBigQuery_Run SQL Query for GoogleBigQuery: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleBigQuery")
+            logger.warning("Warning: No active integration instance found for GoogleBigQuery")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleBigQuery: {e}")
+            logger.error("Error fetching instance for GoogleBigQuery: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,8 +250,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleBigQuery_Ping for GoogleBigQuery: {e}")
+                logger.error("Error executing action GoogleBigQuery_Ping for GoogleBigQuery: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleBigQuery")
+            logger.warning("Warning: No active integration instance found for GoogleBigQuery")
             return {"Status": "Failed", "Message": "No active instance found."}

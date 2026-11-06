@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_List Firewall Rules for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_List Firewall Rules for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -151,7 +151,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -187,10 +187,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Add IP To Rule List for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Add IP To Rule List for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -231,7 +231,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -278,10 +278,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Add URL To Rule List for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Add URL To Rule List for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -319,7 +319,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -352,10 +352,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Ping for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Ping for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -393,7 +393,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -438,10 +438,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Update Firewall Rule for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Update Firewall Rule for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -482,7 +482,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -520,10 +520,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Create Rule List for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Create Rule List for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -564,7 +564,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Cloudflare: {e}")
+            logger.error("Error fetching instance for Cloudflare: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -609,8 +609,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Cloudflare_Create Firewall Rule for Cloudflare: {e}")
+                logger.error("Error executing action Cloudflare_Create Firewall Rule for Cloudflare: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Cloudflare")
+            logger.warning("Warning: No active integration instance found for Cloudflare")
             return {"Status": "Failed", "Message": "No active instance found."}

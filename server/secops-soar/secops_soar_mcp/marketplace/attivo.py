@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_Update Event for Attivo: {e}")
+                logger.error("Error executing action Attivo_Update Event for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -177,10 +177,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_List Service ThreatPaths for Attivo: {e}")
+                logger.error("Error executing action Attivo_List Service ThreatPaths for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -218,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -251,10 +251,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_Ping for Attivo: {e}")
+                logger.error("Error executing action Attivo_Ping for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -292,7 +292,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -328,10 +328,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_List Vulnerability Hosts for Attivo: {e}")
+                logger.error("Error executing action Attivo_List Vulnerability Hosts for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -369,7 +369,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -416,10 +416,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_Enrich Entities for Attivo: {e}")
+                logger.error("Error executing action Attivo_Enrich Entities for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -457,7 +457,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Attivo: {e}")
+            logger.error("Error fetching instance for Attivo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -498,8 +498,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Attivo_List Critical ThreatPath for Attivo: {e}")
+                logger.error("Error executing action Attivo_List Critical ThreatPath for Attivo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Attivo")
+            logger.warning("Warning: No active integration instance found for Attivo")
             return {"Status": "Failed", "Message": "No active instance found."}

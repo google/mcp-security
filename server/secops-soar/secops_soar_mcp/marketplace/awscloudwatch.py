@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -108,10 +108,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Search Log Events for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Search Log Events for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -149,7 +149,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,10 +184,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Set Retention Policy for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Set Retention Policy for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +225,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Delete Log Group for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Delete Log Group for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -300,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -335,10 +335,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Delete Log Stream for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Delete Log Stream for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -376,7 +376,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -416,10 +416,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_List Log Streams for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_List Log Streams for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -457,7 +457,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -490,10 +490,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Ping for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Ping for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -531,7 +531,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -566,10 +566,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Create Log Stream for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Create Log Stream for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -607,7 +607,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -641,10 +641,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Remove Retention Policy for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Remove Retention Policy for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -682,7 +682,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -717,10 +717,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_List Log Groups for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_List Log Groups for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -758,7 +758,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSCloudWatch: {e}")
+            logger.error("Error fetching instance for AWSCloudWatch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -792,8 +792,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSCloudWatch_Create Log Group for AWSCloudWatch: {e}")
+                logger.error("Error executing action AWSCloudWatch_Create Log Group for AWSCloudWatch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSCloudWatch")
+            logger.warning("Warning: No active integration instance found for AWSCloudWatch")
             return {"Status": "Failed", "Message": "No active instance found."}

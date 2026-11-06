@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Delete Saved Query for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Delete Saved Query for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Update Investigation for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Update Investigation for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -255,10 +255,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_List Investigations for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_List Investigations for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -296,7 +296,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -329,10 +329,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Ping for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Ping for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -370,7 +370,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -405,10 +405,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Set Investigation Status for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Set Investigation Status for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -446,7 +446,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -480,10 +480,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Run Saved Query for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Run Saved Query for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -521,7 +521,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -556,10 +556,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_List Saved Queries for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_List Saved Queries for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -597,7 +597,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -632,10 +632,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Set Investigation Assignee for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Set Investigation Assignee for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -673,7 +673,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Rapid7InsightIDR: {e}")
+            logger.error("Error fetching instance for Rapid7InsightIDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -711,8 +711,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Rapid7InsightIDR_Create Saved Query for Rapid7InsightIDR: {e}")
+                logger.error("Error executing action Rapid7InsightIDR_Create Saved Query for Rapid7InsightIDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Rapid7InsightIDR")
+            logger.warning("Warning: No active integration instance found for Rapid7InsightIDR")
             return {"Status": "Failed", "Message": "No active instance found."}

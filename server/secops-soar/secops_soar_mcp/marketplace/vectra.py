@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Enrich Endpoint for Vectra: {e}")
+                logger.error("Error executing action Vectra_Enrich Endpoint for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Update Note for Vectra: {e}")
+                logger.error("Error executing action Vectra_Update Note for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Ping for Vectra: {e}")
+                logger.error("Error executing action Vectra_Ping for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -293,7 +293,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -329,10 +329,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Remove Tags for Vectra: {e}")
+                logger.error("Error executing action Vectra_Remove Tags for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -373,7 +373,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -409,10 +409,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Get Triage Rule Details for Vectra: {e}")
+                logger.error("Error executing action Vectra_Get Triage Rule Details for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -453,7 +453,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -488,10 +488,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Update Detection Status for Vectra: {e}")
+                logger.error("Error executing action Vectra_Update Detection Status for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -532,7 +532,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Vectra: {e}")
+            logger.error("Error fetching instance for Vectra: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -568,8 +568,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Vectra_Add Tags for Vectra: {e}")
+                logger.error("Error executing action Vectra_Add Tags for Vectra: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Vectra")
+            logger.warning("Warning: No active integration instance found for Vectra")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -104,10 +104,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Transfer File Linux To Windows for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Transfer File Linux To Windows for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +148,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -190,10 +190,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Transfer File Linux To Linux for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Transfer File Linux To Linux for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -234,7 +234,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -273,10 +273,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Transfer File Windows To Linux for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Transfer File Windows To Linux for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -317,7 +317,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -356,10 +356,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Zip Files Linux for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Zip Files Linux for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -400,7 +400,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -439,10 +439,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Tarzip Files Windows for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Tarzip Files Windows for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -483,7 +483,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -522,10 +522,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Tarzip Files Linux for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Tarzip Files Linux for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -566,7 +566,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -602,10 +602,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Transfer File Windows To Windows for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Transfer File Windows To Windows for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -643,7 +643,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -676,10 +676,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Ping for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Ping for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -717,7 +717,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FileOperation: {e}")
+            logger.error("Error fetching instance for FileOperation: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -753,8 +753,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FileOperation_Zip Files Windows for FileOperation: {e}")
+                logger.error("Error executing action FileOperation_Zip Files Windows for FileOperation: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FileOperation")
+            logger.warning("Warning: No active integration instance found for FileOperation")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_Update Record for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_Update Record for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +174,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_Ping for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_Ping for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +215,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -251,10 +251,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_Search Records for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_Search Records for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -292,7 +292,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -327,10 +327,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_Delete Record for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_Delete Record for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -368,7 +368,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -407,10 +407,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_List Tables for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_List Tables for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -448,7 +448,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AppSheet: {e}")
+            logger.error("Error fetching instance for AppSheet: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -483,8 +483,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AppSheet_Add Record for AppSheet: {e}")
+                logger.error("Error executing action AppSheet_Add Record for AppSheet: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AppSheet")
+            logger.warning("Warning: No active integration instance found for AppSheet")
             return {"Status": "Failed", "Message": "No active instance found."}

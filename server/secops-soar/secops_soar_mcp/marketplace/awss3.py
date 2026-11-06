@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_List Bucket Objects for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_List Bucket Objects for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_Ping for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_Ping for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_List Buckets for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_List Buckets for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -322,10 +322,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_Set Bucket Policy for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_Set Bucket Policy for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -363,7 +363,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -398,10 +398,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_Download File From Bucket for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_Download File From Bucket for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -439,7 +439,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -474,10 +474,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_Upload File To Bucket for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_Upload File To Bucket for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -515,7 +515,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSS3: {e}")
+            logger.error("Error fetching instance for AWSS3: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -549,8 +549,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSS3_Get Bucket Policy for AWSS3: {e}")
+                logger.error("Error executing action AWSS3_Get Bucket Policy for AWSS3: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSS3")
+            logger.warning("Warning: No active integration instance found for AWSS3")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Update The 'TI' Database Of NetWitness for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Update The 'TI' Database Of NetWitness for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Query NetWitness For Events Around IP for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Query NetWitness For Events Around IP for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -244,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Query NetWitness For Events Around Host for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Query NetWitness For Events Around Host for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -285,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -319,10 +319,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Run General Query for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Run General Query for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -360,7 +360,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -393,10 +393,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Ping for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Ping for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -434,7 +434,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -469,10 +469,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Update The TI Database Of NetWitness Raw Input for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Update The TI Database Of NetWitness Raw Input for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -510,7 +510,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSANetWitness: {e}")
+            logger.error("Error fetching instance for RSANetWitness: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -543,8 +543,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSANetWitness_Query NetWitness For Events Around User for RSANetWitness: {e}")
+                logger.error("Error executing action RSANetWitness_Query NetWitness For Events Around User for RSANetWitness: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSANetWitness")
+            logger.warning("Warning: No active integration instance found for RSANetWitness")
             return {"Status": "Failed", "Message": "No active instance found."}

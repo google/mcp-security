@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get Device Locations for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get Device Locations for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get Installed Applications for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get Installed Applications for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get User History for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get User History for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -318,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Revalidate Device for Portnox: {e}")
+                logger.error("Error executing action Portnox_Revalidate Device for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -359,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -392,10 +392,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Enrich Device for Portnox: {e}")
+                logger.error("Error executing action Portnox_Enrich Device for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -433,7 +433,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -466,10 +466,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Ping for Portnox: {e}")
+                logger.error("Error executing action Portnox_Ping for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -507,7 +507,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -540,10 +540,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get Services for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get Services for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -581,7 +581,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -614,10 +614,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get Open Ports for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get Open Ports for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -658,7 +658,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -692,10 +692,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Get Device History for Portnox: {e}")
+                logger.error("Error executing action Portnox_Get Device History for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -733,7 +733,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Portnox: {e}")
+            logger.error("Error fetching instance for Portnox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -766,8 +766,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Portnox_Revalidate Device By Address for Portnox: {e}")
+                logger.error("Error executing action Portnox_Revalidate Device By Address for Portnox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Portnox")
+            logger.warning("Warning: No active integration instance found for Portnox")
             return {"Status": "Failed", "Message": "No active instance found."}

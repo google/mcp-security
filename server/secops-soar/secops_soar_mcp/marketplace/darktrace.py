@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_List Similar Devices for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_List Similar Devices for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -144,7 +144,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_Update Model Breach Status for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_Update Model Breach Status for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -223,7 +223,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -265,10 +265,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_Execute Custom Search for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_Execute Custom Search for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -309,7 +309,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -350,10 +350,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_List Endpoint Events for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_List Endpoint Events for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -394,7 +394,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -429,10 +429,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_Add Comment To Model Breach for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_Add Comment To Model Breach for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -470,7 +470,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -503,10 +503,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_Ping for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_Ping for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -544,7 +544,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Darktrace: {e}")
+            logger.error("Error fetching instance for Darktrace: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -583,8 +583,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Darktrace_Enrich Entities for Darktrace: {e}")
+                logger.error("Error executing action Darktrace_Enrich Entities for Darktrace: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Darktrace")
+            logger.warning("Warning: No active integration instance found for Darktrace")
             return {"Status": "Failed", "Message": "No active instance found."}

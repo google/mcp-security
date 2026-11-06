@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_SplunkCsvViewer for Splunk: {e}")
+                logger.error("Error executing action Splunk_SplunkCsvViewer for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -185,10 +185,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_Get Host Events for Splunk: {e}")
+                logger.error("Error executing action Splunk_Get Host Events for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -229,7 +229,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -273,10 +273,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_Update Notable Events for Splunk: {e}")
+                logger.error("Error executing action Splunk_Update Notable Events for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -314,7 +314,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -347,10 +347,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_Ping for Splunk: {e}")
+                logger.error("Error executing action Splunk_Ping for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -391,7 +391,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -435,10 +435,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_SplunkQuery for Splunk: {e}")
+                logger.error("Error executing action Splunk_SplunkQuery for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -479,7 +479,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -538,10 +538,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_Execute Entity Query for Splunk: {e}")
+                logger.error("Error executing action Splunk_Execute Entity Query for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -582,7 +582,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Splunk: {e}")
+            logger.error("Error fetching instance for Splunk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -623,8 +623,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Splunk_Submit Event for Splunk: {e}")
+                logger.error("Error executing action Splunk_Submit Event for Splunk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Splunk")
+            logger.warning("Warning: No active integration instance found for Splunk")
             return {"Status": "Failed", "Message": "No active instance found."}

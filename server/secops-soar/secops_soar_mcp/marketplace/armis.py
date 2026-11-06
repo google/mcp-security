@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Armis: {e}")
+            logger.error("Error fetching instance for Armis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Armis_Ping for Armis: {e}")
+                logger.error("Error executing action Armis_Ping for Armis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Armis")
+            logger.warning("Warning: No active integration instance found for Armis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Armis: {e}")
+            logger.error("Error fetching instance for Armis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Armis_Update Alert Status for Armis: {e}")
+                logger.error("Error executing action Armis_Update Alert Status for Armis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Armis")
+            logger.warning("Warning: No active integration instance found for Armis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Armis: {e}")
+            logger.error("Error fetching instance for Armis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -248,10 +248,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Armis_Enrich Entities for Armis: {e}")
+                logger.error("Error executing action Armis_Enrich Entities for Armis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Armis")
+            logger.warning("Warning: No active integration instance found for Armis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -289,7 +289,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Armis: {e}")
+            logger.error("Error fetching instance for Armis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -327,8 +327,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Armis_List Alert Connections for Armis: {e}")
+                logger.error("Error executing action Armis_List Alert Connections for Armis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Armis")
+            logger.warning("Warning: No active integration instance found for Armis")
             return {"Status": "Failed", "Message": "No active instance found."}

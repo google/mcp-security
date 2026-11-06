@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlienVaultTI: {e}")
+            logger.error("Error fetching instance for AlienVaultTI: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlienVaultTI_Ping for AlienVaultTI: {e}")
+                logger.error("Error executing action AlienVaultTI_Ping for AlienVaultTI: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlienVaultTI")
+            logger.warning("Warning: No active integration instance found for AlienVaultTI")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlienVaultTI: {e}")
+            logger.error("Error fetching instance for AlienVaultTI: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,8 +169,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlienVaultTI_Enriches Entities for AlienVaultTI: {e}")
+                logger.error("Error executing action AlienVaultTI_Enriches Entities for AlienVaultTI: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlienVaultTI")
+            logger.warning("Warning: No active integration instance found for AlienVaultTI")
             return {"Status": "Failed", "Message": "No active instance found."}

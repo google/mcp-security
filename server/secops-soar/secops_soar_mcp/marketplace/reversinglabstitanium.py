@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ReversinglabsTitanium: {e}")
+            logger.error("Error fetching instance for ReversinglabsTitanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ReversinglabsTitanium_Ping for ReversinglabsTitanium: {e}")
+                logger.error("Error executing action ReversinglabsTitanium_Ping for ReversinglabsTitanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ReversinglabsTitanium")
+            logger.warning("Warning: No active integration instance found for ReversinglabsTitanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ReversinglabsTitanium: {e}")
+            logger.error("Error fetching instance for ReversinglabsTitanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,8 +169,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ReversinglabsTitanium_Get Malware Details for ReversinglabsTitanium: {e}")
+                logger.error("Error executing action ReversinglabsTitanium_Get Malware Details for ReversinglabsTitanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ReversinglabsTitanium")
+            logger.warning("Warning: No active integration instance found for ReversinglabsTitanium")
             return {"Status": "Failed", "Message": "No active instance found."}

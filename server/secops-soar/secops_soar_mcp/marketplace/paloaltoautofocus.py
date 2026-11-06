@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AutoFocus: {e}")
+            logger.error("Error fetching instance for AutoFocus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AutoFocus_Hunt Ip for AutoFocus: {e}")
+                logger.error("Error executing action AutoFocus_Hunt Ip for AutoFocus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AutoFocus")
+            logger.warning("Warning: No active integration instance found for AutoFocus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AutoFocus: {e}")
+            logger.error("Error fetching instance for AutoFocus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AutoFocus_Hunt Domain for AutoFocus: {e}")
+                logger.error("Error executing action AutoFocus_Hunt Domain for AutoFocus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AutoFocus")
+            logger.warning("Warning: No active integration instance found for AutoFocus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AutoFocus: {e}")
+            logger.error("Error fetching instance for AutoFocus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AutoFocus_Ping for AutoFocus: {e}")
+                logger.error("Error executing action AutoFocus_Ping for AutoFocus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AutoFocus")
+            logger.warning("Warning: No active integration instance found for AutoFocus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AutoFocus: {e}")
+            logger.error("Error fetching instance for AutoFocus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -317,10 +317,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AutoFocus_Hunt File for AutoFocus: {e}")
+                logger.error("Error executing action AutoFocus_Hunt File for AutoFocus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AutoFocus")
+            logger.warning("Warning: No active integration instance found for AutoFocus")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -358,7 +358,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AutoFocus: {e}")
+            logger.error("Error fetching instance for AutoFocus: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -391,8 +391,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AutoFocus_Hunt Url for AutoFocus: {e}")
+                logger.error("Error executing action AutoFocus_Hunt Url for AutoFocus: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AutoFocus")
+            logger.warning("Warning: No active integration instance found for AutoFocus")
             return {"Status": "Failed", "Message": "No active instance found."}

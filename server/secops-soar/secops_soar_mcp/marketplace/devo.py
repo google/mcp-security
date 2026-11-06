@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Devo: {e}")
+            logger.error("Error fetching instance for Devo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Devo_Ping for Devo: {e}")
+                logger.error("Error executing action Devo_Ping for Devo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Devo")
+            logger.warning("Warning: No active integration instance found for Devo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Devo: {e}")
+            logger.error("Error fetching instance for Devo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Devo_Advanced Query for Devo: {e}")
+                logger.error("Error executing action Devo_Advanced Query for Devo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Devo")
+            logger.warning("Warning: No active integration instance found for Devo")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +225,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Devo: {e}")
+            logger.error("Error fetching instance for Devo: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -271,8 +271,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Devo_Simple Query for Devo: {e}")
+                logger.error("Error executing action Devo_Simple Query for Devo: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Devo")
+            logger.warning("Warning: No active integration instance found for Devo")
             return {"Status": "Failed", "Message": "No active instance found."}

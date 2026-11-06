@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CBEnterpriseEDR: {e}")
+            logger.error("Error fetching instance for CBEnterpriseEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CBEnterpriseEDR_Enrich Hash for CBEnterpriseEDR: {e}")
+                logger.error("Error executing action CBEnterpriseEDR_Enrich Hash for CBEnterpriseEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CBEnterpriseEDR")
+            logger.warning("Warning: No active integration instance found for CBEnterpriseEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CBEnterpriseEDR: {e}")
+            logger.error("Error fetching instance for CBEnterpriseEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -178,10 +178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CBEnterpriseEDR_Process Search for CBEnterpriseEDR: {e}")
+                logger.error("Error executing action CBEnterpriseEDR_Process Search for CBEnterpriseEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CBEnterpriseEDR")
+            logger.warning("Warning: No active integration instance found for CBEnterpriseEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CBEnterpriseEDR: {e}")
+            logger.error("Error fetching instance for CBEnterpriseEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -252,10 +252,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CBEnterpriseEDR_Ping for CBEnterpriseEDR: {e}")
+                logger.error("Error executing action CBEnterpriseEDR_Ping for CBEnterpriseEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CBEnterpriseEDR")
+            logger.warning("Warning: No active integration instance found for CBEnterpriseEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -293,7 +293,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CBEnterpriseEDR: {e}")
+            logger.error("Error fetching instance for CBEnterpriseEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -337,8 +337,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CBEnterpriseEDR_Get Events Associated With Process by Process Guid for CBEnterpriseEDR: {e}")
+                logger.error("Error executing action CBEnterpriseEDR_Get Events Associated With Process by Process Guid for CBEnterpriseEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CBEnterpriseEDR")
+            logger.warning("Warning: No active integration instance found for CBEnterpriseEDR")
             return {"Status": "Failed", "Message": "No active instance found."}

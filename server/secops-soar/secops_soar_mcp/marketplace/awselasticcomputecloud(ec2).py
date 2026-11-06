@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Terminate Instance for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Terminate Instance for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_List Instances for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_List Instances for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -253,10 +253,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Take Snapshot for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Take Snapshot for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -294,7 +294,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -338,10 +338,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Revoke Security Group Egress for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Revoke Security Group Egress for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -379,7 +379,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -413,10 +413,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Start Instance for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Start Instance for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -454,7 +454,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -489,10 +489,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Create Tags for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Create Tags for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -530,7 +530,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -563,10 +563,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Ping for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Ping for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -604,7 +604,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -645,10 +645,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_List Security Groups for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_List Security Groups for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -686,7 +686,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -730,10 +730,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Authorize Security Group Egress for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Authorize Security Group Egress for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -771,7 +771,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -815,10 +815,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Authorize Security Group Ingress for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Authorize Security Group Ingress for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -856,7 +856,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -900,10 +900,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Revoke Security Group Ingress for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Revoke Security Group Ingress for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -941,7 +941,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSEC2: {e}")
+            logger.error("Error fetching instance for AWSEC2: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -977,8 +977,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSEC2_Stop Instance for AWSEC2: {e}")
+                logger.error("Error executing action AWSEC2_Stop Instance for AWSEC2: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSEC2")
+            logger.warning("Warning: No active integration instance found for AWSEC2")
             return {"Status": "Failed", "Message": "No active instance found."}

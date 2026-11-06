@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -104,10 +104,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_List Providers for Okta: {e}")
+                logger.error("Error executing action Okta_List Providers for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +148,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -186,10 +186,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Assign Role for Okta: {e}")
+                logger.error("Error executing action Okta_Assign Role for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -227,7 +227,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -267,10 +267,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Unassign Role for Okta: {e}")
+                logger.error("Error executing action Okta_Unassign Role for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -311,7 +311,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -352,10 +352,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Disable User for Okta: {e}")
+                logger.error("Error executing action Okta_Disable User for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -396,7 +396,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -433,10 +433,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Get User for Okta: {e}")
+                logger.error("Error executing action Okta_Get User for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -474,7 +474,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -507,10 +507,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Ping for Okta: {e}")
+                logger.error("Error executing action Okta_Ping for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -551,7 +551,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -588,10 +588,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_List User Groups for Okta: {e}")
+                logger.error("Error executing action Okta_List User Groups for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -632,7 +632,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -668,10 +668,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Get Group for Okta: {e}")
+                logger.error("Error executing action Okta_Get Group for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -709,7 +709,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -745,10 +745,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Add Group for Okta: {e}")
+                logger.error("Error executing action Okta_Add Group for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -789,7 +789,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -828,10 +828,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Reset Password for Okta: {e}")
+                logger.error("Error executing action Okta_Reset Password for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -869,7 +869,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -906,10 +906,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_List Roles for Okta: {e}")
+                logger.error("Error executing action Okta_List Roles for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -950,7 +950,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -991,10 +991,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Enable User for Okta: {e}")
+                logger.error("Error executing action Okta_Enable User for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1035,7 +1035,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1075,10 +1075,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_Set Password for Okta: {e}")
+                logger.error("Error executing action Okta_Set Password for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1119,7 +1119,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Okta: {e}")
+            logger.error("Error fetching instance for Okta: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1160,8 +1160,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Okta_List Users for Okta: {e}")
+                logger.error("Error executing action Okta_List Users for Okta: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Okta")
+            logger.warning("Warning: No active integration instance found for Okta")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -116,10 +116,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Create Ticket for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Create Ticket for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -160,7 +160,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -194,10 +194,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Get Ticket Details for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Get Ticket Details for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -238,7 +238,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -276,10 +276,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Add Comment To Ticket for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Add Comment To Ticket for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -317,7 +317,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -350,10 +350,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Ping for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Ping for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -394,7 +394,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -429,10 +429,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Apply Macros On Ticket for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Apply Macros On Ticket for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -470,7 +470,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -522,10 +522,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Update Ticket for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Update Ticket for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -563,7 +563,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Zendesk: {e}")
+            logger.error("Error fetching instance for Zendesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -597,8 +597,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Zendesk_Search Tickets for Zendesk: {e}")
+                logger.error("Error executing action Zendesk_Search Tickets for Zendesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Zendesk")
+            logger.warning("Warning: No active integration instance found for Zendesk")
             return {"Status": "Failed", "Message": "No active instance found."}

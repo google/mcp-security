@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Get Ports List By Name for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Get Ports List By Name for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -171,10 +171,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Block Address for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Block Address for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -212,7 +212,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Block URL for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Block URL for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -321,10 +321,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Get URL List By Name for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Get URL List By Name for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -362,7 +362,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +397,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Unblock Port for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Unblock Port for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +438,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -474,10 +474,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Block Port for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Block Port for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -515,7 +515,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -548,10 +548,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Ping for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Ping for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -589,7 +589,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -623,10 +623,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Unblock URL for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Unblock URL for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -664,7 +664,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -698,10 +698,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Unblock Address for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Unblock Address for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -739,7 +739,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoFirepowerManagementCenter: {e}")
+            logger.error("Error fetching instance for CiscoFirepowerManagementCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -773,8 +773,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoFirepowerManagementCenter_Get Addresses List By Name for CiscoFirepowerManagementCenter: {e}")
+                logger.error("Error executing action CiscoFirepowerManagementCenter_Get Addresses List By Name for CiscoFirepowerManagementCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoFirepowerManagementCenter")
+            logger.warning("Warning: No active integration instance found for CiscoFirepowerManagementCenter")
             return {"Status": "Failed", "Message": "No active instance found."}

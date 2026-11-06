@@ -63,7 +63,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Remove IP From Group for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Remove IP From Group for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +140,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Add IP To Group for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Add IP To Group for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +217,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -252,10 +252,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Add URL To Url Filter for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Add URL To Url Filter for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -294,7 +294,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -329,10 +329,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Remove URL From Url Filter for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Remove URL From Url Filter for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -370,7 +370,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -404,10 +404,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Get Task Information for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Get Task Information for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -445,7 +445,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -478,10 +478,10 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Ping for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Ping for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -519,7 +519,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FortiManager: {e}")
+            logger.error("Error fetching instance for FortiManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -558,8 +558,8 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FortiManager_Execute Script for FortiManager: {e}")
+                logger.error("Error executing action FortiManager_Execute Script for FortiManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FortiManager")
+            logger.warning("Warning: No active integration instance found for FortiManager")
             return {"Status": "Failed", "Message": "No active instance found."}

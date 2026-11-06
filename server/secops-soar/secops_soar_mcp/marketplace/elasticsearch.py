@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ElasticSearch: {e}")
+            logger.error("Error fetching instance for ElasticSearch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ElasticSearch_Simple ES Search for ElasticSearch: {e}")
+                logger.error("Error executing action ElasticSearch_Simple ES Search for ElasticSearch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ElasticSearch")
+            logger.warning("Warning: No active integration instance found for ElasticSearch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ElasticSearch: {e}")
+            logger.error("Error fetching instance for ElasticSearch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -191,10 +191,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ElasticSearch_Advanced ES Search for ElasticSearch: {e}")
+                logger.error("Error executing action ElasticSearch_Advanced ES Search for ElasticSearch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ElasticSearch")
+            logger.warning("Warning: No active integration instance found for ElasticSearch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -232,7 +232,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ElasticSearch: {e}")
+            logger.error("Error fetching instance for ElasticSearch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -265,10 +265,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ElasticSearch_Ping for ElasticSearch: {e}")
+                logger.error("Error executing action ElasticSearch_Ping for ElasticSearch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ElasticSearch")
+            logger.warning("Warning: No active integration instance found for ElasticSearch")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -306,7 +306,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ElasticSearch: {e}")
+            logger.error("Error fetching instance for ElasticSearch: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -345,8 +345,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ElasticSearch_DSL Search for ElasticSearch: {e}")
+                logger.error("Error executing action ElasticSearch_DSL Search for ElasticSearch: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ElasticSearch")
+            logger.warning("Warning: No active integration instance found for ElasticSearch")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,6 +62,25 @@ def test_marketplace_modules_have_no_print_calls() -> None:
     )
 
 
+def test_marketplace_modules_use_lazy_logging() -> None:
+    """Logger calls must use lazy %-formatting, not f-strings (style guide 3.10.1)."""
+    import re
+
+    offenders = []
+    pattern = re.compile(r"logger\.\w+\(f[\"\']")
+    for path in sorted(MARKETPLACE_DIR.glob("*.py")):
+        if path.name == "__init__.py":
+            continue
+        text = path.read_text(encoding="utf-8")
+        for i, line in enumerate(text.splitlines(), 1):
+            if pattern.search(line):
+                offenders.append(f"{path.name}:{i}")
+    assert offenders == [], (
+        "marketplace logger calls must use lazy % formatting; "
+        f"found f-strings in: {offenders[:10]}"
+    )
+
+
 def _ping_kwargs():
     from secops_soar_mcp.utils.models import TargetEntity
 
@@ -124,7 +143,10 @@ async def test_fetch_instance_error_logs_not_stdout(caplog, capsys) -> None:
     assert result["Status"] == "Failed"
     assert "Error fetching instance" in result["Message"]
     assert capsys.readouterr().out == ""
-    assert any(
-        "Error fetching instance for ActiveDirectory" in record.getMessage()
+    matching = [
+        record
         for record in caplog.records
-    )
+        if "Error fetching instance for ActiveDirectory" in record.getMessage()
+    ]
+    assert matching, "expected fetch-instance error log"
+    assert matching[0].args, "lazy % logging must pass args, not a pre-formatted f-string"

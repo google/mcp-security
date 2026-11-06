@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSAArcher: {e}")
+            logger.error("Error fetching instance for RSAArcher: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSAArcher_Add Incident Journal Entry for RSAArcher: {e}")
+                logger.error("Error executing action RSAArcher_Add Incident Journal Entry for RSAArcher: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSAArcher")
+            logger.warning("Warning: No active integration instance found for RSAArcher")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSAArcher: {e}")
+            logger.error("Error fetching instance for RSAArcher: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -192,10 +192,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSAArcher_Update Incident for RSAArcher: {e}")
+                logger.error("Error executing action RSAArcher_Update Incident for RSAArcher: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSAArcher")
+            logger.warning("Warning: No active integration instance found for RSAArcher")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -233,7 +233,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSAArcher: {e}")
+            logger.error("Error fetching instance for RSAArcher: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -266,10 +266,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSAArcher_Ping for RSAArcher: {e}")
+                logger.error("Error executing action RSAArcher_Ping for RSAArcher: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSAArcher")
+            logger.warning("Warning: No active integration instance found for RSAArcher")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -307,7 +307,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSAArcher: {e}")
+            logger.error("Error fetching instance for RSAArcher: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -343,10 +343,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSAArcher_Get Incident Details for RSAArcher: {e}")
+                logger.error("Error executing action RSAArcher_Get Incident Details for RSAArcher: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSAArcher")
+            logger.warning("Warning: No active integration instance found for RSAArcher")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -384,7 +384,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RSAArcher: {e}")
+            logger.error("Error fetching instance for RSAArcher: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -437,8 +437,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RSAArcher_Create Incident for RSAArcher: {e}")
+                logger.error("Error executing action RSAArcher_Create Incident for RSAArcher: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RSAArcher")
+            logger.warning("Warning: No active integration instance found for RSAArcher")
             return {"Status": "Failed", "Message": "No active instance found."}

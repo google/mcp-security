@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Parse EML to JSON for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Parse EML to JSON for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -182,10 +182,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_List Operations for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_List Operations for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -223,7 +223,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -263,10 +263,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Query Joiner for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Query Joiner for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -304,7 +304,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -341,10 +341,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Count List for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Count List for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -382,7 +382,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -415,10 +415,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Ping for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Ping for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -456,7 +456,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -492,10 +492,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Export Entities as OpenIOC File for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Export Entities as OpenIOC File for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -533,7 +533,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -573,10 +573,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Extract Top From JSON for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Extract Top From JSON for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -614,7 +614,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -647,10 +647,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Get Deployment URL for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Get Deployment URL for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -688,7 +688,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -722,10 +722,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Delete File for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Delete File for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -763,7 +763,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -808,10 +808,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Filter JSON for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Filter JSON for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -849,7 +849,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SiemplifyUtilities: {e}")
+            logger.error("Error fetching instance for SiemplifyUtilities: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -883,8 +883,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SiemplifyUtilities_Count Entities In Scope for SiemplifyUtilities: {e}")
+                logger.error("Error executing action SiemplifyUtilities_Count Entities In Scope for SiemplifyUtilities: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SiemplifyUtilities")
+            logger.warning("Warning: No active integration instance found for SiemplifyUtilities")
             return {"Status": "Failed", "Message": "No active instance found."}

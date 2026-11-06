@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -103,10 +103,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Remove IP From Firewall Rule for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Remove IP From Firewall Rule for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -144,7 +144,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -186,10 +186,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Add Labels To Instance for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Add Labels To Instance for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -227,7 +227,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -272,10 +272,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_List Instances for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_List Instances for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -313,7 +313,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -354,10 +354,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Delete Instance for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Delete Instance for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -395,7 +395,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -436,10 +436,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Start Instance for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Start Instance for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -477,7 +477,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -524,10 +524,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Execute VM Patch Job for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Execute VM Patch Job for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -565,7 +565,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -607,10 +607,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Add Network Tags for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Add Network Tags for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -648,7 +648,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -689,10 +689,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Get Instance IAM Policy for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Get Instance IAM Policy for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -730,7 +730,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -763,10 +763,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Ping for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Ping for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -804,7 +804,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -847,10 +847,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Remove External IP Addresses for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Remove External IP Addresses for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -888,7 +888,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -930,10 +930,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Remove Network Tags for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Remove Network Tags for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -971,7 +971,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1013,10 +1013,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Set Instance IAM Policy for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Set Instance IAM Policy for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1054,7 +1054,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1091,10 +1091,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Enrich Entities for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Enrich Entities for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1132,7 +1132,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1185,10 +1185,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Update Firewall Rule for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Update Firewall Rule for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1226,7 +1226,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1267,10 +1267,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Add IP To Firewall Rule for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Add IP To Firewall Rule for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1308,7 +1308,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudCompute: {e}")
+            logger.error("Error fetching instance for GoogleCloudCompute: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1349,8 +1349,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudCompute_Stop Instance for GoogleCloudCompute: {e}")
+                logger.error("Error executing action GoogleCloudCompute_Stop Instance for GoogleCloudCompute: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudCompute")
+            logger.warning("Warning: No active integration instance found for GoogleCloudCompute")
             return {"Status": "Failed", "Message": "No active instance found."}

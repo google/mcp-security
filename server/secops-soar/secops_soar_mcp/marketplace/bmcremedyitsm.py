@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -130,10 +130,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Update Incident for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Update Incident for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -171,7 +171,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -207,10 +207,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Update Record for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Update Record for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -248,7 +248,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -285,10 +285,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Get Record Details for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Get Record Details for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -326,7 +326,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -361,10 +361,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Add Work Note To Incident for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Add Work Note To Incident for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -402,7 +402,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -439,10 +439,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Wait For Record Fields Update for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Wait For Record Fields Update for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -480,7 +480,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -514,10 +514,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Delete Incident for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Delete Incident for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -555,7 +555,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -588,10 +588,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Ping for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Ping for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -629,7 +629,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -664,10 +664,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Delete Record for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Delete Record for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -705,7 +705,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -745,10 +745,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Get Incident Details for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Get Incident Details for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -786,7 +786,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -821,10 +821,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Create Record for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Create Record for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -862,7 +862,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -933,10 +933,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Create Incident for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Create Incident for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -974,7 +974,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BMCRemedyITSM: {e}")
+            logger.error("Error fetching instance for BMCRemedyITSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1013,8 +1013,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BMCRemedyITSM_Wait For Incident Fields Update for BMCRemedyITSM: {e}")
+                logger.error("Error executing action BMCRemedyITSM_Wait For Incident Fields Update for BMCRemedyITSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BMCRemedyITSM")
+            logger.warning("Warning: No active integration instance found for BMCRemedyITSM")
             return {"Status": "Failed", "Message": "No active instance found."}

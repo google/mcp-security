@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -105,10 +105,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_List Node Pools for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_List Node Pools for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -146,7 +146,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -199,10 +199,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Set Cluster Addons for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Set Cluster Addons for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -240,7 +240,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -282,10 +282,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_List Operations for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_List Operations for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -323,7 +323,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -367,10 +367,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Set Node Pool Management for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Set Node Pool Management for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -408,7 +408,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -441,10 +441,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Ping for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Ping for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -482,7 +482,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -522,10 +522,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Set Cluster Labels for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Set Cluster Labels for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -563,7 +563,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -602,10 +602,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Get Operation Status for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Get Operation Status for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -643,7 +643,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -685,10 +685,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_List Clusters for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_List Clusters for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -726,7 +726,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -772,10 +772,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Set Node Autoscaling for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Set Node Autoscaling for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -813,7 +813,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGKE: {e}")
+            logger.error("Error fetching instance for GoogleGKE: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -854,8 +854,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGKE_Set Node Count for GoogleGKE: {e}")
+                logger.error("Error executing action GoogleGKE_Set Node Count for GoogleGKE: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGKE")
+            logger.warning("Warning: No active integration instance found for GoogleGKE")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -103,10 +103,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_Search for Shodan: {e}")
+                logger.error("Error executing action Shodan_Search for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -147,7 +147,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,10 +184,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_Get Ip Info for Shodan: {e}")
+                logger.error("Error executing action Shodan_Get Ip Info for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +225,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,10 +258,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_Scan A Network for Shodan: {e}")
+                logger.error("Error executing action Shodan_Scan A Network for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -299,7 +299,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -332,10 +332,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_DNS Resolve for Shodan: {e}")
+                logger.error("Error executing action Shodan_DNS Resolve for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -373,7 +373,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -406,10 +406,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_Get Api Info for Shodan: {e}")
+                logger.error("Error executing action Shodan_Get Api Info for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -447,7 +447,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -480,10 +480,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_Ping for Shodan: {e}")
+                logger.error("Error executing action Shodan_Ping for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -521,7 +521,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -554,10 +554,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_DNS Reverse for Shodan: {e}")
+                logger.error("Error executing action Shodan_DNS Reverse for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -595,7 +595,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Shodan: {e}")
+            logger.error("Error fetching instance for Shodan: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -633,8 +633,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Shodan_SearchForExploits for Shodan: {e}")
+                logger.error("Error executing action Shodan_SearchForExploits for Shodan: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Shodan")
+            logger.warning("Warning: No active integration instance found for Shodan")
             return {"Status": "Failed", "Message": "No active instance found."}

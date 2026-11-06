@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PubSub: {e}")
+            logger.error("Error fetching instance for PubSub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,8 +98,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PubSub_Ping for PubSub: {e}")
+                logger.error("Error executing action PubSub_Ping for PubSub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PubSub")
+            logger.warning("Warning: No active integration instance found for PubSub")
             return {"Status": "Failed", "Message": "No active instance found."}

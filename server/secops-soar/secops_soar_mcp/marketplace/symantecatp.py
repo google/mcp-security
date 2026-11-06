@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Update Incident Resolution for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Update Incident Resolution for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Get Sandbox Commands Status for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Get Sandbox Commands Status for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Add To Blacklist for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Add To Blacklist for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -321,10 +321,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Get Events  For Entity for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Get Events  For Entity for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -362,7 +362,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +397,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Add Comment To Incident for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Add Comment To Incident for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +438,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -471,10 +471,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Revoke From Blacklist for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Revoke From Blacklist for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -512,7 +512,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -545,10 +545,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Delete WhiteList Policy for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Delete WhiteList Policy for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -586,7 +586,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -622,10 +622,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Get Incident Comments for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Get Incident Comments for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -663,7 +663,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -698,10 +698,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Get Events Free Query for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Get Events Free Query for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -739,7 +739,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -772,10 +772,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Ping for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Ping for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -813,7 +813,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -846,10 +846,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Add To WhiteList for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Add To WhiteList for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -887,7 +887,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -921,10 +921,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Close Incident for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Close Incident for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -962,7 +962,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -995,10 +995,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Delete Blacklist Policy for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Delete Blacklist Policy for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1036,7 +1036,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1069,10 +1069,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Enrich File Hash for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Enrich File Hash for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1110,7 +1110,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1144,10 +1144,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Delete File for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Delete File for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1185,7 +1185,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1218,10 +1218,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Rejoin Endpoint for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Rejoin Endpoint for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1259,7 +1259,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1292,10 +1292,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Isolate Endpoint for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Isolate Endpoint for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1333,7 +1333,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1366,10 +1366,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Submit Files To Sandbox for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Submit Files To Sandbox for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1407,7 +1407,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SymantecATP: {e}")
+            logger.error("Error fetching instance for SymantecATP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1441,8 +1441,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SymantecATP_Get Commands Status for SymantecATP: {e}")
+                logger.error("Error executing action SymantecATP_Get Commands Status for SymantecATP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SymantecATP")
+            logger.warning("Warning: No active integration instance found for SymantecATP")
             return {"Status": "Failed", "Message": "No active instance found."}

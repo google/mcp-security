@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Create Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Create Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -151,7 +151,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -188,10 +188,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Add Comment To Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Add Comment To Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -232,7 +232,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -266,10 +266,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Get Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Get Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -310,7 +310,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -350,10 +350,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Create Alerts Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Create Alerts Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -391,7 +391,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -424,10 +424,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Ping for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Ping for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -468,7 +468,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -504,10 +504,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Close Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Close Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -545,7 +545,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -585,10 +585,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Add Attachment To Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Add Attachment To Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -629,7 +629,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -681,10 +681,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Update Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Update Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -725,7 +725,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ConnectWise: {e}")
+            logger.error("Error fetching instance for ConnectWise: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -759,8 +759,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ConnectWise_Delete Ticket for ConnectWise: {e}")
+                logger.error("Error executing action ConnectWise_Delete Ticket for ConnectWise: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ConnectWise")
+            logger.warning("Warning: No active integration instance found for ConnectWise")
             return {"Status": "Failed", "Message": "No active instance found."}

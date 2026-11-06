@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -117,10 +117,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Create Ticket for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Create Ticket for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -158,7 +158,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -200,10 +200,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Get Ticket Details for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Get Ticket Details for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -241,7 +241,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -282,10 +282,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Add Comment To Ticket for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Add Comment To Ticket for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -323,7 +323,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -359,10 +359,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Mark Ticket As Spam for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Mark Ticket As Spam for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -400,7 +400,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -435,10 +435,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Get Refresh Token for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Get Refresh Token for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -476,7 +476,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -509,10 +509,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Ping for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Ping for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -550,7 +550,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ZohoDesk: {e}")
+            logger.error("Error fetching instance for ZohoDesk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -616,8 +616,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ZohoDesk_Update Ticket for ZohoDesk: {e}")
+                logger.error("Error executing action ZohoDesk_Update Ticket for ZohoDesk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ZohoDesk")
+            logger.warning("Warning: No active integration instance found for ZohoDesk")
             return {"Status": "Failed", "Message": "No active instance found."}

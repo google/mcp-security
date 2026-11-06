@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Ask An Analyst for Intsights: {e}")
+                logger.error("Error executing action Intsights_Ask An Analyst for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +174,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Search IOCs for Intsights: {e}")
+                logger.error("Error executing action Intsights_Search IOCs for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -218,7 +218,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -257,10 +257,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Close Alert for Intsights: {e}")
+                logger.error("Error executing action Intsights_Close Alert for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -301,7 +301,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -339,10 +339,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Assign Alert for Intsights: {e}")
+                logger.error("Error executing action Intsights_Assign Alert for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -380,7 +380,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -413,10 +413,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Ping for Intsights: {e}")
+                logger.error("Error executing action Intsights_Ping for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -457,7 +457,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -494,10 +494,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Download Alert CSV for Intsights: {e}")
+                logger.error("Error executing action Intsights_Download Alert CSV for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -538,7 +538,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -572,10 +572,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Reopen Alert for Intsights: {e}")
+                logger.error("Error executing action Intsights_Reopen Alert for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -616,7 +616,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -650,10 +650,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Get Alert Image for Intsights: {e}")
+                logger.error("Error executing action Intsights_Get Alert Image for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -694,7 +694,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Intsights: {e}")
+            logger.error("Error fetching instance for Intsights: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -729,8 +729,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Intsights_Add Note for Intsights: {e}")
+                logger.error("Error executing action Intsights_Add Note for Intsights: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Intsights")
+            logger.warning("Warning: No active integration instance found for Intsights")
             return {"Status": "Failed", "Message": "No active instance found."}

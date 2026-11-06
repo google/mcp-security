@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_List Scans for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_List Scans for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Launch Patch Report for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Launch Patch Report for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -223,7 +223,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -257,10 +257,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Download Vm Scan Results for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Download Vm Scan Results for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -301,7 +301,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -342,10 +342,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Launch VM Scan And Fetch Results for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Launch VM Scan And Fetch Results for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -386,7 +386,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -420,10 +420,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Download Report for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Download Report for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -461,7 +461,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -494,10 +494,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_List Ips for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_List Ips for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -538,7 +538,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -580,10 +580,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Launch Scan Report for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Launch Scan Report for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -621,7 +621,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -654,10 +654,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Ping for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Ping for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -695,7 +695,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -728,10 +728,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_List Groups for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_List Groups for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -772,7 +772,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -817,10 +817,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_List Endpoint Detections for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_List Endpoint Detections for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -858,7 +858,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -891,10 +891,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_List Reports for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_List Reports for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -935,7 +935,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -977,10 +977,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Launch Remediation Report for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Launch Remediation Report for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1021,7 +1021,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1063,10 +1063,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Launch Compliance Report for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Launch Compliance Report for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1107,7 +1107,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QualysVM: {e}")
+            logger.error("Error fetching instance for QualysVM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1142,8 +1142,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QualysVM_Enrich Host for QualysVM: {e}")
+                logger.error("Error executing action QualysVM_Enrich Host for QualysVM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QualysVM")
+            logger.warning("Warning: No active integration instance found for QualysVM")
             return {"Status": "Failed", "Message": "No active instance found."}

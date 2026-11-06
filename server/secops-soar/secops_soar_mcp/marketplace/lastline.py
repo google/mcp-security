@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Lastline: {e}")
+            logger.error("Error fetching instance for Lastline: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Lastline_Search Analysis History for Lastline: {e}")
+                logger.error("Error executing action Lastline_Search Analysis History for Lastline: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Lastline")
+            logger.warning("Warning: No active integration instance found for Lastline")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +148,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Lastline: {e}")
+            logger.error("Error fetching instance for Lastline: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Lastline_Ping for Lastline: {e}")
+                logger.error("Error executing action Lastline_Ping for Lastline: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Lastline")
+            logger.warning("Warning: No active integration instance found for Lastline")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +222,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Lastline: {e}")
+            logger.error("Error fetching instance for Lastline: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Lastline_Get Analysis Results for Lastline: {e}")
+                logger.error("Error executing action Lastline_Get Analysis Results for Lastline: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Lastline")
+            logger.warning("Warning: No active integration instance found for Lastline")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -303,7 +303,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Lastline: {e}")
+            logger.error("Error fetching instance for Lastline: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -339,10 +339,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Lastline_Submit URL for Lastline: {e}")
+                logger.error("Error executing action Lastline_Submit URL for Lastline: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Lastline")
+            logger.warning("Warning: No active integration instance found for Lastline")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -383,7 +383,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Lastline: {e}")
+            logger.error("Error fetching instance for Lastline: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -419,8 +419,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Lastline_Submit File for Lastline: {e}")
+                logger.error("Error executing action Lastline_Submit File for Lastline: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Lastline")
+            logger.warning("Warning: No active integration instance found for Lastline")
             return {"Status": "Failed", "Message": "No active instance found."}

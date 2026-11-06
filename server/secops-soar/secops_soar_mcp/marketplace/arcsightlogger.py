@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ArcSightLogger: {e}")
+            logger.error("Error fetching instance for ArcSightLogger: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -110,10 +110,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ArcSightLogger_Send Query for ArcSightLogger: {e}")
+                logger.error("Error executing action ArcSightLogger_Send Query for ArcSightLogger: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ArcSightLogger")
+            logger.warning("Warning: No active integration instance found for ArcSightLogger")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -151,7 +151,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ArcSightLogger: {e}")
+            logger.error("Error fetching instance for ArcSightLogger: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,8 +184,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ArcSightLogger_Ping for ArcSightLogger: {e}")
+                logger.error("Error executing action ArcSightLogger_Ping for ArcSightLogger: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ArcSightLogger")
+            logger.warning("Warning: No active integration instance found for ArcSightLogger")
             return {"Status": "Failed", "Message": "No active instance found."}

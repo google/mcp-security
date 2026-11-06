@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeTIEDXL: {e}")
+            logger.error("Error fetching instance for McAfeeTIEDXL: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeTIEDXL_Get File Reputation for McAfeeTIEDXL: {e}")
+                logger.error("Error executing action McAfeeTIEDXL_Get File Reputation for McAfeeTIEDXL: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeTIEDXL")
+            logger.warning("Warning: No active integration instance found for McAfeeTIEDXL")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeTIEDXL: {e}")
+            logger.error("Error fetching instance for McAfeeTIEDXL: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeTIEDXL_Set File Reputation for McAfeeTIEDXL: {e}")
+                logger.error("Error executing action McAfeeTIEDXL_Set File Reputation for McAfeeTIEDXL: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeTIEDXL")
+            logger.warning("Warning: No active integration instance found for McAfeeTIEDXL")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeTIEDXL: {e}")
+            logger.error("Error fetching instance for McAfeeTIEDXL: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeTIEDXL_Ping for McAfeeTIEDXL: {e}")
+                logger.error("Error executing action McAfeeTIEDXL_Ping for McAfeeTIEDXL: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeTIEDXL")
+            logger.warning("Warning: No active integration instance found for McAfeeTIEDXL")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeTIEDXL: {e}")
+            logger.error("Error fetching instance for McAfeeTIEDXL: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -324,8 +324,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeTIEDXL_Get File References for McAfeeTIEDXL: {e}")
+                logger.error("Error executing action McAfeeTIEDXL_Get File References for McAfeeTIEDXL: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeTIEDXL")
+            logger.warning("Warning: No active integration instance found for McAfeeTIEDXL")
             return {"Status": "Failed", "Message": "No active instance found."}

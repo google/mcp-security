@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Get User related activities for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Get User related activities for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Create IP Address Range for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Create IP Address Range for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +222,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -261,10 +261,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Close Alert for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Close Alert for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -302,7 +302,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -336,10 +336,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Remove IP From IP Address Range for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Remove IP From IP Address Range for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -377,7 +377,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -410,10 +410,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Ping for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Ping for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -451,7 +451,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -487,10 +487,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Bulk Resolve Alert for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Bulk Resolve Alert for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -528,7 +528,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -562,10 +562,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Add IP To IP Address Range for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Add IP To IP Address Range for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -603,7 +603,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -641,10 +641,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Get IP related activities for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Get IP related activities for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -682,7 +682,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -715,10 +715,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Enrich Entities for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Enrich Entities for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -756,7 +756,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -797,10 +797,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_List Files for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_List Files for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -838,7 +838,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Office365CloudAppSecurity: {e}")
+            logger.error("Error fetching instance for Office365CloudAppSecurity: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -874,8 +874,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Office365CloudAppSecurity_Dismiss Alert for Office365CloudAppSecurity: {e}")
+                logger.error("Error executing action Office365CloudAppSecurity_Dismiss Alert for Office365CloudAppSecurity: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Office365CloudAppSecurity")
+            logger.warning("Warning: No active integration instance found for Office365CloudAppSecurity")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SEP12: {e}")
+            logger.error("Error fetching instance for SEP12: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SEP12_GetReport for SEP12: {e}")
+                logger.error("Error executing action SEP12_GetReport for SEP12: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SEP12")
+            logger.warning("Warning: No active integration instance found for SEP12")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SEP12: {e}")
+            logger.error("Error fetching instance for SEP12: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SEP12_UpdateEndpoint for SEP12: {e}")
+                logger.error("Error executing action SEP12_UpdateEndpoint for SEP12: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SEP12")
+            logger.warning("Warning: No active integration instance found for SEP12")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SEP12: {e}")
+            logger.error("Error fetching instance for SEP12: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -244,10 +244,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SEP12_UpdateAndScanEndpoint for SEP12: {e}")
+                logger.error("Error executing action SEP12_UpdateAndScanEndpoint for SEP12: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SEP12")
+            logger.warning("Warning: No active integration instance found for SEP12")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -285,7 +285,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SEP12: {e}")
+            logger.error("Error fetching instance for SEP12: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -318,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SEP12_Ping for SEP12: {e}")
+                logger.error("Error executing action SEP12_Ping for SEP12: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SEP12")
+            logger.warning("Warning: No active integration instance found for SEP12")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -359,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SEP12: {e}")
+            logger.error("Error fetching instance for SEP12: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -392,8 +392,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SEP12_ScanEndpoint for SEP12: {e}")
+                logger.error("Error executing action SEP12_ScanEndpoint for SEP12: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SEP12")
+            logger.warning("Warning: No active integration instance found for SEP12")
             return {"Status": "Failed", "Message": "No active instance found."}

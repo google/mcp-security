@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoThreatGrid: {e}")
+            logger.error("Error fetching instance for CiscoThreatGrid: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoThreatGrid_Get Hash Associated IPs for CiscoThreatGrid: {e}")
+                logger.error("Error executing action CiscoThreatGrid_Get Hash Associated IPs for CiscoThreatGrid: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoThreatGrid")
+            logger.warning("Warning: No active integration instance found for CiscoThreatGrid")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoThreatGrid: {e}")
+            logger.error("Error fetching instance for CiscoThreatGrid: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoThreatGrid_Get Hash Associated Domains for CiscoThreatGrid: {e}")
+                logger.error("Error executing action CiscoThreatGrid_Get Hash Associated Domains for CiscoThreatGrid: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoThreatGrid")
+            logger.warning("Warning: No active integration instance found for CiscoThreatGrid")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoThreatGrid: {e}")
+            logger.error("Error fetching instance for CiscoThreatGrid: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoThreatGrid_Ping for CiscoThreatGrid: {e}")
+                logger.error("Error executing action CiscoThreatGrid_Ping for CiscoThreatGrid: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoThreatGrid")
+            logger.warning("Warning: No active integration instance found for CiscoThreatGrid")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoThreatGrid: {e}")
+            logger.error("Error fetching instance for CiscoThreatGrid: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -331,10 +331,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoThreatGrid_Upload Sample for CiscoThreatGrid: {e}")
+                logger.error("Error executing action CiscoThreatGrid_Upload Sample for CiscoThreatGrid: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoThreatGrid")
+            logger.warning("Warning: No active integration instance found for CiscoThreatGrid")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -372,7 +372,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoThreatGrid: {e}")
+            logger.error("Error fetching instance for CiscoThreatGrid: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,8 +408,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoThreatGrid_Get Submissions for CiscoThreatGrid: {e}")
+                logger.error("Error executing action CiscoThreatGrid_Get Submissions for CiscoThreatGrid: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoThreatGrid")
+            logger.warning("Warning: No active integration instance found for CiscoThreatGrid")
             return {"Status": "Failed", "Message": "No active instance found."}

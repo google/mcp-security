@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Redis: {e}")
+            logger.error("Error fetching instance for Redis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Redis_Get Key for Redis: {e}")
+                logger.error("Error executing action Redis_Get Key for Redis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Redis")
+            logger.warning("Warning: No active integration instance found for Redis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +140,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Redis: {e}")
+            logger.error("Error fetching instance for Redis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Redis_Set Key for Redis: {e}")
+                logger.error("Error executing action Redis_Set Key for Redis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Redis")
+            logger.warning("Warning: No active integration instance found for Redis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +219,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Redis: {e}")
+            logger.error("Error fetching instance for Redis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -253,10 +253,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Redis_Get List for Redis: {e}")
+                logger.error("Error executing action Redis_Get List for Redis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Redis")
+            logger.warning("Warning: No active integration instance found for Redis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -294,7 +294,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Redis: {e}")
+            logger.error("Error fetching instance for Redis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -327,10 +327,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Redis_Ping for Redis: {e}")
+                logger.error("Error executing action Redis_Ping for Redis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Redis")
+            logger.warning("Warning: No active integration instance found for Redis")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -371,7 +371,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Redis: {e}")
+            logger.error("Error fetching instance for Redis: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -406,8 +406,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Redis_Add To List for Redis: {e}")
+                logger.error("Error executing action Redis_Add To List for Redis: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Redis")
+            logger.warning("Warning: No active integration instance found for Redis")
             return {"Status": "Failed", "Message": "No active instance found."}

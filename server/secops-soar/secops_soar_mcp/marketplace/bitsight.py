@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BitSight: {e}")
+            logger.error("Error fetching instance for BitSight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +107,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BitSight_List Company Highlights for BitSight: {e}")
+                logger.error("Error executing action BitSight_List Company Highlights for BitSight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BitSight")
+            logger.warning("Warning: No active integration instance found for BitSight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -151,7 +151,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BitSight: {e}")
+            logger.error("Error fetching instance for BitSight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -185,10 +185,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BitSight_Get Company Details for BitSight: {e}")
+                logger.error("Error executing action BitSight_Get Company Details for BitSight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BitSight")
+            logger.warning("Warning: No active integration instance found for BitSight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -226,7 +226,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BitSight: {e}")
+            logger.error("Error fetching instance for BitSight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BitSight_Ping for BitSight: {e}")
+                logger.error("Error executing action BitSight_Ping for BitSight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BitSight")
+            logger.warning("Warning: No active integration instance found for BitSight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -303,7 +303,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BitSight: {e}")
+            logger.error("Error fetching instance for BitSight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -341,8 +341,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BitSight_List Company Vulnerabilities for BitSight: {e}")
+                logger.error("Error executing action BitSight_List Company Vulnerabilities for BitSight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BitSight")
+            logger.warning("Warning: No active integration instance found for BitSight")
             return {"Status": "Failed", "Message": "No active instance found."}

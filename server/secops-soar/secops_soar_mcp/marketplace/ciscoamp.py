@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Computers By Network Activity (URL) for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Computers By Network Activity (URL) for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Computers By Network Activity (Ip) for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Computers By Network Activity (Ip) for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -245,10 +245,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Add File To File List for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Add File To File List for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -286,7 +286,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -319,10 +319,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Unisolate Machine for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Unisolate Machine for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -360,7 +360,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -393,10 +393,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Groups for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Groups for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -434,7 +434,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -467,10 +467,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Computers By File Hash for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Computers By File Hash for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -508,7 +508,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -542,10 +542,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get File Lists By Policy for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get File Lists By Policy for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -583,7 +583,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -618,10 +618,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Create Group for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Create Group for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -659,7 +659,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -692,10 +692,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Computers By File Name for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Computers By File Name for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -733,7 +733,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -766,10 +766,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Ping for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Ping for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -807,7 +807,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -841,10 +841,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get File List Items for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get File List Items for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -882,7 +882,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -915,10 +915,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Policies for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Policies for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -956,7 +956,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -989,10 +989,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Get Computer Info for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Get Computer Info for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1030,7 +1030,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoAMP: {e}")
+            logger.error("Error fetching instance for CiscoAMP: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1063,8 +1063,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoAMP_Isolate Machine for CiscoAMP: {e}")
+                logger.error("Error executing action CiscoAMP_Isolate Machine for CiscoAMP: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoAMP")
+            logger.warning("Warning: No active integration instance found for CiscoAMP")
             return {"Status": "Failed", "Message": "No active instance found."}

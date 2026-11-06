@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudArmor: {e}")
+            logger.error("Error fetching instance for GoogleCloudArmor: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudArmor_Create a Security Policy for GoogleCloudArmor: {e}")
+                logger.error("Error executing action GoogleCloudArmor_Create a Security Policy for GoogleCloudArmor: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudArmor")
+            logger.warning("Warning: No active integration instance found for GoogleCloudArmor")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudArmor: {e}")
+            logger.error("Error fetching instance for GoogleCloudArmor: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +176,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudArmor_Update a Security Policy for GoogleCloudArmor: {e}")
+                logger.error("Error executing action GoogleCloudArmor_Update a Security Policy for GoogleCloudArmor: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudArmor")
+            logger.warning("Warning: No active integration instance found for GoogleCloudArmor")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +217,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudArmor: {e}")
+            logger.error("Error fetching instance for GoogleCloudArmor: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudArmor_Ping for GoogleCloudArmor: {e}")
+                logger.error("Error executing action GoogleCloudArmor_Ping for GoogleCloudArmor: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudArmor")
+            logger.warning("Warning: No active integration instance found for GoogleCloudArmor")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleCloudArmor: {e}")
+            logger.error("Error fetching instance for GoogleCloudArmor: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -328,8 +328,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleCloudArmor_Add a Rule to a Security Policy for GoogleCloudArmor: {e}")
+                logger.error("Error executing action GoogleCloudArmor_Add a Rule to a Security Policy for GoogleCloudArmor: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleCloudArmor")
+            logger.warning("Warning: No active integration instance found for GoogleCloudArmor")
             return {"Status": "Failed", "Message": "No active instance found."}

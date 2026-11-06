@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlgoSec: {e}")
+            logger.error("Error fetching instance for AlgoSec: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlgoSec_List Templates for AlgoSec: {e}")
+                logger.error("Error executing action AlgoSec_List Templates for AlgoSec: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlgoSec")
+            logger.warning("Warning: No active integration instance found for AlgoSec")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlgoSec: {e}")
+            logger.error("Error fetching instance for AlgoSec: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -177,10 +177,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlgoSec_Wait for Change Request Status Update for AlgoSec: {e}")
+                logger.error("Error executing action AlgoSec_Wait for Change Request Status Update for AlgoSec: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlgoSec")
+            logger.warning("Warning: No active integration instance found for AlgoSec")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -218,7 +218,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlgoSec: {e}")
+            logger.error("Error fetching instance for AlgoSec: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -251,10 +251,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlgoSec_Ping for AlgoSec: {e}")
+                logger.error("Error executing action AlgoSec_Ping for AlgoSec: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlgoSec")
+            logger.warning("Warning: No active integration instance found for AlgoSec")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -292,7 +292,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlgoSec: {e}")
+            logger.error("Error fetching instance for AlgoSec: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -338,10 +338,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlgoSec_Allow IP for AlgoSec: {e}")
+                logger.error("Error executing action AlgoSec_Allow IP for AlgoSec: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlgoSec")
+            logger.warning("Warning: No active integration instance found for AlgoSec")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -379,7 +379,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AlgoSec: {e}")
+            logger.error("Error fetching instance for AlgoSec: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -425,8 +425,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AlgoSec_Block IP for AlgoSec: {e}")
+                logger.error("Error executing action AlgoSec_Block IP for AlgoSec: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AlgoSec")
+            logger.warning("Warning: No active integration instance found for AlgoSec")
             return {"Status": "Failed", "Message": "No active instance found."}

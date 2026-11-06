@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberArkPAM: {e}")
+            logger.error("Error fetching instance for CyberArkPAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -107,10 +107,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberArkPAM_List Accounts for CyberArkPAM: {e}")
+                logger.error("Error executing action CyberArkPAM_List Accounts for CyberArkPAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberArkPAM")
+            logger.warning("Warning: No active integration instance found for CyberArkPAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -148,7 +148,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberArkPAM: {e}")
+            logger.error("Error fetching instance for CyberArkPAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberArkPAM_Ping for CyberArkPAM: {e}")
+                logger.error("Error executing action CyberArkPAM_Ping for CyberArkPAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberArkPAM")
+            logger.warning("Warning: No active integration instance found for CyberArkPAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +222,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberArkPAM: {e}")
+            logger.error("Error fetching instance for CyberArkPAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -263,8 +263,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberArkPAM_Get Account Password Value for CyberArkPAM: {e}")
+                logger.error("Error executing action CyberArkPAM_Get Account Password Value for CyberArkPAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberArkPAM")
+            logger.warning("Warning: No active integration instance found for CyberArkPAM")
             return {"Status": "Failed", "Message": "No active instance found."}

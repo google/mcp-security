@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -104,10 +104,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Create Regex Pattern Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Create Regex Pattern Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -145,7 +145,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -180,10 +180,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Remove Rule From Rule Group for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Remove Rule From Rule Group for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -221,7 +221,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -268,10 +268,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Create Web ACL for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Create Web ACL for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -309,7 +309,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -344,10 +344,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Add Pattern To Regex Pattern Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Add Pattern To Regex Pattern Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -385,7 +385,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -423,10 +423,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Create IP Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Create IP Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -464,7 +464,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -506,10 +506,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Create Rule Group for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Create Rule Group for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -547,7 +547,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -580,10 +580,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Ping for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Ping for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -621,7 +621,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -656,10 +656,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Remove Rule From Web ACL for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Remove Rule From Web ACL for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -697,7 +697,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -732,10 +732,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_List IP Sets for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_List IP Sets for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -773,7 +773,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -808,10 +808,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_List Regex Pattern Sets for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_List Regex Pattern Sets for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -849,7 +849,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -884,10 +884,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Add Rule To Rule Group for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Add Rule To Rule Group for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -925,7 +925,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -960,10 +960,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_List Web ACLs for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_List Web ACLs for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1001,7 +1001,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1036,10 +1036,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_List Rule Groups for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_List Rule Groups for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1077,7 +1077,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1111,10 +1111,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Remove IP From IP Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Remove IP From IP Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1152,7 +1152,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1186,10 +1186,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Add IP To IP Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Add IP To IP Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1227,7 +1227,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1262,10 +1262,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Remove Pattern From Regex Pattern Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Remove Pattern From Regex Pattern Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1303,7 +1303,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1341,10 +1341,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Remove Entity From Regex Pattern Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Remove Entity From Regex Pattern Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1382,7 +1382,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1421,10 +1421,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Add Rule To Web ACL for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Add Rule To Web ACL for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1462,7 +1462,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSWAF: {e}")
+            logger.error("Error fetching instance for AWSWAF: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1500,8 +1500,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSWAF_Add Entity To Regex Pattern Set for AWSWAF: {e}")
+                logger.error("Error executing action AWSWAF_Add Entity To Regex Pattern Set for AWSWAF: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSWAF")
+            logger.warning("Warning: No active integration instance found for AWSWAF")
             return {"Status": "Failed", "Message": "No active instance found."}

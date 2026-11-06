@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Terminate Process for SSH: {e}")
+                logger.error("Error executing action SSH_Terminate Process for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -145,7 +145,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -183,10 +183,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Reboot Machine for SSH: {e}")
+                logger.error("Error executing action SSH_Reboot Machine for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -227,7 +227,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -266,10 +266,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Logoff User for SSH: {e}")
+                logger.error("Error executing action SSH_Logoff User for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -307,7 +307,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -340,10 +340,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Ping for SSH: {e}")
+                logger.error("Error executing action SSH_Ping for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -384,7 +384,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -423,10 +423,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Execute Program for SSH: {e}")
+                logger.error("Error executing action SSH_Execute Program for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -467,7 +467,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -505,10 +505,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_List Processes for SSH: {e}")
+                logger.error("Error executing action SSH_List Processes for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -549,7 +549,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -589,10 +589,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_List iptables Rules for SSH: {e}")
+                logger.error("Error executing action SSH_List iptables Rules for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -633,7 +633,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -672,10 +672,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Run Command for SSH: {e}")
+                logger.error("Error executing action SSH_Run Command for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -716,7 +716,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -754,10 +754,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_List Connections for SSH: {e}")
+                logger.error("Error executing action SSH_List Connections for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -798,7 +798,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -837,10 +837,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Block IP Address in iptables for SSH: {e}")
+                logger.error("Error executing action SSH_Block IP Address in iptables for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -881,7 +881,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -920,10 +920,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Shutdown Machine for SSH: {e}")
+                logger.error("Error executing action SSH_Shutdown Machine for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -964,7 +964,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SSH: {e}")
+            logger.error("Error fetching instance for SSH: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1003,8 +1003,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SSH_Delete Firewall Rule for SSH: {e}")
+                logger.error("Error executing action SSH_Delete Firewall Rule for SSH: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SSH")
+            logger.warning("Warning: No active integration instance found for SSH")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -103,10 +103,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Delivery Methods for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Delivery Methods for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -144,7 +144,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -184,10 +184,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_Execute Task for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_Execute Task for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +225,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -264,10 +264,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Column Sets for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Column Sets for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -305,7 +305,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -341,10 +341,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_Execute Query for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_Execute Query for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -382,7 +382,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -419,10 +419,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Endpoint Vulnerabilities for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Endpoint Vulnerabilities for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -460,7 +460,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -500,10 +500,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Column Set Fields for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Column Set Fields for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -541,7 +541,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -574,10 +574,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_Ping for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_Ping for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -615,7 +615,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -651,10 +651,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_Scan Endpoints for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_Scan Endpoints for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -692,7 +692,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -731,10 +731,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Queries for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Queries for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -772,7 +772,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -811,10 +811,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_List Packages for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_List Packages for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -852,7 +852,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IvantiEndpointManager: {e}")
+            logger.error("Error fetching instance for IvantiEndpointManager: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -889,8 +889,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IvantiEndpointManager_Enrich Entities for IvantiEndpointManager: {e}")
+                logger.error("Error executing action IvantiEndpointManager_Enrich Entities for IvantiEndpointManager: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IvantiEndpointManager")
+            logger.warning("Warning: No active integration instance found for IvantiEndpointManager")
             return {"Status": "Failed", "Message": "No active instance found."}

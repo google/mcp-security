@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -109,10 +109,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Endpoint Events for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Endpoint Events for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -150,7 +150,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -187,10 +187,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_List Tasks for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_List Tasks for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -228,7 +228,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -261,10 +261,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Dat Version for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Dat Version for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -302,7 +302,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -336,10 +336,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Run Full Scan for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Run Full Scan for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -377,7 +377,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -410,10 +410,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Virus Engine Agent Version for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Virus Engine Agent Version for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -451,7 +451,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -487,10 +487,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Execute Query By ID for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Execute Query By ID for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -528,7 +528,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -561,10 +561,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Last Communication Time for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Last Communication Time for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -602,7 +602,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -635,10 +635,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Agent Information for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Agent Information for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -676,7 +676,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -709,10 +709,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get McAfee Epo Agent Version for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get McAfee Epo Agent Version for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -750,7 +750,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -783,10 +783,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Ping for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Ping for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -824,7 +824,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -857,10 +857,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Host Network IPS Status for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Host Network IPS Status for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -898,7 +898,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -937,10 +937,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_List Queries for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_List Queries for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -978,7 +978,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1012,10 +1012,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Update Mcafee Agent for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Update Mcafee Agent for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1053,7 +1053,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1086,10 +1086,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Compare Server and Agent DAT for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Compare Server and Agent DAT for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1127,7 +1127,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1160,10 +1160,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Host IPS Status for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Host IPS Status for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1201,7 +1201,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1236,10 +1236,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get System Information for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get System Information for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1277,7 +1277,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1339,10 +1339,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Execute Entity Query for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Execute Entity Query for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1380,7 +1380,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1424,10 +1424,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Execute Custom Query for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Execute Custom Query for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1465,7 +1465,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1499,10 +1499,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Add Tag for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Add Tag for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1540,7 +1540,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1592,10 +1592,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Get Events For Hash for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Get Events For Hash for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1633,7 +1633,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeEPO: {e}")
+            logger.error("Error fetching instance for McAfeeEPO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1667,8 +1667,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeEPO_Remove Tag for McAfeeEPO: {e}")
+                logger.error("Error executing action McAfeeEPO_Remove Tag for McAfeeEPO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeEPO")
+            logger.warning("Warning: No active integration instance found for McAfeeEPO")
             return {"Status": "Failed", "Message": "No active instance found."}

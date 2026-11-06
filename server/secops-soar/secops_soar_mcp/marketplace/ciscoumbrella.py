@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Get Whois for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Get Whois for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Add Domain for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Add Domain for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Get Domain Security Info for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Get Domain Security Info for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -317,10 +317,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Get Domain Status for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Get Domain Status for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -358,7 +358,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -391,10 +391,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Get Associated Domains for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Get Associated Domains for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -432,7 +432,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -465,10 +465,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Ping for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Ping for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -506,7 +506,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -539,10 +539,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Delete Domain for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Delete Domain for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -580,7 +580,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CiscoUmbrella: {e}")
+            logger.error("Error fetching instance for CiscoUmbrella: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -613,8 +613,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CiscoUmbrella_Get Malicious Domains for CiscoUmbrella: {e}")
+                logger.error("Error executing action CiscoUmbrella_Get Malicious Domains for CiscoUmbrella: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CiscoUmbrella")
+            logger.warning("Warning: No active integration instance found for CiscoUmbrella")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -116,10 +116,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Unblock Sender by Message ID for Exchange: {e}")
+                logger.error("Error executing action Exchange_Unblock Sender by Message ID for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -157,7 +157,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -206,10 +206,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Send Mail for Exchange: {e}")
+                logger.error("Error executing action Exchange_Send Mail for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -247,7 +247,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -287,10 +287,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Add Domains to Exchange-Siemplify Inbox Rules for Exchange: {e}")
+                logger.error("Error executing action Exchange_Add Domains to Exchange-Siemplify Inbox Rules for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -331,7 +331,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -373,10 +373,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Send Thread Reply for Exchange: {e}")
+                logger.error("Error executing action Exchange_Send Thread Reply for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -417,7 +417,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -478,10 +478,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Search Mails for Exchange: {e}")
+                logger.error("Error executing action Exchange_Search Mails for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -522,7 +522,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -562,10 +562,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Wait for Vote Mail Results for Exchange: {e}")
+                logger.error("Error executing action Exchange_Wait for Vote Mail Results for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -603,7 +603,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -637,10 +637,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Generate Token for Exchange: {e}")
+                logger.error("Error executing action Exchange_Generate Token for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -678,7 +678,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -722,10 +722,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Send Vote Mail for Exchange: {e}")
+                logger.error("Error executing action Exchange_Send Vote Mail for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -763,7 +763,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -803,10 +803,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_List Exchange-Siemplify Inbox Rules for Exchange: {e}")
+                logger.error("Error executing action Exchange_List Exchange-Siemplify Inbox Rules for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -844,7 +844,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -882,10 +882,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Delete Exchange-Siemplify Inbox Rules for Exchange: {e}")
+                logger.error("Error executing action Exchange_Delete Exchange-Siemplify Inbox Rules for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -926,7 +926,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -981,10 +981,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Move Mail To Folder for Exchange: {e}")
+                logger.error("Error executing action Exchange_Move Mail To Folder for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1022,7 +1022,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1067,10 +1067,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Send Email And Wait for Exchange: {e}")
+                logger.error("Error executing action Exchange_Send Email And Wait for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1108,7 +1108,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1141,10 +1141,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Ping for Exchange: {e}")
+                logger.error("Error executing action Exchange_Ping for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1185,7 +1185,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1223,10 +1223,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Extract EML Data for Exchange: {e}")
+                logger.error("Error executing action Exchange_Extract EML Data for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1264,7 +1264,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1306,10 +1306,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Remove Domains from Exchange-Siemplify Inbox Rules for Exchange: {e}")
+                logger.error("Error executing action Exchange_Remove Domains from Exchange-Siemplify Inbox Rules for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1347,7 +1347,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1391,10 +1391,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Remove Senders from Exchange-Siemplify Inbox Rules for Exchange: {e}")
+                logger.error("Error executing action Exchange_Remove Senders from Exchange-Siemplify Inbox Rules for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1435,7 +1435,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1472,10 +1472,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Save Mail Attachments To The Case for Exchange: {e}")
+                logger.error("Error executing action Exchange_Save Mail Attachments To The Case for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1516,7 +1516,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1569,10 +1569,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Download Attachments for Exchange: {e}")
+                logger.error("Error executing action Exchange_Download Attachments for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1613,7 +1613,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1656,10 +1656,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Send Mail HTML for Exchange: {e}")
+                logger.error("Error executing action Exchange_Send Mail HTML for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1700,7 +1700,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1753,10 +1753,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Delete Mail for Exchange: {e}")
+                logger.error("Error executing action Exchange_Delete Mail for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1797,7 +1797,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1834,10 +1834,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Get Mail EML File for Exchange: {e}")
+                logger.error("Error executing action Exchange_Get Mail EML File for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1878,7 +1878,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1911,10 +1911,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Get Account Out Of Facility Settings for Exchange: {e}")
+                logger.error("Error executing action Exchange_Get Account Out Of Facility Settings for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1952,7 +1952,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1994,10 +1994,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Add Senders to Exchange-Siemplify Inbox Rule for Exchange: {e}")
+                logger.error("Error executing action Exchange_Add Senders to Exchange-Siemplify Inbox Rule for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2035,7 +2035,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2068,10 +2068,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Get Authorization for Exchange: {e}")
+                logger.error("Error executing action Exchange_Get Authorization for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2109,7 +2109,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2163,10 +2163,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Block Sender by Message ID for Exchange: {e}")
+                logger.error("Error executing action Exchange_Block Sender by Message ID for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2204,7 +2204,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Exchange: {e}")
+            logger.error("Error fetching instance for Exchange: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2249,8 +2249,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Exchange_Wait for mail from user for Exchange: {e}")
+                logger.error("Error executing action Exchange_Wait for mail from user for Exchange: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Exchange")
+            logger.warning("Warning: No active integration instance found for Exchange")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for F5BigIQ: {e}")
+            logger.error("Error fetching instance for F5BigIQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action F5BigIQ_Get Event Logs By Blocking ID for F5BigIQ: {e}")
+                logger.error("Error executing action F5BigIQ_Get Event Logs By Blocking ID for F5BigIQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for F5BigIQ")
+            logger.warning("Warning: No active integration instance found for F5BigIQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for F5BigIQ: {e}")
+            logger.error("Error fetching instance for F5BigIQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action F5BigIQ_Ping for F5BigIQ: {e}")
+                logger.error("Error executing action F5BigIQ_Ping for F5BigIQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for F5BigIQ")
+            logger.warning("Warning: No active integration instance found for F5BigIQ")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for F5BigIQ: {e}")
+            logger.error("Error fetching instance for F5BigIQ: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,8 +246,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action F5BigIQ_Change Policy Enforcement Mode for F5BigIQ: {e}")
+                logger.error("Error executing action F5BigIQ_Change Policy Enforcement Mode for F5BigIQ: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for F5BigIQ")
+            logger.warning("Warning: No active integration instance found for F5BigIQ")
             return {"Status": "Failed", "Message": "No active instance found."}

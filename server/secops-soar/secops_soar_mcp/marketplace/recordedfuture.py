@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Get Host Related Entities for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Get Host Related Entities for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich Hash for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich Hash for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +246,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Get Hash Related Entities for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Get Hash Related Entities for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +287,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -326,10 +326,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Add Analyst Note for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Add Analyst Note for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -367,7 +367,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -406,10 +406,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Update Alert for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Update Alert for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -447,7 +447,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -483,10 +483,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich CVE for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich CVE for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -524,7 +524,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -560,10 +560,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich IP for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich IP for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -601,7 +601,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -634,10 +634,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Ping for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Ping for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -675,7 +675,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -709,10 +709,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Get Alert Details for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Get Alert Details for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -750,7 +750,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -783,10 +783,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Get Ip Related Entities for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Get Ip Related Entities for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -824,7 +824,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -858,10 +858,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich IOC for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich IOC for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -899,7 +899,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -935,10 +935,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich Host for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich Host for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -976,7 +976,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1009,10 +1009,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Get CVE Related Entities for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Get CVE Related Entities for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1050,7 +1050,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for RecordedFuture: {e}")
+            logger.error("Error fetching instance for RecordedFuture: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1086,8 +1086,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action RecordedFuture_Enrich URL for RecordedFuture: {e}")
+                logger.error("Error executing action RecordedFuture_Enrich URL for RecordedFuture: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for RecordedFuture")
+            logger.warning("Warning: No active integration instance found for RecordedFuture")
             return {"Status": "Failed", "Message": "No active instance found."}

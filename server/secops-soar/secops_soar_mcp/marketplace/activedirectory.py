@@ -64,7 +64,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Get Group Members for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Get Group Members for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Force password update for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Force password update for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Enable computer for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Enable computer for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Get Manager Contact Details for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Get Manager Contact Details for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +397,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Disable account for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Disable account for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +438,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -471,10 +471,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Enable account for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Enable account for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -512,7 +512,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -546,10 +546,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Change User OU for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Change User OU for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -587,7 +587,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -621,10 +621,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Remove User From Group for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Remove User From Group for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -662,7 +662,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -695,10 +695,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Ping for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Ping for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -736,7 +736,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -769,10 +769,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_List User Groups for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_List User Groups for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -810,7 +810,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -845,10 +845,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Update attributes of an AD User for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Update attributes of an AD User for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -886,7 +886,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -921,10 +921,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Update attributes of an AD Host for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Update attributes of an AD Host for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -962,7 +962,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -995,10 +995,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Release Locked Account for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Release Locked Account for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1036,7 +1036,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1070,10 +1070,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Change Host OU for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Change Host OU for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1111,7 +1111,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1152,10 +1152,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Enrich entities for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Enrich entities for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1193,7 +1193,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1227,10 +1227,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Add User To Group for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Add User To Group for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1269,7 +1269,7 @@ Note - For this action, please make sure to have a verified SSL connection and a
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1303,10 +1303,10 @@ Note - For this action, please make sure to have a verified SSL connection and a
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Set User Password for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Set User Password for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1344,7 +1344,7 @@ Note - For this action, please make sure to have a verified SSL connection and a
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1377,10 +1377,10 @@ Note - For this action, please make sure to have a verified SSL connection and a
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Disable computer for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Disable computer for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1418,7 +1418,7 @@ Note - For this action, please make sure to have a verified SSL connection and a
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1452,10 +1452,10 @@ Note - For this action, please make sure to have a verified SSL connection and a
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Is User In Group for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Is User In Group for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1493,7 +1493,7 @@ Note - For this action, please make sure to have a verified SSL connection and a
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ActiveDirectory: {e}")
+            logger.error("Error fetching instance for ActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1529,8 +1529,8 @@ Note - For this action, please make sure to have a verified SSL connection and a
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ActiveDirectory_Search Active Directory for ActiveDirectory: {e}")
+                logger.error("Error executing action ActiveDirectory_Search Active Directory for ActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ActiveDirectory")
+            logger.warning("Warning: No active integration instance found for ActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}

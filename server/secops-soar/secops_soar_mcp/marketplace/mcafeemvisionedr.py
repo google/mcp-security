@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Quarantine Endpoint for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Quarantine Endpoint for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Enrich Endpoint for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Enrich Endpoint for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Ping for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Ping for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -319,10 +319,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Kill Process for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Kill Process for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -360,7 +360,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -395,10 +395,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Stop And Remove Content for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Stop And Remove Content for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -436,7 +436,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -469,10 +469,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Unquarantine Endpoint for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Unquarantine Endpoint for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -510,7 +510,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -545,10 +545,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Remove File for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Remove File for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -586,7 +586,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeMvisionEDR: {e}")
+            logger.error("Error fetching instance for McAfeeMvisionEDR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -620,8 +620,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeMvisionEDR_Dismiss Threat for McAfeeMvisionEDR: {e}")
+                logger.error("Error executing action McAfeeMvisionEDR_Dismiss Threat for McAfeeMvisionEDR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeMvisionEDR")
+            logger.warning("Warning: No active integration instance found for McAfeeMvisionEDR")
             return {"Status": "Failed", "Message": "No active instance found."}

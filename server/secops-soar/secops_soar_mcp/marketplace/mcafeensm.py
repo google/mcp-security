@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Quarantine IP for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Quarantine IP for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Unblock IP for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Unblock IP for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Ping for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Ping for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -317,10 +317,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Is IP Blocked for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Is IP Blocked for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -358,7 +358,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -391,10 +391,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Block IP for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Block IP for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -435,7 +435,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for McAfeeNSM: {e}")
+            logger.error("Error fetching instance for McAfeeNSM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -470,8 +470,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action McAfeeNSM_Get Alert Info Data for McAfeeNSM: {e}")
+                logger.error("Error executing action McAfeeNSM_Get Alert Info Data for McAfeeNSM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for McAfeeNSM")
+            logger.warning("Warning: No active integration instance found for McAfeeNSM")
             return {"Status": "Failed", "Message": "No active instance found."}

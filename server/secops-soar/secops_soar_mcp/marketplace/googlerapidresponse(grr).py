@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +101,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_List Hunts for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_List Hunts for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +142,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_List Launched Flows for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_List Launched Flows for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +220,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +254,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_Get Hunt Details for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_Get Hunt Details for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -295,7 +295,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -328,10 +328,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_Ping for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_Ping for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -369,7 +369,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -403,10 +403,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_Get Client Details for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_Get Client Details for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -444,7 +444,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -478,10 +478,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_Stop a Hunt for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_Stop a Hunt for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -519,7 +519,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -553,10 +553,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_Start a Hunt for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_Start a Hunt for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -594,7 +594,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for GoogleGRR: {e}")
+            logger.error("Error fetching instance for GoogleGRR: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -631,8 +631,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action GoogleGRR_List Clients for GoogleGRR: {e}")
+                logger.error("Error executing action GoogleGRR_List Clients for GoogleGRR: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for GoogleGRR")
+            logger.warning("Warning: No active integration instance found for GoogleGRR")
             return {"Status": "Failed", "Message": "No active instance found."}

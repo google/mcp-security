@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -108,10 +108,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Send Thread Reply for Gmail: {e}")
+                logger.error("Error executing action Gmail_Send Thread Reply for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -152,7 +152,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -199,10 +199,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Add Email Label for Gmail: {e}")
+                logger.error("Error executing action Gmail_Add Email Label for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -243,7 +243,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -288,10 +288,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Forward Email for Gmail: {e}")
+                logger.error("Error executing action Gmail_Forward Email for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -329,7 +329,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -383,10 +383,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Search For Emails for Gmail: {e}")
+                logger.error("Error executing action Gmail_Search For Emails for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -427,7 +427,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -466,10 +466,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Wait For Thread Reply for Gmail: {e}")
+                logger.error("Error executing action Gmail_Wait For Thread Reply for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -510,7 +510,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -557,10 +557,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Remove Email Label for Gmail: {e}")
+                logger.error("Error executing action Gmail_Remove Email Label for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -601,7 +601,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -634,10 +634,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Ping for Gmail: {e}")
+                logger.error("Error executing action Gmail_Ping for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -678,7 +678,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -719,10 +719,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Save Email To The Case for Gmail: {e}")
+                logger.error("Error executing action Gmail_Save Email To The Case for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -760,7 +760,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -806,10 +806,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Send Email for Gmail: {e}")
+                logger.error("Error executing action Gmail_Send Email for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -850,7 +850,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Gmail: {e}")
+            logger.error("Error fetching instance for Gmail: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -898,8 +898,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Gmail_Delete Email for Gmail: {e}")
+                logger.error("Error executing action Gmail_Delete Email for Gmail: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Gmail")
+            logger.warning("Warning: No active integration instance found for Gmail")
             return {"Status": "Failed", "Message": "No active instance found."}

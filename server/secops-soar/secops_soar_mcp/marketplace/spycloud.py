@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SpyCloud: {e}")
+            logger.error("Error fetching instance for SpyCloud: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -104,10 +104,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SpyCloud_List Entity Breaches for SpyCloud: {e}")
+                logger.error("Error executing action SpyCloud_List Entity Breaches for SpyCloud: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SpyCloud")
+            logger.warning("Warning: No active integration instance found for SpyCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -145,7 +145,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SpyCloud: {e}")
+            logger.error("Error fetching instance for SpyCloud: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -178,10 +178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SpyCloud_Ping for SpyCloud: {e}")
+                logger.error("Error executing action SpyCloud_Ping for SpyCloud: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SpyCloud")
+            logger.warning("Warning: No active integration instance found for SpyCloud")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +222,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for SpyCloud: {e}")
+            logger.error("Error fetching instance for SpyCloud: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -266,8 +266,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action SpyCloud_List Catalogs for SpyCloud: {e}")
+                logger.error("Error executing action SpyCloud_List Catalogs for SpyCloud: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for SpyCloud")
+            logger.warning("Warning: No active integration instance found for SpyCloud")
             return {"Status": "Failed", "Message": "No active instance found."}

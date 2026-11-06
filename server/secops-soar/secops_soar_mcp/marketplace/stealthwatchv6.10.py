@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for StealthwatchV6-10: {e}")
+            logger.error("Error fetching instance for StealthwatchV6-10: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action StealthwatchV6-10_Search Events for StealthwatchV6-10: {e}")
+                logger.error("Error executing action StealthwatchV6-10_Search Events for StealthwatchV6-10: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for StealthwatchV6-10")
+            logger.warning("Warning: No active integration instance found for StealthwatchV6-10")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for StealthwatchV6-10: {e}")
+            logger.error("Error fetching instance for StealthwatchV6-10: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action StealthwatchV6-10_Ping for StealthwatchV6-10: {e}")
+                logger.error("Error executing action StealthwatchV6-10_Ping for StealthwatchV6-10: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for StealthwatchV6-10")
+            logger.warning("Warning: No active integration instance found for StealthwatchV6-10")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -211,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for StealthwatchV6-10: {e}")
+            logger.error("Error fetching instance for StealthwatchV6-10: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,8 +246,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action StealthwatchV6-10_Search Flows for StealthwatchV6-10: {e}")
+                logger.error("Error executing action StealthwatchV6-10_Search Flows for StealthwatchV6-10: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for StealthwatchV6-10")
+            logger.warning("Warning: No active integration instance found for StealthwatchV6-10")
             return {"Status": "Failed", "Message": "No active instance found."}

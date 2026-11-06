@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +99,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Remote Lock Managed Device for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Remote Lock Managed Device for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +140,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_List Managed Devices for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_List Managed Devices for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -222,7 +222,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -259,10 +259,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Sync Managed Device for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Sync Managed Device for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -300,7 +300,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -333,10 +333,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Ping for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Ping for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -374,7 +374,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -411,10 +411,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Locate Managed Device for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Locate Managed Device for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -452,7 +452,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -497,10 +497,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Wipe Managed Device for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Wipe Managed Device for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -538,7 +538,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -575,10 +575,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Get Managed Device for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Get Managed Device for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -616,7 +616,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for MicrosoftIntune: {e}")
+            logger.error("Error fetching instance for MicrosoftIntune: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -653,8 +653,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action MicrosoftIntune_Reset Managed Device Passcode for MicrosoftIntune: {e}")
+                logger.error("Error executing action MicrosoftIntune_Reset Managed Device Passcode for MicrosoftIntune: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for MicrosoftIntune")
+            logger.warning("Warning: No active integration instance found for MicrosoftIntune")
             return {"Status": "Failed", "Message": "No active instance found."}

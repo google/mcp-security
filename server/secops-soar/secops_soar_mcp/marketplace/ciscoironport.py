@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IronPort: {e}")
+            logger.error("Error fetching instance for IronPort: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IronPort_Get Report for IronPort: {e}")
+                logger.error("Error executing action IronPort_Get Report for IronPort: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IronPort")
+            logger.warning("Warning: No active integration instance found for IronPort")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IronPort: {e}")
+            logger.error("Error fetching instance for IronPort: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IronPort_Ping for IronPort: {e}")
+                logger.error("Error executing action IronPort_Ping for IronPort: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IronPort")
+            logger.warning("Warning: No active integration instance found for IronPort")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IronPort: {e}")
+            logger.error("Error fetching instance for IronPort: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -253,10 +253,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IronPort_Get All Recipients By Sender for IronPort: {e}")
+                logger.error("Error executing action IronPort_Get All Recipients By Sender for IronPort: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IronPort")
+            logger.warning("Warning: No active integration instance found for IronPort")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -294,7 +294,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IronPort: {e}")
+            logger.error("Error fetching instance for IronPort: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -334,8 +334,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IronPort_Get All Recipients By Subject for IronPort: {e}")
+                logger.error("Error executing action IronPort_Get All Recipients By Subject for IronPort: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IronPort")
+            logger.warning("Warning: No active integration instance found for IronPort")
             return {"Status": "Failed", "Message": "No active instance found."}

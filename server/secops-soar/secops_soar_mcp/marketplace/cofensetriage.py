@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -97,10 +97,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Add Tags To Report for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Add Tags To Report for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -138,7 +138,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -173,10 +173,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Categorize Report for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Categorize Report for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +214,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Execute Playbook for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Execute Playbook for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -331,10 +331,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_List Playbooks for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_List Playbooks for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -372,7 +372,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -409,10 +409,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_List Reports Related To Threat Indicators for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_List Reports Related To Threat Indicators for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -450,7 +450,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -486,10 +486,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Get Report Headers for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Get Report Headers for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -527,7 +527,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -560,10 +560,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Ping for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Ping for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -601,7 +601,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -634,10 +634,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Get Domain Details for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Get Domain Details for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -675,7 +675,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -709,10 +709,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Get Report Reporters for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Get Report Reporters for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -750,7 +750,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -797,10 +797,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_List Categories for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_List Categories for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -838,7 +838,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -871,10 +871,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Get Threat Indicator Details for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Get Threat Indicator Details for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -912,7 +912,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -952,10 +952,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Download Report Preview for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Download Report Preview for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -993,7 +993,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1032,10 +1032,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_Download Report Email for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_Download Report Email for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1073,7 +1073,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CofenseTriage: {e}")
+            logger.error("Error fetching instance for CofenseTriage: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1107,8 +1107,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CofenseTriage_EnrichURL for CofenseTriage: {e}")
+                logger.error("Error executing action CofenseTriage_EnrichURL for CofenseTriage: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CofenseTriage")
+            logger.warning("Warning: No active integration instance found for CofenseTriage")
             return {"Status": "Failed", "Message": "No active instance found."}

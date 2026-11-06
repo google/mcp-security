@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_List Reference Maps for QRadar: {e}")
+                logger.error("Error executing action QRadar_List Reference Maps for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_List Reference Maps of Sets for QRadar: {e}")
+                logger.error("Error executing action QRadar_List Reference Maps of Sets for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +220,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +254,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_QRadar AQL Search for QRadar: {e}")
+                logger.error("Error executing action QRadar_QRadar AQL Search for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -295,7 +295,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -341,10 +341,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Similar Events Query for QRadar: {e}")
+                logger.error("Error executing action QRadar_Similar Events Query for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -382,7 +382,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -417,10 +417,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Value in Reference Tables for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Value in Reference Tables for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -458,7 +458,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -493,10 +493,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Add Offense Note for QRadar: {e}")
+                logger.error("Error executing action QRadar_Add Offense Note for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -534,7 +534,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -569,10 +569,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Value in Reference Set for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Value in Reference Set for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -610,7 +610,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -645,10 +645,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Key in Reference Map of Sets for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Key in Reference Map of Sets for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -686,7 +686,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -719,10 +719,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Ping for QRadar: {e}")
+                logger.error("Error executing action QRadar_Ping for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -760,7 +760,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -810,10 +810,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_QRadar Simple AQL Search for QRadar: {e}")
+                logger.error("Error executing action QRadar_QRadar Simple AQL Search for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -851,7 +851,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -893,10 +893,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Similar Flows Query for QRadar: {e}")
+                logger.error("Error executing action QRadar_Similar Flows Query for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -934,7 +934,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -970,10 +970,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Get Rule MITRE Coverage for QRadar: {e}")
+                logger.error("Error executing action QRadar_Get Rule MITRE Coverage for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1011,7 +1011,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1049,10 +1049,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_List Reference Sets for QRadar: {e}")
+                logger.error("Error executing action QRadar_List Reference Sets for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1090,7 +1090,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1128,10 +1128,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_List Reference Tables for QRadar: {e}")
+                logger.error("Error executing action QRadar_List Reference Tables for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1169,7 +1169,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1204,10 +1204,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Value in Reference Map for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Value in Reference Map for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1248,7 +1248,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1291,10 +1291,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Update Offense for QRadar: {e}")
+                logger.error("Error executing action QRadar_Update Offense for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1332,7 +1332,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1367,10 +1367,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Key in Reference Map for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Key in Reference Map for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1408,7 +1408,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for QRadar: {e}")
+            logger.error("Error fetching instance for QRadar: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1443,8 +1443,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action QRadar_Lookup for a Value in Reference Map of Sets for QRadar: {e}")
+                logger.error("Error executing action QRadar_Lookup for a Value in Reference Map of Sets for QRadar: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for QRadar")
+            logger.warning("Warning: No active integration instance found for QRadar")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +99,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_List Policies for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_List Policies for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +140,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Remove a User from a Group for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Remove a User from a Group for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +250,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Create a Group for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Create a Group for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +291,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -324,10 +324,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Ping for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Ping for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -365,7 +365,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +400,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_List Groups for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_List Groups for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -441,7 +441,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -477,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Attach a Policy for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Attach a Policy for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -518,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -553,10 +553,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Add a User to a Group for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Add a User to a Group for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -594,7 +594,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -631,10 +631,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Create a Policy for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Create a Policy for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -672,7 +672,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -705,10 +705,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Disable User Access for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Disable User Access for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -746,7 +746,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -780,10 +780,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_Create a User for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_Create a User for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -821,7 +821,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AWSIAM: {e}")
+            logger.error("Error fetching instance for AWSIAM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -856,8 +856,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AWSIAM_List Users for AWSIAM: {e}")
+                logger.error("Error executing action AWSIAM_List Users for AWSIAM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AWSIAM")
+            logger.warning("Warning: No active integration instance found for AWSIAM")
             return {"Status": "Failed", "Message": "No active instance found."}

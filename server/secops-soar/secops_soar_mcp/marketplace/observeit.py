@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ObserveIT: {e}")
+            logger.error("Error fetching instance for ObserveIT: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,8 +95,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ObserveIT_Ping for ObserveIT: {e}")
+                logger.error("Error executing action ObserveIT_Ping for ObserveIT: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ObserveIT")
+            logger.warning("Warning: No active integration instance found for ObserveIT")
             return {"Status": "Failed", "Message": "No active instance found."}

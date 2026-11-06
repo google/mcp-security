@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Get Hash Info for XForce: {e}")
+                logger.error("Error executing action XForce_Get Hash Info for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -144,7 +144,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -179,10 +179,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Get IP Info for XForce: {e}")
+                logger.error("Error executing action XForce_Get IP Info for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +220,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -253,10 +253,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Ping for XForce: {e}")
+                logger.error("Error executing action XForce_Ping for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -297,7 +297,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -332,10 +332,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Get Url Info for XForce: {e}")
+                logger.error("Error executing action XForce_Get Url Info for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -374,7 +374,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,10 +408,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Get IP By Category for XForce: {e}")
+                logger.error("Error executing action XForce_Get IP By Category for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -452,7 +452,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for XForce: {e}")
+            logger.error("Error fetching instance for XForce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -485,8 +485,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action XForce_Get IP Malware for XForce: {e}")
+                logger.error("Error executing action XForce_Get IP Malware for XForce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for XForce")
+            logger.warning("Warning: No active integration instance found for XForce")
             return {"Status": "Failed", "Message": "No active instance found."}

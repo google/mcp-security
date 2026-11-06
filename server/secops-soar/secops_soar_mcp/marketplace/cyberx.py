@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Enrich Endpoints for CyberX: {e}")
+                logger.error("Error executing action CyberX_Enrich Endpoints for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Get Connections for Endpoint for CyberX: {e}")
+                logger.error("Error executing action CyberX_Get Connections for Endpoint for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -243,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Get Events for CyberX: {e}")
+                logger.error("Error executing action CyberX_Get Events for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -284,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -317,10 +317,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Ping for CyberX: {e}")
+                logger.error("Error executing action CyberX_Ping for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -358,7 +358,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -391,10 +391,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Get Device Vulnerability Report for CyberX: {e}")
+                logger.error("Error executing action CyberX_Get Device Vulnerability Report for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -432,7 +432,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CyberX: {e}")
+            logger.error("Error fetching instance for CyberX: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -465,8 +465,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CyberX_Get Alerts for CyberX: {e}")
+                logger.error("Error executing action CyberX_Get Alerts for CyberX: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CyberX")
+            logger.warning("Warning: No active integration instance found for CyberX")
             return {"Status": "Failed", "Message": "No active instance found."}

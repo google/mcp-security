@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +100,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_List Watchlist Items for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_List Watchlist Items for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -141,7 +141,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Delete Watchlist for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Delete Watchlist for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -216,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Ping for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Ping for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -338,10 +338,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Enrich Entities for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Enrich Entities for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -379,7 +379,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -417,10 +417,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Create Watchlist for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Create Watchlist for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -458,7 +458,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -492,10 +492,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Add Comments To Entity for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Add Comments To Entity for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -533,7 +533,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -567,10 +567,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Remove Entity From Watchlist for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Remove Entity From Watchlist for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -608,7 +608,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -642,10 +642,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_Add Entity To Watchlist for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_Add Entity To Watchlist for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -683,7 +683,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for ExabeamAdvancedAnalytics: {e}")
+            logger.error("Error fetching instance for ExabeamAdvancedAnalytics: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -718,8 +718,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action ExabeamAdvancedAnalytics_List Watchlists for ExabeamAdvancedAnalytics: {e}")
+                logger.error("Error executing action ExabeamAdvancedAnalytics_List Watchlists for ExabeamAdvancedAnalytics: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for ExabeamAdvancedAnalytics")
+            logger.warning("Warning: No active integration instance found for ExabeamAdvancedAnalytics")
             return {"Status": "Failed", "Message": "No active instance found."}

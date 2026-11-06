@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Remove Deceptive Server for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Remove Deceptive Server for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -171,10 +171,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Remove Deceptive User for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Remove Deceptive User for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -212,7 +212,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -245,10 +245,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Ping for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Ping for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -286,7 +286,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_List Deceptive Items for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_List Deceptive Items for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -397,10 +397,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Enrich Entities for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Enrich Entities for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -438,7 +438,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -477,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Add Deceptive User for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Add Deceptive User for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -518,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -561,10 +561,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Run Forensic Scan for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Run Forensic Scan for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -602,7 +602,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for IllusiveNetworks: {e}")
+            logger.error("Error fetching instance for IllusiveNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -639,8 +639,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action IllusiveNetworks_Add Deceptive Server for IllusiveNetworks: {e}")
+                logger.error("Error executing action IllusiveNetworks_Add Deceptive Server for IllusiveNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for IllusiveNetworks")
+            logger.warning("Warning: No active integration instance found for IllusiveNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}

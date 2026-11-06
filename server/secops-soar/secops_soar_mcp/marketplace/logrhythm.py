@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Add Alarm To Case for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Add Alarm To Case for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +140,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -175,10 +175,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Download Case Files for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Download Case Files for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +219,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -262,10 +262,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_List Entity Events for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_List Entity Events for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -306,7 +306,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -342,10 +342,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Get Alarm Details for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Get Alarm Details for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -383,7 +383,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -416,10 +416,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Ping for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Ping for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -460,7 +460,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -494,10 +494,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Add Note To Case for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Add Note To Case for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -538,7 +538,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -583,10 +583,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Update Case for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Update Case for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -627,7 +627,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -666,10 +666,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Create Case for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Create Case for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -710,7 +710,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -745,10 +745,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Add Comment To Alarm for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Add Comment To Alarm for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -789,7 +789,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -828,10 +828,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_List Case Evidence for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_List Case Evidence for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -872,7 +872,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -908,10 +908,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Attach File To Case for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Attach File To Case for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -952,7 +952,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -990,10 +990,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Update Alarm for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Update Alarm for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1034,7 +1034,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for LogRhythm: {e}")
+            logger.error("Error fetching instance for LogRhythm: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1069,8 +1069,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action LogRhythm_Enrich Entities for LogRhythm: {e}")
+                logger.error("Error executing action LogRhythm_Enrich Entities for LogRhythm: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for LogRhythm")
+            logger.warning("Warning: No active integration instance found for LogRhythm")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Create Question for Tanium: {e}")
+                logger.error("Error executing action Tanium_Create Question for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -181,10 +181,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Quarantine Endpoint for Tanium: {e}")
+                logger.error("Error executing action Tanium_Quarantine Endpoint for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -225,7 +225,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -261,10 +261,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Get Task Details for Tanium: {e}")
+                logger.error("Error executing action Tanium_Get Task Details for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -305,7 +305,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -352,10 +352,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_List Endpoint Events for Tanium: {e}")
+                logger.error("Error executing action Tanium_List Endpoint Events for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -396,7 +396,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -433,10 +433,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Get Question Results for Tanium: {e}")
+                logger.error("Error executing action Tanium_Get Question Results for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -474,7 +474,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -507,10 +507,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Ping for Tanium: {e}")
+                logger.error("Error executing action Tanium_Ping for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -548,7 +548,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -581,10 +581,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Create Connection for Tanium: {e}")
+                logger.error("Error executing action Tanium_Create Connection for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -622,7 +622,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -655,10 +655,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_List Connections for Tanium: {e}")
+                logger.error("Error executing action Tanium_List Connections for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -699,7 +699,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -734,10 +734,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Enrich Entities for Tanium: {e}")
+                logger.error("Error executing action Tanium_Enrich Entities for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -778,7 +778,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -815,10 +815,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Download File for Tanium: {e}")
+                logger.error("Error executing action Tanium_Download File for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -859,7 +859,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Tanium: {e}")
+            logger.error("Error fetching instance for Tanium: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -893,8 +893,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Tanium_Delete File for Tanium: {e}")
+                logger.error("Error executing action Tanium_Delete File for Tanium: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Tanium")
+            logger.warning("Warning: No active integration instance found for Tanium")
             return {"Status": "Failed", "Message": "No active instance found."}

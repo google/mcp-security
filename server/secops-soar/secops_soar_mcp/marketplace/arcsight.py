@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Search for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Search for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -191,10 +191,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Get Report for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Get Report for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -232,7 +232,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -269,10 +269,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Add Entities To Active List for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Add Entities To Active List for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -310,7 +310,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -351,10 +351,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Get Activelist Entries for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Get Activelist Entries for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -392,7 +392,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -427,10 +427,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Change Case Stage for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Change Case Stage for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -468,7 +468,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -501,10 +501,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Ping for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Ping for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -542,7 +542,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -581,10 +581,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Get Query Results for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Get Query Results for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -622,7 +622,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -665,10 +665,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_List Resources for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_List Resources for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -706,7 +706,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -749,10 +749,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Add Entries To Activelist for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Add Entries To Activelist for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -790,7 +790,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for Arcsight: {e}")
+            logger.error("Error fetching instance for Arcsight: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -828,8 +828,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action Arcsight_Is Value In Activelist Column for Arcsight: {e}")
+                logger.error("Error executing action Arcsight_Is Value In Activelist Column for Arcsight: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for Arcsight")
+            logger.warning("Warning: No active integration instance found for Arcsight")
             return {"Status": "Failed", "Message": "No active instance found."}

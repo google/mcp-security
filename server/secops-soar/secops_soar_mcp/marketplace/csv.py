@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CSV: {e}")
+            logger.error("Error fetching instance for CSV: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -111,10 +111,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CSV_CSV Search by Entity for CSV: {e}")
+                logger.error("Error executing action CSV_CSV Search by Entity for CSV: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CSV")
+            logger.warning("Warning: No active integration instance found for CSV")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -152,7 +152,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CSV: {e}")
+            logger.error("Error fetching instance for CSV: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -185,10 +185,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CSV_Ping for CSV: {e}")
+                logger.error("Error executing action CSV_Ping for CSV: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CSV")
+            logger.warning("Warning: No active integration instance found for CSV")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -226,7 +226,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CSV: {e}")
+            logger.error("Error fetching instance for CSV: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -263,10 +263,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CSV_Save Json To CSV for CSV: {e}")
+                logger.error("Error executing action CSV_Save Json To CSV for CSV: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CSV")
+            logger.warning("Warning: No active integration instance found for CSV")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -304,7 +304,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for CSV: {e}")
+            logger.error("Error fetching instance for CSV: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -350,8 +350,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action CSV_CSV Search by String for CSV: {e}")
+                logger.error("Error executing action CSV_CSV Search by String for CSV: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for CSV")
+            logger.warning("Warning: No active integration instance found for CSV")
             return {"Status": "Failed", "Message": "No active instance found."}

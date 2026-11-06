@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Delete IOC Feed for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Delete IOC Feed for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -173,10 +173,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Release Quarantined Email for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Release Quarantined Email for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +214,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -249,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Acknowledge Alert for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Acknowledge Alert for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -323,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Ping for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Ping for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +400,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Delete Quarantined Email for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Delete Quarantined Email for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -441,7 +441,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -477,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Add Rule To Custom Rules File for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Add Rule To Custom Rules File for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -518,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -555,10 +555,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Add IOC Feed for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Add IOC Feed for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -596,7 +596,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -632,10 +632,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Download Alert Artifacts for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Download Alert Artifacts for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -673,7 +673,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -708,10 +708,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_List IOC Feeds for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_List IOC Feeds for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -749,7 +749,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -786,10 +786,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Download Custom Rules File for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Download Custom Rules File for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -827,7 +827,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -865,10 +865,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_Download Quarantined Email for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_Download Quarantined Email for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -906,7 +906,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for FireEyeCM: {e}")
+            logger.error("Error fetching instance for FireEyeCM: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -949,8 +949,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action FireEyeCM_List Quarantined Emails for FireEyeCM: {e}")
+                logger.error("Error executing action FireEyeCM_List Quarantined Emails for FireEyeCM: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for FireEyeCM")
+            logger.warning("Warning: No active integration instance found for FireEyeCM")
             return {"Status": "Failed", "Message": "No active instance found."}

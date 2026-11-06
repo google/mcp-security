@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -102,10 +102,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Edit Blocked Applications for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Edit Blocked Applications for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -180,10 +180,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Block ips in policy for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Block ips in policy for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -221,7 +221,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -260,10 +260,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Get Correlated Traffic Between IPs for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Get Correlated Traffic Between IPs for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -301,7 +301,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -337,10 +337,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Add Ips to group for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Add Ips to group for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -378,7 +378,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -418,10 +418,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Search logs for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Search logs for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -459,7 +459,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -493,10 +493,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Commit Changes for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Commit Changes for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -534,7 +534,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -567,10 +567,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Ping for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Ping for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -608,7 +608,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -644,10 +644,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Unblock Urls for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Unblock Urls for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -685,7 +685,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -719,10 +719,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Push Changes for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Push Changes for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -760,7 +760,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -796,10 +796,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Block Urls for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Block Urls for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -837,7 +837,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -873,10 +873,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Remove Ips from group for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Remove Ips from group for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -914,7 +914,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -951,10 +951,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Unblock ips in policy for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Unblock ips in policy for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -992,7 +992,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for PaloAltoPanorama: {e}")
+            logger.error("Error fetching instance for PaloAltoPanorama: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1028,8 +1028,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action PaloAltoPanorama_Get Blocked Applications for PaloAltoPanorama: {e}")
+                logger.error("Error executing action PaloAltoPanorama_Get Blocked Applications for PaloAltoPanorama: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for PaloAltoPanorama")
+            logger.warning("Warning: No active integration instance found for PaloAltoPanorama")
             return {"Status": "Failed", "Message": "No active instance found."}

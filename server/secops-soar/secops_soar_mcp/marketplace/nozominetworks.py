@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for NozomiNetworks: {e}")
+            logger.error("Error fetching instance for NozomiNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action NozomiNetworks_Run a CLI Command for NozomiNetworks: {e}")
+                logger.error("Error executing action NozomiNetworks_Run a CLI Command for NozomiNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for NozomiNetworks")
+            logger.warning("Warning: No active integration instance found for NozomiNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for NozomiNetworks: {e}")
+            logger.error("Error fetching instance for NozomiNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -173,10 +173,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action NozomiNetworks_Run a Query for NozomiNetworks: {e}")
+                logger.error("Error executing action NozomiNetworks_Run a Query for NozomiNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for NozomiNetworks")
+            logger.warning("Warning: No active integration instance found for NozomiNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +214,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for NozomiNetworks: {e}")
+            logger.error("Error fetching instance for NozomiNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -258,10 +258,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action NozomiNetworks_List Vulnerabilities for NozomiNetworks: {e}")
+                logger.error("Error executing action NozomiNetworks_List Vulnerabilities for NozomiNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for NozomiNetworks")
+            logger.warning("Warning: No active integration instance found for NozomiNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -299,7 +299,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for NozomiNetworks: {e}")
+            logger.error("Error fetching instance for NozomiNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -332,10 +332,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action NozomiNetworks_Ping for NozomiNetworks: {e}")
+                logger.error("Error executing action NozomiNetworks_Ping for NozomiNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for NozomiNetworks")
+            logger.warning("Warning: No active integration instance found for NozomiNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -373,7 +373,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for NozomiNetworks: {e}")
+            logger.error("Error fetching instance for NozomiNetworks: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,8 +408,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action NozomiNetworks_Enrich Entities for NozomiNetworks: {e}")
+                logger.error("Error executing action NozomiNetworks_Enrich Entities for NozomiNetworks: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for NozomiNetworks")
+            logger.warning("Warning: No active integration instance found for NozomiNetworks")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -62,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AtlassianConfluenceServer: {e}")
+            logger.error("Error fetching instance for AtlassianConfluenceServer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AtlassianConfluenceServer_Get Page by ID for AtlassianConfluenceServer: {e}")
+                logger.error("Error executing action AtlassianConfluenceServer_Get Page by ID for AtlassianConfluenceServer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AtlassianConfluenceServer")
+            logger.warning("Warning: No active integration instance found for AtlassianConfluenceServer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AtlassianConfluenceServer: {e}")
+            logger.error("Error fetching instance for AtlassianConfluenceServer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -174,10 +174,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AtlassianConfluenceServer_Get Child Pages for AtlassianConfluenceServer: {e}")
+                logger.error("Error executing action AtlassianConfluenceServer_Get Child Pages for AtlassianConfluenceServer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AtlassianConfluenceServer")
+            logger.warning("Warning: No active integration instance found for AtlassianConfluenceServer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -215,7 +215,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AtlassianConfluenceServer: {e}")
+            logger.error("Error fetching instance for AtlassianConfluenceServer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -252,10 +252,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AtlassianConfluenceServer_Get Page Comments for AtlassianConfluenceServer: {e}")
+                logger.error("Error executing action AtlassianConfluenceServer_Get Page Comments for AtlassianConfluenceServer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AtlassianConfluenceServer")
+            logger.warning("Warning: No active integration instance found for AtlassianConfluenceServer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -293,7 +293,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AtlassianConfluenceServer: {e}")
+            logger.error("Error fetching instance for AtlassianConfluenceServer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -326,10 +326,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AtlassianConfluenceServer_Ping for AtlassianConfluenceServer: {e}")
+                logger.error("Error executing action AtlassianConfluenceServer_Ping for AtlassianConfluenceServer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AtlassianConfluenceServer")
+            logger.warning("Warning: No active integration instance found for AtlassianConfluenceServer")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -367,7 +367,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for AtlassianConfluenceServer: {e}")
+            logger.error("Error fetching instance for AtlassianConfluenceServer: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,8 +408,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action AtlassianConfluenceServer_List Pages for AtlassianConfluenceServer: {e}")
+                logger.error("Error executing action AtlassianConfluenceServer_List Pages for AtlassianConfluenceServer: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for AtlassianConfluenceServer")
+            logger.warning("Warning: No active integration instance found for AtlassianConfluenceServer")
             return {"Status": "Failed", "Message": "No active instance found."}

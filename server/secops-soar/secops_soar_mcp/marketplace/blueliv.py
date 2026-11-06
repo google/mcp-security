@@ -65,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -102,10 +102,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Add Labels to Threats for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Add Labels to Threats for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -143,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +176,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Ping for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Ping for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +220,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -257,10 +257,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Add Comment to a Threat for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Add Comment to a Threat for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -301,7 +301,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -340,10 +340,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_List Entity Threats for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_List Entity Threats for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -384,7 +384,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -421,10 +421,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Mark Threat as a Favorite for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Mark Threat as a Favorite for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -465,7 +465,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -501,10 +501,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Enrich Entities for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Enrich Entities for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -542,7 +542,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            logger.error(f"Error fetching instance for BlueLiv: {e}")
+            logger.error("Error fetching instance for BlueLiv: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -579,8 +579,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                logger.error(f"Error executing action BlueLiv_Remove Labels From Threats for BlueLiv: {e}")
+                logger.error("Error executing action BlueLiv_Remove Labels From Threats for BlueLiv: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            logger.warning(f"Warning: No active integration instance found for BlueLiv")
+            logger.warning("Warning: No active integration instance found for BlueLiv")
             return {"Status": "Failed", "Message": "No active instance found."}
