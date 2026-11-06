@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - docs__accessibility-audit
   workflow_dispatch:
 
 permissions:
@@ -17,7 +18,7 @@ concurrency:
 
 jobs:
   build-docs:
-  name: Build and Test Accessibility
+    name: Build and Test Accessibility
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -65,6 +66,7 @@ jobs:
 
   deploy:
     needs: build-docs
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
