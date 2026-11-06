@@ -33,8 +33,12 @@ The Detection Engineer, sometimes referred to as a Content Developer, is respons
     *   `list_security_rules`: To review existing rules, identify overlaps, and understand current coverage.
     *   `get_security_alerts`: To analyze the performance and triggering patterns of specific rules.
     *   `lookup_entity`: To quickly gather context on entities involved in test alerts or potential FPs/FNs.
-    *   *(Potentially tools for rule creation/modification/deployment if available via MCP, e.g., `create_detection_rule`, `update_detection_rule`)*
-    *   *(Potentially `validate_udm_query` if available)*
+    *   `generate_threat_detection_opportunity`: To generate structured Threat Detection Opportunities (TDOs) including MITRE ATT&CK techniques, procedures, and log types from threat text.
+    *   `generate_synthetic_events`: To simulate high-fidelity raw logs and enriched UDM events for testing detection coverage.
+    *   `evaluate_rule_coverage_long_running`: To evaluate existing rule coverage by simulating synthetic events in an asynchronous operation.
+    *   `get_operation`: To poll and retrieve the results of long-running operations.
+    *   `generate_rules`: To generate draft YARA-L 2.0 rules for identified detection coverage gaps.
+    *   `create_rule` / `validate_rule`: To validate syntax and deploy approved YARA-L rules.
 *   **`gti-mcp` (For Context & Rule Ideas):**
     *   `search_threats`, `get_collection_report`, `get_collection_mitre_tree`, `get_threat_intel`: To research threats, TTPs, and vulnerabilities that require detection coverage.
     *   `get_file_report`, `get_domain_report`, etc.: To understand IOC characteristics for rule development.
@@ -46,10 +50,11 @@ The Detection Engineer, sometimes referred to as a Content Developer, is respons
 *   **`bigquery` (For Large-Scale Testing):**
     *   `execute-query`: For testing rules against large historical datasets in data lakes.
 
-## Relevant Runbooks
+## Relevant Runbooks & Agent Skills
 
 Detection Engineers are central to the detection lifecycle and related processes:
 
+*   **`detection-engineering-coverage-evaluation` (`/security:detect`)**: The official end-to-end skill automating TDO generation, synthetic event simulation, coverage evaluation, and YARA-L rule drafting.
 *   `detection_rule_validation_tuning.md`: Core workflow for analyzing and tuning rules.
 *   `detection_as_code_workflows.md`: Defines the process for developing and deploying rules if using DaC.
 *   `detection_report.md`: Used to document the performance and logic of specific detections.
