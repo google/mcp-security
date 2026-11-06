@@ -42,3 +42,10 @@ serve: build
 # Deploy to GitHub Pages (if used)
 deploy: build
 	@echo "To deploy to GitHub Pages, configure your repository settings."
+
+# Accessibility and linting targets
+lint-docs:
+	markdownlint-cli2 "docs/**/*.md"
+
+test-a11y: build
+	HTML_DIR="$(BUILDDIR)/html" pytest docs/tests/test_docs_a11y.py
