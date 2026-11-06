@@ -37,8 +37,9 @@ CISOs typically interact with security tools at a high level for reporting, metr
     *   Reviewing case summaries (`get_case_full_details`, `siemplify_create_gemini_case_summary`), case volume/status (`list_cases`), and incident reports to understand operational tempo and major events.
 *   **`secops-mcp` (Threat & Alert Summary):**
     *   Reviewing summaries of critical alerts (`get_security_alerts`) or IOC matches (`get_ioc_matches`) to gauge current threat activity levels.
-*   **`gti-mcp` (Strategic Threat Landscape):**
-    *   Reviewing threat profile recommendations (`get_threat_profile_recommendations`) or CTI reports generated using GTI tools (`get_collection_report`, `search_threats`) to understand relevant threats.
+*   **`gti-mcp` (Strategic Threat Context):**
+    *   Reviewing organization Threat Profiles (`list_threat_profiles`, `get_threat_profile`, `get_threat_profile_recommendations`, `get_threat_profile_associations_timeline`) and CTI reports (`get_collection_report`, `search_threats`) to track threats targeting the organization's industry and regions.
+    *   Reviewing executive threat summaries from GTI Agentic sessions (`ask_gti_agent`, `copy_shared_session`) and external brand or ransomware exposure surfaced via `search_digital_threat_monitoring`.
 *   **`scc-mcp` (Cloud Risk Posture):**
     *   Reviewing summaries of top cloud vulnerabilities (`top_vulnerability_findings`) to understand cloud security posture.
 *   **(Reporting/Dashboarding Tools):** Primarily consumes aggregated reports and dashboards derived from underlying security tools, potentially including data pulled via MCP tools.
