@@ -645,11 +645,19 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
     Markdown-formatted string with the commonalities of the collection.
   """
   async with vt_client(ctx) as client:
-    data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
-    data = await data.json_async()
+    response = await client.get_async(
+        f"/collections/{collection_id}?attributes=aggregations")
+    data = await response.json_async()
+    if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+      error_info = data.get("error", {}) if isinstance(data, dict) else {}
+      message = (
+          error_info.get("message")
+          if isinstance(error_info, dict) else None)
+      if message:
+        return f"Error: {message}"
+      return "Error: Collection not found or unexpected API response"
     sanitized_data = utils.sanitize_response(data["data"])
-    markdown_output = utils.parse_collection_commonalities(sanitized_data)
-  return markdown_output
+  return utils.parse_collection_commonalities(sanitized_data)
 
 
 async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
@@ -752,7 +760,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
           # Iterate through different community rule types
           for key, rule_type in rule_keys_map.items():
             rules = files_aggregations.get(key, [])
-            if rule_type not in rule_type and not rules:
+            if rule_type not in rule_types or not rules:
               continue
 
             # Sort rules by count and take the top N

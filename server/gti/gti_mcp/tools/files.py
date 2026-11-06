@@ -109,8 +109,8 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
 
 @server.tool()
 async def get_entities_related_to_a_file(
-    hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10, 
-) -> list[dict[str, typing.Any]]:
+    hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10,
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
     """Retrieve entities related to the the given file hash.
 
     The following table shows a summary of available relationships for file objects.
@@ -171,7 +171,7 @@ async def get_entities_related_to_a_file(
       descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
       limit: Limit the number of files to retrieve. 10 by default.
     Returns:
-      List of objects related to the given file.
+      List of objects related to the given file, or an error dictionary.
     """
     if not relationship_name in FILE_RELATIONSHIPS:
         return {
@@ -181,9 +181,9 @@ async def get_entities_related_to_a_file(
 
     async with vt_client(ctx) as client:
       res = await utils.fetch_object_relationships(
-          client, 
+          client,
           "files",
-          hash, 
+          hash,
           relationships=[relationship_name],
           descriptors_only=descriptors_only,
           limit=limit)
