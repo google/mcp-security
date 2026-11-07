@@ -806,16 +806,22 @@ class TestChronicleSecOpsMCP:
     async def test_get_stats_basic(self, chronicle_config: Dict[str, str]) -> None:
         """Test that get_stats returns a structured aggregation result from Chronicle.
 
-        Runs a stats count by event type over the last 24 hours. We cannot assert
-        specific row values (data varies per environment), but we verify the response
-        contract: correct keys, typed values, no error field, and row/total_rows
-        consistency.
+        Runs a YARA-L 2.0 match:/outcome: count by event type over the last 24 hours.
+        We cannot assert specific row values (data varies per environment), but we
+        verify the response contract: correct keys, typed values, no error field,
+        and row/total_rows consistency.
 
         Args:
             chronicle_config: Dictionary with Chronicle configuration
         """
         result = await get_stats(
-            query="| stats count() as event_count by metadata.event_type",
+            query=(
+                'metadata.event_type != ""\n'
+                "match:\n"
+                "  metadata.event_type\n"
+                "outcome:\n"
+                "  $event_count = count(metadata.id)"
+            ),
             hours_back=24,
             max_values=20,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -832,6 +838,10 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result["total_rows"], int)
         # Row list length must match total_rows — the secops-wrapper contract
         assert result["total_rows"] == len(result["rows"])
+        # Chronicle :udmSearch strips the leading $ from outcome variable names.
+        if result["columns"]:
+            assert "event_count" in result["columns"]
+            assert "$event_count" not in result["columns"]
 
         if result["rows"]:
             sample_row = result["rows"][0]
@@ -853,7 +863,13 @@ class TestChronicleSecOpsMCP:
             chronicle_config: Dictionary with Chronicle configuration
         """
         result = await get_stats(
-            query="| stats count() as total by metadata.event_type",
+            query=(
+                'metadata.event_type != ""\n'
+                "match:\n"
+                "  metadata.event_type\n"
+                "outcome:\n"
+                "  $total = count(metadata.id)"
+            ),
             hours_back=24,
             max_values=5,
             project_id=chronicle_config["CHRONICLE_PROJECT_ID"],
@@ -864,6 +880,7 @@ class TestChronicleSecOpsMCP:
         assert "error" not in result, f"get_stats returned an error: {result.get('error')}"
 
         for row in result["rows"]:
+            # Leading $ is stripped from outcome aliases in returned column headers.
             count_value = row.get("total")
             if count_value is not None:
                 assert isinstance(count_value, (int, float)), (

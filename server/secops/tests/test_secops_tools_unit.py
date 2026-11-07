@@ -55,10 +55,10 @@ def mock_chronicle_client():
     client.fetch_udm_search_csv.return_value = {"csv": {"row": []}}
     client.translate_nl_to_udm.return_value = "metadata.event_type = 'USER_LOGIN'"
     client.get_stats.return_value = {
-        "columns": ["metadata.event_type", "count"],
+        "columns": ["metadata.event_type", "event_count"],
         "rows": [
-            {"metadata.event_type": "USER_LOGIN", "count": 150},
-            {"metadata.event_type": "NETWORK_CONNECTION", "count": 42},
+            {"metadata.event_type": "USER_LOGIN", "event_count": 150},
+            {"metadata.event_type": "NETWORK_CONNECTION", "event_count": 42},
         ],
         "total_rows": 2,
     }
@@ -258,11 +258,33 @@ async def test_export_csv_invalid_date(mock_get_client):
 # Stats tool tests
 # ---------------------------------------------------------------------------
 
+# YARA-L 2.0 match:/outcome: queries used across get_stats unit tests.
+_STATS_BY_EVENT_TYPE = """\
+metadata.event_type != ""
+match:
+  metadata.event_type
+outcome:
+  $event_count = count(metadata.id)
+"""
+
+_STATS_BY_PRINCIPAL_IP = """\
+principal.ip != ""
+match:
+  principal.ip
+outcome:
+  $user_count_by_ip = count(principal.user.userid)
+order:
+  $user_count_by_ip desc
+limit:
+  20
+"""
+
+
 @pytest.mark.asyncio
 async def test_get_stats_returns_structured_result(mock_get_client):
     """Stats results contain typed columns, rows, and total_rows."""
     result = await get_stats(
-        query="| stats count() as count by metadata.event_type",
+        query=_STATS_BY_EVENT_TYPE,
         hours_back=24,
         project_id="test",
         customer_id="test",
@@ -270,18 +292,19 @@ async def test_get_stats_returns_structured_result(mock_get_client):
 
     assert "error" not in result, f"Unexpected error: {result.get('error')}"
     assert result["total_rows"] == 2
-    assert result["columns"] == ["metadata.event_type", "count"]
+    # Chronicle :udmSearch strips the leading $ from outcome variable names.
+    assert result["columns"] == ["metadata.event_type", "event_count"]
     assert len(result["rows"]) == 2
     # Verify row values are typed correctly (int, not string)
     login_row = next(r for r in result["rows"] if r["metadata.event_type"] == "USER_LOGIN")
-    assert login_row["count"] == 150
+    assert login_row["event_count"] == 150
 
 
 @pytest.mark.asyncio
 async def test_get_stats_passes_correct_time_range(mock_get_client):
     """Explicit ISO start/end times are parsed and forwarded as datetime objects."""
     result = await get_stats(
-        query="| stats count() by metadata.event_type",
+        query=_STATS_BY_EVENT_TYPE,
         start_time="2024-03-01T00:00:00Z",
         end_time="2024-03-02T00:00:00Z",
         project_id="test",
@@ -297,13 +320,15 @@ async def test_get_stats_passes_correct_time_range(mock_get_client):
     assert kwargs["start_time"].day == 1
     assert isinstance(kwargs["end_time"], datetime)
     assert kwargs["end_time"].day == 2
+    assert "max_events" not in kwargs
+    assert "case_insensitive" not in kwargs
 
 
 @pytest.mark.asyncio
 async def test_get_stats_passes_max_values_param(mock_get_client):
     """max_values is forwarded to the underlying chronicle client."""
     await get_stats(
-        query="| stats count() by principal.ip",
+        query=_STATS_BY_PRINCIPAL_IP,
         max_values=100,
         project_id="test",
         customer_id="test",
@@ -317,7 +342,7 @@ async def test_get_stats_passes_max_values_param(mock_get_client):
 async def test_get_stats_invalid_date_returns_error(mock_get_client):
     """Invalid ISO date returns error dict — not an exception."""
     result = await get_stats(
-        query="| stats count() by metadata.event_type",
+        query=_STATS_BY_EVENT_TYPE,
         start_time="not-a-date",
         project_id="test",
         customer_id="test",
@@ -338,7 +363,7 @@ async def test_get_stats_api_error_returns_error_dict(mock_get_client):
     mock_get_client.get_stats.side_effect = Exception("Chronicle API unavailable")
 
     result = await get_stats(
-        query="| stats count() by metadata.event_type",
+        query=_STATS_BY_EVENT_TYPE,
         project_id="test",
         customer_id="test",
     )
