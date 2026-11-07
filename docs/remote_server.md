@@ -1,186 +1,254 @@
-# Remote MCP Server for Google SecOps
+# Remote MCP server for Google SecOps
 
-The **Remote MCP server for Google SecOps** simplifies the setup and usage of MCP by providing a fully-managed service. Instead of managing a local Python environment, you can point your AI agents or MCP clients to a globally-consistent and enterprise-ready endpoint.
+The remote MCP server for Google Security Operations provides a Google-managed Streamable HTTP MCP endpoint backed by the Chronicle REST API. Instead of managing a local Python runtime, you point your MCP client or agent framework to the regional Google Cloud endpoint and authenticate with Application Default Credentials (ADC) and IAM.
 
-This remote server inherits the rigorous scalability, security, and observability standards of the Google Cloud ecosystem.
+## Endpoints
+
+Use the locational endpoint (`<region>-chronicle.googleapis.com`) matching your Google SecOps tenant region, or the multi-regional endpoint where applicable:
+
+| Region | Endpoint URL |
+| :--- | :--- |
+| United States (locational) | `https://us-chronicle.googleapis.com/mcp` |
+| United States (multi-regional) | `https://chronicle.us.rep.googleapis.com/mcp` |
+| Europe (locational) | `https://eu-chronicle.googleapis.com/mcp` |
+| Single GCP region (for example, `europe-west2`, `asia-southeast1`) | `https://<region>-chronicle.googleapis.com/mcp` |
 
 ## Onboarding
 
-### Authentication and Authorization
+### 1. Authenticate and grant IAM roles
 
-The remote server uses [Application Default Credentials (ADC)](https://docs.cloud.google.com/mcp/authenticate-mcp#user-credentials-adc-mcp-servers).
+The remote server authenticates callers with Google Cloud [Application Default Credentials (ADC)](https://docs.cloud.google.com/mcp/authenticate-mcp#user-credentials-adc-mcp-servers).
 
-1.  **Set up ADC**: Follow the guide to [Set up Application Default Credentials](https://docs.cloud.google.com/docs/authentication/provide-credentials-adc).
-2.  **Authenticate**: Detailed instructions are in [Authenticate to Google and Google Cloud MCP servers](https://docs.cloud.google.com/mcp/authenticate-mcp).
-3.  **Roles**: The caller requires the `roles/mcp.toolUser` role. Administrators adding this role need `roles/serviceusage.serviceUsageAdmin`.
+1. **Authenticate locally**: Sign in and update ADC, then set your quota project:
+   ```bash
+   ACCOUNT="analyst@example.com"
+   PROJECT_ID="your-project-id"
+   gcloud auth login "$ACCOUNT" --update-adc
+   gcloud config set project "$PROJECT_ID"
+   gcloud auth application-default set-quota-project "$PROJECT_ID"
+   ```
+   For unattended or production workloads, attach a dedicated Google Cloud service account rather than a human user credential. See [Authenticate to Google Cloud MCP servers](https://docs.cloud.google.com/mcp/authenticate-mcp#agent-identity).
 
-For production, see [Agent identity](https://docs.cloud.google.com/mcp/authenticate-mcp#agent-identity) recommendations in [Manage MCP servers](https://docs.cloud.google.com/mcp/manage-mcp-servers).
+2. **Grant required IAM roles** on your Google Cloud project:
+   - **MCP Tool User** (`roles/mcp.toolUser`) to invoke `/mcp` tools (`mcp.tools.call`).
+   - **Service Usage Consumer** (`roles/serviceusage.serviceUsageConsumer`) to validate the `x-goog-user-project` quota header.
+   - **Chronicle data role** such as **Chronicle API Viewer** (`roles/chronicle.viewer`), **Chronicle API Editor** (`roles/chronicle.editor`), or **Chronicle API Admin** (`roles/chronicle.admin`). The remote MCP server enforces the caller's granular Chronicle IAM permissions on every API call.
 
-### Enable the Service
+### 2. Enable the remote MCP service
 
-You must enable the MCP service in your Google Cloud project.
+Enable `chronicle.googleapis.com/mcp` on the Google Cloud project bound to your Google SecOps tenant (requires `roles/serviceusage.serviceUsageAdmin`):
 
 ```bash
-PROJECT_ID=<your-gcp-project-id>
+PROJECT_ID="your-project-id"
 gcloud components install beta
-gcloud beta services mcp enable chronicle.googleapis.com/mcp --project=$PROJECT_ID
+gcloud beta services mcp enable chronicle.googleapis.com/mcp --project="$PROJECT_ID"
 ```
 
-See [Supported Products](https://docs.cloud.google.com/mcp/supported-products) and the [Enablement Guide](https://docs.cloud.google.com/mcp/configure-mcp-ai-application#enable-remote-mcp-server) for more details.
+For organization-wide enablement details, see [Supported Google Cloud MCP products](https://docs.cloud.google.com/mcp/supported-products) and [Enable a remote MCP server](https://docs.cloud.google.com/mcp/configure-mcp-ai-application#enable-remote-mcp-server).
 
-### Environment Configuration
+### 3. Provide tenant parameters in agent instructions
 
-Remote MCP servers require specific environment context for every request. It is recommended to include these in a context file (e.g., `GEMINI.md` or system prompt) for your LLM:
+Nearly every tool on the remote MCP server requires `projectId`, `customerId`, and `region` to bind the target Google SecOps resource path (`projects/{projectId}/locations/{region}/instances/{customerId}`). Add your tenant identifiers to your agent's persistent rules or `GEMINI.md` file so the model passes them on every call:
 
 ```text
-When using the secops-hosted-mcp MCP Server, use these parameters for EVERY request:
-Customer ID: <UUIDv4 for your tenant>
-Region: <your-region>
-Project ID: <your-gcp-project-id>
+When calling tools on the Google SecOps remote MCP server, pass these tenant parameters on every tool call:
+- projectId: your-project-id
+- customerId: a1b2c3d4-e5f6-4321-abcd-ef1234567890
+- region: us
 ```
 
-### SOAR API Migration
+### SOAR API migration status
 
-The hosted MCP server uses the **Chronicle REST APIs** (OneMCP) instead of the legacy SOAR APIs.
-*   **SIEM tools**: Available immediately without migration.
-*   **SOAR tools**: Require migration to Chronicle API. See [SOAR migration overview](https://docs.cloud.google.com/chronicle/docs/soar/admin-tasks/advanced/migrate-to-gcp).
+The remote MCP server calls native Chronicle REST APIs:
 
-## Governance
+- **SIEM tools** (UDM search, YARA-L 2.0 rules, curated rules, alerts, entity summaries, data tables, reference lists, feeds, parsers, and investigations) work immediately on all Google SecOps SIEM tenants.
+- **SOAR tools** (cases, case alerts, playbooks, and integration actions) require your tenant to complete SOAR migration to the Chronicle API. See [Migrate Google SecOps SOAR to Google Cloud](https://docs.cloud.google.com/chronicle/docs/soar/admin-tasks/advanced/migrate-to-gcp). Tenants that have not completed migration can continue using the local [Google SecOps SOAR MCP server](servers/secops_soar_mcp.md) against `SOAR_URL`.
 
-### Model Armor
-Optional protection to sanitize MCP tool calls and responses, mitigating prompt injection and sensitive data leakage.
-*   [Model Armor for MCP guide](https://docs.cloud.google.com/model-armor/model-armor-mcp-google-cloud-integration)
+## Governance and security controls
 
-### Cloud Armor
-Protect the endpoint itself using DDoS protection and WAF capabilities (IP allowlists, geo-blocking).
-*   [Cloud Armor integration](https://docs.cloud.google.com/chronicle/docs/soar/marketplace-integrations/google-cloud-armor)
-
-### IAM
-Access is managed via standard Google Cloud IAM.
-*   Identity requires: `roles/mcp.toolUser`
-*   The server respects existing granular entitlements assigned to the identity via the Chronicle REST API.
-*   [MCP Access Control](https://docs.cloud.google.com/mcp/access-control)
-
-### Organization Policy
-Restrict MCP usage across your organization. For example, to allow *only* the SecOps MCP server:
-
-```json
-{
-  "name": "organizations/$ORG_ID/policies/gcp.managed.allowedMCPServices",
-  "spec": {
-    "rules": [
-      {
-        "enforce": true,
-        "parameters": {
-          "allowedServices": [
+- **IAM access control**: Access is governed by Google Cloud IAM (`roles/mcp.toolUser` plus Chronicle roles). See [MCP access control](https://docs.cloud.google.com/mcp/access-control).
+- **Model Armor**: Sanitize MCP tool inputs and responses to mitigate prompt injection and sensitive data exposure. See [Model Armor for Google Cloud MCP](https://docs.cloud.google.com/model-armor/model-armor-mcp-google-cloud-integration).
+- **Organization policies**: Restrict allowed MCP services across your Google Cloud organization with `gcp.managed.allowedMCPServices`:
+  ```json
+  {
+    "name": "organizations/YOUR_ORG_ID/policies/gcp.managed.allowedMCPServices",
+    "spec": {
+      "rules": [
+        {
+          "enforce": true,
+          "parameters": {
+            "allowedServices": [
               "chronicle.googleapis.com/mcp"
-          ]
+            ]
+          }
         }
-      }
-    ]
+      ]
+    }
   }
-}
-```
-*   [Control MCP use in your organization](https://docs.cloud.google.com/mcp/control-mcp-use-organization)
+  ```
+  See [Control MCP use in your organization](https://docs.cloud.google.com/mcp/control-mcp-use-organization).
+- **Cloud Audit Logs**: All administrative operations and MCP tool calls are recorded in Cloud Audit Logs. See [MCP audit logging](https://docs.cloud.google.com/mcp/audit-logging).
 
-### Observability
-All administrative and access activities are recorded in Cloud Audit Logs.
-*   [MCP Audit Logging](https://docs.cloud.google.com/mcp/audit-logging)
+## Client configuration
 
-## Client Configuration
+### Automated setup with skills
 
-The remote server can be used with any MCP-compatible client. Since JSON configuration for MCP is not yet fully standardized across all clients, here are examples for common tools.
-
-### Automated Setup
-
-For **Gemini CLI** and **Antigravity**, you can use the automated setup skills provided in the [Google SecOps Extension](./google_secops_extension.md):
-*   **Gemini CLI**: Use the `secops-setup-gemini-cli` skill.
-*   **Antigravity**: Use the `secops-setup-antigravity` skill.
+For **Gemini CLI** and **Antigravity**, the [Google SecOps extension](google_secops_extension.md) includes interactive setup skills (`secops-setup-gemini` and `secops-setup-antigravity`) that verify ADC and write the configuration for you.
 
 ### Gemini CLI
 
-Using the `google_credentials` auth provider (native support):
+Add `secops-hosted-mcp` to `~/.gemini/settings.json` using the built-in `google_credentials` auth provider:
 
 ```json
 {
- "mcpServers": {
-   "secops-hosted-mcp": {
-     "httpUrl": "https://chronicle.us.rep.googleapis.com/mcp",
-     "authProviderType": "google_credentials",
-     "oauth": {
-       "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
-     },
-     "timeout": 30000,
-     "headers": {
-       "x-goog-user-project": "<YOUR_PROJECT_ID>"
-     }
-   }
- }
+  "mcpServers": {
+    "secops-hosted-mcp": {
+      "httpUrl": "https://us-chronicle.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "oauth": {
+        "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      },
+      "timeout": 30000,
+      "headers": {
+        "x-goog-user-project": "your-project-id"
+      },
+      "excludeTools": [
+        "create_feed",
+        "update_feed",
+        "run_parser",
+        "list_feeds",
+        "get_feed",
+        "disable_feed",
+        "enable_feed"
+      ]
+    }
+  }
 }
 ```
 
-*   [Gemini CLI Configuration Guide](https://docs.cloud.google.com/mcp/configure-mcp-ai-application#gemini-cli)
+### Antigravity
 
-### Testing with cURL
+Add `secops` to `~/.gemini/antigravity/mcp_config.json`:
 
-You can verify access directly without an MCP client:
-
-```bash
-curl --location 'https://chronicle.us.rep.googleapis.com/mcp' \
-  -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
-  -H 'content-type: application/json' \
-  -H 'accept: application/json, text/event-stream' \
-  -H 'x-goog-user-project: <YOUR_PROJECT_ID>' \
-  -d '{
-    "method": "tools/call",
-    "params": {
-      "name": "list_rules",
-      "arguments": {
-        "project_id": "<YOUR_PROJECT_ID>",
-        "customer_id": "<YOUR_CUSTOMER_ID>",
-        "region": "<YOUR_REGION>"
-      }
-    },
-    "jsonrpc": "2.0",
-    "id": 1
-  }' -s
+```json
+{
+  "mcpServers": {
+    "secops": {
+      "serverUrl": "https://us-chronicle.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "headers": {
+        "x-goog-user-project": "your-project-id"
+      },
+      "disabledTools": [
+        "create_feed",
+        "update_feed",
+        "run_parser",
+        "list_feeds",
+        "get_feed",
+        "disable_feed",
+        "enable_feed"
+      ]
+    }
+  }
+}
 ```
 
-### Agent Development Kit (ADK)
+> **Schema token tip:** Excluding the seven feed and parser administration tools (`create_feed`, `update_feed`, `run_parser`, `list_feeds`, `get_feed`, `disable_feed`, and `enable_feed`) when you are not administering log feeds reduces the remote server's eager JSON `inputSchema` payload by roughly 69% (`~42,000` tokens per session). Remove that filter whenever you need feed or parser administration tools.
 
-Example Python configuration using `google-adk`:
+### Goose
+
+In [Goose](https://goose-docs.ai/) (`~/.config/goose/config.yaml`), configure a `streamable_http` extension and pass your bearer token and quota project header:
+
+```yaml
+extensions:
+  secops-remote:
+    name: Google SecOps Remote MCP
+    type: streamable_http
+    enabled: true
+    uri: https://us-chronicle.googleapis.com/mcp
+    headers:
+      Authorization: "Bearer ${GCP_ACCESS_TOKEN}"
+      x-goog-user-project: "your-project-id"
+```
+
+### Verify connectivity with cURL
+
+Test your credentials and IAM bindings directly from a terminal before wiring an MCP client:
+
+```bash
+PROJECT_ID="your-project-id"
+CUSTOMER_ID="a1b2c3d4-e5f6-4321-abcd-ef1234567890"
+REGION="us"
+ENDPOINT_URL="https://${REGION}-chronicle.googleapis.com/mcp"
+ACCESS_TOKEN="$(gcloud auth application-default print-access-token)"
+
+curl --silent --show-error --location "$ENDPOINT_URL" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "x-goog-user-project: $PROJECT_ID" \
+  -d "{
+    \"jsonrpc\": \"2.0\",
+    \"id\": 1,
+    \"method\": \"tools/call\",
+    \"params\": {
+      \"name\": \"list_rules\",
+      \"arguments\": {
+        \"projectId\": \"$PROJECT_ID\",
+        \"customerId\": \"$CUSTOMER_ID\",
+        \"region\": \"$REGION\"
+      }
+    }
+  }"
+```
+
+### Google Agent Development Kit (ADK)
+
+Connect a Python ADK agent to the remote MCP endpoint with `McpToolset` and `StreamableHTTPConnectionParams`:
 
 ```python
 import google.auth
 from google.auth.transport.requests import Request
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
 
-# 1. Setup scopes
-SCOPES = ["https://www.googleapis.com/auth/chronicle"]
+PROJECT_ID = "your-project-id"
+REGION = "us"
+SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
+FEED_ADMIN_TOOLS = {
+    "create_feed",
+    "update_feed",
+    "run_parser",
+    "list_feeds",
+    "get_feed",
+    "disable_feed",
+    "enable_feed",
+}
 
-def get_access_token():
-   creds, _ = google.auth.default(scopes=SCOPES)
-   auth_req = Request()
-   creds.refresh(auth_req)
-   return creds.token
 
-# 2. Configure Toolset
+def get_access_token() -> str:
+    creds, _ = google.auth.default(scopes=SCOPES)
+    creds.refresh(Request())
+    return creds.token
+
+
 toolset = McpToolset(
-   connection_params=StreamableHTTPConnectionParams(
-       url="https://chronicle.us.rep.googleapis.com/mcp",
-       headers={
-           "Authorization": f"Bearer {get_access_token()}",
-           "Accept": "text/event-stream",
-           "x-goog-user-project": "<YOUR_PROJECT_ID>"
-       }
-   )
+    connection_params=StreamableHTTPConnectionParams(
+        url=f"https://{REGION}-chronicle.googleapis.com/mcp",
+        headers={
+            "Authorization": f"Bearer {get_access_token()}",
+            "Accept": "application/json, text/event-stream",
+            "x-goog-user-project": PROJECT_ID,
+        },
+    ),
+    tool_filter=lambda tool, ctx=None: tool.name not in FEED_ADMIN_TOOLS,
 )
 ```
 
-## Available Tools
+## Available tools
 
-The remote MCP server exposes a strategic subset of Chronicle REST API methods as MCP tools. The list is extensive and includes tools for:
-*   SIEM (Search, Rules, Alerts, Feeds)
-*   SOAR (Cases, Playbooks, Connectors) - *requires API migration*
+The remote MCP server exposes over 70 tools mapped from the Chronicle REST API across:
 
-Use the `list_tools` MCP method or your client's discovery command (e.g., `/mcp desc` in Gemini CLI) to see the full list dynamically.
+- **SIEM**: Natural-language-to-UDM query translation (`translate_udm_query`), UDM event search (`udm_search`), entity summaries (`summarize_entity`), IOC matches (`get_ioc_match`), SIEM alerts, YARA-L 2.0 detection rules, retrohunts, curated rules, data tables, reference lists, feeds, parsers, and Gemini investigations.
+- **SOAR** (on migrated tenants): Cases (`list_cases`, `get_case`, `update_case`, `create_case_comment`, `execute_bulk_close_case`), case alerts (`list_case_alerts`), connector events, involved entities, playbooks, and integration actions.
+
+Call `tools/list` (or run `/mcp desc` in Gemini CLI) to inspect the live schema for every tool available to your tenant.

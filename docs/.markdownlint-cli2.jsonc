@@ -9,6 +9,7 @@
     "MD059": true
   },
   "ignores": [
-    "_build/**"
+    "_build/**",
+    "superpowers/**"
   ]
 }

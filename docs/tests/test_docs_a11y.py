@@ -134,6 +134,12 @@ def test_all_html_pages_static_semantics() -> None:
                     f"{rel}: <pre> block missing tabindex for keyboard scrolling"
                 )
 
+        for table_wrapper in soup.select("div.table-wrapper"):
+            if table_wrapper.get("tabindex") is None:
+                errors.append(
+                    f"{rel}: div.table-wrapper missing tabindex for keyboard scrolling"
+                )
+
         for checkbox in soup.select("input.task-list-item-checkbox"):
             if not checkbox.get("aria-label") and not checkbox.get(
                 "aria-labelledby"

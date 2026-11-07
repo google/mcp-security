@@ -1,4 +1,4 @@
-:# Nozomi Networks Integration
+# Nozomi Networks Integration
 
 ## Overview
 

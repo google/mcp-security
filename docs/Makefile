@@ -46,7 +46,7 @@ deploy: build
 
 # Lint Markdown source files for accessibility rules (headings, alt text, link text)
 lint-docs:
-	$(MARKDOWNLINT) "**/*.md" "!_build/**"
+	$(MARKDOWNLINT) "**/*.md" "!_build/**" "!superpowers/**"
 
 # Run automated static HTML semantics and headless Chromium axe-core WCAG AA checks
 test-a11y:

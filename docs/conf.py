@@ -68,6 +68,9 @@ myst_enable_extensions = [
     "tasklist",            # Task lists with checkboxes
 ]
 
+# Generate anchor slugs for H1 through H4 headings so section links resolve cleanly
+myst_heading_anchors = 4
+
 # Support both .md and .rst files
 source_suffix = [".rst", ".md"]
 
@@ -88,6 +91,7 @@ exclude_patterns = [
     "requirements.txt",
     "Makefile",
     "tests",
+    "superpowers",
 ]
 
 # Syntax highlighting style (WCAG AA high-contrast palettes for light and dark modes)
@@ -247,12 +251,24 @@ texinfo_documents = [
 # -- HTML Accessibility Post-Processing -----------------------------------
 
 def _enhance_body_accessibility(app, pagename, templatename, context, doctree):
-    """Ensure Sphinx/MyST generated body fragments satisfy WCAG 2.1 AA semantics."""
+    """Ensure Sphinx/MyST generated body and navigation fragments satisfy WCAG 2.1 AA semantics."""
+    from bs4 import BeautifulSoup
+
+    for tree_key in ("furo_navigation_tree",):
+        nav_html = context.get(tree_key)
+        if nav_html and 'role="heading"' in nav_html:
+            nav_soup = BeautifulSoup(nav_html, "html.parser")
+            nav_modified = False
+            for heading in nav_soup.find_all(attrs={"role": "heading"}):
+                if not heading.get("aria-level"):
+                    heading["aria-level"] = "2"
+                    nav_modified = True
+            if nav_modified:
+                context[tree_key] = str(nav_soup)
+
     body = context.get("body")
     if not body:
         return
-
-    from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(body, "html.parser")
     modified = False
@@ -263,10 +279,11 @@ def _enhance_body_accessibility(app, pagename, templatename, context, doctree):
             heading["aria-level"] = "2"
             modified = True
 
-    # Horizontally scrollable <pre> code blocks require keyboard focusability (WCAG 2.1.1).
-    for pre in soup.find_all("pre"):
-        if not pre.get("tabindex"):
-            pre["tabindex"] = "0"
+    # Horizontally scrollable <pre> code blocks and Furo .table-wrapper containers
+    # require keyboard focusability (WCAG 2.1.1 / axe scrollable-region-focusable).
+    for scrollable in soup.select("pre, div.table-wrapper"):
+        if not scrollable.get("tabindex"):
+            scrollable["tabindex"] = "0"
             modified = True
 
     # MyST tasklist checkboxes emit disabled <input type="checkbox"> without labels (WCAG 4.1.2).
@@ -288,4 +305,4 @@ def _enhance_body_accessibility(app, pagename, templatename, context, doctree):
 
 
 def setup(app):
-    app.connect("html-page-context", _enhance_body_accessibility)
+    app.connect("html-page-context", _enhance_body_accessibility, priority=900)
