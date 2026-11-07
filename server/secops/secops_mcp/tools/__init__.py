@@ -25,6 +25,7 @@ from .reference_list_management import *
 from .rule_exclusions import *
 from .search import *
 from .security_alerts import *
+from .stats import *
 from .security_events import *
 from .security_rules import *
 from .threat_intel import *

@@ -203,6 +203,9 @@ app_data.db
 
 # Don't commit the evaluation data
 *.evalset.json
+
+# Local reference docs (not for repo)
+stats_doc.md
 .adk/
 
 # Gemini
