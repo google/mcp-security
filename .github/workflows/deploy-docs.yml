@@ -3,15 +3,20 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # Or your default branch
       - docs__accessibility-audit
-  workflow_dispatch:
+    paths:
+      - 'docs/**' # Trigger on changes within the docs directory
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch: # Allows manual triggering
 
+# Required for GitHub Pages API deployment
 permissions:
   contents: read
-  pages: write
+  pages: write  # Needed to push to gh-pages branch
   id-token: write
 
+# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -22,29 +27,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
-      - name: Set up Node.js for Markdown Linting
-        uses: actions/setup-node@v4
+      - name: Set up Node.js for Markdown accessibility linting
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          if [ -f docs/requirements.txt ]; then
-            pip install -r docs/requirements.txt
-          fi
-          playwright install --with-deps chromium
+          python -m pip install pip==26.2.2
+          pip install -r docs/requirements.txt
+          playwright install --with-deps chromium --only-shell
 
-      - name: Lint Markdown documentation
+      - name: Lint Markdown documentation for accessibility
         run: |
-          make -C docs lint-docs || echo "Markdown lint warnings reported"
+          make -C docs lint-docs
 
       - name: Create .nojekyll file
         run: |
@@ -52,9 +55,10 @@ jobs:
 
       - name: Build documentation
         run: |
+          # Run make html inside the docs directory
           make -C docs html
 
-      - name: Run Accessibility Tests (axe-core WCAG AA)
+      - name: Run Accessibility Tests (HTML semantics + axe-core WCAG AA)
         run: |
           make -C docs test-a11y
 
@@ -63,7 +67,7 @@ jobs:
           touch docs/_build/html/.nojekyll
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs/_build/html
 

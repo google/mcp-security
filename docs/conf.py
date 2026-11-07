@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Copyright 2025 Google LLC
 #
@@ -22,12 +23,14 @@ from subprocess import PIPE, Popen
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
-project = "Google MCP Security"
+project = "Google MCP Security"  # Modified
 author = "Google Cloud Security"
 copyright = f"{datetime.date.today().year}, {author}"
 
+# The version info for the project you're documenting
 try:
-    pipe = Popen("git describe --tags --always", stdout=PIPE, shell=True, cwd=os.path.abspath('../..'))
+    # Attempt to get version from git, adjust path if necessary
+    pipe = Popen("git describe --tags --always", stdout=PIPE, shell=True, cwd=os.path.abspath('../..')) # Added cwd
     git_version = pipe.stdout.read().decode("utf8").strip()
 
     if git_version:
@@ -42,31 +45,39 @@ except Exception:
 
 # -- General configuration ---------------------------------------------------
 
+# Add any Sphinx extension module names here
 extensions = [
-    "myst_parser",
-    "sphinx_copybutton",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.intersphinx",
-    "sphinx_click",
+    "myst_parser",           # Markdown support
+    "sphinx_copybutton",     # Add copy buttons to code blocks
+    "sphinx.ext.autodoc",    # API documentation
+    "sphinx.ext.viewcode",   # Add links to view source code
+    "sphinx.ext.napoleon",   # Support for Google-style docstrings
+    "sphinx.ext.intersphinx", # Link to other projects' documentation
+    "sphinx_click",         # Document click-based CLI applications
 ]
 
+# MyST Parser configuration for extended Markdown support
 myst_enable_extensions = [
-    "colon_fence",
-    "deflist",
-    "fieldlist",
-    "html_admonition",
-    "html_image",
-    "replacements",
-    "smartquotes",
-    "tasklist",
+    "colon_fence",           # Code blocks with colons
+    "deflist",              # Definition lists
+    "fieldlist",            # Field lists
+    "html_admonition",      # HTML admonitions
+    "html_image",           # HTML images
+    "replacements",         # Text replacements
+    "smartquotes",          # Smart quotes
+    "tasklist",            # Task lists with checkboxes
 ]
 
+# Support both .md and .rst files
 source_suffix = [".rst", ".md"]
+
+# The master toctree document
 master_doc = "index"
+
+# Add any paths that contain templates
 templates_path = ["_templates"]
 
+# Files to exclude from documentation build
 exclude_patterns = [
     "_build",
     "Thumbs.db",
@@ -75,24 +86,33 @@ exclude_patterns = [
     "env",
     "**/.git/**",
     "requirements.txt",
-    "Makefile"
+    "Makefile",
+    "tests",
 ]
 
-# Use accessible high contrast pygments themes for WCAG AA compliance
+# Syntax highlighting style (WCAG AA high-contrast palettes for light and dark modes)
 pygments_style = "a11y-high-contrast-light"
 pygments_dark_style = "a11y-high-contrast-dark"
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = "furo"
 
+# html_logo = "img/LogStory_logo.png"
 html_logo = "img/SecOps-512-color.png"
 html_favicon = "img/SecOps-32-color.png"
 
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+
+html_theme_options = {}
 html_title = project
 
+# Create _static directory if it doesn't exist
 static_dir = os.path.join(os.path.dirname(__file__), '_static')
 os.makedirs(static_dir, exist_ok=True)
 
+# Set static paths for custom CSS/JS/images
 html_static_path = ["_static", "img"]
 
 html_sidebars = {
@@ -104,10 +124,10 @@ html_sidebars = {
     ]
 }
 
-# Theme options with WCAG AA compliant primary brand colors
+# Theme options
 html_theme_options = {
     "light_css_variables": {
-        "color-brand-primary": "#185abc",    # WCAG AA compliant Google Blue on light/tinted surfaces
+        "color-brand-primary": "#185abc",    # Google Blue (WCAG AA >= 4.5:1 on light and sidebar surfaces)
         "color-brand-content": "#185abc",
     },
     "dark_css_variables": {
@@ -134,19 +154,138 @@ html_theme_options = {
     ],
 }
 
+# -- Extension configurations ------------------------------------------------
+
+# Intersphinx mapping to other projects
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'requests': ('https://requests.readthedocs.io/en/latest/', None),
 }
 
+# Napoleon settings for Google-style docstrings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
 napoleon_include_init_with_doc = True
 napoleon_include_private_with_doc = False
 
+# Copy button settings
 copybutton_prompt_text = "$ "
 copybutton_prompt_is_regexp = True
 copybutton_only_copy_prompt_lines = False
 copybutton_remove_prompts = True
 
+# -- Options for HTMLHelp output ------------------------------------------
+
+# Output file base name for HTML help builder.
 htmlhelp_basename = "project-doc"
+
+
+# -- Options for LaTeX output ---------------------------------------------
+
+latex_elements = {
+    # The paper size ('letterpaper' or 'a4paper').
+    #
+    # 'papersize': 'letterpaper',
+    # The font size ('10pt', '11pt' or '12pt').
+    #
+    # 'pointsize': '10pt',
+    # Additional stuff for the LaTeX preamble.
+    #
+    # 'preamble': '',
+    # Latex figure (float) alignment
+    #
+    # 'figure_align': 'htbp',
+}
+
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+latex_documents = [
+    (
+        master_doc,
+        "project.tex",
+        project,
+        author,
+        "manual",
+    )
+]
+
+
+# -- Options for manual page output ---------------------------------------
+
+# One entry per manual page. List of tuples
+# (source start file, name, description, authors, manual section).
+man_pages = [
+    (
+        master_doc,
+        "project",
+        project,
+        [author],
+        1,
+    )
+]
+
+
+# -- Options for Texinfo output -------------------------------------------
+
+# Grouping the document tree into Texinfo files. List of tuples
+# (source start file, target name, title, author,
+#  dir menu entry, description, category)
+texinfo_documents = [
+    (
+        master_doc,
+        "project",
+        project,
+        author,
+        "project",
+        "Documentation for {}".format(project),
+        "Miscellaneous",
+    )
+]
+
+
+# -- HTML Accessibility Post-Processing -----------------------------------
+
+def _enhance_body_accessibility(app, pagename, templatename, context, doctree):
+    """Ensure Sphinx/MyST generated body fragments satisfy WCAG 2.1 AA semantics."""
+    body = context.get("body")
+    if not body:
+        return
+
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(body, "html.parser")
+    modified = False
+
+    # Sphinx toctree captions emit role="heading" without aria-level (WCAG 4.1.2).
+    for heading in soup.find_all(attrs={"role": "heading"}):
+        if not heading.get("aria-level"):
+            heading["aria-level"] = "2"
+            modified = True
+
+    # Horizontally scrollable <pre> code blocks require keyboard focusability (WCAG 2.1.1).
+    for pre in soup.find_all("pre"):
+        if not pre.get("tabindex"):
+            pre["tabindex"] = "0"
+            modified = True
+
+    # MyST tasklist checkboxes emit disabled <input type="checkbox"> without labels (WCAG 4.1.2).
+    for checkbox in soup.select("input.task-list-item-checkbox"):
+        if not checkbox.get("aria-label") and not checkbox.get("aria-labelledby"):
+            parent_li = checkbox.find_parent("li")
+            label_text = (
+                " ".join(parent_li.get_text(" ", strip=True).split())
+                if parent_li
+                else ""
+            )
+            checkbox["aria-label"] = (
+                f"Task: {label_text[:120]}" if label_text else "Task item"
+            )
+            modified = True
+
+    if modified:
+        context["body"] = str(soup)
+
+
+def setup(app):
+    app.connect("html-page-context", _enhance_body_accessibility)

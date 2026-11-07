@@ -1,0 +1,14 @@
+{
+  // Enforce Markdown source accessibility rules without failing on stylistic formatting.
+  "config": {
+    "default": false,
+    "MD001": true,
+    "MD025": true,
+    "MD042": true,
+    "MD045": true,
+    "MD059": true
+  },
+  "ignores": [
+    "_build/**"
+  ]
+}
