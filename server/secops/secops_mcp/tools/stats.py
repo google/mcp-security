@@ -29,12 +29,10 @@ async def get_stats(
     start_time: Optional[str] = None,
     end_time: Optional[str] = None,
     max_values: int = 60,
-    max_events: int = 10000,
-    case_insensitive: bool = True,
     timeout: int = 120,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: Optional[str] = None,
+    customer_id: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Run a YARA-L 2.0 stats/aggregation query against Chronicle UDM events.
 
@@ -55,6 +53,8 @@ async def get_stats(
     A stats query is composed of the following sections in order:
 
     1. **Filtering statement** (required): UDM conditions to filter events.
+       Use ``nocase`` in the query text for case-insensitive string matching
+       (for example, ``principal.hostname = "host" nocase``).
     2. **match** (optional): Fields to group by, with optional time granularity.
        Syntax: ``match:\\n  field1, field2 [by|over every] [N] [time_unit]``
     3. **outcome** (required): Aggregate expressions assigned to ``$variables``.
@@ -129,6 +129,7 @@ async def get_stats(
     Args:
         query (str): YARA-L 2.0 query with a filtering statement and outcome section.
                     The match section is optional; outcome is required for aggregation.
+                    Put ``nocase`` in the query text when case-insensitive matching is needed.
         hours_back (int): Hours to look back from now when start_time is not given.
                          Defaults to 24.
         start_time (Optional[str]): Start of time range in ISO 8601 format
@@ -136,10 +137,6 @@ async def get_stats(
         end_time (Optional[str]): End of time range in ISO 8601 format. Defaults to now.
         max_values (int): Maximum number of aggregated rows (buckets) to return.
                          Defaults to 60. Increase for high-cardinality group-by fields.
-        max_events (int): Maximum raw events scanned during aggregation. Defaults to
-                         10000. Increase for more complete results on busy environments.
-        case_insensitive (bool): Whether string comparisons are case-insensitive.
-                                Defaults to True.
         timeout (int): Request timeout in seconds. Defaults to 120. Increase for
                       complex queries over large time windows.
         project_id (Optional[str]): Google Cloud project ID. Defaults to env config.
@@ -148,7 +145,10 @@ async def get_stats(
 
     Returns:
         Dict[str, Any]: A dictionary with:
-            - "columns" (List[str]): Ordered list of column names from the outcome section.
+            - "columns" (List[str]): Ordered list of column names. Chronicle
+              ``:udmSearch`` strips the leading ``$`` from ``outcome:`` variable
+              names in returned headers (for example, ``user_count_by_ip`` rather
+              than ``$user_count_by_ip``).
             - "rows" (List[Dict]): Each row is a dict mapping column name to its value.
               Values are typed: int, float, str, datetime, list, or None.
             - "total_rows" (int): Number of rows returned.
@@ -156,10 +156,10 @@ async def get_stats(
 
     Example Output:
         {
-            "columns": ["principal.ip", "$user_count_by_ip"],
+            "columns": ["principal.ip", "user_count_by_ip"],
             "rows": [
-                {"principal.ip": "10.1.2.3", "$user_count_by_ip": 412},
-                {"principal.ip": "192.168.0.55", "$user_count_by_ip": 87}
+                {"principal.ip": "10.1.2.3", "user_count_by_ip": 412},
+                {"principal.ip": "192.168.0.55", "user_count_by_ip": 87}
             ],
             "total_rows": 2
         }
@@ -175,17 +175,23 @@ async def get_stats(
         try:
             start_dt, end_dt = parse_time_range(start_time, end_time, hours_back)
         except ValueError as e:
-            logger.error(f"Error parsing date format: {str(e)}", exc_info=True)
+            logger.error("Error parsing date format: %s", e, exc_info=True)
             return {
-                "error": f"Error parsing date format: {str(e)}. Use ISO 8601 format (e.g., 2024-01-15T12:00:00Z)",
+                "error": (
+                    f"Error parsing date format: {e}. "
+                    "Use ISO 8601 format (e.g., 2024-01-15T12:00:00Z)"
+                ),
                 "columns": [],
                 "rows": [],
                 "total_rows": 0,
             }
 
         logger.info(
-            f"Running stats query - Query: {query}, "
-            f"Time Range: {start_dt} to {end_dt}, max_values: {max_values}"
+            "Running stats query - Query: %s, Time Range: %s to %s, max_values: %s",
+            query,
+            start_dt,
+            end_dt,
+            max_values,
         )
 
         chronicle = get_chronicle_client(project_id, customer_id, region)
@@ -196,15 +202,17 @@ async def get_stats(
             end_time=end_dt,
             max_values=max_values,
             timeout=timeout,
-            max_events=max_events,
-            case_insensitive=case_insensitive,
         )
 
         total_rows = results.get("total_rows", 0)
-        logger.info(f"Stats query returned {total_rows} rows across {len(results.get('columns', []))} columns")
+        logger.info(
+            "Stats query returned %s rows across %s columns",
+            total_rows,
+            len(results.get("columns", [])),
+        )
 
         return results
 
     except Exception as e:
-        logger.error(f"Error running stats query: {str(e)}", exc_info=True)
+        logger.error("Error running stats query: %s", e, exc_info=True)
         return {"error": str(e), "columns": [], "rows": [], "total_rows": 0}
