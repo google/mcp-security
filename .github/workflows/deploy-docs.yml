@@ -3,39 +3,41 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
-      - main # Or your default branch
-      - docs__accessibility-audit
+      - main
     paths:
-      - 'docs/**' # Trigger on changes within the docs directory
+      - 'docs/**'
       - '.github/workflows/deploy-docs.yml'
-  workflow_dispatch: # Allows manual triggering
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
 
-# Required for GitHub Pages API deployment
 permissions:
   contents: read
-  pages: write  # Needed to push to gh-pages branch
-  id-token: write
-
-# Allow only one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build-docs:
     name: Build and Test Accessibility
     runs-on: ubuntu-latest
+    concurrency:
+      group: "docs-build-${{ github.ref }}"
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: '3.11'
 
       - name: Set up Node.js for Markdown accessibility linting
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '22'
 
@@ -55,7 +57,6 @@ jobs:
 
       - name: Build documentation
         run: |
-          # Run make html inside the docs directory
           make -C docs html
 
       - name: Run Accessibility Tests (HTML semantics + axe-core WCAG AA)
@@ -67,13 +68,22 @@ jobs:
           touch docs/_build/html/.nojekyll
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: docs/_build/html
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build-docs
-    if: github.ref == 'refs/heads/main' || github.repository != 'google/mcp-security'
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.repository != 'google/mcp-security')
+    permissions:
+      contents: read
+      pages: write    # Required to publish built documentation to GitHub Pages
+      id-token: write # Required for GitHub Pages OIDC deployment verification
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -81,4 +91,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
