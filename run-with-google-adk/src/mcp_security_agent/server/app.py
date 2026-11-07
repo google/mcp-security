@@ -17,6 +17,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from mcp_security_agent import __version__
+from mcp_security_agent.server.auth import SessionAuthManager
 from mcp_security_agent.server.routes import router
 
 
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
         version=__version__,
         description="Autonomous Security Operations Center (SOC) Agent API",
     )
+    app.state.session_auth = SessionAuthManager()
     app.include_router(router)
 
     # Mount static assets if directory exists

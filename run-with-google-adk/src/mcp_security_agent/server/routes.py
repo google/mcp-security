@@ -14,14 +14,13 @@
 """REST and SSE endpoints for FastAPI server and Cloud Run deployments."""
 
 import json
-import uuid
 import asyncio
 import logging
 import threading
 from collections import OrderedDict
 from pathlib import Path
 from typing import Dict, Any, Optional, AsyncGenerator
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from google.adk.runners import Runner
@@ -30,6 +29,7 @@ from google.genai import types
 import mcp_security_agent.agent as agent_mod
 from mcp_security_agent import __version__
 from mcp_security_agent.config import AgentSettings, discover_user_identity
+from mcp_security_agent.server.auth import get_session_auth
 
 logger = logging.getLogger(__name__)
 
@@ -82,14 +82,21 @@ def get_app_name() -> Dict[str, str]:
 
 
 @router.get("/get_session")
-def get_session(username: Optional[str] = Query(None, description="Username for session")) -> Dict[str, str]:
-    """Generates a session ID and returns user context for chat sessions."""
-    detected_user = discover_user_identity()
-    user = username if (username and username.strip() and username != "secops_user") else detected_user
-    return {
-        "session_id": str(uuid.uuid4()),
-        "user_id": user,
-    }
+def get_session(
+    request: Request,
+    response: Response,
+    username: Optional[str] = Query(None, description="Username for session"),
+    start_new_session: str = Query("N", description="Set to Y to start a new session"),
+) -> Dict[str, str]:
+    """Generates a bound session ID and issues a signed session capability cookie."""
+    auth = get_session_auth(request)
+    return auth.issue_session(
+        request=request,
+        response=response,
+        username=username,
+        start_new_session=start_new_session,
+        settings=get_settings(),
+    )
 
 
 _settings: Optional[AgentSettings] = None
@@ -107,13 +114,15 @@ def get_settings() -> AgentSettings:
 
 
 @router.get("/info")
-def get_info() -> Dict[str, Any]:
+def get_info(request: Request) -> Dict[str, Any]:
     """Provides server runtime metadata, active user identity, and enabled MCP server status."""
     settings = get_settings()
+    auth = get_session_auth(request)
+    active_user = auth.resolve_info_user(request, settings=settings)
     return {
         "version": __version__,
         "model": settings.google_model,
-        "user": discover_user_identity(),
+        "user": active_user,
         "tools": {
             "secops": settings.load_secops_mcp,
             "scc": settings.load_scc_mcp,
@@ -329,10 +338,10 @@ async def sse_event_generator(
                         })
                         yield f"data: {resp_info}\n\n"
     except asyncio.CancelledError:
-        logger.info(f"SSE client disconnected for session {session_id}")
+        logger.info("SSE client disconnected for session %s", session_id)
         raise
     except Exception as e:
-        logger.error(f"Error during agent execution: {e}", exc_info=True)
+        logger.error("Error during agent execution: %s", e, exc_info=True)
         err_data = json.dumps({
             "text": f"[Error] **Error during investigation:** {str(e)}",
             "last_msg": False,
@@ -351,31 +360,49 @@ async def sse_event_generator(
 
 @router.get("/chat")
 async def chat_sse_stream(
+    http_request: Request,
     message: str = Query(..., description="User prompt or security alert query"),
     session_id: Optional[str] = Query(None, description="Session ID for conversation history"),
     user_id: Optional[str] = Query(None, description="Active user ID"),
 ):
     """Server-Sent Events (SSE) streaming endpoint for web UI clients."""
-    sess_id = session_id or str(uuid.uuid4())
-    return StreamingResponse(
-        sse_event_generator(message, sess_id, user_id),
+    auth = get_session_auth(http_request)
+    uid, sess_id, new_cookie = auth.authorize_chat(
+        request=http_request,
+        user_id=user_id,
+        session_id=session_id,
+        settings=get_settings(),
+    )
+    stream_resp = StreamingResponse(
+        sse_event_generator(message, sess_id, uid),
         media_type="text/event-stream",
     )
+    if new_cookie is not None:
+        auth.set_cookie_on_response(stream_resp, http_request, new_cookie)
+    return stream_resp
 
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat_post(request: ChatRequest, http_request: Request):
     """REST and SSE chat endpoint for API clients, automated workflows, and web UI."""
-    sess_id = request.session_id or str(uuid.uuid4())
+    auth = get_session_auth(http_request)
+    uid, sess_id, new_cookie = auth.authorize_chat(
+        request=http_request,
+        user_id=request.user_id,
+        session_id=request.session_id,
+        settings=get_settings(),
+    )
     query_text = request.message or request.prompt or ""
-    uid = request.user_id or discover_user_identity()
 
     accept_header = http_request.headers.get("accept", "")
     if "text/event-stream" in accept_header:
-        return StreamingResponse(
+        stream_resp = StreamingResponse(
             sse_event_generator(query_text, sess_id, uid),
             media_type="text/event-stream",
         )
+        if new_cookie is not None:
+            auth.set_cookie_on_response(stream_resp, http_request, new_cookie)
+        return stream_resp
 
     # For non-streaming REST queries, collect text parts from runner
     accumulated = []
@@ -389,10 +416,13 @@ async def chat_post(request: ChatRequest, http_request: Request):
                 pass
 
     response_text = "\n\n".join(accumulated) if accumulated else f"No response generated for: {query_text}"
-    return JSONResponse(
+    json_resp = JSONResponse(
         content={
             "response": response_text,
             "session_id": sess_id,
         }
     )
+    if new_cookie is not None:
+        auth.set_cookie_on_response(json_resp, http_request, new_cookie)
+    return json_resp
 

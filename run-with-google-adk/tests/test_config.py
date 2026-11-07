@@ -20,6 +20,8 @@ def test_default_settings():
         assert settings.stdio_timeout_seconds == 60.0
         assert settings.minimal_logging is False
         assert settings.load_secops_mcp is False
+        assert settings.session_secret is None
+        assert settings.trust_auth_headers is False
 
 
 def test_env_override_settings():

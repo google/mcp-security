@@ -78,19 +78,21 @@ def test_chat_post():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
         client = TestClient(create_app())
-        response = client.post("/chat", json={"prompt": "Investigate alert 123", "session_id": "test-sess"})
+        sess = client.get("/get_session").json()
+        response = client.post("/chat", json={"prompt": "Investigate alert 123", "session_id": sess["session_id"]})
         assert response.status_code == 200
         data = response.json()
         assert "response" in data
         assert "Mocked analysis response" in data["response"]
-        assert data["session_id"] == "test-sess"
+        assert data["session_id"] == sess["session_id"]
 
 
 def test_chat_sse_stream():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
         client = TestClient(create_app())
-        response = client.get("/chat", params={"message": "check finding", "session_id": "test-sess"})
+        sess = client.get("/get_session").json()
+        response = client.get("/chat", params={"message": "check finding", "session_id": sess["session_id"]})
         assert response.status_code == 200
         assert "text/event-stream" in response.headers["content-type"]
         assert "Mocked analysis response" in response.text
@@ -108,9 +110,10 @@ def test_chat_post_sse_streaming():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
         client = TestClient(create_app())
+        sess = client.get("/get_session").json()
         response = client.post(
             "/chat",
-            json={"message": "Investigate alert 123", "session_id": "test-sess"},
+            json={"message": "Investigate alert 123", "session_id": sess["session_id"]},
             headers={"accept": "text/event-stream"},
         )
         assert response.status_code == 200
@@ -155,7 +158,8 @@ def test_no_emojis_in_web_app_and_stream():
 
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=None):
-        resp = client.get("/chat", params={"message": "hello"})
+        sess = client.get("/get_session").json()
+        resp = client.get("/chat", params={"message": "hello", "session_id": sess["session_id"]})
         assert resp.status_code == 200
         assert "[Warning]" in resp.text
         for char in resp.text:

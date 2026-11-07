@@ -228,6 +228,8 @@ class AgentSettings(BaseSettings):
     minimal_logging: bool = Field(default=False, alias="MINIMAL_LOGGING")
     stdio_timeout_seconds: float = Field(default=60.0, alias="STDIO_PARAM_TIMEOUT")
     default_prompt: Optional[str] = Field(default=None, alias="DEFAULT_PROMPT")
+    session_secret: Optional[str] = Field(default=None, alias="MCP_AGENT_SESSION_SECRET")
+    trust_auth_headers: bool = Field(default=False, alias="MCP_AGENT_TRUST_AUTH_HEADERS")
 
     @field_validator(
         "load_secops_mcp", "load_gti_mcp", "load_secops_soar_mcp",
@@ -245,7 +247,7 @@ class AgentSettings(BaseSettings):
         return bool(value)
 
     @field_validator(
-        "load_scc_mcp", "use_vertex_ai", "minimal_logging",
+        "load_scc_mcp", "use_vertex_ai", "minimal_logging", "trust_auth_headers",
         mode="before"
     )
     @classmethod

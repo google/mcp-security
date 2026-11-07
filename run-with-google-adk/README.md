@@ -152,6 +152,8 @@ SOAR_APP_KEY=
 # Runtime Settings
 STDIO_PARAM_TIMEOUT=60.0
 MINIMAL_LOGGING=N
+MCP_AGENT_SESSION_SECRET=
+MCP_AGENT_TRUST_AUTH_HEADERS=False
 ```
 
 ### Environment Variable Reference
@@ -176,6 +178,8 @@ MINIMAL_LOGGING=N
 | `GOOGLE_APPLICATION_CREDENTIALS` | Auto-detected | Path to service account key file or local `.gcloud/application_default_credentials.json`. |
 | `STDIO_PARAM_TIMEOUT` | `60.0` | Timeout in seconds for MCP subprocess initialization and tool execution. |
 | `MINIMAL_LOGGING` | `False` | Reduces logging verbosity to suppress sensitive query content in production. |
+| `MCP_AGENT_SESSION_SECRET` | Random 32 bytes | HMAC-SHA256 signing secret for `mcp_agent_session` cookies. Configure a shared secret across instances in multi-replica deployments. |
+| `MCP_AGENT_TRUST_AUTH_HEADERS` | `False` | When `True`, requires `X-Goog-Authenticated-User-Email` from Identity-Aware Proxy (IAP) or Cloud Run IAM and binds session ownership to that verified principal. |
 
 ---
 
@@ -194,8 +198,16 @@ Open `http://localhost:8080` in your browser to access the SOC Agent UI.
 * **`GET /`**: Serves the bundled web landing page and interactive investigation console.
 * **`GET /healthz`**: Liveness & readiness probe returning `{"status": "ok"}` for Cloud Run.
 * **`GET /info`**: Returns JSON metadata including package version, active model, and toolset configurations.
-* **`POST /chat`**: Synchronous chat endpoint accepting `{"prompt": "string", "session_id": "optional"}`.
-* **`GET /chat?message=...`**: Server-Sent Events (SSE) token streaming endpoint.
+* **`GET /get_session`**: Issues a `session_id` and sets an `HttpOnly`, `SameSite=Lax` HMAC-SHA256 signed capability cookie (`mcp_agent_session`) binding the client to `(user_id, session_id)`.
+* **`POST /chat`**: Chat endpoint accepting JSON or `Accept: text/event-stream` requests for an authorized session.
+* **`GET /chat?message=...&session_id=...`**: Server-Sent Events (SSE) streaming endpoint for an authorized session.
+
+### Session Authorization and Identity Binding
+
+Session endpoints bind `(user_id, session_id)` ownership to the caller before creating or resuming ADK sessions:
+
+* **Default capability cookie mode (`MCP_AGENT_TRUST_AUTH_HEADERS=false`).** `GET /get_session` issues an `HttpOnly`, `SameSite=Lax` HMAC-SHA256 signed `mcp_agent_session` cookie (`Secure` when served over HTTPS or `X-Forwarded-Proto: https`) and records session ownership on the server. The bundled web UI uses same-origin `fetch`, so browsers send this cookie automatically. Direct API callers must retain cookies from `/get_session` when calling `/chat`. Requests to `/chat` with a missing cookie, tampered HMAC signature, mismatched `user_id`, or another client's `session_id` return `HTTP 403`. Set `MCP_AGENT_SESSION_SECRET` to a shared secret when running multiple replicas behind a load balancer; when unset, each process generates a random 32-byte key at startup.
+* **Authenticated reverse-proxy mode (`MCP_AGENT_TRUST_AUTH_HEADERS=true`).** Enable this setting only when Cloud Run IAM or Identity-Aware Proxy (IAP) enforces authentication in front of the container and strips untrusted client headers. The server extracts the verified principal from `X-Goog-Authenticated-User-Email` after stripping the `accounts.google.com:` prefix, rejects missing or malformed headers with `HTTP 401`, and rejects mismatched `username`, `user_id`, or cross-user `session_id` values with `HTTP 403`. When `MCP_AGENT_TRUST_AUTH_HEADERS` is `false`, the server ignores `X-Goog-Authenticated-User-Email` so callers on directly reachable endpoints cannot spoof headers.
 
 ---
 
@@ -211,7 +223,7 @@ Deploy the service directly from the repository root:
 gcloud run deploy mcp-security-agent-service \
   --source . \
   --region us-central1 \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --set-env-vars="LOAD_SECOPS_MCP=Y,LOAD_SCC_MCP=Y,GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID,CHRONICLE_PROJECT_ID=YOUR_PROJECT_ID,CHRONICLE_CUSTOMER_ID=YOUR_CUSTOMER_ID"
 ```
 
@@ -228,7 +240,8 @@ To protect the service in production:
 1. In Cloud Run, select `mcp-security-agent-service` and navigate to **Security**.
 2. Select **Require authentication**.
 3. Under **Permissions**, grant `Cloud Run Invoker` (`roles/run.invoker`) to authorized users.
-4. Authorized users can securely access the service locally via proxy:
+4. When fronting the service with Identity-Aware Proxy (IAP) or an authenticated proxy that injects `X-Goog-Authenticated-User-Email`, set `MCP_AGENT_TRUST_AUTH_HEADERS=true` and configure a shared `MCP_AGENT_SESSION_SECRET` in Secret Manager across replicas. Do not enable `MCP_AGENT_TRUST_AUTH_HEADERS=true` if the container is reachable without an authenticating proxy.
+5. Authorized users can securely access the service locally via proxy:
    ```bash
    gcloud run services proxy mcp-security-agent-service --project YOUR_PROJECT_ID --region us-central1
    ```
