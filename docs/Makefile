@@ -7,12 +7,13 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = google-mcp-security # Modified
 SOURCEDIR     = .
 BUILDDIR      = _build
+MARKDOWNLINT  = npx --yes markdownlint-cli2@0.22.1
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile clean setup serve deploy
+.PHONY: help Makefile clean setup serve deploy lint-docs test-a11y
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
@@ -42,3 +43,14 @@ serve: build
 # Deploy to GitHub Pages (if used)
 deploy: build
 	@echo "To deploy to GitHub Pages, configure your repository settings."
+
+# Lint Markdown source files for accessibility rules (headings, alt text, link text)
+lint-docs:
+	$(MARKDOWNLINT) "**/*.md" "!_build/**" "!superpowers/**"
+
+# Run automated static HTML semantics and headless Chromium axe-core WCAG AA checks
+test-a11y:
+	@if [ ! -d "$(BUILDDIR)/html" ]; then \
+		$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); \
+	fi
+	HTML_DIR="$(BUILDDIR)/html" pytest tests/test_docs_a11y.py

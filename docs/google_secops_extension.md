@@ -1,120 +1,87 @@
-# Google SecOps Extension
+# Google SecOps extension
 
-This folder contains the **Google SecOps Extension**, providing specialized skills for security operations.
+The `extensions/google-secops/` directory packages security operations workflows and client onboarding guides as portable [Agent Skills](https://agentskills.io/specification). Each skill adapts at runtime to whichever MCP transport is connected:
 
-## Overview
+- **[Remote MCP server for Google SecOps](remote_server.md)** (preferred when available)
+- **[Local Python MCP servers](usage_guide.md)** (`server/secops` and `server/secops-soar` fallback)
 
-The extension `extensions/google-secops` packages setup and key security workflows into [skills](https://agentskills.io/specification). 
-
-These skills are **Adaptive**, designed to work seamlessly with:
- *   [Google SecOps Remote MCP Server](https://google.github.io/mcp-security/docs/remote_server.html) (Preferred)
- *   **Local Python Tools** (Fallback)
-
-This allows the skills to function in diverse environments, automatically selecting the best available tool for the job.
-    
-The (`.agent`) symlink makes them available as [Antigravity Agent Skills](https://antigravity.google/docs/skills) at the workspace level. You could also install/copy/symlink the skills to `~/.gemini/antigravity/skills/` to make them available globally to all workspaces.
-
+A workspace `.agent` symlink exposes these skills as [Antigravity agent skills](https://antigravity.google/docs/skills) inside the repository, or you can symlink them into `~/.gemini/antigravity/skills/` to make them available across all workspaces.
 
 ## Prerequisites
 
-1.  **Install Gemini CLI (Preview)**:
-    ```bash
-    npm install -g @google/gemini-cli@preview
-    ```
+1. **Install Gemini CLI** (when using the Gemini CLI extension workflow):
+   ```bash
+   npm install -g @google/gemini-cli@preview
+   ```
 
-2.  **Enable Skills**: Ensure your `~/.gemini/settings.json` has `experimental.skills` enabled:
-    ```json
-    {
-      "security": {
-        "auth": {
-          "selectedType": "gemini-api-key"
-        }
-      },
-      "general": {
-        "previewFeatures": true
-      },
-      "experimental": {
-        "skills": true
-      }
-    }
-    ```
+2. **Enable skills in `~/.gemini/settings.json`**:
+   ```json
+   {
+     "general": {
+       "previewFeatures": true
+     },
+     "experimental": {
+       "skills": true
+     }
+   }
+   ```
 
-Verify skills are enabled from the Gemini CLI prompt:
+3. **Verify skill discovery** from the Gemini CLI prompt:
+   ```text
+   /skills list
+   ```
+
+## Install the extension
+
+From the root of a local `mcp-security` clone, install the extension into Gemini CLI:
+
+```bash
+gemini extensions install ./extensions/google-secops
 ```
-/skills list
-```
 
-## Installation
+When prompted, enter your Google Cloud `PROJECT_ID` and remote MCP `SERVER_URL` (for example, `https://us-chronicle.googleapis.com/mcp`).
 
-To install this extension in your Gemini CLI environment:
+## Included skills
 
-1.  **Navigate** to the project root.
-2.  **Run**:
-    ```bash
-    gemini extensions install ./extensions/google-secops
-    ```
+| Skill name | Slash command | Path | Purpose |
+| :--- | :--- | :--- | :--- |
+| `secops-setup-gemini` | `/security:setup-gemini` | `skills/setup-gemini-cli/SKILL.md` | Verifies `uv` and Google Cloud ADC, collects `PROJECT_ID`, `CUSTOMER_ID`, and `REGION`, and adds `secops-hosted-mcp` to `~/.gemini/settings.json`. |
+| `secops-setup-antigravity` | `/security:setup-antigravity` | `skills/setup-antigravity/SKILL.md` | Verifies Google Cloud ADC and merges the remote SecOps MCP configuration from `mcp_config.template.json` into `~/.gemini/antigravity/mcp_config.json`. |
+| `secops-triage` | `/security:triage` | `skills/triage/SKILL.md` | Runs a structured Tier 1 alert and case triage protocol: gathers case and alert context, checks for duplicate cases, enriches entities, and recommends False Positive, Benign True Positive, or True Positive classification. |
+| `secops-investigate` | `/security:investigate` | `skills/investigate/SKILL.md` | Guides Tier 2 and Tier 3 incident response investigations across malware triage, lateral movement, and suspicious authentication procedures. |
+| `secops-hunt` | `/security:hunt` | `skills/hunt/SKILL.md` | Drives hypothesis-based and GTI campaign-based threat hunts using IOC matching and UDM event searches. |
 
-You will be prompted for two environment variables for the MCP configuration:
+## How adaptive tool selection works
 
-1. `PROJECT_ID`
-2. `SERVER_URL`
+Each operational skill (`secops-triage`, `secops-investigate`, and `secops-hunt`) embeds its step-by-step SOC procedure directly in `SKILL.md` and resolves tool names against [`extensions/google-secops/TOOL_MAPPING.md`](https://github.com/google/mcp-security/blob/main/extensions/google-secops/TOOL_MAPPING.md):
 
-## Available Skills
+1. **Inspect registered MCP tools**: Check whether remote Google SecOps tools (such as `udm_search` and `summarize_entity`) or local Python tools (such as `search_udm`, `search_security_events`, and `lookup_entity`) are loaded in the active session.
+2. **Prefer remote tools**: When the remote MCP server is connected, call the remote tool names.
+3. **Adapt multi-step workflows**: Some operations differ in call shape between transports. For natural-language event search, the remote server pairs `translate_udm_query` followed by `udm_search`, whereas the local `google-secops-mcp` server executes `search_security_events` in one call.
 
-### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
-*   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/config.json`).
+### Key remote vs. local tool mappings
 
-### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
-*   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
-*   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/antigravity/mcp_config.json`).
+| Capability | Remote MCP tool | Local Python MCP tool |
+| :--- | :--- | :--- |
+| UDM query search | `udm_search` | `search_udm` |
+| Natural-language event search | `translate_udm_query` then `udm_search` | `search_security_events` |
+| Entity activity summary | `summarize_entity` | `lookup_entity` |
+| IOC matches | `get_ioc_match` | `get_ioc_matches` |
+| Get case details | `get_case` and `list_case_alerts` | `get_case_full_details` |
+| Add case comment | `create_case_comment` | `post_case_comment` |
+| Close case | `execute_bulk_close_case` | `close_case` |
+| Update YARA-L 2.0 rule in place | Not exposed | `update_rule` |
 
-### 3. Alert Triage (`secops-triage`)
-*   **Trigger**: "Triage alert [ID]", "Analyze case [ID]".
-*   **Function**: Orchestrates a Tier 1 triage workflow by following the `triage_alerts.md` runbook. It checks for duplicates, enriches entities, and provides a classification recommendation (FP/TP).
+## Cross-agent compatibility
 
-### 4. Investigation (`secops-investigate`)
-*   **Trigger**: "Investigate case [ID]", "Deep dive on [Entity]".
-*   **Function**: Guides deep-dive investigations using specialized runbooks (e.g., Lateral Movement, Malware).
+The skills follow the open Agent Skills directory layout (`skills/<name>/SKILL.md` with YAML frontmatter) so they work across Gemini CLI, Antigravity, Claude Code, Goose, and other skill-aware coding agents:
 
-### 5. Threat Hunting (`secops-hunt`)
-*   **Trigger**: "Hunt for [Threat]", "Search for TTP [ID]".
-*   **Function**: Assists in proactive threat hunting by generating hypotheses and constructing complex UDM queries for Chronicle.
-
-## How it Works
-
-These skills act as **Driver Agents** that:
-1.  **Read** the standardized Runbooks in `rules_bank/run_books/`.
-2.  **Execute** the steps using the available MCP tools.
-3.  **Standardize** the output according to SOC best practices.
-
-### Tool Selection
-
-The skills employ an **Adaptive Execution** strategy to ensure robustness:
-
-1.  **Check Environment**: The skill first identifies which tools are available in the current workspace.
-2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
-3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
-
-For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
-
-
-## Cross-Compatibility
-
-These skills are designed to be compatible with **Claude Code** and other AI agents. The `slash_command` and `personas` metadata in the YAML frontmatter allow other tools to index and trigger these skills effectively.
-
-*   `slash_command`: Defines the equivalent command pattern (e.g., `/security:triage`).
-*   `personas`: detailed which security personas (e.g., `threat_hunter`) are best suited for the task.
-
+- `slash_command` declares a shortcut pattern such as `/security:triage`.
+- `personas` maps each workflow to its corresponding role in [Security personas](personas/index.md) (such as `tier1_soc_analyst`, `incident_responder`, or `threat_hunter`).
 
 ## References
-* [Agent Skills Specification](https://agentskills.io/specification)
-* [Gemini CLI Documentation](https://geminicli.com)
-* [Gemini CLI Preview Features](https://geminicli.com/docs/settings/general#previewfeatures)
-* [Antigravity Skills](https://antigravity.google/docs/skills)
 
-
-
-
-
-
+- [Agent Skills specification](https://agentskills.io/specification)
+- [Gemini CLI documentation](https://geminicli.com)
+- [Gemini CLI preview features](https://geminicli.com/docs/settings/general#previewfeatures)
+- [Antigravity agent skills](https://antigravity.google/docs/skills)

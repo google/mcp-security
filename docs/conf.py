@@ -68,6 +68,9 @@ myst_enable_extensions = [
     "tasklist",            # Task lists with checkboxes
 ]
 
+# Generate anchor slugs for H1 through H4 headings so section links resolve cleanly
+myst_heading_anchors = 4
+
 # Support both .md and .rst files
 source_suffix = [".rst", ".md"]
 
@@ -86,11 +89,14 @@ exclude_patterns = [
     "env",
     "**/.git/**",
     "requirements.txt",
-    "Makefile"
+    "Makefile",
+    "tests",
+    "superpowers",
 ]
 
-# Syntax highlighting style
-pygments_style = "default"
+# Syntax highlighting style (WCAG AA high-contrast palettes for light and dark modes)
+pygments_style = "a11y-high-contrast-light"
+pygments_dark_style = "a11y-high-contrast-dark"
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = "furo"
@@ -125,8 +131,8 @@ html_sidebars = {
 # Theme options
 html_theme_options = {
     "light_css_variables": {
-        "color-brand-primary": "#1a73e8",    # Google Blue
-        "color-brand-content": "#1a73e8",
+        "color-brand-primary": "#185abc",    # Google Blue (WCAG AA >= 4.5:1 on light and sidebar surfaces)
+        "color-brand-content": "#185abc",
     },
     "dark_css_variables": {
         "color-brand-primary": "#8ab4f8",    # Google Blue (dark mode)
@@ -143,7 +149,7 @@ html_theme_options = {
             "name": "GitHub",
             "url": "https://github.com/google/mcp-security",
             "html": """
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
                     <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
                 </svg>
             """,
@@ -240,3 +246,63 @@ texinfo_documents = [
         "Miscellaneous",
     )
 ]
+
+
+# -- HTML Accessibility Post-Processing -----------------------------------
+
+def _enhance_body_accessibility(app, pagename, templatename, context, doctree):
+    """Ensure Sphinx/MyST generated body and navigation fragments satisfy WCAG 2.1 AA semantics."""
+    from bs4 import BeautifulSoup
+
+    for tree_key in ("furo_navigation_tree",):
+        nav_html = context.get(tree_key)
+        if nav_html and 'role="heading"' in nav_html:
+            nav_soup = BeautifulSoup(nav_html, "html.parser")
+            nav_modified = False
+            for heading in nav_soup.find_all(attrs={"role": "heading"}):
+                if not heading.get("aria-level"):
+                    heading["aria-level"] = "2"
+                    nav_modified = True
+            if nav_modified:
+                context[tree_key] = str(nav_soup)
+
+    body = context.get("body")
+    if not body:
+        return
+
+    soup = BeautifulSoup(body, "html.parser")
+    modified = False
+
+    # Sphinx toctree captions emit role="heading" without aria-level (WCAG 4.1.2).
+    for heading in soup.find_all(attrs={"role": "heading"}):
+        if not heading.get("aria-level"):
+            heading["aria-level"] = "2"
+            modified = True
+
+    # Horizontally scrollable <pre> code blocks and Furo .table-wrapper containers
+    # require keyboard focusability (WCAG 2.1.1 / axe scrollable-region-focusable).
+    for scrollable in soup.select("pre, div.table-wrapper"):
+        if not scrollable.get("tabindex"):
+            scrollable["tabindex"] = "0"
+            modified = True
+
+    # MyST tasklist checkboxes emit disabled <input type="checkbox"> without labels (WCAG 4.1.2).
+    for checkbox in soup.select("input.task-list-item-checkbox"):
+        if not checkbox.get("aria-label") and not checkbox.get("aria-labelledby"):
+            parent_li = checkbox.find_parent("li")
+            label_text = (
+                " ".join(parent_li.get_text(" ", strip=True).split())
+                if parent_li
+                else ""
+            )
+            checkbox["aria-label"] = (
+                f"Task: {label_text[:120]}" if label_text else "Task item"
+            )
+            modified = True
+
+    if modified:
+        context["body"] = str(soup)
+
+
+def setup(app):
+    app.connect("html-page-context", _enhance_body_accessibility, priority=900)
