@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 SESSION_COOKIE_NAME = "mcp_agent_session"
 _COOKIE_VERSION = 1
 _MAX_COOKIE_LENGTH = 4096
+_MAX_IAP_JWT_LENGTH = 16384
 _MAX_COOKIE_SESSIONS = 32
 _MAX_TRACKED_SESSIONS = 4096
 _IAP_EMAIL_PREFIX = "accounts.google.com:"
@@ -46,10 +47,25 @@ _IAP_CERTS_URL = "https://www.gstatic.com/iap/verify/public_key-jwk"
 _IAP_EXPECTED_ISSUER = "https://cloud.google.com/iap"
 _TRUTHY_VALUES = frozenset({"Y", "YES", "TRUE", "1"})
 _START_NEW_VALUES = frozenset({"Y", "N", "YES", "NO", "TRUE", "FALSE", "1", "0", ""})
+_LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
 
 _USER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._@+-]{0,127}\Z")
 
 _fallback_lock = threading.Lock()
+
+
+def _extract_hostname(host_header: str) -> str:
+    """Extracts normalized hostname from an HTTP Host header."""
+    raw = host_header.strip()
+    if not raw:
+        return ""
+    if raw == "::1":
+        return "::1"
+    try:
+        parsed = urllib.parse.urlsplit(f"//{raw}")
+        return (parsed.hostname or "").lower()
+    except Exception:
+        return raw.split(":")[0].strip().lower()
 
 
 def is_valid_user_id(value: Any) -> bool:
@@ -74,8 +90,8 @@ def is_https_request(request: Request) -> bool:
     """Determines whether the request arrived over HTTPS directly or via proxy."""
     if request.url.scheme.lower() == "https":
         return True
-    host = request.headers.get("host", "").split(":")[0].strip().lower()
-    if host in ("localhost", "127.0.0.1", "testserver"):
+    host = _extract_hostname(request.headers.get("host", ""))
+    if host in _LOOPBACK_HOSTS:
         return False
     forwarded_proto = request.headers.get("x-forwarded-proto", "")
     if forwarded_proto:
@@ -114,6 +130,7 @@ def get_iap_audience(settings: Optional[AgentSettings] = None) -> Optional[str]:
 def verify_same_origin(request: Request, settings: Optional[AgentSettings] = None) -> None:
     """Enforces browser same-origin semantics via Sec-Fetch-Site and Origin headers."""
     sec_fetch_site = request.headers.get("sec-fetch-site")
+    clean_site = ""
     if sec_fetch_site:
         clean_site = sec_fetch_site.strip().lower()
         if clean_site not in ("same-origin", "none"):
@@ -136,15 +153,22 @@ def verify_same_origin(request: Request, settings: Optional[AgentSettings] = Non
             logger.warning("Blocked request with invalid Origin scheme/netloc: %s", clean_origin)
             raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
 
+        iap_enabled = is_iap_mode_enabled(settings)
         target_host = ""
-        if is_iap_mode_enabled(settings):
+        if iap_enabled:
             f_host = request.headers.get("x-forwarded-host")
             if f_host:
                 target_host = f_host.split(",")[0].strip().lower()
         if not target_host:
             target_host = request.headers.get("host", "").strip().lower()
 
-        if not target_host or parsed.netloc.lower() != target_host:
+        is_local_proxy_same_origin = (
+            not iap_enabled
+            and clean_site == "same-origin"
+            and parsed.scheme.lower() == "http"
+            and (parsed.hostname or "").lower() in _LOOPBACK_HOSTS
+        )
+        if not target_host or (parsed.netloc.lower() != target_host and not is_local_proxy_same_origin):
             logger.warning(
                 "Blocked cross-origin request: origin %s does not match host %s",
                 parsed.netloc,
@@ -316,14 +340,21 @@ class SessionAuthManager:
             )
 
         raw_jwt = raw_jwt.strip()
+        if len(raw_jwt) > _MAX_IAP_JWT_LENGTH:
+            logger.warning("Rejected oversized IAP JWT header (%d bytes)", len(raw_jwt))
+            raise HTTPException(status_code=401, detail="Malformed IAP JWT header.")
         try:
             header = jwt.get_unverified_header(raw_jwt)
         except Exception as e:
             logger.warning("Malformed IAP JWT header: %s", e)
             raise HTTPException(status_code=401, detail="Malformed IAP JWT header.")
 
-        if header.get("alg") != "ES256" or not header.get("kid"):
-            logger.warning("Rejected IAP JWT with unsupported alg or missing kid: %s", header.get("alg"))
+        kid = header.get("kid") if isinstance(header, dict) else None
+        if not isinstance(header, dict) or header.get("alg") != "ES256" or not isinstance(kid, str) or not kid.strip():
+            logger.warning(
+                "Rejected IAP JWT with unsupported alg or missing kid: %s",
+                header.get("alg") if isinstance(header, dict) else None,
+            )
             raise HTTPException(status_code=401, detail="Invalid IAP JWT header algorithm or key ID.")
 
         try:
@@ -336,11 +367,16 @@ class SessionAuthManager:
             )
         except Exception as e:
             logger.warning("IAP token verification failed: %s", e)
-            raise HTTPException(status_code=401, detail=f"IAP token verification failed: {e}")
+            raise HTTPException(status_code=401, detail="Invalid or expired IAP token.")
 
         if claims.get("iss") != _IAP_EXPECTED_ISSUER:
             logger.warning("Rejected IAP JWT with unexpected issuer: %s", claims.get("iss"))
             raise HTTPException(status_code=401, detail="Invalid IAP token issuer.")
+
+        sub = claims.get("sub")
+        if not sub or not isinstance(sub, str) or not sub.strip():
+            logger.warning("IAP JWT missing sub claim")
+            raise HTTPException(status_code=401, detail="IAP token missing subject claim.")
 
         email = claims.get("email")
         if not email or not isinstance(email, str):
@@ -364,12 +400,7 @@ class SessionAuthManager:
     ) -> str:
         """Resolves the active user identity for /info metadata."""
         if is_iap_mode_enabled(settings):
-            if settings and settings.require_iap:
-                return self.verify_iap_principal(request, settings)
-            try:
-                return self.verify_iap_principal(request, settings)
-            except Exception:
-                return "unauthenticated"
+            return self.verify_iap_principal(request, settings)
         raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
         if raw_cookie:
             cookie_data = self.verify_cookie(raw_cookie, settings)

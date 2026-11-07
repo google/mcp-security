@@ -168,7 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (startNew) {
         url += (targetUser ? '&' : '?') + 'start_new_session=Y';
       }
-      const res = await fetch(url);
+      let res = await fetch(url);
+      if (res.status === 403 && requestedUsername === undefined && targetUser) {
+        currentUserId = null;
+        localStorage.removeItem('username');
+        const fallbackUrl = `${API_BASE_URL}/get_session` + (startNew ? '?start_new_session=Y' : '');
+        res = await fetch(fallbackUrl);
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       currentSessionId = data.session_id;

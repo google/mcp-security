@@ -177,16 +177,17 @@ def test_session_fixation_and_identifier_validation(monkeypatch):
     app = create_app()
     client = TestClient(app)
 
-    # 1. Attacker generates their own valid UUIDv4 and tries to inject it without an issued cookie
-    unissued_uuid = str(uuid.uuid4())
+    # 1. Attacker supplies an unissued canonical RFC 4122 UUIDv4 without an issued cookie -> 403
+    unissued_uuid = "a1b2c3d4-e5f6-4321-abcd-ef1234567890"
     resp_fixation = client.post(
         "/chat",
         json={"session_id": unissued_uuid, "prompt": "inject session"},
     )
     assert resp_fixation.status_code == 403
 
-    # 2. Non-UUID format for session_id -> 400
-    for bad_sid in ["case-1042", "../admin", "12345", "not-a-uuid", str(uuid.uuid4()).upper()]:
+    # 2. Non-UUIDv4 format for session_id (including UUIDv1 or uppercase) -> 400
+    uuid_v1 = str(uuid.uuid1())
+    for bad_sid in ["case-1042", "../admin", "12345", "not-a-uuid", uuid_v1, unissued_uuid.upper()]:
         resp_bad_sid = client.post(
             "/chat",
             json={"session_id": bad_sid, "prompt": "test"},
@@ -345,6 +346,40 @@ def test_same_origin_csrf_protection(monkeypatch):
     r_good_origin = client.get("/get_session", headers={"Origin": "http://localhost:8080"})
     assert r_good_origin.status_code == 200
 
+    # 3. gcloud run services proxy compatibility (loopback Origin + Sec-Fetch-Site: same-origin + rewritten Host)
+    proxy_client = TestClient(app, base_url="http://mcp-agent-xyz.a.run.app")
+    r_gcloud_proxy = proxy_client.get(
+        "/get_session",
+        headers={
+            "Host": "mcp-agent-xyz.a.run.app",
+            "Origin": "http://127.0.0.1:8080",
+            "Sec-Fetch-Site": "same-origin",
+        },
+    )
+    assert r_gcloud_proxy.status_code == 200
+
+    # Cross-port local attack against gcloud run services proxy sends Sec-Fetch-Site: same-site -> 403
+    r_cross_port = proxy_client.get(
+        "/get_session",
+        headers={
+            "Host": "mcp-agent-xyz.a.run.app",
+            "Origin": "http://127.0.0.1:3000",
+            "Sec-Fetch-Site": "same-site",
+        },
+    )
+    assert r_cross_port.status_code == 403
+
+    # Direct browser fetch from local untrusted app to remote Cloud Run sends Sec-Fetch-Site: cross-site -> 403
+    r_local_to_remote = proxy_client.get(
+        "/get_session",
+        headers={
+            "Host": "mcp-agent-xyz.a.run.app",
+            "Origin": "http://127.0.0.1:8080",
+            "Sec-Fetch-Site": "cross-site",
+        },
+    )
+    assert r_local_to_remote.status_code == 403
+
 
 # Test Suite 6: Cookie security flags
 def test_cookie_security_flags_httponly_samesite_and_conditional_secure(monkeypatch):
@@ -354,7 +389,7 @@ def test_cookie_security_flags_httponly_samesite_and_conditional_secure(monkeypa
     app = create_app()
 
     # Plain HTTP request -> HttpOnly and SameSite=lax, no Secure attribute
-    http_client = TestClient(app, base_url="http://testserver")
+    http_client = TestClient(app, base_url="http://localhost:8080")
     r_http = http_client.get("/get_session")
     assert r_http.status_code == 200
     set_cookie_http = r_http.headers.get("set-cookie", "")
@@ -362,8 +397,17 @@ def test_cookie_security_flags_httponly_samesite_and_conditional_secure(monkeypa
     assert "SameSite=lax" in set_cookie_http
     assert "; Secure" not in set_cookie_http
 
+    # Spoofed X-Forwarded-Proto: https on plain HTTP loopback (IPv4 and IPv6) -> ignores header, no Secure
+    for loopback_host in ["localhost:8080", "127.0.0.1:8080", "[::1]:8080"]:
+        r_spoof = http_client.get(
+            "/get_session",
+            headers={"Host": loopback_host, "X-Forwarded-Proto": "https"},
+        )
+        assert r_spoof.status_code == 200
+        assert "; Secure" not in r_spoof.headers.get("set-cookie", "")
+
     # Direct HTTPS request -> includes Secure
-    https_client = TestClient(app, base_url="https://testserver")
+    https_client = TestClient(app, base_url="https://localhost:8443")
     r_https = https_client.get("/get_session")
     assert r_https.status_code == 200
     set_cookie_https = r_https.headers.get("set-cookie", "")
@@ -455,9 +499,12 @@ def test_iap_cryptographic_jwt_verification(monkeypatch):
         hs_token = make_token(alg="HS256")
         assert client.get("/get_session", headers={"X-Goog-Iap-Jwt-Assertion": hs_token}).status_code == 401
 
-        # 6. Wrong audience -> 401
+        # 6. Wrong audience -> 401 with opaque error detail (does not leak expected audience)
         wrong_aud_token = make_token(aud="/projects/999/global/backendServices/wrong")
-        assert client.get("/get_session", headers={"X-Goog-Iap-Jwt-Assertion": wrong_aud_token}).status_code == 401
+        wrong_aud_resp = client.get("/get_session", headers={"X-Goog-Iap-Jwt-Assertion": wrong_aud_token})
+        assert wrong_aud_resp.status_code == 401
+        assert wrong_aud_resp.json()["detail"] == "Invalid or expired IAP token."
+        assert audience not in wrong_aud_resp.text
 
         # 7. Wrong issuer -> 401
         wrong_iss_token = make_token(iss="https://accounts.google.com")
@@ -524,14 +571,19 @@ def test_iap_cryptographic_jwt_verification(monkeypatch):
 
 
 def test_iap_require_iap_without_audience_fails_closed(monkeypatch):
-    """Verifies fail-closed 500 error when MCP_AGENT_REQUIRE_IAP is True but audience is unconfigured."""
-    monkeypatch.setenv("MCP_AGENT_REQUIRE_IAP", "true")
+    """Verifies fail-closed 500 error across all endpoints when MCP_AGENT_REQUIRE_IAP lacks audience."""
+    monkeypatch.delenv("MCP_AGENT_REQUIRE_IAP", raising=False)
     monkeypatch.delenv("MCP_AGENT_IAP_AUDIENCE", raising=False)
 
+    # Even if MCP_AGENT_REQUIRE_IAP is enabled dynamically after create_app(), all endpoints fail closed
     app = create_app()
+    monkeypatch.setenv("MCP_AGENT_REQUIRE_IAP", "true")
     client = TestClient(app)
 
-    # When require_iap is True and audience is None, requests to protected endpoints return 500
-    resp = client.get("/get_session")
-    assert resp.status_code == 500
-    assert "MCP_AGENT_IAP_AUDIENCE must be configured" in resp.text
+    for resp in (
+        client.get("/get_session"),
+        client.get("/info"),
+        client.post("/chat", json={"prompt": "hi"}),
+    ):
+        assert resp.status_code == 500
+        assert "MCP_AGENT_IAP_AUDIENCE must be configured" in resp.text
