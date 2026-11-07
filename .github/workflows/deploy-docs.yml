@@ -73,7 +73,7 @@ jobs:
 
   deploy:
     needs: build-docs
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.repository != 'google/mcp-security'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
