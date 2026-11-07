@@ -23,10 +23,14 @@ import os
 import re
 import secrets
 import threading
+import urllib.parse
 import uuid
 from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import HTTPException, Request, Response
+import google.auth.transport.requests
+import google.oauth2.id_token
+import jwt
 
 from mcp_security_agent.config import AgentSettings, discover_user_identity
 
@@ -37,35 +41,42 @@ _COOKIE_VERSION = 1
 _MAX_COOKIE_LENGTH = 4096
 _MAX_COOKIE_SESSIONS = 32
 _MAX_TRACKED_SESSIONS = 4096
-_MAX_TRACKED_PRINCIPALS = 4096
 _IAP_EMAIL_PREFIX = "accounts.google.com:"
+_IAP_CERTS_URL = "https://www.gstatic.com/iap/verify/public_key-jwk"
+_IAP_EXPECTED_ISSUER = "https://cloud.google.com/iap"
 _TRUTHY_VALUES = frozenset({"Y", "YES", "TRUE", "1"})
 _START_NEW_VALUES = frozenset({"Y", "N", "YES", "NO", "TRUE", "FALSE", "1", "0", ""})
 
 _USER_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._@+-]{0,127}\Z")
-_SESSION_ID_RE = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9_-]{0,127}\Z")
 
 _fallback_lock = threading.Lock()
 
 
 def is_valid_user_id(value: Any) -> bool:
     """Validates user_id / username format and length bounds."""
-    if not isinstance(value, str) or ".." in value:
+    if not isinstance(value, str) or len(value) < 1 or len(value) > 128 or ".." in value:
         return False
     return bool(_USER_ID_RE.fullmatch(value))
 
 
 def is_valid_session_id(value: Any) -> bool:
-    """Validates session_id format and length bounds."""
-    if not isinstance(value, str):
+    """Validates that session_id is a strict canonical lowercase UUIDv4 string."""
+    if not isinstance(value, str) or len(value) != 36:
         return False
-    return bool(_SESSION_ID_RE.fullmatch(value))
+    try:
+        parsed = uuid.UUID(value)
+    except (ValueError, AttributeError):
+        return False
+    return parsed.version == 4 and str(parsed) == value
 
 
 def is_https_request(request: Request) -> bool:
     """Determines whether the request arrived over HTTPS directly or via proxy."""
     if request.url.scheme.lower() == "https":
         return True
+    host = request.headers.get("host", "").split(":")[0].strip().lower()
+    if host in ("localhost", "127.0.0.1", "testserver"):
+        return False
     forwarded_proto = request.headers.get("x-forwarded-proto", "")
     if forwarded_proto:
         first_hop = forwarded_proto.split(",")[0].strip().lower()
@@ -74,33 +85,72 @@ def is_https_request(request: Request) -> bool:
     return False
 
 
-def trust_auth_headers_enabled(settings: Optional[AgentSettings] = None) -> bool:
-    """Checks whether trusted reverse-proxy identity headers are enabled."""
-    raw = os.environ.get("MCP_AGENT_TRUST_AUTH_HEADERS")
-    if raw is not None:
-        return raw.strip().upper() in _TRUTHY_VALUES
+def is_iap_mode_enabled(settings: Optional[AgentSettings] = None) -> bool:
+    """Checks whether Identity-Aware Proxy (IAP) enforcement is configured."""
+    raw_aud = os.environ.get("MCP_AGENT_IAP_AUDIENCE")
+    if raw_aud is not None and raw_aud.strip():
+        return True
+    raw_req = os.environ.get("MCP_AGENT_REQUIRE_IAP")
+    if raw_req is not None and raw_req.strip().upper() in _TRUTHY_VALUES:
+        return True
     if settings is not None:
-        return bool(settings.trust_auth_headers)
+        if settings.iap_audience and settings.iap_audience.strip():
+            return True
+        if settings.require_iap:
+            return True
     return False
 
 
-def extract_trusted_principal(request: Request) -> str:
-    """Extracts and validates X-Goog-Authenticated-User-Email from a trusted proxy."""
-    raw_header = request.headers.get("x-goog-authenticated-user-email")
-    if raw_header is None or not raw_header.strip():
-        raise HTTPException(
-            status_code=401,
-            detail="Authenticated user identity header is required.",
-        )
-    principal = raw_header.strip()
-    if principal.lower().startswith(_IAP_EMAIL_PREFIX):
-        principal = principal[len(_IAP_EMAIL_PREFIX):].strip()
-    if not principal or not is_valid_user_id(principal):
-        raise HTTPException(
-            status_code=401,
-            detail="Authenticated user identity header is invalid.",
-        )
-    return principal
+def get_iap_audience(settings: Optional[AgentSettings] = None) -> Optional[str]:
+    """Retrieves the configured IAP audience string from environment or settings."""
+    raw = os.environ.get("MCP_AGENT_IAP_AUDIENCE")
+    if raw is not None and raw.strip():
+        return raw.strip()
+    if settings is not None and settings.iap_audience and settings.iap_audience.strip():
+        return settings.iap_audience.strip()
+    return None
+
+
+def verify_same_origin(request: Request, settings: Optional[AgentSettings] = None) -> None:
+    """Enforces browser same-origin semantics via Sec-Fetch-Site and Origin headers."""
+    sec_fetch_site = request.headers.get("sec-fetch-site")
+    if sec_fetch_site:
+        clean_site = sec_fetch_site.strip().lower()
+        if clean_site not in ("same-origin", "none"):
+            logger.warning("Blocked cross-origin request with Sec-Fetch-Site: %s", clean_site)
+            raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
+
+    origin = request.headers.get("origin")
+    if origin is not None:
+        clean_origin = origin.strip()
+        if clean_origin.lower() == "null":
+            logger.warning("Blocked cross-origin request with Origin: null")
+            raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
+        try:
+            parsed = urllib.parse.urlsplit(clean_origin)
+        except Exception:
+            logger.warning("Blocked request with unparseable Origin header: %s", clean_origin)
+            raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
+
+        if parsed.scheme.lower() not in ("http", "https") or not parsed.netloc:
+            logger.warning("Blocked request with invalid Origin scheme/netloc: %s", clean_origin)
+            raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
+
+        target_host = ""
+        if is_iap_mode_enabled(settings):
+            f_host = request.headers.get("x-forwarded-host")
+            if f_host:
+                target_host = f_host.split(",")[0].strip().lower()
+        if not target_host:
+            target_host = request.headers.get("host", "").strip().lower()
+
+        if not target_host or parsed.netloc.lower() != target_host:
+            logger.warning(
+                "Blocked cross-origin request: origin %s does not match host %s",
+                parsed.netloc,
+                target_host,
+            )
+            raise HTTPException(status_code=403, detail="Cross-origin request blocked.")
 
 
 def _safe_default_user() -> str:
@@ -126,12 +176,16 @@ def _b64url_decode(segment: str) -> Optional[bytes]:
 class SessionAuthManager:
     """Manages HMAC-SHA256 session cookies and server-side ownership bindings."""
 
-    def __init__(self, max_sessions: int = _MAX_TRACKED_SESSIONS) -> None:
+    def __init__(
+        self,
+        max_sessions: int = _MAX_TRACKED_SESSIONS,
+        http_request: Optional[Any] = None,
+    ) -> None:
         self._ephemeral_secret: bytes = secrets.token_bytes(32)
         self._max_sessions = max_sessions
         self._session_owners: "OrderedDict[str, Tuple[str, str]]" = OrderedDict()
-        self._principal_owners: "OrderedDict[str, str]" = OrderedDict()
         self._lock = threading.RLock()
+        self._http_request = http_request or google.auth.transport.requests.Request()
 
     def _get_secret_bytes(self, settings: Optional[AgentSettings] = None) -> bytes:
         env_secret = os.environ.get("MCP_AGENT_SESSION_SECRET")
@@ -233,16 +287,75 @@ class SessionAuthManager:
         )
 
     def _record_session_owner(self, session_id: str, owner_key: str, user_id: str) -> None:
-        self._session_owners.pop(session_id, None)
-        while len(self._session_owners) >= self._max_sessions:
-            self._session_owners.popitem(last=False)
-        self._session_owners[session_id] = (owner_key, user_id)
+        with self._lock:
+            self._session_owners.pop(session_id, None)
+            while len(self._session_owners) >= self._max_sessions:
+                self._session_owners.popitem(last=False)
+            self._session_owners[session_id] = (owner_key, user_id)
 
-    def _record_principal_owner(self, user_id: str, cid: str) -> None:
-        self._principal_owners.pop(user_id, None)
-        while len(self._principal_owners) >= _MAX_TRACKED_PRINCIPALS:
-            self._principal_owners.popitem(last=False)
-        self._principal_owners[user_id] = cid
+    def verify_iap_principal(
+        self,
+        request: Request,
+        settings: Optional[AgentSettings] = None,
+    ) -> str:
+        """Validates Google Cloud IAP ES256 JWT assertion and extracts verified email."""
+        audience = get_iap_audience(settings)
+        if not audience:
+            logger.error("MCP_AGENT_IAP_AUDIENCE must be configured when MCP_AGENT_REQUIRE_IAP is enabled.")
+            raise HTTPException(
+                status_code=500,
+                detail="MCP_AGENT_IAP_AUDIENCE must be configured when MCP_AGENT_REQUIRE_IAP is enabled.",
+            )
+
+        raw_jwt = request.headers.get("x-goog-iap-jwt-assertion")
+        if not raw_jwt or not raw_jwt.strip():
+            logger.warning("Missing X-Goog-Iap-Jwt-Assertion header on IAP-protected route")
+            raise HTTPException(
+                status_code=401,
+                detail="Missing X-Goog-Iap-Jwt-Assertion header.",
+            )
+
+        raw_jwt = raw_jwt.strip()
+        try:
+            header = jwt.get_unverified_header(raw_jwt)
+        except Exception as e:
+            logger.warning("Malformed IAP JWT header: %s", e)
+            raise HTTPException(status_code=401, detail="Malformed IAP JWT header.")
+
+        if header.get("alg") != "ES256" or not header.get("kid"):
+            logger.warning("Rejected IAP JWT with unsupported alg or missing kid: %s", header.get("alg"))
+            raise HTTPException(status_code=401, detail="Invalid IAP JWT header algorithm or key ID.")
+
+        try:
+            claims = google.oauth2.id_token.verify_token(
+                raw_jwt,
+                request=self._http_request,
+                audience=audience,
+                certs_url=_IAP_CERTS_URL,
+                clock_skew_in_seconds=30,
+            )
+        except Exception as e:
+            logger.warning("IAP token verification failed: %s", e)
+            raise HTTPException(status_code=401, detail=f"IAP token verification failed: {e}")
+
+        if claims.get("iss") != _IAP_EXPECTED_ISSUER:
+            logger.warning("Rejected IAP JWT with unexpected issuer: %s", claims.get("iss"))
+            raise HTTPException(status_code=401, detail="Invalid IAP token issuer.")
+
+        email = claims.get("email")
+        if not email or not isinstance(email, str):
+            logger.warning("IAP JWT missing email claim")
+            raise HTTPException(status_code=401, detail="IAP token missing email claim.")
+
+        principal = email.strip()
+        if principal.lower().startswith(_IAP_EMAIL_PREFIX):
+            principal = principal[len(_IAP_EMAIL_PREFIX):].strip()
+
+        if not principal or not is_valid_user_id(principal):
+            logger.warning("IAP JWT email is not a valid user identifier: %s", principal)
+            raise HTTPException(status_code=401, detail="IAP token contains invalid user identity.")
+
+        return principal
 
     def resolve_info_user(
         self,
@@ -250,8 +363,13 @@ class SessionAuthManager:
         settings: Optional[AgentSettings] = None,
     ) -> str:
         """Resolves the active user identity for /info metadata."""
-        if trust_auth_headers_enabled(settings):
-            return extract_trusted_principal(request)
+        if is_iap_mode_enabled(settings):
+            if settings and settings.require_iap:
+                return self.verify_iap_principal(request, settings)
+            try:
+                return self.verify_iap_principal(request, settings)
+            except Exception:
+                return "unauthenticated"
         raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
         if raw_cookie:
             cookie_data = self.verify_cookie(raw_cookie, settings)
@@ -268,31 +386,35 @@ class SessionAuthManager:
         settings: Optional[AgentSettings] = None,
     ) -> Dict[str, str]:
         """Issues or refreshes a bound session capability for /get_session."""
-        if trust_auth_headers_enabled(settings):
-            principal = extract_trusted_principal(request)
-            if start_new_session is not None and start_new_session.strip().upper() not in _START_NEW_VALUES:
-                raise HTTPException(status_code=400, detail="Invalid start_new_session parameter.")
-            if username is not None and username != "":
-                if not is_valid_user_id(username):
-                    raise HTTPException(status_code=400, detail="Invalid username format.")
-                if username != principal:
-                    logger.warning(
-                        "Rejected /get_session username mismatch for authenticated principal %s",
-                        principal,
-                    )
-                    raise HTTPException(
-                        status_code=403,
-                        detail="Requested username does not match authenticated principal.",
-                    )
+        verify_same_origin(request, settings)
+
+        if start_new_session is not None and start_new_session.strip().upper() not in _START_NEW_VALUES:
+            raise HTTPException(status_code=400, detail="Invalid start_new_session parameter.")
+
+        requested_user: Optional[str] = None
+        if username is not None and username.strip() and username != "secops_user":
+            if not is_valid_user_id(username):
+                raise HTTPException(status_code=400, detail="Invalid username format.")
+            requested_user = username
+
+        if is_iap_mode_enabled(settings):
+            principal = self.verify_iap_principal(request, settings)
+            if requested_user is not None and requested_user != principal:
+                logger.warning(
+                    "Rejected /get_session username mismatch for authenticated principal %s",
+                    principal,
+                )
+                raise HTTPException(
+                    status_code=403,
+                    detail="Requested username does not match authenticated principal.",
+                )
 
             raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
             cid: Optional[str] = None
             sids: List[str] = []
             if raw_cookie is not None:
                 cookie_data = self.verify_cookie(raw_cookie, settings)
-                if cookie_data is None:
-                    raise HTTPException(status_code=403, detail="Invalid session cookie.")
-                if cookie_data["uid"] == principal:
+                if cookie_data is not None and cookie_data["uid"] == principal:
                     cid = cookie_data["cid"]
                     sids = list(cookie_data["sids"])
             if cid is None:
@@ -301,74 +423,44 @@ class SessionAuthManager:
             session_id = str(uuid.uuid4())
             sids.append(session_id)
             sids = sids[-_MAX_COOKIE_SESSIONS:]
-            with self._lock:
-                self._record_session_owner(session_id, f"iap:{principal}", principal)
+            self._record_session_owner(session_id, f"iap:{principal}", principal)
 
             token = self._sign_cookie_payload(cid, principal, sids, settings)
             self.set_cookie_on_response(response, request, token)
             return {"session_id": session_id, "user_id": principal}
 
-        if start_new_session is not None and start_new_session.strip().upper() not in _START_NEW_VALUES:
-            raise HTTPException(status_code=400, detail="Invalid start_new_session parameter.")
-
-        requested_user: Optional[str] = None
-        if username is not None and username != "":
-            if not is_valid_user_id(username):
-                raise HTTPException(status_code=400, detail="Invalid username format.")
-            requested_user = username
-
+        # Default (non-IAP) mode
         raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
-        if raw_cookie is not None:
-            cookie_data = self.verify_cookie(raw_cookie, settings)
-            if cookie_data is None:
-                logger.warning("Rejected invalid or tampered session cookie on /get_session")
-                raise HTTPException(status_code=403, detail="Invalid session cookie.")
+        cookie_data = self.verify_cookie(raw_cookie, settings) if raw_cookie else None
 
-            cid = cookie_data["cid"]
-            bound_uid = cookie_data["uid"]
-            if requested_user is not None and requested_user != bound_uid:
-                logger.warning(
-                    "Rejected /get_session principal switch from %s to %s",
-                    bound_uid,
-                    requested_user,
-                )
-                raise HTTPException(
-                    status_code=403,
-                    detail="Session cookie is already bound to a different user identity.",
-                )
-
+        if cookie_data is None:
+            cid = secrets.token_urlsafe(24)
+            uid = requested_user or _safe_default_user()
             session_id = str(uuid.uuid4())
-            sids = list(cookie_data["sids"])
-            sids.append(session_id)
-            sids = sids[-_MAX_COOKIE_SESSIONS:]
-            with self._lock:
-                self._record_session_owner(session_id, f"cid:{cid}", bound_uid)
-
-            token = self._sign_cookie_payload(cid, bound_uid, sids, settings)
-            self.set_cookie_on_response(response, request, token)
-            return {"session_id": session_id, "user_id": bound_uid}
-
-        cid = secrets.token_urlsafe(24)
-        session_id = str(uuid.uuid4())
-        with self._lock:
-            if requested_user is not None:
-                existing_cid = self._principal_owners.get(requested_user)
-                if existing_cid is not None:
-                    logger.warning(
-                        "Rejected unauthenticated claim for already-bound username %s",
-                        requested_user,
-                    )
-                    raise HTTPException(
-                        status_code=403,
-                        detail="Requested username is already bound to another client.",
-                    )
-                uid = requested_user
-                self._record_principal_owner(uid, cid)
-            else:
-                uid = _safe_default_user()
+            sids = [session_id]
             self._record_session_owner(session_id, f"cid:{cid}", uid)
+            token = self._sign_cookie_payload(cid, uid, sids, settings)
+            self.set_cookie_on_response(response, request, token)
+            return {"session_id": session_id, "user_id": uid}
 
-        token = self._sign_cookie_payload(cid, uid, [session_id], settings)
+        if requested_user is not None and requested_user != cookie_data["uid"]:
+            cid = secrets.token_urlsafe(24)
+            uid = requested_user
+            session_id = str(uuid.uuid4())
+            sids = [session_id]
+            self._record_session_owner(session_id, f"cid:{cid}", uid)
+            token = self._sign_cookie_payload(cid, uid, sids, settings)
+            self.set_cookie_on_response(response, request, token)
+            return {"session_id": session_id, "user_id": uid}
+
+        cid = cookie_data["cid"]
+        uid = cookie_data["uid"]
+        session_id = str(uuid.uuid4())
+        sids = list(cookie_data["sids"])
+        sids.append(session_id)
+        sids = sids[-_MAX_COOKIE_SESSIONS:]
+        self._record_session_owner(session_id, f"cid:{cid}", uid)
+        token = self._sign_cookie_payload(cid, uid, sids, settings)
         self.set_cookie_on_response(response, request, token)
         return {"session_id": session_id, "user_id": uid}
 
@@ -380,32 +472,33 @@ class SessionAuthManager:
         settings: Optional[AgentSettings] = None,
     ) -> Tuple[str, str, Optional[str]]:
         """Authorizes a /chat request and returns (user_id, session_id, new_cookie_or_none)."""
+        verify_same_origin(request, settings)
+
         req_uid = None if (user_id is None or user_id == "") else user_id
         req_sid = None if (session_id is None or session_id == "") else session_id
 
-        if trust_auth_headers_enabled(settings):
-            principal = extract_trusted_principal(request)
-            if req_uid is not None and not is_valid_user_id(req_uid):
-                raise HTTPException(status_code=400, detail="Invalid user_id format.")
+        if is_iap_mode_enabled(settings):
+            principal = self.verify_iap_principal(request, settings)
+            if req_uid is not None:
+                if not is_valid_user_id(req_uid):
+                    raise HTTPException(status_code=400, detail="Invalid user_id format.")
+                if req_uid != principal:
+                    logger.warning(
+                        "Rejected /chat user_id mismatch for authenticated principal %s",
+                        principal,
+                    )
+                    raise HTTPException(
+                        status_code=403,
+                        detail="Caller user_id does not match authenticated principal.",
+                    )
             if req_sid is not None and not is_valid_session_id(req_sid):
                 raise HTTPException(status_code=400, detail="Invalid session_id format.")
-            if req_uid is not None and req_uid != principal:
-                logger.warning(
-                    "Rejected /chat user_id mismatch for authenticated principal %s",
-                    principal,
-                )
-                raise HTTPException(
-                    status_code=403,
-                    detail="Caller user_id does not match authenticated principal.",
-                )
 
             raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
             cookie_data: Optional[Dict[str, Any]] = None
             if raw_cookie is not None:
                 cookie_data = self.verify_cookie(raw_cookie, settings)
-                if cookie_data is None:
-                    raise HTTPException(status_code=403, detail="Invalid session cookie.")
-                if cookie_data["uid"] != principal:
+                if cookie_data is None or cookie_data["uid"] != principal:
                     raise HTTPException(
                         status_code=403,
                         detail="Session cookie does not match authenticated principal.",
@@ -418,8 +511,7 @@ class SessionAuthManager:
                 sids = list(cookie_data["sids"]) if cookie_data else []
                 sids.append(new_sid)
                 sids = sids[-_MAX_COOKIE_SESSIONS:]
-                with self._lock:
-                    self._record_session_owner(new_sid, f"iap:{principal}", principal)
+                self._record_session_owner(new_sid, f"iap:{principal}", principal)
                 new_token = self._sign_cookie_payload(cid, principal, sids, settings)
                 return principal, new_sid, new_token
 
@@ -447,24 +539,38 @@ class SessionAuthManager:
                 detail="Session is not authorized for the authenticated principal.",
             )
 
+        # Default (non-IAP) mode
         raw_cookie = request.cookies.get(SESSION_COOKIE_NAME)
-        if not raw_cookie:
-            raise HTTPException(
-                status_code=403,
-                detail="Missing session authorization cookie.",
-            )
-        cookie_data = self.verify_cookie(raw_cookie, settings)
-        if cookie_data is None:
-            logger.warning("Rejected invalid or tampered session cookie on /chat")
-            raise HTTPException(
-                status_code=403,
-                detail="Invalid session authorization cookie.",
-            )
+        cookie_data: Optional[Dict[str, Any]] = None
+        if raw_cookie is not None:
+            cookie_data = self.verify_cookie(raw_cookie, settings)
+            if cookie_data is None:
+                logger.warning("Rejected invalid or tampered session cookie on /chat")
+                raise HTTPException(
+                    status_code=403,
+                    detail="Invalid session authorization cookie.",
+                )
 
         if req_uid is not None and not is_valid_user_id(req_uid):
             raise HTTPException(status_code=400, detail="Invalid user_id format.")
         if req_sid is not None and not is_valid_session_id(req_sid):
             raise HTTPException(status_code=400, detail="Invalid session_id format.")
+
+        # Stateless single-turn API path:
+        if cookie_data is None and req_sid is None and req_uid is None:
+            cid = secrets.token_urlsafe(24)
+            uid = _safe_default_user()
+            new_sid = str(uuid.uuid4())
+            self._record_session_owner(new_sid, f"cid:{cid}", uid)
+            new_token = self._sign_cookie_payload(cid, uid, [new_sid], settings)
+            return uid, new_sid, new_token
+
+        # All stateful or user-targeted paths require a valid session cookie
+        if cookie_data is None:
+            raise HTTPException(
+                status_code=403,
+                detail="Missing session authorization cookie.",
+            )
 
         cid = cookie_data["cid"]
         bound_uid = cookie_data["uid"]
@@ -485,8 +591,7 @@ class SessionAuthManager:
             sids = list(cookie_data["sids"])
             sids.append(new_sid)
             sids = sids[-_MAX_COOKIE_SESSIONS:]
-            with self._lock:
-                self._record_session_owner(new_sid, f"cid:{cid}", bound_uid)
+            self._record_session_owner(new_sid, f"cid:{cid}", bound_uid)
             new_token = self._sign_cookie_payload(cid, bound_uid, sids, settings)
             return bound_uid, new_sid, new_token
 

@@ -78,6 +78,7 @@ def test_chat_post():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
         client = TestClient(create_app())
+        # 1. Stateful follow-up with issued session
         sess = client.get("/get_session").json()
         response = client.post("/chat", json={"prompt": "Investigate alert 123", "session_id": sess["session_id"]})
         assert response.status_code == 200
@@ -86,17 +87,20 @@ def test_chat_post():
         assert "Mocked analysis response" in data["response"]
         assert data["session_id"] == sess["session_id"]
 
+        # 2. Stateless single-turn REST API call (no pre-session, no cookies)
+        stateless_client = TestClient(create_app())
+        resp_stateless = stateless_client.post("/chat", json={"prompt": "Single turn query"})
+        assert resp_stateless.status_code == 200
+        stateless_data = resp_stateless.json()
+        assert "Mocked analysis response" in stateless_data["response"]
+        assert "session_id" in stateless_data
+        assert "mcp_agent_session" in resp_stateless.cookies
 
-def test_chat_sse_stream():
-    from unittest.mock import patch
-    with patch("mcp_security_agent.server.routes.get_runner", return_value=MockRunner()):
-        client = TestClient(create_app())
-        sess = client.get("/get_session").json()
-        response = client.get("/chat", params={"message": "check finding", "session_id": sess["session_id"]})
-        assert response.status_code == 200
-        assert "text/event-stream" in response.headers["content-type"]
-        assert "Mocked analysis response" in response.text
-        assert "Stream finished." in response.text
+
+def test_chat_get_method_not_allowed():
+    client = TestClient(create_app())
+    response = client.get("/chat", params={"message": "check finding"})
+    assert response.status_code == 405
 
 
 def test_login_and_alias_routes():
@@ -159,7 +163,11 @@ def test_no_emojis_in_web_app_and_stream():
     from unittest.mock import patch
     with patch("mcp_security_agent.server.routes.get_runner", return_value=None):
         sess = client.get("/get_session").json()
-        resp = client.get("/chat", params={"message": "hello", "session_id": sess["session_id"]})
+        resp = client.post(
+            "/chat",
+            json={"message": "hello", "session_id": sess["session_id"]},
+            headers={"accept": "text/event-stream"},
+        )
         assert resp.status_code == 200
         assert "[Warning]" in resp.text
         for char in resp.text:
@@ -216,10 +224,13 @@ def test_bounded_session_service_eviction():
                 session_id=f"sess_{i}",
             )
         assert len(multi_service._session_order) == 5
-        # Users 0, 1, 2 should be completely evicted and pruned from test_app dict
+        # Users 0, 1, 2 should be completely evicted and pruned from test_app dict and user_state
         assert "user_0" not in multi_service.sessions["test_app"]
         assert "user_1" not in multi_service.sessions["test_app"]
         assert "user_2" not in multi_service.sessions["test_app"]
+        assert "user_0" not in multi_service.user_state.get("test_app", {})
+        assert "user_1" not in multi_service.user_state.get("test_app", {})
+        assert "user_2" not in multi_service.user_state.get("test_app", {})
         # Users 3..7 should remain
         for i in range(3, 8):
             assert f"user_{i}" in multi_service.sessions["test_app"]
@@ -231,6 +242,7 @@ def test_bounded_session_service_eviction():
             session_id="sess_7",
         )
         assert "user_7" not in multi_service.sessions["test_app"]
+        assert "user_7" not in multi_service.user_state.get("test_app", {})
 
     asyncio.run(run_test())
 
@@ -281,7 +293,7 @@ def test_frontend_streaming_abort_on_reset():
     # Verify newInvestigationBtn and saveUser call cancelStreaming when isStreaming is true
     assert "newInvestigationBtn.addEventListener" in js
     assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    messagesContainer.innerHTML = '';" in js
-    assert "if (isStreaming) {\n      cancelStreaming();\n    }\n    currentUserId = newName;" in js
+    assert "const ok = await initSession(true, newName);" in js
 
 
 def test_bounded_session_service_thread_safe_lookups():

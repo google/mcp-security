@@ -158,14 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Fetch / Initialize Session
-  async function initSession(startNew = false) {
+  async function initSession(startNew = false, requestedUsername = undefined) {
     try {
+      const targetUser = requestedUsername !== undefined ? requestedUsername : currentUserId;
       let url = `${API_BASE_URL}/get_session`;
-      if (currentUserId) {
-        url += `?username=${encodeURIComponent(currentUserId)}`;
+      if (targetUser) {
+        url += `?username=${encodeURIComponent(targetUser)}`;
       }
       if (startNew) {
-        url += (currentUserId ? '&' : '?') + 'start_new_session=Y';
+        url += (targetUser ? '&' : '?') + 'start_new_session=Y';
       }
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -178,9 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
       currentSessionDisplay.textContent = currentSessionId.slice(0, 8) + '...';
       currentSessionDisplay.title = currentSessionId;
       console.log('Active session initialized:', currentSessionId, 'User:', currentUserId);
+      return true;
     } catch (err) {
       console.error('Session initialization failed:', err);
       showToast('Could not initialize session with backend', 'error');
+      return false;
     }
   }
 
@@ -336,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let accumulatedText = '';
 
     try {
-      const response = await fetch(`${API_BASE_URL}/chat`, {
+      let response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -349,6 +352,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }),
         signal: activeAbortController.signal,
       });
+
+      if (response.status === 403) {
+        const refreshed = await initSession(true);
+        if (refreshed) {
+          response = await fetch(`${API_BASE_URL}/chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'text/event-stream, application/json',
+            },
+            body: JSON.stringify({
+              session_id: currentSessionId,
+              user_id: currentUserId,
+              message: prompt,
+            }),
+            signal: activeAbortController.signal,
+          });
+        }
+      }
 
       if (!response.ok) {
         throw new Error(`Server returned HTTP ${response.status}`);
@@ -453,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userModal.style.display = 'none';
   }
 
-  function saveUser() {
+  async function saveUser() {
     const newName = usernameInput.value.trim();
     if (!newName) {
       showToast('Username cannot be empty', 'warning');
@@ -462,11 +484,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isStreaming) {
       cancelStreaming();
     }
-    currentUserId = newName;
-    updateUserUI();
-    closeUserModal();
-    initSession(true);
-    showToast(`Active user set to: ${currentUserId}`, 'success');
+    const ok = await initSession(true, newName);
+    if (ok) {
+      updateUserUI();
+      closeUserModal();
+      showToast(`Active user set to: ${currentUserId}`, 'success');
+    }
   }
 
   // Event Listeners

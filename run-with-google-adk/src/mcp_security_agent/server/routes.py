@@ -81,24 +81,6 @@ def get_app_name() -> Dict[str, str]:
     return {"app_name": "Google Security Agent"}
 
 
-@router.get("/get_session")
-def get_session(
-    request: Request,
-    response: Response,
-    username: Optional[str] = Query(None, description="Username for session"),
-    start_new_session: str = Query("N", description="Set to Y to start a new session"),
-) -> Dict[str, str]:
-    """Generates a bound session ID and issues a signed session capability cookie."""
-    auth = get_session_auth(request)
-    return auth.issue_session(
-        request=request,
-        response=response,
-        username=username,
-        start_new_session=start_new_session,
-        settings=get_settings(),
-    )
-
-
 _settings: Optional[AgentSettings] = None
 _settings_lock = threading.Lock()
 
@@ -113,10 +95,37 @@ def get_settings() -> AgentSettings:
     return _settings
 
 
+def get_app_settings(request: Optional[Request] = None) -> AgentSettings:
+    """Returns application-scoped AgentSettings or the cached singleton."""
+    if request is not None:
+        app_settings = getattr(request.app.state, "settings", None)
+        if app_settings is not None:
+            return app_settings
+    return get_settings()
+
+
+@router.get("/get_session")
+def get_session(
+    request: Request,
+    response: Response,
+    username: Optional[str] = Query(None, description="Username for session"),
+    start_new_session: str = Query("N", description="Set to Y to start a new session"),
+) -> Dict[str, str]:
+    """Generates a bound session ID and issues a signed session capability cookie."""
+    auth = get_session_auth(request)
+    return auth.issue_session(
+        request=request,
+        response=response,
+        username=username,
+        start_new_session=start_new_session,
+        settings=get_app_settings(request),
+    )
+
+
 @router.get("/info")
 def get_info(request: Request) -> Dict[str, Any]:
     """Provides server runtime metadata, active user identity, and enabled MCP server status."""
-    settings = get_settings()
+    settings = get_app_settings(request)
     auth = get_session_auth(request)
     active_user = auth.resolve_info_user(request, settings=settings)
     return {
@@ -156,8 +165,14 @@ class BoundedSessionService(InMemorySessionService):
                     self.sessions[old_app][old_user].pop(old_sess, None)
                     if not self.sessions[old_app][old_user]:
                         self.sessions[old_app].pop(old_user, None)
+                        if hasattr(self, "user_state") and old_app in self.user_state:
+                            self.user_state[old_app].pop(old_user, None)
+                            if not self.user_state[old_app]:
+                                self.user_state.pop(old_app, None)
                 if old_app in self.sessions and not self.sessions[old_app]:
                     self.sessions.pop(old_app, None)
+                    if hasattr(self, "user_state"):
+                        self.user_state.pop(old_app, None)
             sess = super()._create_session_impl(
                 app_name=app_name,
                 user_id=user_id,
@@ -228,8 +243,14 @@ class BoundedSessionService(InMemorySessionService):
             if app_name in self.sessions and user_id in self.sessions[app_name]:
                 if not self.sessions[app_name][user_id]:
                     self.sessions[app_name].pop(user_id, None)
+                    if hasattr(self, "user_state") and app_name in self.user_state:
+                        self.user_state[app_name].pop(user_id, None)
+                        if not self.user_state[app_name]:
+                            self.user_state.pop(app_name, None)
             if app_name in self.sessions and not self.sessions[app_name]:
                 self.sessions.pop(app_name, None)
+                if hasattr(self, "user_state"):
+                    self.user_state.pop(app_name, None)
 
 
 _runner: Optional[Runner] = None
@@ -358,30 +379,6 @@ async def sse_event_generator(
     yield f"data: {done_data}\n\n"
 
 
-@router.get("/chat")
-async def chat_sse_stream(
-    http_request: Request,
-    message: str = Query(..., description="User prompt or security alert query"),
-    session_id: Optional[str] = Query(None, description="Session ID for conversation history"),
-    user_id: Optional[str] = Query(None, description="Active user ID"),
-):
-    """Server-Sent Events (SSE) streaming endpoint for web UI clients."""
-    auth = get_session_auth(http_request)
-    uid, sess_id, new_cookie = auth.authorize_chat(
-        request=http_request,
-        user_id=user_id,
-        session_id=session_id,
-        settings=get_settings(),
-    )
-    stream_resp = StreamingResponse(
-        sse_event_generator(message, sess_id, uid),
-        media_type="text/event-stream",
-    )
-    if new_cookie is not None:
-        auth.set_cookie_on_response(stream_resp, http_request, new_cookie)
-    return stream_resp
-
-
 @router.post("/chat", response_model=ChatResponse)
 async def chat_post(request: ChatRequest, http_request: Request):
     """REST and SSE chat endpoint for API clients, automated workflows, and web UI."""
@@ -390,7 +387,7 @@ async def chat_post(request: ChatRequest, http_request: Request):
         request=http_request,
         user_id=request.user_id,
         session_id=request.session_id,
-        settings=get_settings(),
+        settings=get_app_settings(http_request),
     )
     query_text = request.message or request.prompt or ""
 

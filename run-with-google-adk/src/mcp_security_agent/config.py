@@ -229,7 +229,8 @@ class AgentSettings(BaseSettings):
     stdio_timeout_seconds: float = Field(default=60.0, alias="STDIO_PARAM_TIMEOUT")
     default_prompt: Optional[str] = Field(default=None, alias="DEFAULT_PROMPT")
     session_secret: Optional[str] = Field(default=None, alias="MCP_AGENT_SESSION_SECRET")
-    trust_auth_headers: bool = Field(default=False, alias="MCP_AGENT_TRUST_AUTH_HEADERS")
+    iap_audience: Optional[str] = Field(default=None, alias="MCP_AGENT_IAP_AUDIENCE")
+    require_iap: bool = Field(default=False, alias="MCP_AGENT_REQUIRE_IAP")
 
     @field_validator(
         "load_secops_mcp", "load_gti_mcp", "load_secops_soar_mcp",
@@ -247,7 +248,7 @@ class AgentSettings(BaseSettings):
         return bool(value)
 
     @field_validator(
-        "load_scc_mcp", "use_vertex_ai", "minimal_logging", "trust_auth_headers",
+        "load_scc_mcp", "use_vertex_ai", "minimal_logging", "require_iap",
         mode="before"
     )
     @classmethod

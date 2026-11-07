@@ -21,7 +21,8 @@ def test_default_settings():
         assert settings.minimal_logging is False
         assert settings.load_secops_mcp is False
         assert settings.session_secret is None
-        assert settings.trust_auth_headers is False
+        assert settings.iap_audience is None
+        assert settings.require_iap is False
 
 
 def test_env_override_settings():
@@ -153,4 +154,17 @@ def test_discover_user_identity():
         assert discover_user_identity() == "secops_user"
 
 
-
+def test_iap_settings():
+    with patch.dict(
+        os.environ,
+        {
+            "MCP_AGENT_IAP_AUDIENCE": "/projects/12345/global/backendServices/67890",
+            "MCP_AGENT_REQUIRE_IAP": "true",
+            "MCP_AGENT_SESSION_SECRET": "test-secret-key-1234567890123456",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.iap_audience == "/projects/12345/global/backendServices/67890"
+        assert settings.require_iap is True
+        assert settings.session_secret == "test-secret-key-1234567890123456"
