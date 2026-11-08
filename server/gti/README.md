@@ -4,6 +4,10 @@ This is an MCP (Model Context Protocol) server for interacting with Google's
 Threat Intelligence suite.
 [MCP Info](https://modelcontextprotocol.io/introduction)
 
+## Remote Agentic MCP server
+
+Organizations with a Google Threat Intelligence Enterprise or Enterprise Plus license can also connect MCP clients directly to the hosted Google Threat Intelligence Agentic MCP endpoint at `https://www.virustotal.com/api/v3/agentspace/mcp/`, available in public preview, with no local Python runtime. See the [Remote MCP server for Google Threat Intelligence guide](https://google.github.io/mcp-security/gti_remote_server.html) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide). Both the remote Agentic server and this local `gti-mcp` package can run side by side using the same `VT_APIKEY`.
+
 ## Features
 
 ### Collections (Threats)

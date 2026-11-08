@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="340" viewBox="0 0 940 340" role="img" aria-labelledby="title">
+  <title id="title">Remote GTI Agentic MCP endpoint versus local gti-mcp server</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <rect x="24" y="115" width="216" height="96" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="132.0" y="140.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">MCP client</text>
+  <text x="132.0" y="158.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Gemini CLI, Antigravity,</text>
+  <text x="132.0" y="176.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Goose, Claude Code,</text>
+  <text x="132.0" y="194.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Cursor, VS Code, ADK</text>
+  <rect x="316" y="32" width="320" height="104" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="476.0" y="62.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">Remote GTI Agentic MCP (gti-agentic)</text>
+  <text x="476.0" y="79.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">www.virustotal.com/api/v3/agentspace/mcp/</text>
+  <text x="476.0" y="96.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">Streamable HTTP + x-apikey header</text>
+  <text x="476.0" y="113.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">7 stateful session tools</text>
+  <polyline points="240,148 316,84" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="316" y="190" width="320" height="104" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="476.0" y="220.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">Local GTI MCP server (gti-mcp)</text>
+  <text x="476.0" y="237.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">uvx gti_mcp + VT_APIKEY</text>
+  <text x="476.0" y="254.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">stdio transport</text>
+  <text x="476.0" y="271.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">Direct VirusTotal API v3 tools</text>
+  <polyline points="240,178 316,242" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="6 4"/>
+  <rect x="712" y="32" width="204" height="104" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="814.0" y="61.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">GTI Agentic platform</text>
+  <text x="814.0" y="79.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Specialist threat and</text>
+  <text x="814.0" y="97.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">malware agents</text>
+  <text x="814.0" y="115.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Enterprise / Plus license</text>
+  <polyline points="636,84 712,84" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="712" y="190" width="204" height="104" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="814.0" y="219.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Google Threat Intelligence</text>
+  <text x="814.0" y="237.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">VirusTotal API v3</text>
+  <text x="814.0" y="255.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Collections, files, rules,</text>
+  <text x="814.0" y="273.0" text-anchor="middle" font-size="13" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">domains, IPs, and URLs</text>
+  <polyline points="636,242 712,242" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="6 4"/>
+  <polyline points="814,136 814,190" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="476" y="166" text-anchor="middle" font-size="12" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">Run either option, or register both side by side</text>
+  <text x="470" y="322" text-anchor="middle" font-size="12" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">Both options authenticate with the same Google Threat Intelligence API key.</text>
+</svg>
