@@ -15,6 +15,7 @@ import json
 import mcp
 import pytest
 import asyncio
+import vt
 from unittest.mock import patch, MagicMock, AsyncMock
 
 from gti_mcp.server import server
@@ -24,6 +25,22 @@ from gti_mcp.tools import collections
 from mcp.shared.memory import (
     create_connected_server_and_client_session as client_session,
 )
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://theevil.com/",
+        "https://example.com/?a=1>",
+        "https://bit.ly/3x~?",
+        "https://example.com/path?q=\u00fc\u00f1\u00ee",
+    ],
+)
+def test_url_to_base64_matches_vt_url_id(url):
+    """URL ids must use the URL-safe alphabet that vt-py's `url_id` uses."""
+    url_id = tools.url_to_base64(url)
+    assert url_id == vt.url_id(url)
+    assert "/" not in url_id and "+" not in url_id and "=" not in url_id
 
 
 @pytest.mark.asyncio(loop_scope="session")
@@ -186,6 +203,24 @@ async def test_server_connection():
             },
         ),
         (
+            "get_url_report",
+            {"url": "https://example.com/?a=1>"},
+            # URL-safe id: standard base64 would put a "/" in the path.
+            "/api/v3/urls/aHR0cHM6Ly9leGFtcGxlLmNvbS8_YT0xPg",
+            {
+                "data": {
+                    "id": "url-id",
+                    "type": "url",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            {
+                "id": "url-id",
+                "type": "url",
+                "attributes": {"foo": "foo", "bar": "bar"},
+            },
+        ),
+        (
             "get_collection_report",
             {"id": "collection_id"},
             "/api/v3/collections/collection_id",
@@ -303,6 +338,16 @@ async def test_get_reports(
             "get_entities_related_to_an_url",
             {"url": "http://theevil.com/", "relationship_name": "associations", "descriptors_only": "True"},
             "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/relationship/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "https://bit.ly/3x~?", "relationship_name": "associations", "descriptors_only": "True"},
+            # URL-safe id: standard base64 would encode this URL with a "+".
+            "/api/v3/urls/aHR0cHM6Ly9iaXQubHkvM3h-Pw/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
             },

@@ -61,11 +61,13 @@ URL_KEY_RELATIONSHIPS = [
 
 
 def url_to_base64(url: str) -> str:
-  """Converts the URL into base64.
+  """Converts the URL into its Google Threat Intelligence URL identifier.
 
-  Without padding, as required by the Google Threat Intelligence API.
+  URL-safe base64 without padding, as required by the API (same as
+  `vt.url_id`). Standard base64 can contain "/" and "+", which turn the
+  identifier into a different API path or a different URL.
   """
-  b = base64.b64encode(url.encode('utf-8'))
+  b = base64.urlsafe_b64encode(url.encode('utf-8'))
   return b.decode('utf-8').rstrip("=")
 
 
