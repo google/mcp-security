@@ -1602,3 +1602,72 @@ async def test_get_entities_related_invalid_relationship_returns_error(
         payload = result.structuredContent["result"]
         assert isinstance(payload, dict)
         assert "Relationship not_a_relationship does not exist" in payload["error"]
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    "status, api_response, expected_error",
+    [
+        (
+            403,
+            {"error": {"code": "ForbiddenError", "message": "Not allowed"}},
+            "API Error: Not allowed",
+        ),
+        (400, {"error": "not a dict"}, "API Error: Unknown error"),
+        (200, {"data": None}, "API Error: Unknown error"),
+    ],
+)
+async def test_create_collection_api_error_returns_error(
+    make_httpserver_ipv4, status, api_response, expected_error
+):
+    """A GTI error response comes back as an error dict, not KeyError: 'data'."""
+    name = f"error collection {status} {expected_error}"
+    make_httpserver_ipv4.expect_request(
+        "/api/v3/collections",
+        method="POST",
+        json={
+            "data": {
+                "attributes": {"name": name, "description": "d", "private": True},
+                "type": "collection",
+                "raw_items": "evil-domain.com",
+            }
+        },
+    ).respond_with_json(api_response, status=status)
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "create_collection",
+            arguments={"name": name, "description": "d", "iocs": ["evil-domain.com"]},
+        )
+        assert not result.isError, result.content[0].text
+        assert result.structuredContent["result"] == {"error": expected_error}
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    "status, api_response, expected_error",
+    [
+        (
+            404,
+            {"error": {"code": "NotFoundError", "message": "Collection not found"}},
+            "API Error: Collection not found",
+        ),
+        (200, {"data": None}, "API Error: Unknown error"),
+    ],
+)
+async def test_update_collection_attributes_api_error_returns_error(
+    make_httpserver_ipv4, status, api_response, expected_error
+):
+    """A GTI error response comes back as an error dict, not KeyError: 'data'."""
+    collection_id = f"missing_collection_{status}"
+    make_httpserver_ipv4.expect_request(
+        f"/api/v3/collections/{collection_id}", method="PATCH"
+    ).respond_with_json(api_response, status=status)
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "update_collection_attributes",
+            arguments={"id": collection_id, "attributes": {"name": "new"}},
+        )
+        assert not result.isError, result.content[0].text
+        assert result.structuredContent["result"] == {"error": expected_error}
