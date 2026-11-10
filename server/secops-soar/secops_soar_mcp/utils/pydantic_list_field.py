@@ -1,9 +1,8 @@
-from typing import Type
 from pydantic import BaseModel, Field
 from pydantic.json_schema import GenerateJsonSchema
 
 def PydanticListField(
-    model: Type[BaseModel],
+    model: type[BaseModel],
     description: str = "",
     default_factory=list,
 ) -> Field:

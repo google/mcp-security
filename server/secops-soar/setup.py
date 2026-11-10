@@ -21,6 +21,7 @@ setup(
     name="secops-soar-mcp",
     version="0.1.2",
     packages=setuptools.find_packages(),
+    python_requires=">=3.11",
     install_requires=[
         "aiohttp>=3.11.15",
         "mcp[cli]>=1.4.1,<2.0",

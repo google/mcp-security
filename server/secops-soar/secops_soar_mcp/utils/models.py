@@ -13,7 +13,7 @@
 # limitations under the License.
 from enum import StrEnum
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
+from typing import Any
 
 
 class CasePriority(StrEnum):
@@ -32,16 +32,16 @@ class TargetEntity(BaseModel):
 
 class ApiManualActionDataModel(BaseModel):
     caseId: int
-    targetEntities: List[Any] = Field(default_factory=list)
-    properties: Dict[str, str] = Field(default_factory=dict)
+    targetEntities: list[Any] = Field(default_factory=list)
+    properties: dict[str, str] = Field(default_factory=dict)
     actionProvider: str
     actionName: str
-    scope: Optional[str]
-    alertGroupIdentifiers: List[str] = Field(default_factory=list)
+    scope: str | None
+    alertGroupIdentifiers: list[str] = Field(default_factory=list)
     isPredefinedScope: bool
 
 
 class EmailContent(BaseModel):
     Content: str
-    ContentTemplateName: Optional[str]
-    HtmlTemplateName: Optional[str]
+    ContentTemplateName: str | None
+    HtmlTemplateName: str | None
