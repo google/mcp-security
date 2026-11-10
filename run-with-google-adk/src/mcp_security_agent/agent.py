@@ -15,7 +15,7 @@
 
 import logging
 import threading
-from typing import Optional, Any
+from typing import Any
 from mcp_security_agent.config import AgentSettings
 from mcp_security_agent.toolsets import build_mcp_toolsets
 from mcp_security_agent.callbacks import bmc_trim_llm_request
@@ -32,7 +32,7 @@ Guidelines:
 """
 
 
-def create_security_agent(settings: Optional[AgentSettings] = None) -> Any:
+def create_security_agent(settings: AgentSettings | None = None) -> Any:
     """Initializes and returns the configured SOC Security Agent.
 
     Args:
@@ -63,7 +63,7 @@ def create_security_agent(settings: Optional[AgentSettings] = None) -> Any:
 
 
 # Lazy root_agent instantiation for standard ADK CLI discovery (adk run, adk web)
-_root_agent: Optional[Any] = None
+_root_agent: Any | None = None
 _root_agent_lock = threading.Lock()
 
 

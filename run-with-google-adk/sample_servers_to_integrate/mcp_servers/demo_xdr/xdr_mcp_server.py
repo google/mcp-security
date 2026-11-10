@@ -16,7 +16,6 @@ import argparse
 import json
 import uuid
 import sys
-from typing import Optional
 
 # To run this, you need the MCP SDK installed.
 # If not available, we'll use a placeholder class for demonstration.
@@ -38,8 +37,8 @@ except ImportError:
             print("This is a placeholder and will not actually listen for requests.")
 
 # --- Configuration Variables (populated by argparse) ---
-CLIENT_ID: Optional[str] = None
-CLIENT_SECRET: Optional[str] = None
+CLIENT_ID: str | None = None
+CLIENT_SECRET: str | None = None
 
 # Initialize FastMCP server for the XDR sample
 mcp = FastMCP("xdr_sample_server")

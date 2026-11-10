@@ -15,13 +15,13 @@
 
 import logging
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 from mcp_security_agent.config import AgentSettings
 
 logger = logging.getLogger(__name__)
 
 
-def build_mcp_toolsets(settings: AgentSettings) -> List[Any]:
+def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
     """Builds and returns all configured MCP toolsets using native ADK transports.
 
     Args:
