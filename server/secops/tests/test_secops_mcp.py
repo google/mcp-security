@@ -16,7 +16,6 @@ To run these tests:
 
 import os
 import uuid
-from typing import Dict
 
 import pytest
 
@@ -47,7 +46,7 @@ class TestChronicleSecOpsMCP:
     """Test class for Chronicle SecOps MCP tools."""
 
     @pytest.mark.asyncio
-    async def test_search_security_events_basic(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_search_security_events_basic(self, chronicle_config: dict[str, str]) -> None:
         """Test basic search for security events using natural language.
         
         Args:
@@ -81,7 +80,7 @@ class TestChronicleSecOpsMCP:
         # Instead we verify the API call worked and returned the expected structure
 
     @pytest.mark.asyncio
-    async def test_search_security_events_with_time_range(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_search_security_events_with_time_range(self, chronicle_config: dict[str, str]) -> None:
         """Test search with a specific time range.
         
         Args:
@@ -105,7 +104,7 @@ class TestChronicleSecOpsMCP:
         assert "8.8.8.8" in result["udm_query"]
     
     @pytest.mark.asyncio
-    async def test_search_security_events_detailed_query(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_search_security_events_detailed_query(self, chronicle_config: dict[str, str]) -> None:
         """Test search with a detailed security query.
         
         Args:
@@ -134,7 +133,7 @@ class TestChronicleSecOpsMCP:
         assert any(keyword in udm_query.lower() for keyword in login_keywords)
     
     @pytest.mark.asyncio
-    async def test_get_security_alerts(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_security_alerts(self, chronicle_config: dict[str, str]) -> None:
         """Test retrieving security alerts.
         
         Args:
@@ -163,7 +162,7 @@ class TestChronicleSecOpsMCP:
             assert "Severity:" in result
     
     @pytest.mark.asyncio
-    async def test_get_security_alerts_with_status_filter(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_security_alerts_with_status_filter(self, chronicle_config: dict[str, str]) -> None:
         """Test retrieving security alerts with a status filter.
         
         Args:
@@ -194,7 +193,7 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result_open, str)
     
     @pytest.mark.asyncio
-    async def test_lookup_entity_ip(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_lookup_entity_ip(self, chronicle_config: dict[str, str]) -> None:
         """Test looking up an IP entity.
         
         Args:
@@ -216,7 +215,7 @@ class TestChronicleSecOpsMCP:
         assert "Primary Entity" in result or "No information found" in result
     
     @pytest.mark.asyncio
-    async def test_lookup_entity_domain(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_lookup_entity_domain(self, chronicle_config: dict[str, str]) -> None:
         """Test looking up a domain entity.
         
         Args:
@@ -235,7 +234,7 @@ class TestChronicleSecOpsMCP:
         assert "Entity Summary for google.com" in result
     
     @pytest.mark.asyncio
-    async def test_lookup_entity_hash(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_lookup_entity_hash(self, chronicle_config: dict[str, str]) -> None:
         """Test looking up a file hash entity.
         
         Args:
@@ -259,7 +258,7 @@ class TestChronicleSecOpsMCP:
                 "No information found for entity: 44d88612fea8a8f36de82e1278abb02f" in result)
     
     @pytest.mark.asyncio
-    async def test_list_security_rules(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_list_security_rules(self, chronicle_config: dict[str, str]) -> None:
         """Test listing security detection rules.
         
         Args:
@@ -290,7 +289,7 @@ class TestChronicleSecOpsMCP:
         # Test passes if we get a valid dictionary response
 
     @pytest.mark.asyncio
-    async def test_search_security_rules(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_search_security_rules(self, chronicle_config: dict[str, str]) -> None:
         """Test searching security detection rules.
         
         Args:
@@ -322,7 +321,7 @@ class TestChronicleSecOpsMCP:
         # Test passes if we get a valid dictionary response
     
     @pytest.mark.asyncio
-    async def test_get_ioc_matches(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_ioc_matches(self, chronicle_config: dict[str, str]) -> None:
         """Test retrieving IoC matches.
         
         Args:
@@ -348,7 +347,7 @@ class TestChronicleSecOpsMCP:
             assert "Sources:" in result
     
     @pytest.mark.asyncio
-    async def test_get_threat_intel(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_threat_intel(self, chronicle_config: dict[str, str]) -> None:
         """Test getting threat intelligence.
         
         Args:
@@ -369,7 +368,7 @@ class TestChronicleSecOpsMCP:
         assert "APT29" in result or "APT-29" in result or "Cozy Bear" in result
     
     @pytest.mark.asyncio
-    async def test_get_threat_intel_cve(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_threat_intel_cve(self, chronicle_config: dict[str, str]) -> None:
         """Test getting threat intelligence about a CVE.
         
         Args:
@@ -390,7 +389,7 @@ class TestChronicleSecOpsMCP:
         assert "CVE-2021-44228" in result or "Log4j" in result or "Log4Shell" in result
     
     @pytest.mark.asyncio
-    async def test_get_threat_intel_general(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_threat_intel_general(self, chronicle_config: dict[str, str]) -> None:
         """Test getting general threat intelligence information.
         
         Args:
@@ -412,7 +411,7 @@ class TestChronicleSecOpsMCP:
 
 
     @pytest.mark.asyncio
-    async def test_get_rule_detections(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_rule_detections(self, chronicle_config: dict[str, str]) -> None:
         """Test listing detections by rule id.
         
         Args:
@@ -434,7 +433,7 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result, dict)
 
     @pytest.mark.asyncio
-    async def test_get_rule_detection_errors(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_rule_detection_errors(self, chronicle_config: dict[str, str]) -> None:
         """Test listing errors for detection rules.
         
         Args:
@@ -456,7 +455,7 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result, dict)
 
     @pytest.mark.asyncio
-    async def test_do_update_security_alert(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_do_update_security_alert(self, chronicle_config: dict[str, str]) -> None:
         """Test updating Alert details by alert id
         
         Args:
@@ -481,7 +480,7 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result, dict)
 
     @pytest.mark.asyncio
-    async def test_get_security_alert_by_id(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_security_alert_by_id(self, chronicle_config: dict[str, str]) -> None:
         """Test listing errors for detection rules.
         
         Args:
@@ -503,7 +502,7 @@ class TestChronicleSecOpsMCP:
         assert isinstance(result, dict)
 
     @pytest.mark.asyncio
-    async def test_list_feeds(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_list_feeds(self, chronicle_config: dict[str, str]) -> None:
         """Test listing feeds.
 
         Args:
@@ -543,7 +542,7 @@ class TestChronicleSecOpsMCP:
                 assert "logType" in first_feed["details"]
 
     @pytest.mark.asyncio
-    async def test_get_feed(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_feed(self, chronicle_config: dict[str, str]) -> None:
         """Test getting details of a feed.
 
         Args:
@@ -583,7 +582,7 @@ class TestChronicleSecOpsMCP:
 
     @pytest.mark.asyncio
     async def test_create_update_disable_delete_feed(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test the full lifecycle of a feed.
 
@@ -692,7 +691,7 @@ class TestChronicleSecOpsMCP:
                     print(f"Warning: Failed to delete test feed: {e}")
 
     @pytest.mark.asyncio
-    async def test_search_udm(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_search_udm(self, chronicle_config: dict[str, str]) -> None:
         """Test searching UDM events in Chronicle.
 
         Args:
@@ -729,7 +728,7 @@ class TestChronicleSecOpsMCP:
 
     @pytest.mark.asyncio
     async def test_export_udm_search_csv(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test exporting UDM search results to CSV.
 
@@ -767,7 +766,7 @@ class TestChronicleSecOpsMCP:
 
     @pytest.mark.asyncio
     async def test_find_udm_field_values(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test finding UDM field values for autocomplete.
 
@@ -803,7 +802,7 @@ class TestChronicleSecOpsMCP:
                 assert isinstance(first_value, dict)
 
     @pytest.mark.asyncio
-    async def test_get_stats_basic(self, chronicle_config: Dict[str, str]) -> None:
+    async def test_get_stats_basic(self, chronicle_config: dict[str, str]) -> None:
         """Test that get_stats returns a structured aggregation result from Chronicle.
 
         Runs a YARA-L 2.0 match:/outcome: count by event type over the last 24 hours.
@@ -851,7 +850,7 @@ class TestChronicleSecOpsMCP:
 
     @pytest.mark.asyncio
     async def test_get_stats_count_values_are_numeric(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Verify count() values are returned as int/float, not strings.
 
@@ -889,7 +888,7 @@ class TestChronicleSecOpsMCP:
 
     @pytest.mark.asyncio
     async def test_service_account_authentication(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test tool execution using service account authentication.
 

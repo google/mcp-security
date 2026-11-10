@@ -16,7 +16,7 @@
 import base64
 import json
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -29,9 +29,9 @@ logger = logging.getLogger("secops-mcp")
 async def create_parser(
     log_type: str,
     parser_code: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
     validated_on_empty_logs: bool = True,
 ) -> str:
     """Create a new parser for a specific log type in Chronicle.
@@ -148,9 +148,9 @@ async def create_parser(
 async def get_parser(
     log_type: str,
     parser_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Get details of a specific parser in Chronicle.
 
@@ -245,13 +245,13 @@ async def get_parser(
 @server.tool()
 async def list_parsers(
     log_type: str = "-",
-    page_size: Optional[int] = None,
-    page_token: Optional[str] = None,
-    filter: Optional[str] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    page_size: int | None = None,
+    page_token: str | None = None,
+    filter: str | None = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """List parsers in Chronicle, optionally filtered by log type.
 
     Enumerates parsers deployed in the Chronicle tenant without needing a parser ID
@@ -349,9 +349,9 @@ async def list_parsers(
 async def activate_parser(
     log_type: str,
     parser_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Activate a parser for a specific log type in Chronicle.
 
@@ -428,9 +428,9 @@ async def activate_parser(
 async def deactivate_parser(
     log_type: str,
     parser_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Deactivate a parser for a specific log type in Chronicle.
 
@@ -511,11 +511,11 @@ async def deactivate_parser(
 async def run_parser_against_sample_logs(
     log_type: str,
     parser_code: str,
-    sample_logs: List[str],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    parser_extension_code: Optional[str] = None,
+    sample_logs: list[str],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    parser_extension_code: str | None = None,
     statedump_allowed: bool = False,
 ) -> str:
     """Run a parser against sample logs to test parsing logic.

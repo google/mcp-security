@@ -13,7 +13,6 @@ To run these tests:
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Dict
 
 import pytest
 
@@ -30,7 +29,7 @@ class TestChronicleInvestigationsMCP:
 
     @pytest.mark.asyncio
     async def test_list_investigations(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing investigations.
 
@@ -52,7 +51,7 @@ class TestChronicleInvestigationsMCP:
 
     @pytest.mark.asyncio
     async def test_get_investigation(
-        self, chronicle_config: Dict[str, str], chronicle_client
+        self, chronicle_config: dict[str, str], chronicle_client
     ) -> None:
         """Test getting a specific investigation.
 
@@ -86,7 +85,7 @@ class TestChronicleInvestigationsMCP:
 
     @pytest.mark.asyncio
     async def test_trigger_investigation(
-        self, chronicle_config: Dict[str, str], chronicle_client
+        self, chronicle_config: dict[str, str], chronicle_client
     ) -> None:
         """Test triggering investigation for a real alert.
 
@@ -123,7 +122,7 @@ class TestChronicleInvestigationsMCP:
 
     @pytest.mark.asyncio
     async def test_fetch_associated_investigations(
-        self, chronicle_config: Dict[str, str], chronicle_client
+        self, chronicle_config: dict[str, str], chronicle_client
     ) -> None:
         """Test fetching investigations associated with alerts.
 

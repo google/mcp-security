@@ -17,7 +17,7 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 
-from typing import Any, Dict, Optional
+from typing import Any
 from secops_mcp.server import get_chronicle_client, server
 
 
@@ -26,12 +26,12 @@ logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def get_security_alerts(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
     hours_back: int = 24,
     max_alerts: int = 10,
     status_filter: str = 'feedback_summary.status != "CLOSED"',
-    region: Optional[str] = None,
+    region: str | None = None,
 ) -> str:
     """Get security alerts directly from Chronicle SIEM.
 
@@ -155,10 +155,10 @@ async def get_security_alerts(
 
 @server.tool()
 async def get_security_alert_by_id(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    alert_id: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    alert_id: str | None = None,
     include_detections: bool = True
 ) -> str:
     """Get security alert by ID directly from Chronicle SIEM.
@@ -210,17 +210,17 @@ async def get_security_alert_by_id(
 
 @server.tool()
 async def do_update_security_alert(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    alert_id: Optional[str] = None,
-    reason: Optional[str] = None,
-    priority: Optional[str] = None,
-    status: Optional[str] = None,
-    verdict: Optional[str] = None,
-    severity: Optional[int] = None,
-    comment: Optional[str] = None,
-    root_cause: Optional[str] = None
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    alert_id: str | None = None,
+    reason: str | None = None,
+    priority: str | None = None,
+    status: str | None = None,
+    verdict: str | None = None,
+    severity: int | None = None,
+    comment: str | None = None,
+    root_cause: str | None = None
 ) -> str:
     """
         Update security alert attributes directly in Chronicle SIEM.

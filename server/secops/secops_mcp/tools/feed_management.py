@@ -14,7 +14,7 @@
 """Security Operations MCP tools for feed management."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -25,10 +25,10 @@ logger = logging.getLogger("secops-mcp")
 
 @server.tool()
 async def list_feeds(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """List all feeds configured in Chronicle.
 
     Retrieves a list of all feeds that are configured in the
@@ -105,10 +105,10 @@ async def list_feeds(
 @server.tool()
 async def get_feed(
     feed_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Get detailed information about a specific feed.
 
     Retrieves complete configuration details for a specified feed by its ID,
@@ -169,11 +169,11 @@ async def get_feed(
 @server.tool()
 async def create_feed(
     display_name: str,
-    feed_details: Dict[str, Any],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    feed_details: dict[str, Any],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Create a new feed in Chronicle.
 
     Creates a new feed configuration for ingesting security data into Chronicle.
@@ -245,12 +245,12 @@ async def create_feed(
 @server.tool()
 async def update_feed(
     feed_id: str,
-    display_name: Optional[str] = None,
-    feed_details: Dict[str, Any] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    display_name: str | None = None,
+    feed_details: dict[str, Any] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Update an existing feed in Chronicle.
 
     Modifies the configuration of an existing feed in Chronicle. Can
@@ -320,10 +320,10 @@ async def update_feed(
 @server.tool()
 async def enable_feed(
     feed_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Enable a inactive feed in Chronicle.
 
     Activates a feed that is currently in the INACTIVE state, allowing it
@@ -385,10 +385,10 @@ async def enable_feed(
 @server.tool()
 async def disable_feed(
     feed_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Disable an active feed in Chronicle.
 
     Stops data ingestion for a feed by setting its state to INACTIVE.
@@ -450,10 +450,10 @@ async def disable_feed(
 @server.tool()
 async def delete_feed(
     feed_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Delete a feed from Chronicle.
 
     Permanently removes a feed from Chronicle. This action cannot be undone
@@ -511,10 +511,10 @@ async def delete_feed(
 @server.tool()
 async def generate_feed_secret(
     feed_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Generate authentication secret for a feed.
 
     Generates a new secret for https push feeds which do not support jwt tokens.

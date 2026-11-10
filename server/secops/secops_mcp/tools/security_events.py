@@ -15,7 +15,7 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 from secops_mcp.utils import parse_time_range
@@ -28,14 +28,14 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def search_security_events(
     text: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
     hours_back: int = 24,
-    start_time: Optional[str] = None,
-    end_time: Optional[str] = None,
+    start_time: str | None = None,
+    end_time: str | None = None,
     max_events: int = 100,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Search for security events in Chronicle SIEM using natural language.
 
     Allows searching Chronicle event logs using natural language queries, which are

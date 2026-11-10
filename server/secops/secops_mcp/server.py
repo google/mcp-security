@@ -19,7 +19,7 @@ security operations tasks using Chronicle, including natural language search.
 
 import logging
 import os
-from typing import Any, Optional
+from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 from secops import SecOpsClient
@@ -43,9 +43,9 @@ DEFAULT_REGION = os.environ.get('CHRONICLE_REGION', 'us')
 
 
 def get_chronicle_client(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None
 ) -> Any:
     """Initialize and return a Chronicle client.
 
