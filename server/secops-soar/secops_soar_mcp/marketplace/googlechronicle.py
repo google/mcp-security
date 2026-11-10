@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Get Rule Details for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Get Rule Details for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -169,10 +172,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Get Detection Details for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Get Detection Details for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -210,7 +213,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -252,10 +255,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Execute UDM Query for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Execute UDM Query for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -293,7 +296,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -328,10 +331,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Remove Values From Reference List for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Remove Values From Reference List for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -369,7 +372,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -404,10 +407,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Add Values To Reference List for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Add Values To Reference List for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -445,7 +448,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -482,10 +485,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_List IOCs for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_List IOCs for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -523,7 +526,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -562,10 +565,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Enrich IP for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Enrich IP for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -603,7 +606,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -636,10 +639,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Ping for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Ping for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -677,7 +680,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -723,10 +726,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_List Events for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_List Events for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -764,7 +767,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -804,10 +807,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Execute Retrohunt for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Execute Retrohunt for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -845,7 +848,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -882,10 +885,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Is Value In Reference List for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Is Value In Reference List for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -923,7 +926,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -966,10 +969,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_List Assets for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_List Assets for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1007,7 +1010,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1045,10 +1048,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Lookup Similar Alerts for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Lookup Similar Alerts for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1086,7 +1089,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1125,10 +1128,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Enrich Domain for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Enrich Domain for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1166,7 +1169,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleChronicle: {e}")
+            logger.error("Error fetching instance for GoogleChronicle: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1209,8 +1212,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleChronicle_Get Reference Lists for GoogleChronicle: {e}")
+                logger.error("Error executing action GoogleChronicle_Get Reference Lists for GoogleChronicle: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleChronicle")
+            logger.warning("Warning: No active integration instance found for GoogleChronicle")
             return {"Status": "Failed", "Message": "No active instance found."}

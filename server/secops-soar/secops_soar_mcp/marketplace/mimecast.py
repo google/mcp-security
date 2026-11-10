@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Advanced Archive Search for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Advanced Archive Search for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +179,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Release Message for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Release Message for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -220,7 +223,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -260,10 +263,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Reject Message for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Reject Message for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -304,7 +307,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -339,10 +342,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Permit Sender for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Permit Sender for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -383,7 +386,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -418,10 +421,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Block Sender for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Block Sender for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -459,7 +462,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -492,10 +495,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Ping for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Ping for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -536,7 +539,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -585,10 +588,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Simple Archive Search for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Simple Archive Search for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -629,7 +632,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Mimecast: {e}")
+            logger.error("Error fetching instance for Mimecast: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -667,8 +670,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Mimecast_Report Message for Mimecast: {e}")
+                logger.error("Error executing action Mimecast_Report Message for Mimecast: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Mimecast")
+            logger.warning("Warning: No active integration instance found for Mimecast")
             return {"Status": "Failed", "Message": "No active instance found."}

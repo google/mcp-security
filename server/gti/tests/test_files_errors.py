@@ -61,3 +61,32 @@ async def test_get_file_behavior_summary_unexpected_format_handled():
         result = await files.get_file_behavior_summary(hash="some_hash", ctx=mock_ctx)
         assert "error" in result
         assert "Unexpected response format" in result["error"]
+
+
+@pytest.mark.asyncio
+async def test_get_entities_related_to_a_file_invalid_relationship_returns_error_dict():
+    """Invalid relationship_name returns an error dict via FastMCP call_tool.
+
+    Invoking through server.call_tool exercises FastMCP outputSchema /
+    structured-output validation, so a regression that drops the Union return
+    annotation fails this test (ToolError / pydantic list_type).
+    """
+    from gti_mcp.server import server
+
+    result = await server.call_tool(
+        "get_entities_related_to_a_file",
+        {
+            "hash": "abc",
+            "relationship_name": "not_a_real_relationship",
+            "descriptors_only": True,
+        },
+    )
+    # FastMCP wraps Union returns as (unstructured, structured) with
+    # structured == {"result": <tool return value>}.
+    assert isinstance(result, tuple)
+    _content, structured = result
+    assert isinstance(structured, dict)
+    payload = structured.get("result", structured)
+    assert isinstance(payload, dict)
+    assert "error" in payload
+    assert "not_a_real_relationship" in payload["error"]

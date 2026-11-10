@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Hosts By Process for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Hosts By Process for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -166,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Isolate Host for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Isolate Host for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -207,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -240,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Unblock Hash for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Unblock Hash for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -281,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -315,10 +318,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Process Free Query for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Process Free Query for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -356,7 +359,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -389,10 +392,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Enrich Binary for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Enrich Binary for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -430,7 +433,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -463,10 +466,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Unisolate Host for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Unisolate Host for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -504,7 +507,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -537,10 +540,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Enrich Process for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Enrich Process for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -578,7 +581,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -611,10 +614,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Ping for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Ping for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -652,7 +655,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -687,10 +690,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Get FileMod Data For Process for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Get FileMod Data For Process for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -728,7 +731,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -762,10 +765,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Resolve Alert for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Resolve Alert for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -803,7 +806,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -836,10 +839,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_List Processes for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_List Processes for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -877,7 +880,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -910,10 +913,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Kill Process for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Kill Process for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -951,7 +954,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -984,10 +987,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Get License for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Get License for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1025,7 +1028,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1060,10 +1063,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Get Process Tree Data for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Get Process Tree Data for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1101,7 +1104,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1135,10 +1138,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Binary Free Query for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Binary Free Query for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1176,7 +1179,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1209,10 +1212,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Get System Info for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Get System Info for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1250,7 +1253,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1286,10 +1289,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Create Watchlist for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Create Watchlist for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1327,7 +1330,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1360,10 +1363,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Block Hash for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Block Hash for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1401,7 +1404,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for CBResponse: {e}")
+            logger.error("Error fetching instance for CBResponse: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1434,8 +1437,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action CBResponse_Download Binary for CBResponse: {e}")
+                logger.error("Error executing action CBResponse_Download Binary for CBResponse: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for CBResponse")
+            logger.warning("Warning: No active integration instance found for CBResponse")
             return {"Status": "Failed", "Message": "No active instance found."}

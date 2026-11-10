@@ -86,7 +86,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_collection(
     id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
@@ -118,7 +118,7 @@ async def get_entities_related_to_a_collection(
       limit (optional): Limit the number of collections to retrieve. 10 by default.
       descriptors_only (optional)): Bool. Default True. Must be False when the target object type is 'attack_techniques'.
     Returns:
-      List of objects related to the collection.
+      List of objects related to the collection, or an error dictionary.
   """
   if not relationship_name in COLLECTION_RELATIONSHIPS:
       return {
@@ -177,7 +177,7 @@ async def _search_threats_by_collection_type(
 async def search_threats(
     ctx: Context,
     query: str,
-    collection_type: str = None,
+    collection_type: typing.Optional[str] = None,
     limit: int = 5,
     order_by: str = "relevance-",
 ) -> typing.List[typing.Dict[str, typing.Any]]:
@@ -459,7 +459,7 @@ async def create_collection(
 async def update_collection_attributes(
     id: str,
     ctx: Context,
-    attributes: typing.Dict[str, typing.Any] = None,
+    attributes: typing.Dict[str, typing.Any],
 ) -> typing.Dict[str, typing.Any]:
   """Allows updating a collection's attributes (such as name or description)
   Args:
@@ -645,11 +645,19 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
     Markdown-formatted string with the commonalities of the collection.
   """
   async with vt_client(ctx) as client:
-    data = await client.get_async(f"/collections/{collection_id}?attributes=aggregations")
-    data = await data.json_async()
+    response = await client.get_async(
+        f"/collections/{collection_id}?attributes=aggregations")
+    data = await response.json_async()
+    if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+      error_info = data.get("error", {}) if isinstance(data, dict) else {}
+      message = (
+          error_info.get("message")
+          if isinstance(error_info, dict) else None)
+      if message:
+        return f"Error: {message}"
+      return "Error: Collection not found or unexpected API response"
     sanitized_data = utils.sanitize_response(data["data"])
-    markdown_output = utils.parse_collection_commonalities(sanitized_data)
-  return markdown_output
+  return utils.parse_collection_commonalities(sanitized_data)
 
 
 async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
@@ -707,7 +715,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.List[str] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.Optional[typing.List[str]] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
 
   Note:
@@ -752,7 +760,7 @@ async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4,
           # Iterate through different community rule types
           for key, rule_type in rule_keys_map.items():
             rules = files_aggregations.get(key, [])
-            if rule_type not in rule_type and not rules:
+            if rule_type not in rule_types or not rules:
               continue
 
             # Sort rules by count and take the top N

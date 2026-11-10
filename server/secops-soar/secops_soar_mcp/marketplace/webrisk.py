@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for WebRisk: {e}")
+            logger.error("Error fetching instance for WebRisk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action WebRisk_Ping for WebRisk: {e}")
+                logger.error("Error executing action WebRisk_Ping for WebRisk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for WebRisk")
+            logger.warning("Warning: No active integration instance found for WebRisk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for WebRisk: {e}")
+            logger.error("Error fetching instance for WebRisk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -180,10 +183,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action WebRisk_Submit Entities for WebRisk: {e}")
+                logger.error("Error executing action WebRisk_Submit Entities for WebRisk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for WebRisk")
+            logger.warning("Warning: No active integration instance found for WebRisk")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -221,7 +224,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for WebRisk: {e}")
+            logger.error("Error fetching instance for WebRisk: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,8 +257,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action WebRisk_Enrich Entities for WebRisk: {e}")
+                logger.error("Error executing action WebRisk_Enrich Entities for WebRisk: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for WebRisk")
+            logger.warning("Warning: No active integration instance found for WebRisk")
             return {"Status": "Failed", "Message": "No active instance found."}

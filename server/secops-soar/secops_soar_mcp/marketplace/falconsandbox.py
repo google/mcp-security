@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -118,10 +121,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Search for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Search for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -159,7 +162,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -196,10 +199,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Analyze File for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Analyze File for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -237,7 +240,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -271,10 +274,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Wait For Job and Fetch Report for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Wait For Job and Fetch Report for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -312,7 +315,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -345,10 +348,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Ping for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Ping for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -386,7 +389,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -421,10 +424,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Analyze File Url for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Analyze File Url for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -462,7 +465,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -495,10 +498,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Get Hash Scan Report for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Get Hash Scan Report for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -536,7 +539,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -571,10 +574,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Scan URL for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Scan URL for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -612,7 +615,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for FalconSandbox: {e}")
+            logger.error("Error fetching instance for FalconSandbox: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -647,8 +650,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action FalconSandbox_Submit File for FalconSandbox: {e}")
+                logger.error("Error executing action FalconSandbox_Submit File for FalconSandbox: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for FalconSandbox")
+            logger.warning("Warning: No active integration instance found for FalconSandbox")
             return {"Status": "Failed", "Message": "No active instance found."}

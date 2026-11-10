@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -99,10 +102,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Execute Email for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Execute Email for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -140,7 +143,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Execute Custom Script for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Execute Custom Script for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +220,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +253,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Ping for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Ping for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +294,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -324,10 +327,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Submit URL for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Submit URL for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -365,7 +368,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -398,10 +401,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Enrich Entities for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Enrich Entities for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -439,7 +442,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -474,10 +477,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Update Workbench Alert for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Update Workbench Alert for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -515,7 +518,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -550,10 +553,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Isolate Endpoint for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Isolate Endpoint for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -591,7 +594,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -631,10 +634,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Submit File for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Submit File for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -672,7 +675,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TrendVisionOne: {e}")
+            logger.error("Error fetching instance for TrendVisionOne: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -707,8 +710,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TrendVisionOne_Unisolate Endpoint for TrendVisionOne: {e}")
+                logger.error("Error executing action TrendVisionOne_Unisolate Endpoint for TrendVisionOne: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TrendVisionOne")
+            logger.warning("Warning: No active integration instance found for TrendVisionOne")
             return {"Status": "Failed", "Message": "No active instance found."}

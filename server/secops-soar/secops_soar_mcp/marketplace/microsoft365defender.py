@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -101,10 +104,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Update Incident for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Update Incident for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +145,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -192,10 +195,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Execute Query for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Execute Query for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -233,7 +236,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -268,10 +271,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Add Comment To Incident for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Add Comment To Incident for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -309,7 +312,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -342,10 +345,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Ping for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Ping for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -383,7 +386,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -445,10 +448,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Execute Entity Query for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Execute Entity Query for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -486,7 +489,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Microsoft365Defender: {e}")
+            logger.error("Error fetching instance for Microsoft365Defender: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -522,8 +525,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Microsoft365Defender_Execute Custom Query for Microsoft365Defender: {e}")
+                logger.error("Error executing action Microsoft365Defender_Execute Custom Query for Microsoft365Defender: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Microsoft365Defender")
+            logger.warning("Warning: No active integration instance found for Microsoft365Defender")
             return {"Status": "Failed", "Message": "No active instance found."}

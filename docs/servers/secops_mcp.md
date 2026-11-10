@@ -287,6 +287,16 @@ The service account or user credentials need the following Chronicle roles:
       }
       ```
 
+- **`update_rule(rule_id, rule_text, project_id=None, customer_id=None, region=None)`**
+    - **Description:** Updates an existing YARA-L 2.0 detection rule in place in Chronicle SIEM, preserving its rule ID, deployment state, and revision history.
+    - **Parameters:**
+        - `rule_id` (required): Unique ID of the rule to update (e.g., `"ru_<UUID>"`).
+        - `rule_text` (required): Complete, updated YARA-L 2.0 rule definition.
+        - `project_id` (optional): Google Cloud project ID (defaults to environment config).
+        - `customer_id` (optional): Chronicle customer ID (defaults to environment config).
+        - `region` (optional): Chronicle region (defaults to environment config or 'us').
+    - **Returns:** Formatted string with the rule ID, updated revision ID, and rule name.
+
 - **`get_ioc_matches(project_id=None, customer_id=None, hours_back=24, max_matches=20, region=None)`**
     - **Description:** Retrieves Indicators of Compromise (IoCs) matches from Chronicle within a specified time range.
     - **Parameters:**

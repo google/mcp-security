@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_Get Vulnerability Details for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_Get Vulnerability Details for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +140,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -176,10 +179,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_List Policies for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_List Policies for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -217,7 +220,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -254,10 +257,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_List Endpoint Vulnerabilities for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_List Endpoint Vulnerabilities for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -295,7 +298,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -334,10 +337,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_List Scanners for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_List Scanners for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -375,7 +378,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -408,10 +411,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_Ping for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_Ping for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -449,7 +452,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -488,10 +491,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_Scan Endpoints for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_Scan Endpoints for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -529,7 +532,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -568,10 +571,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_List Plugin Families for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_List Plugin Families for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -609,7 +612,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for TenableIO: {e}")
+            logger.error("Error fetching instance for TenableIO: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -644,8 +647,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action TenableIO_Enrich Entities for TenableIO: {e}")
+                logger.error("Error executing action TenableIO_Enrich Entities for TenableIO: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for TenableIO")
+            logger.warning("Warning: No active integration instance found for TenableIO")
             return {"Status": "Failed", "Message": "No active instance found."}

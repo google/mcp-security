@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSSecurityHub: {e}")
+            logger.error("Error fetching instance for AWSSecurityHub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -95,10 +98,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSSecurityHub_Get Insight Details for AWSSecurityHub: {e}")
+                logger.error("Error executing action AWSSecurityHub_Get Insight Details for AWSSecurityHub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSSecurityHub")
+            logger.warning("Warning: No active integration instance found for AWSSecurityHub")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -136,7 +139,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSSecurityHub: {e}")
+            logger.error("Error fetching instance for AWSSecurityHub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -172,10 +175,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSSecurityHub_Create Insight for AWSSecurityHub: {e}")
+                logger.error("Error executing action AWSSecurityHub_Create Insight for AWSSecurityHub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSSecurityHub")
+            logger.warning("Warning: No active integration instance found for AWSSecurityHub")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -213,7 +216,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSSecurityHub: {e}")
+            logger.error("Error fetching instance for AWSSecurityHub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -246,10 +249,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSSecurityHub_Ping for AWSSecurityHub: {e}")
+                logger.error("Error executing action AWSSecurityHub_Ping for AWSSecurityHub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSSecurityHub")
+            logger.warning("Warning: No active integration instance found for AWSSecurityHub")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -287,7 +290,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSSecurityHub: {e}")
+            logger.error("Error fetching instance for AWSSecurityHub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -340,10 +343,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSSecurityHub_Update Finding for AWSSecurityHub: {e}")
+                logger.error("Error executing action AWSSecurityHub_Update Finding for AWSSecurityHub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSSecurityHub")
+            logger.warning("Warning: No active integration instance found for AWSSecurityHub")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -381,7 +384,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AWSSecurityHub: {e}")
+            logger.error("Error fetching instance for AWSSecurityHub: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -421,8 +424,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AWSSecurityHub_Update Insight for AWSSecurityHub: {e}")
+                logger.error("Error executing action AWSSecurityHub_Update Insight for AWSSecurityHub: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AWSSecurityHub")
+            logger.warning("Warning: No active integration instance found for AWSSecurityHub")
             return {"Status": "Failed", "Message": "No active instance found."}

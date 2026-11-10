@@ -44,9 +44,22 @@ No additional installation is needed as `uv` will handle dependencies when runni
 ### Step 2: Configure Your MCP Client
 
 
-#### For Prebuilt Google ADK Agent as a client:
+#### For Prebuilt Google ADK Agent as a Client:
 
-Detailed instructions are provided [here](https://github.com/google/mcp-security/#using-the-prebuilt-google-adk-agent-as-client)
+The repository provides a prebuilt Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2.x and MCP in [`run-with-google-adk/`](../run-with-google-adk/README.md).
+
+```bash
+cd run-with-google-adk
+cp .env.example .env
+
+# Interactive terminal investigation REPL
+uv run mcp-security-agent chat
+
+# Web UI and Cloud Run API server
+uv run mcp-security-agent serve --port 8080
+```
+
+For complete configuration and deployment details, see the [ADK Agent Guide](../run-with-google-adk/README.md).
 
 
 #### For Claude Desktop:
@@ -244,3 +257,58 @@ If you encounter issues with the MCP servers:
 3. **Check server logs**: Look for error messages in the server output
 4. **Restart the client**: Sometimes restarting the LLM Desktop or VS Code can resolve connection issues
 5. **Verify uv installation**: Ensure that `uv` is properly installed and accessible in your PATH
+
+### SecOps SOAR: finding the correct SOAR_URL
+
+If the SecOps SOAR server starts and then shuts down with an error like this:
+
+```text
+Error: Failed to fetch valid scopes from SOAR, please make sure you have configured the right SOAR credentials. Shutting down...
+MCP error -32000: Connection closed
+```
+
+check that `SOAR_URL` is set to your Google SecOps SOAR base URL, not your Backstory URL. The SOAR APIs used by this server are specific to the SOAR platform, so they are not listed in a Backstory tenant's Swagger documentation.
+
+If you are not sure which URL to use, try one of these options:
+
+1. In Google SecOps SOAR, go to **Settings > Webhooks**, create a new webhook with any parameters, and copy the base URL from the generated webhook URL. For example: `https://s4i0z.siemplify-soar.com`.
+2. Open your browser developer tools, go to the **Network** tab, and navigate to **Cases** in the SOAR UI. Look for a request such as `GetCaseCardsByRequest`, open the **Headers** tab, and copy the base URL from that request. For example: `https://s4i0z.siemplify-soar.com`.
+
+After updating `SOAR_URL`, restart your MCP client so it picks up the new environment variable.
+
+### Corporate Proxy Configuration
+
+If you are running MCP servers behind an HTTP/HTTPS corporate proxy:
+
+1. **Configure standard proxy variables**: Set `HTTP_PROXY`, `HTTPS_PROXY`, and optionally `NO_PROXY` in your environment.
+2. **Pass proxy variables in MCP client settings**: Ensure your MCP client configuration passes these variables to each server's `env` section:
+
+```json
+{
+  "mcpServers": {
+    "gti": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/server/gti/gti_mcp", "run", "server.py"],
+      "env": {
+        "VT_APIKEY": "${VT_APIKEY}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}"
+      }
+    },
+    "secops-soar": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/server/secops-soar/secops_soar_mcp", "run", "server.py"],
+      "env": {
+        "SOAR_URL": "${SOAR_URL}",
+        "SOAR_APP_KEY": "${SOAR_APP_KEY}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}"
+      }
+    }
+  }
+}
+```
+
+3. **Custom SSL/CA Certificates (SSL Decryption/Inspection)**: If your corporate proxy intercepts SSL traffic, point `SSL_CERT_FILE` to your corporate CA certificate bundle.
+
+

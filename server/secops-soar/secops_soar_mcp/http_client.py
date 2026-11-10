@@ -14,6 +14,7 @@
 """HTTP client for making requests to the SecOps SOAR API."""
 
 import json
+import ssl
 from typing import Any, Dict
 
 import aiohttp
@@ -32,7 +33,7 @@ class HttpClient:
 
     def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None:
-            self._session = aiohttp.ClientSession()
+            self._session = aiohttp.ClientSession(trust_env=True)
         return self._session
 
     async def _get_headers(self):
@@ -64,6 +65,10 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None
@@ -95,6 +100,10 @@ class HttpClient:
                 return json.loads(decoded_data)
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None
@@ -124,9 +133,14 @@ class HttpClient:
                 return await response.json()
         except aiohttp.ClientResponseError as e:
             logger.debug("HTTP error occurred: %s", e)
+        except (ssl.SSLError, aiohttp.ClientSSLError):
+            # Don't mask certificate configuration problems as a plain
+            # "no data" result; callers need to see and report on these.
+            raise
         except Exception as e:
             logger.debug("An error occurred: %s", e)
         return None
 
     async def close(self):
-        await self._get_session().close()
+        if self._session is not None:
+            await self._session.close()

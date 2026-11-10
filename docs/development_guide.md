@@ -11,6 +11,10 @@ mcp-security/
 ├── docs/                 # Documentation
 │   ├── servers/          # Server-specific documentation
 │   └── img/              # Images for documentation
+├── run-with-google-adk/   # Autonomous SOC Agent (Google ADK v2 & MCP)
+│   ├── src/              # Package source (mcp_security_agent)
+│   ├── static/           # Web UI frontend assets
+│   └── tests/            # Hermetic unit test suite
 ├── server/               # Server implementations
 │   ├── gti/              # Google Threat Intelligence server
 │   ├── scc/              # Security Command Center server

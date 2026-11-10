@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -100,10 +103,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Add To Global List for Cylance: {e}")
+                logger.error("Error executing action Cylance_Add To Global List for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -144,7 +147,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -178,10 +181,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Get Threat for Cylance: {e}")
+                logger.error("Error executing action Cylance_Get Threat for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -219,7 +222,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -252,10 +255,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Get Threats for Cylance: {e}")
+                logger.error("Error executing action Cylance_Get Threats for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -293,7 +296,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -326,10 +329,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Ping for Cylance: {e}")
+                logger.error("Error executing action Cylance_Ping for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -367,7 +370,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -400,10 +403,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Enrich Entities for Cylance: {e}")
+                logger.error("Error executing action Cylance_Enrich Entities for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -444,7 +447,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -478,10 +481,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Get Global List for Cylance: {e}")
+                logger.error("Error executing action Cylance_Get Global List for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -522,7 +525,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -559,10 +562,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Change Zone for Cylance: {e}")
+                logger.error("Error executing action Cylance_Change Zone for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -603,7 +606,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -637,10 +640,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Delete From Global List for Cylance: {e}")
+                logger.error("Error executing action Cylance_Delete From Global List for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -681,7 +684,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -715,10 +718,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Change Policy for Cylance: {e}")
+                logger.error("Error executing action Cylance_Change Policy for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -756,7 +759,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -789,10 +792,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Get Threat Devices for Cylance: {e}")
+                logger.error("Error executing action Cylance_Get Threat Devices for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -833,7 +836,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Cylance: {e}")
+            logger.error("Error fetching instance for Cylance: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -868,8 +871,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Cylance_Get Threat Download Link for Cylance: {e}")
+                logger.error("Error executing action Cylance_Get Threat Download Link for Cylance: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Cylance")
+            logger.warning("Warning: No active integration instance found for Cylance")
             return {"Status": "Failed", "Message": "No active instance found."}

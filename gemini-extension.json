@@ -1,0 +1,40 @@
+{
+  "name": "google-secops",
+  "description": "Essential Security Operations skills for Triage, Investigation, and Hunting.",
+  "version": "1.0.0",
+  "contextFileName": "extensions/google-secops/GEMINI.md",
+  "skills": [
+    "extensions/google-secops/skills/setup-gemini-cli",
+    "extensions/google-secops/skills/setup-antigravity",
+    "extensions/google-secops/skills/triage",
+    "extensions/google-secops/skills/investigate",
+    "extensions/google-secops/skills/hunt"
+  ],
+  "settings": [
+    {
+      "name": "PROJECT_ID",
+      "description": "Your Google Cloud Project ID.",
+      "envVar": "PROJECT_ID"
+    },
+    {
+      "name": "SERVER_URL",
+      "defaultValue": "https://chronicle.us.rep.googleapis.com/mcp",
+      "description": "The URL of the remote MCP server See https://docs.cloud.google.com/chronicle/docs/secops/use-google-secops-mcp.",
+      "envVar": "SERVER_URL"
+    }
+  ],
+  "mcpServers": {
+    "remote-mcp-secops": {
+      "httpUrl": "${SERVER_URL}",
+      "authProviderType": "google_credentials",
+      "oauth": {
+        "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform"
+        ]
+      },
+      "headers": {
+        "x-goog-user-project": "${PROJECT_ID}"
+      }
+    }
+  }
+}

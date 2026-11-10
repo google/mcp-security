@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -98,10 +101,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_Add Entities To Policy for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_Add Entities To Policy for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -142,7 +145,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -183,10 +186,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_List Policies for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_List Policies for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -227,7 +230,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -268,10 +271,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_List Address Groups for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_List Address Groups for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -312,7 +315,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -346,10 +349,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_Remove Entities From Address Group for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_Remove Entities From Address Group for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -387,7 +390,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -420,10 +423,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_Ping for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_Ping for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -464,7 +467,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -500,10 +503,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_Remove Entities From Policy for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_Remove Entities From Policy for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -544,7 +547,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Fortigate: {e}")
+            logger.error("Error fetching instance for Fortigate: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -578,8 +581,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Fortigate_Add Entities To Address Group for Fortigate: {e}")
+                logger.error("Error executing action Fortigate_Add Entities To Address Group for Fortigate: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Fortigate")
+            logger.warning("Warning: No active integration instance found for Fortigate")
             return {"Status": "Failed", "Message": "No active instance found."}

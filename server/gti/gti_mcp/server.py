@@ -35,7 +35,7 @@ def _vt_client_factory(unused_ctx) -> vt.Client:
   api_key = os.getenv("VT_APIKEY")
   if not api_key:
     raise ValueError("VT_APIKEY environment variable is required")
-  return vt.Client(api_key)
+  return vt.Client(api_key, trust_env=True)
 
 vt_client_factory = _vt_client_factory
 

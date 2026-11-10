@@ -159,14 +159,29 @@ You can also use environment files with uvx:
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients
-2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-prebuilt-google-adk-agent-as-client))
+2. [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) Agents (a prebuilt agent is provided, details [below](#using-the-google-adk-autonomous-soc-agent))
 3. [Google SecOps Extension](https://google.github.io/mcp-security/google_secops_extension.html) - Install our example extension for Gemini CLI to get specialized security skills (Triage, Investigate, Hunt).
 
 The configuration for Claude Desktop and Cline is the same (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
 
-### Using the prebuilt Google ADK agent as client
+### Using the Google ADK Autonomous SOC Agent
 
-Please refer to the [README file](./run-with-google-adk/README.md) for both - locally running the prebuilt agent and [Cloud Run](https://cloud.google.com/run) deployment.
+The repository includes a prebuilt Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2 and the Model Context Protocol in [`run-with-google-adk`](./run-with-google-adk/README.md).
+
+It can be run locally via an interactive CLI REPL or launched as a FastAPI service for Google Cloud Run:
+
+```bash
+cd run-with-google-adk
+cp .env.example .env
+
+# Interactive terminal investigation REPL
+uv run mcp-security-agent chat
+
+# Web UI and Cloud Run REST API server
+uv run mcp-security-agent serve --port 8080
+```
+
+For full setup, architecture details, and Cloud Run deployment guides, see the [ADK Agent Guide](./run-with-google-adk/README.md).
 
 ## MCP Client Config Locations
 

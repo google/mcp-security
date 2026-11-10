@@ -56,7 +56,7 @@ async def get_stats(
        Use ``nocase`` in the query text for case-insensitive string matching
        (for example, ``principal.hostname = "host" nocase``).
     2. **match** (optional): Fields to group by, with optional time granularity.
-       Syntax: ``match:\\n  field1, field2 [by|over every] [N] [time_unit]``
+       Syntax: ``match:\\n  field1, field2 [by <N><short_unit> | [by|over every] <time_unit>]``
     3. **outcome** (required): Aggregate expressions assigned to ``$variables``.
        Syntax: ``outcome:\\n  $alias = function(field)``
     4. **order** (optional): Sort direction — ``asc`` (default) or ``desc``.
@@ -70,17 +70,20 @@ async def get_stats(
     - ``avg(numericField)`` — average, ignoring NULLs
     - ``count(field)`` — number of rows in the group
     - ``count_distinct(field)`` — number of distinct values in the group
-    - ``earliest(timestamp)`` — earliest timestamp with microsecond resolution
-    - ``latest(timestamp)`` — latest timestamp with microsecond resolution
+    - ``earliest(timestampField)`` — earliest timestamp with microsecond resolution
+      (pass a Timestamp proto field such as ``metadata.event_timestamp``, not ``.seconds``)
+    - ``latest(timestampField)`` — latest timestamp with microsecond resolution
+      (pass a Timestamp proto field such as ``metadata.event_timestamp``, not ``.seconds``)
     - ``max(numericField)`` — maximum value in the group
     - ``min(numericField)`` — minimum value in the group
     - ``stddev(numericField)`` — standard deviation
     - ``sum(numericField)`` — sum, ignoring NULLs
 
     **Time Granularity (match section):**
-    Group by time using ``by`` or ``over every`` with: ``minute``/``m``,
-    ``hour``/``h``, ``day``/``d``, ``week``/``w``, ``month``/``mo``.
-    Both keywords are functionally equivalent.
+    Group by single-unit intervals using ``by`` or ``over every`` with ``minute``/``m``,
+    ``hour``/``h``, ``day``/``d``, ``week``/``w``, or ``month``/``mo`` (both keywords
+    are functionally equivalent for single units), or use ``by <N><short_unit>``
+    (for example, ``by 5m``, ``by 24h``, ``by 14d``) for multi-unit buckets.
 
     **Example Queries:**
     ```
@@ -99,7 +102,7 @@ async def get_stats(
     match:
         principal.ip
     outcome:
-        $user_count_by_ip = count(principal.user.userid)
+        $user_count_by_ip = count_distinct(principal.user.userid)
     order:
         $user_count_by_ip desc
     limit:

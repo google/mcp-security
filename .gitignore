@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -129,8 +132,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+.env*
+.envrc
 .venv
+.gcloud/
 env/
 venv/
 ENV/
@@ -181,9 +186,9 @@ python-sdk/
 secops-wrapper/
 
 # integration test auth config
-config.py
-llm.py
-config.json
+/config.py
+/llm.py
+/config.json
 
 # Firebase Studio
 .idx/
@@ -203,7 +208,6 @@ app_data.db
 
 # Don't commit the evaluation data
 *.evalset.json
-
 .adk/
 
 # Gemini
@@ -211,3 +215,6 @@ app_data.db
 
 # devcontainer
 .devcontainer/
+
+# IDE / Project tools
+.cm_project

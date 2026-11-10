@@ -15,6 +15,7 @@ import json
 import mcp
 import pytest
 import asyncio
+import vt
 from unittest.mock import patch, MagicMock, AsyncMock
 
 from gti_mcp.server import server
@@ -24,6 +25,22 @@ from gti_mcp.tools import collections
 from mcp.shared.memory import (
     create_connected_server_and_client_session as client_session,
 )
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://theevil.com/",
+        "https://example.com/?a=1>",
+        "https://bit.ly/3x~?",
+        "https://example.com/path?q=\u00fc\u00f1\u00ee",
+    ],
+)
+def test_url_to_base64_matches_vt_url_id(url):
+    """URL ids must use the URL-safe alphabet that vt-py's `url_id` uses."""
+    url_id = tools.url_to_base64(url)
+    assert url_id == vt.url_id(url)
+    assert "/" not in url_id and "+" not in url_id and "=" not in url_id
 
 
 @pytest.mark.asyncio(loop_scope="session")
@@ -186,6 +203,24 @@ async def test_server_connection():
             },
         ),
         (
+            "get_url_report",
+            {"url": "https://example.com/?a=1>"},
+            # URL-safe id: standard base64 would put a "/" in the path.
+            "/api/v3/urls/aHR0cHM6Ly9leGFtcGxlLmNvbS8_YT0xPg",
+            {
+                "data": {
+                    "id": "url-id",
+                    "type": "url",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            {
+                "id": "url-id",
+                "type": "url",
+                "attributes": {"foo": "foo", "bar": "bar"},
+            },
+        ),
+        (
             "get_collection_report",
             {"id": "collection_id"},
             "/api/v3/collections/collection_id",
@@ -303,6 +338,16 @@ async def test_get_reports(
             "get_entities_related_to_an_url",
             {"url": "http://theevil.com/", "relationship_name": "associations", "descriptors_only": "True"},
             "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/relationship/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "https://bit.ly/3x~?", "relationship_name": "associations", "descriptors_only": "True"},
+            # URL-safe id: standard base64 would encode this URL with a "+".
+            "/api/v3/urls/aHR0cHM6Ly9iaXQubHkvM3h-Pw/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
             },
@@ -1161,6 +1206,32 @@ async def test_search_digital_threat_monitoring_errors(
             assert "error" in content
             assert content["error"] == expected_error
 
+@pytest.mark.asyncio
+async def test_search_digital_threat_monitoring_drops_empty_params():
+    """None or "" for unused filters must not add empty query parameters."""
+    with patch('gti_mcp.tools.files.vt_client') as mock_vt_client:
+        mock_response = MagicMock()
+
+        async def json_async():
+            return {"docs": []}
+
+        mock_response.json_async = json_async
+        mock_client_instance = MagicMock()
+        mock_client_instance.post_async = AsyncMock(return_value=mock_response)
+        mock_cm = MagicMock()
+        mock_cm.__aenter__.return_value = mock_client_instance
+        mock_vt_client.return_value = mock_cm
+
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_digital_threat_monitoring",
+                arguments={"query": "test", "since": "", "until": None, "page": ""},
+            )
+
+    assert not result.isError, result.content[0].text
+    path = mock_client_instance.post_async.await_args.kwargs["path"]
+    assert path == "/dtm/docs/search?size=10&sanitize=true"
+
 @pytest.mark.asyncio(loop_scope="session")
 @pytest.mark.parametrize(
     argnames=[
@@ -1291,6 +1362,13 @@ async def test_get_collection_rules_all_types():
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_filter_types():
+    """Unrequested rule types with non-empty aggregations must be skipped.
+
+    Regression for the `rule_type not in rule_type and not rules` bug: the
+    self-compare is always False, and `and not rules` still lets non-empty
+    unrequested types through. Sigma is mocked to succeed so a leak would
+    show up in the result (not be masked by a detail-lookup failure).
+    """
     mock_ctx = AsyncMock()
     mock_client_instance = AsyncMock()
 
@@ -1305,16 +1383,52 @@ async def test_get_collection_rules_filter_types():
                         "crowdsourced_sigma_results": [
                             {"id": "sigma1", "count": 8, "value": {"id": "sigma1", "title": "Sigma Rule 1"}},
                         ],
+                        "crowdsourced_yara_results": [
+                            {"id": "yara1", "count": 12, "value": {"ruleset_id": "yara1"}},
+                        ],
                     }
                 }
             }
         }
     }
 
+    sigma_lookups = []
+    yara_lookups = []
+
     async def mock_get_async(url, **kwargs):
         mock_resp = MagicMock()
         if url.startswith("/collections/test_id?attributes=aggregations"):
             async def json_async(): return mock_aggregations_data
+            mock_resp.json_async = json_async
+        elif url.startswith("/sigma_rules/"):
+            sigma_lookups.append(url)
+            async def json_async():
+                return {
+                    "data": {
+                        "id": "sigma1",
+                        "attributes": {
+                            "source_url": "http://sigma1.com",
+                            "rule": "sigma rule content 1",
+                        },
+                    }
+                }
+            mock_resp.json_async = json_async
+        elif url.startswith("/yara_rulesets/"):
+            yara_lookups.append(url)
+            async def json_async():
+                return {
+                    "data": {
+                        "id": "yara1",
+                        "attributes": {
+                            "name": "Yara Rule 1",
+                            "source": "source1",
+                            "rules": "yara rule content 1",
+                        },
+                    }
+                }
+            mock_resp.json_async = json_async
+        else:
+            async def json_async(): return {"data": []}
             mock_resp.json_async = json_async
         return mock_resp
 
@@ -1324,12 +1438,19 @@ async def test_get_collection_rules_filter_types():
     mock_vt_client.__aenter__.return_value = mock_client_instance
     
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
-        result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx, rule_types=["crowdsourced_ids"])
+        result = await collections.get_collection_rules(
+            collection_id="test_id",
+            ctx=mock_ctx,
+            rule_types=["crowdsourced_ids"],
+        )
 
     expected_result = [
         {"rule_id": "ids1", "rule_name": "IDS Rule 1", "rule_source": "http://ids1.com", "rule_content": "ids rule content 1", "count": 10, "rule_type": "crowdsourced_ids"},
     ]
     assert result == expected_result
+    assert sigma_lookups == [], "unrequested sigma rules must not be fetched"
+    assert yara_lookups == [], "unrequested yara rules must not be fetched"
+    assert all(r.get("rule_type") == "crowdsourced_ids" for r in result)
 
 @pytest.mark.asyncio
 async def test_get_collection_rules_empty():
@@ -1400,3 +1521,84 @@ async def test_get_collection_rules_partial_error():
     with patch("gti_mcp.tools.collections.vt_client", return_value=mock_vt_client):
         result = await collections.get_collection_rules(collection_id="test_id", ctx=mock_ctx)
     assert result == []
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_none_default_params_accept_null():
+    """Params defaulting to None must accept an explicit null.
+
+    Some MCP clients send every optional argument, using the advertised
+    default (null). If the schema type excludes null, the call is rejected
+    at argument validation instead of falling back to the default.
+    """
+
+    async with client_session(server._mcp_server) as client:
+        tools_result = await client.list_tools()
+
+    offenders = []
+    for tool in tools_result.tools:
+        for name, prop in tool.inputSchema.get("properties", {}).items():
+            if "default" not in prop or prop["default"] is not None:
+                continue
+            types = [prop.get("type")] + [
+                option.get("type") for option in prop.get("anyOf", [])
+            ]
+            if "null" not in types:
+                offenders.append(f"{tool.name}.{name}")
+
+    assert offenders == []
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_search_threats_accepts_null_collection_type():
+    """An explicit null `collection_type` behaves like omitting it."""
+
+    with patch("gti_mcp.tools.collections.utils.consume_vt_iterator",
+               new=AsyncMock(return_value=[])) as mock_iterator:
+        async with client_session(server._mcp_server) as client:
+            result = await client.call_tool(
+                "search_threats",
+                arguments={"query": "apt", "collection_type": None},
+            )
+
+    assert not result.isError, result.content[0].text
+    mock_iterator.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "tool_name, arguments",
+    [
+        (
+            "get_entities_related_to_a_domain",
+            {"domain": "theevil.com", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_ip_address",
+            {"ip_address": "8.8.8.8", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "http://theevil.com/", "descriptors_only": True},
+        ),
+        ("get_entities_related_to_a_collection", {"id": "collection_1"}),
+        ("get_entities_related_to_a_hunting_ruleset", {"ruleset_id": "1234"}),
+    ],
+)
+async def test_get_entities_related_invalid_relationship_returns_error(
+    tool_name, arguments
+):
+    """An unknown relationship_name comes back as an error dict, not a ToolError.
+
+    The tools return the error dict before any API call. With a list-only
+    return annotation, FastMCP's output validation rejects that dict.
+    """
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            tool_name,
+            arguments={**arguments, "relationship_name": "not_a_relationship"},
+        )
+        assert not result.isError
+        assert result.structuredContent is not None
+        payload = result.structuredContent["result"]
+        assert isinstance(payload, dict)
+        assert "Relationship not_a_relationship does not exist" in payload["error"]

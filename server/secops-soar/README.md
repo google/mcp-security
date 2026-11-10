@@ -119,6 +119,37 @@ $Env:SOAR_APP_KEY = "your-soar-app-key"
 $Env:SOAR_INTEGRATIONS = "ServiceNow,CSV,Siemplify"
 ```
 
+## Troubleshooting
+
+If the server shuts down at startup with an error like `Failed to fetch valid
+scopes from SOAR due to an SSL certificate verification error`, this is a
+local CA certificate problem, not incorrect `SOAR_URL`/`SOAR_APP_KEY` values.
+Install the certifi CA bundle:
+
+- **macOS:** run `Install Certificates.command` from your Python install,
+  e.g. `/Applications/Python\ 3.12/Install\ Certificates.command` (match the
+  Python minor version you're running).
+- **Linux/Windows:** point `SSL_CERT_FILE` at the certifi bundle, e.g.
+  `export SSL_CERT_FILE=$(python -m certifi)` (or the PowerShell equivalent
+  `$Env:SSL_CERT_FILE = (python -m certifi)`).
+
+### Corporate Proxy Configuration
+
+The server automatically honors standard proxy environment variables (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`). If running behind a corporate proxy, set these variables in your environment or within your MCP client configuration (`cline_mcp_settings.json`, `claude_desktop_config.json`):
+
+```json
+"env": {
+  "SOAR_URL": "https://your-soar-instance",
+  "SOAR_APP_KEY": "your-key",
+  "HTTP_PROXY": "http://proxy.corp.example.com:8080",
+  "HTTPS_PROXY": "http://proxy.corp.example.com:8080"
+}
+```
+
+If your corporate proxy performs SSL decryption/inspection, point `SSL_CERT_FILE` to your corporate CA bundle.
+
+See `docs/usage_guide.md` for further details.
+
 ## Requirements
 
 -   Python 3.11+

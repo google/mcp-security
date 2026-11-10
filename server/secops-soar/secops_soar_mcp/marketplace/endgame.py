@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -158,10 +161,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Collect Autoruns for Endgame: {e}")
+                logger.error("Error executing action Endgame_Collect Autoruns for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -202,7 +205,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -237,10 +240,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Isolate Host for Endgame: {e}")
+                logger.error("Error executing action Endgame_Isolate Host for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -281,7 +284,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -320,10 +323,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Hunt User for Endgame: {e}")
+                logger.error("Error executing action Endgame_Hunt User for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -364,7 +367,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -402,10 +405,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Add IP Subnet to Host Isolation Config for Endgame: {e}")
+                logger.error("Error executing action Endgame_Add IP Subnet to Host Isolation Config for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -446,7 +449,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -480,10 +483,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Get Investigation Details for Endgame: {e}")
+                logger.error("Error executing action Endgame_Get Investigation Details for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -524,7 +527,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -560,10 +563,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Remove IP Subnet from Host Isolation Config for Endgame: {e}")
+                logger.error("Error executing action Endgame_Remove IP Subnet from Host Isolation Config for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -604,7 +607,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -647,10 +650,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_System Survey for Endgame: {e}")
+                logger.error("Error executing action Endgame_System Survey for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -691,7 +694,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -734,10 +737,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Hunt Process for Endgame: {e}")
+                logger.error("Error executing action Endgame_Hunt Process for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -778,7 +781,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -813,10 +816,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Firewall Survey (Windows only) for Endgame: {e}")
+                logger.error("Error executing action Endgame_Firewall Survey (Windows only) for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -857,7 +860,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -892,10 +895,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Unisolate Host for Endgame: {e}")
+                logger.error("Error executing action Endgame_Unisolate Host for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -936,7 +939,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -975,10 +978,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_List Investigations for Endgame: {e}")
+                logger.error("Error executing action Endgame_List Investigations for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1016,7 +1019,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1049,10 +1052,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Ping for Endgame: {e}")
+                logger.error("Error executing action Endgame_Ping for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1090,7 +1093,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1123,10 +1126,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Get Host Isolation Config for Endgame: {e}")
+                logger.error("Error executing action Endgame_Get Host Isolation Config for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1164,7 +1167,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1197,10 +1200,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Get Endpoints for Endgame: {e}")
+                logger.error("Error executing action Endgame_Get Endpoints for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1241,7 +1244,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1284,10 +1287,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Process Survey for Endgame: {e}")
+                logger.error("Error executing action Endgame_Process Survey for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1328,7 +1331,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1363,10 +1366,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Drivers Survey (Windows only) for Endgame: {e}")
+                logger.error("Error executing action Endgame_Drivers Survey (Windows only) for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1407,7 +1410,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1443,10 +1446,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Kill Process for Endgame: {e}")
+                logger.error("Error executing action Endgame_Kill Process for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1487,7 +1490,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1522,10 +1525,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_User Sessions Survey for Endgame: {e}")
+                logger.error("Error executing action Endgame_User Sessions Survey for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1566,7 +1569,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1609,10 +1612,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Network Survey for Endgame: {e}")
+                logger.error("Error executing action Endgame_Network Survey for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1653,7 +1656,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1700,10 +1703,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Hunt IP for Endgame: {e}")
+                logger.error("Error executing action Endgame_Hunt IP for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1744,7 +1747,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1787,10 +1790,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Hunt Registry for Endgame: {e}")
+                logger.error("Error executing action Endgame_Hunt Registry for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1828,7 +1831,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1861,10 +1864,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Enrich Entities for Endgame: {e}")
+                logger.error("Error executing action Endgame_Enrich Entities for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1905,7 +1908,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1950,10 +1953,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Hunt File for Endgame: {e}")
+                logger.error("Error executing action Endgame_Hunt File for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1994,7 +1997,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2031,10 +2034,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Download File for Endgame: {e}")
+                logger.error("Error executing action Endgame_Download File for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2075,7 +2078,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2109,10 +2112,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Delete File for Endgame: {e}")
+                logger.error("Error executing action Endgame_Delete File for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2153,7 +2156,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2188,10 +2191,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Removable Media Survey (Windows only) for Endgame: {e}")
+                logger.error("Error executing action Endgame_Removable Media Survey (Windows only) for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -2232,7 +2235,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Endgame: {e}")
+            logger.error("Error fetching instance for Endgame: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -2267,8 +2270,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Endgame_Software Survey (Windows only) for Endgame: {e}")
+                logger.error("Error executing action Endgame_Software Survey (Windows only) for Endgame: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Endgame")
+            logger.warning("Warning: No active integration instance found for Endgame")
             return {"Status": "Failed", "Message": "No active instance found."}

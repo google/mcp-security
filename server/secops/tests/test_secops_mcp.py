@@ -816,7 +816,7 @@ class TestChronicleSecOpsMCP:
         """
         result = await get_stats(
             query=(
-                'metadata.event_type != ""\n'
+                'metadata.event_type != "EVENTTYPE_UNSPECIFIED"\n'
                 "match:\n"
                 "  metadata.event_type\n"
                 "outcome:\n"
@@ -864,7 +864,7 @@ class TestChronicleSecOpsMCP:
         """
         result = await get_stats(
             query=(
-                'metadata.event_type != ""\n'
+                'metadata.event_type != "EVENTTYPE_UNSPECIFIED"\n'
                 "match:\n"
                 "  metadata.event_type\n"
                 "outcome:\n"

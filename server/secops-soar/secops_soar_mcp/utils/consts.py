@@ -36,6 +36,13 @@ class Endpoints:
     GET_ALERT_GROUP_IDENTIFIERS_ENTITIES = (
         "/api/external/v1/case-overview/GetAlertsEntities"
     )
+    BASE_LEGACY_CASE_URL = "/api/external/v1/cases"
+    CHANGE_CASE_DESCRIPTION = BASE_LEGACY_CASE_URL + "/ChangeCaseDescription"
+    CLOSE_CASE = BASE_LEGACY_CASE_URL + "/CloseCase"
+    ASSIGN_USER_TO_CASE = BASE_LEGACY_CASE_URL + "/AssignUserToCase"
+    ADD_CASE_TAG = BASE_LEGACY_CASE_URL + "/AddCaseTag"
+    REMOVE_CASE_TAG = BASE_LEGACY_CASE_URL + "/RemoveCaseTag"
+    CHANGE_CASE_STAGE = BASE_LEGACY_CASE_URL + "/ChangeCaseStage"
     # the below endpoint uses 'alerts' instead of 'caseAlerts', because of a bug that was introduced to the SOAR server
     LIST_INVOLVED_EVENTS_BY_ALERT = (
         "/api/1p/external/v1.0/cases/{CASE_ID}/alerts/{ALERT_ID}/involvedEvents"

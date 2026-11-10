@@ -45,6 +45,7 @@ except ImportError:
 from secops_mcp.tools.search import search_udm
 from secops_mcp.tools.udm_search import export_udm_search_csv
 from secops_mcp.tools.security_events import search_security_events
+from secops_mcp.tools.security_rules import get_rule_detections, test_rule as secops_test_rule
 from secops_mcp.tools.stats import get_stats
 
 @pytest.fixture
@@ -69,8 +70,64 @@ def mock_get_client(mock_chronicle_client):
     with patch('secops_mcp.tools.search.get_chronicle_client', return_value=mock_chronicle_client) as m1, \
          patch('secops_mcp.tools.udm_search.get_chronicle_client', return_value=mock_chronicle_client) as m2, \
          patch('secops_mcp.tools.security_events.get_chronicle_client', return_value=mock_chronicle_client) as m3, \
+         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client), \
          patch('secops_mcp.tools.stats.get_chronicle_client', return_value=mock_chronicle_client) as m4:
         yield mock_chronicle_client
+
+
+@pytest.mark.asyncio
+async def test_get_rule_detections_forwards_filters(mock_get_client):
+    """Test detection filters use the Chronicle SDK parameter names."""
+    expected = {"detections": []}
+
+    def list_detections(
+        rule_id,
+        start_time=None,
+        end_time=None,
+        list_basis=None,
+        alert_state=None,
+        page_size=None,
+        page_token=None,
+    ):
+        if start_time:
+            start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return expected
+
+    mock_get_client.list_detections.side_effect = list_detections
+
+    result = await get_rule_detections(
+        "ru_test",
+        alert_state="ALERTING",
+        page_size=25,
+        page_token="next-page",
+    )
+
+    assert result == expected
+    call_args = mock_get_client.list_detections.call_args
+    assert call_args.args == ("ru_test",)
+    assert call_args.kwargs["alert_state"] == "ALERTING"
+    assert call_args.kwargs["page_size"] == 25
+    assert call_args.kwargs["page_token"] == "next-page"
+
+
+@pytest.mark.asyncio
+async def test_get_rule_detections_forwards_time_range(mock_get_client):
+    """Test detection time range parameters are converted and forwarded."""
+    await get_rule_detections(
+        "ru_test",
+        start_time="2025-01-20T00:00:00Z",
+        end_time="2025-01-27T23:59:59Z",
+        list_basis="DETECTION_TIME",
+    )
+
+    call_args = mock_get_client.list_detections.call_args
+    assert call_args.kwargs["start_time"] == datetime(
+        2025, 1, 20, tzinfo=timezone.utc
+    )
+    assert call_args.kwargs["end_time"] == datetime(
+        2025, 1, 27, 23, 59, 59, tzinfo=timezone.utc
+    )
+    assert call_args.kwargs["list_basis"] == "DETECTION_TIME"
 
 @pytest.mark.asyncio
 async def test_search_udm_with_start_time(mock_get_client):
@@ -254,13 +311,52 @@ async def test_export_csv_invalid_date(mock_get_client):
     assert "yesterday" in result
 
 
+# =========================================================================
+# Tests for test_rule (PR #143)
+# =========================================================================
+
+@pytest.mark.asyncio
+async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
+    """Test test_rule buffers end_time to start of current hour."""
+    mock_get_client.run_rule_test.return_value = [
+        {"type": "detection", "detection": {"ruleName": "test_rule", "id": "d-1"}},
+        {"type": "progress", "percentDone": 100},
+    ]
+
+    result = await secops_test_rule(
+        rule_text="rule test { condition: true }",
+        project_id="my-proj",
+        customer_id="my-cust",
+        region="us",
+        hours_back=24,
+    )
+
+    # Verify run_rule_test was invoked
+    mock_get_client.run_rule_test.assert_called_once()
+    _, kwargs = mock_get_client.run_rule_test.call_args
+
+    # Check end_time has minute, second, microsecond set to 0 (buffered to start of hour)
+    end_time = kwargs["end_time"]
+    start_time = kwargs["start_time"]
+    assert end_time.minute == 0
+    assert end_time.second == 0
+    assert end_time.microsecond == 0
+
+    # Check start_time is 24 hours before end_time
+    assert end_time - start_time == timedelta(hours=24)
+
+    # Check output contains detection summary
+    assert "Total Detections: 1" in result
+    assert "Rule successfully detected 1 event(s)" in result
+
+
 # ---------------------------------------------------------------------------
 # Stats tool tests
 # ---------------------------------------------------------------------------
 
 # YARA-L 2.0 match:/outcome: queries used across get_stats unit tests.
 _STATS_BY_EVENT_TYPE = """\
-metadata.event_type != ""
+metadata.event_type != "EVENTTYPE_UNSPECIFIED"
 match:
   metadata.event_type
 outcome:
@@ -272,7 +368,7 @@ principal.ip != ""
 match:
   principal.ip
 outcome:
-  $user_count_by_ip = count(principal.user.userid)
+  $user_count_by_ip = count_distinct(principal.user.userid)
 order:
   $user_count_by_ip desc
 limit:

@@ -12,13 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.13-slim
+FROM python:3.11-slim
+
 WORKDIR /app
 
-COPY run-with-google-adk/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install uv for fast dependency resolution and execution
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
+# Copy server packages and agent package
+COPY server/ /app/server/
+COPY run-with-google-adk/ /app/run-with-google-adk/
 
-COPY . .
+WORKDIR /app/run-with-google-adk
+RUN uv pip install --system -e .
 
-CMD ["sh","cloudrun_deploy_run.sh","run"]
+EXPOSE 8080
+ENV PORT=8080
+
+CMD ["uv", "run", "mcp-security-agent", "serve", "--port", "8080"]

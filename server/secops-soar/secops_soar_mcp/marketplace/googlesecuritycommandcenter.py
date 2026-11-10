@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleSecurityCommandCenter: {e}")
+            logger.error("Error fetching instance for GoogleSecurityCommandCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -93,10 +96,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleSecurityCommandCenter_Push Finding To Pub-Sub for GoogleSecurityCommandCenter: {e}")
+                logger.error("Error executing action GoogleSecurityCommandCenter_Push Finding To Pub-Sub for GoogleSecurityCommandCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleSecurityCommandCenter")
+            logger.warning("Warning: No active integration instance found for GoogleSecurityCommandCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -134,7 +137,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleSecurityCommandCenter: {e}")
+            logger.error("Error fetching instance for GoogleSecurityCommandCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -167,10 +170,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleSecurityCommandCenter_Ping for GoogleSecurityCommandCenter: {e}")
+                logger.error("Error executing action GoogleSecurityCommandCenter_Ping for GoogleSecurityCommandCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleSecurityCommandCenter")
+            logger.warning("Warning: No active integration instance found for GoogleSecurityCommandCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -208,7 +211,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleSecurityCommandCenter: {e}")
+            logger.error("Error fetching instance for GoogleSecurityCommandCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +253,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleSecurityCommandCenter_List Asset Vulnerabilities for GoogleSecurityCommandCenter: {e}")
+                logger.error("Error executing action GoogleSecurityCommandCenter_List Asset Vulnerabilities for GoogleSecurityCommandCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleSecurityCommandCenter")
+            logger.warning("Warning: No active integration instance found for GoogleSecurityCommandCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +294,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleSecurityCommandCenter: {e}")
+            logger.error("Error fetching instance for GoogleSecurityCommandCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -329,10 +332,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleSecurityCommandCenter_Update Finding for GoogleSecurityCommandCenter: {e}")
+                logger.error("Error executing action GoogleSecurityCommandCenter_Update Finding for GoogleSecurityCommandCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleSecurityCommandCenter")
+            logger.warning("Warning: No active integration instance found for GoogleSecurityCommandCenter")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -370,7 +373,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for GoogleSecurityCommandCenter: {e}")
+            logger.error("Error fetching instance for GoogleSecurityCommandCenter: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -404,8 +407,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action GoogleSecurityCommandCenter_Get Finding Details for GoogleSecurityCommandCenter: {e}")
+                logger.error("Error executing action GoogleSecurityCommandCenter_Get Finding Details for GoogleSecurityCommandCenter: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for GoogleSecurityCommandCenter")
+            logger.warning("Warning: No active integration instance found for GoogleSecurityCommandCenter")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -59,7 +62,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -92,10 +95,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Force Password Update for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Force Password Update for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -133,7 +136,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -166,10 +169,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Get Manager Contact Details for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Get Manager Contact Details for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -207,7 +210,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -240,10 +243,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Disable Account for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Disable Account for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -281,7 +284,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -320,10 +323,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Remove User from a Group for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Remove User from a Group for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -361,7 +364,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -396,10 +399,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Enrich User for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Enrich User for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -437,7 +440,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -470,10 +473,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Enable Account for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Enable Account for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -511,7 +514,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -544,10 +547,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Ping for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Ping for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -585,7 +588,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -621,10 +624,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Reset User Password for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Reset User Password for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -662,7 +665,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -695,10 +698,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Revoke User Session for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Revoke User Session for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -736,7 +739,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -777,10 +780,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_List Groups for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_List Groups for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -818,7 +821,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -863,10 +866,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_List Members in the Group for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_List Members in the Group for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -904,7 +907,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -938,10 +941,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Add User To a Group for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Add User To a Group for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -979,7 +982,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1013,10 +1016,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Is User In a Group for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Is User In a Group for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1054,7 +1057,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1087,10 +1090,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_Enrich Host for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_Enrich Host for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1128,7 +1131,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1175,10 +1178,10 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_List User's Groups Membership for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_List User's Groups Membership for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1216,7 +1219,7 @@ def register_tools(mcp: FastMCP):
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for AzureActiveDirectory: {e}")
+            logger.error("Error fetching instance for AzureActiveDirectory: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1261,8 +1264,8 @@ def register_tools(mcp: FastMCP):
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action AzureActiveDirectory_List Users for AzureActiveDirectory: {e}")
+                logger.error("Error executing action AzureActiveDirectory_List Users for AzureActiveDirectory: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for AzureActiveDirectory")
+            logger.warning("Warning: No active integration instance found for AzureActiveDirectory")
             return {"Status": "Failed", "Message": "No active instance found."}

@@ -1,6 +1,6 @@
 [project]
 name = "secops-soar-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "Google SecOps SOAR MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,7 +15,8 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp>=3.11.15",
-    "mcp[cli]>=1.4.1"
+    "mcp[cli]>=1.4.1,<2.0",
+    "python-dotenv>=1.0.0"
 ]
 
 [project.urls]

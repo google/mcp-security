@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -102,10 +105,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Wait For Reply for Slack: {e}")
+                logger.error("Error executing action Slack_Wait For Reply for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -146,7 +149,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -186,10 +189,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Create Channel for Slack: {e}")
+                logger.error("Error executing action Slack_Create Channel for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -227,7 +230,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -270,10 +273,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_List Channels for Slack: {e}")
+                logger.error("Error executing action Slack_List Channels for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -314,7 +317,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -356,10 +359,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Get Channel Or User Conversation History for Slack: {e}")
+                logger.error("Error executing action Slack_Get Channel Or User Conversation History for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -400,7 +403,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -434,10 +437,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Get User Details By Id for Slack: {e}")
+                logger.error("Error executing action Slack_Get User Details By Id for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -475,7 +478,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -509,10 +512,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Wait For Reply With Webhook for Slack: {e}")
+                logger.error("Error executing action Slack_Wait For Reply With Webhook for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -550,7 +553,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -583,10 +586,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Ping for Slack: {e}")
+                logger.error("Error executing action Slack_Ping for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -627,7 +630,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -662,10 +665,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Get User Details for Slack: {e}")
+                logger.error("Error executing action Slack_Get User Details for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -706,7 +709,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -741,10 +744,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Ask Question for Slack: {e}")
+                logger.error("Error executing action Slack_Ask Question for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -785,7 +788,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -822,10 +825,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Send Advanced Message for Slack: {e}")
+                logger.error("Error executing action Slack_Send Advanced Message for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -866,7 +869,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -904,10 +907,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Rename Channel for Slack: {e}")
+                logger.error("Error executing action Slack_Rename Channel for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -948,7 +951,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -984,10 +987,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Upload File for Slack: {e}")
+                logger.error("Error executing action Slack_Upload File for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1025,7 +1028,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1062,10 +1065,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Send Interactive Message for Slack: {e}")
+                logger.error("Error executing action Slack_Send Interactive Message for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1106,7 +1109,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1143,10 +1146,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Build Block for Slack: {e}")
+                logger.error("Error executing action Slack_Build Block for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1187,7 +1190,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1222,10 +1225,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_Send Message for Slack: {e}")
+                logger.error("Error executing action Slack_Send Message for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -1263,7 +1266,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Slack: {e}")
+            logger.error("Error fetching instance for Slack: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -1304,8 +1307,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Slack_List Users for Slack: {e}")
+                logger.error("Error executing action Slack_List Users for Slack: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Slack")
+            logger.warning("Warning: No active integration instance found for Slack")
             return {"Status": "Failed", "Message": "No active instance found."}

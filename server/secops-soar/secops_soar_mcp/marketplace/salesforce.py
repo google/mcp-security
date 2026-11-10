@@ -19,6 +19,9 @@ import json
 from typing import Optional, List, Dict, Union, Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 
 def register_tools(mcp: FastMCP):
@@ -62,7 +65,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -96,10 +99,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Get Case for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Get Case for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -137,7 +140,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -170,10 +173,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Ping for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Ping for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -214,7 +217,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -250,10 +253,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Add Comment for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Add Comment for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -291,7 +294,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -337,10 +340,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Update Case for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Update Case for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -381,7 +384,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -415,10 +418,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Search Records for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Search Records for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -459,7 +462,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -503,10 +506,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Create Case for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Create Case for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -547,7 +550,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -581,10 +584,10 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_Close Case for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_Close Case for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
@@ -622,7 +625,7 @@ dict: A dictionary containing the result of the action execution.
             )
             instances = instance_response.get("integration_instances", [])
         except Exception as e:
-            print(f"Error fetching instance for Salesforce: {e}")
+            logger.error("Error fetching instance for Salesforce: %s", e)
             return {"Status": "Failed", "Message": f"Error fetching instance: {e}"}
     
         if instances:
@@ -655,8 +658,8 @@ dict: A dictionary containing the result of the action execution.
                 )
                 return execution_response
             except Exception as e:
-                print(f"Error executing action Salesforce_List Cases for Salesforce: {e}")
+                logger.error("Error executing action Salesforce_List Cases for Salesforce: %s", e)
                 return {"Status": "Failed", "Message": f"Error executing action: {e}"}
         else:
-            print(f"Warning: No active integration instance found for Salesforce")
+            logger.warning("Warning: No active integration instance found for Salesforce")
             return {"Status": "Failed", "Message": "No active instance found."}
