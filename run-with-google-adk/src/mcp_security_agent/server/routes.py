@@ -19,9 +19,9 @@ import asyncio
 import logging
 import threading
 from collections import OrderedDict
+from collections.abc import AsyncGenerator
 from pathlib import Path
 from typing import Any
-from collections.abc import AsyncGenerator
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
