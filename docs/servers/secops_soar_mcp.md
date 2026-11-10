@@ -1,26 +1,42 @@
-# SecOps SOAR MCP Server
+# Google SecOps SOAR MCP server
 
-This server provides tools for interacting with a Security Orchestration, Automation, and Response (SOAR) platform, specifically Google SecOps SOAR (formerly Siemplify). It includes core case management functionalities and dynamically loads integration-specific tools.
+The `secops-soar-mcp` server connects MCP clients to Google Security Operations SOAR for case triage, alert and event inspection, entity lookups, and third-party response actions. It always registers 17 core case-management tools and optionally loads any subset of 294 pre-built marketplace integration modules via the `--integrations` CLI flag.
 
 ## Configuration
 
-### Prerequisites
+### Prerequisites and authentication
 
-1. **Google SecOps SOAR Instance** - An operational SOAR platform
-2. **API Access** - SOAR API key with appropriate permissions
-3. **Integration Modules** - (Optional) Specific integration modules for additional functionality
+`secops-soar-mcp` authenticates exclusively with an `AppKey` header derived from `SOAR_APP_KEY`:
 
-### MCP Server Configuration
+1. `SOAR_URL`: Base URL of your Google SecOps SOAR instance (for example, `https://your-soar-instance.siemplify-soar.com:443`). Do not use a `*.backstory.chronicle.security` SIEM URL; see [Finding your `SOAR_URL`](../usage_guide.md#setting-up-environment-variables) if startup logs `Failed to fetch valid scopes from SOAR`.
+2. `SOAR_APP_KEY`: API key created in Google SecOps SOAR under **Settings > Advanced > API Keys**.
 
-Add the following configuration to your MCP client's settings file:
+On macOS and Linux:
+
+```bash
+export SOAR_URL="https://your-soar-instance.example.com"
+export SOAR_APP_KEY="your-soar-api-key"
+```
+
+On Windows PowerShell:
+
+```powershell
+$Env:SOAR_URL = "https://your-soar-instance.example.com"
+$Env:SOAR_APP_KEY = "your-soar-api-key"
+```
+
+### MCP client configuration
+
+To load marketplace integration modules with `--integrations`, run `server.py` from a local Git clone (`marketplace.*` imports resolve relative to `server/secops-soar/secops_soar_mcp`):
 
 ```json
-"secops-soar": {
+{
+  "mcpServers": {
+    "secops-soar": {
       "command": "uv",
       "args": [
-
         "--directory",
-        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
+        "/path/to/mcp-security/server/secops-soar/secops_soar_mcp",
         "run",
         "server.py",
         "--integrations",
@@ -31,701 +47,163 @@ Add the following configuration to your MCP client's settings file:
         "SOAR_APP_KEY": "your-soar-api-key"
       }
     }
+  }
+}
 ```
 
-#### `--env-file`
-
-Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
-
-Your revised config would then be:
+To keep `SOAR_APP_KEY` out of your client configuration file, pass `--env-file` to `uv`:
 
 ```json
-      ...
+{
+  "mcpServers": {
+    "secops-soar": {
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/the/repo/server/secops-soar/secops_soar_mcp",
+        "/path/to/mcp-security/server/secops-soar/secops_soar_mcp",
         "run",
         "--env-file",
-        "/path/to/the/repo/.env",
+        "/path/to/mcp-security/.env",
         "server.py",
         "--integrations",
         "CSV,OKTA"
       ],
-      "env": {},
-      ...
+      "env": {}
+    }
+  }
+}
 ```
 
-Example .env file:
-```
-SOAR_URL=https://your-soar-instance.example.com
-SOAR_APP_KEY=your-soar-api-key
-```
+If you only need the 17 core case and entity tools, you can also run the published PyPI package via `uvx --from secops-soar-mcp secops_soar_mcp`.
 
-### Environment Variable Setup
+> **Note:** Enable only the integrations your workflow uses (1 to 3 modules is typical). Each marketplace integration registers between 4 and 40+ action tools; loading many modules at once expands tool schemas in the model's context window. Integration selection is controlled only by the `--integrations` CLI argument (there is no `SOAR_INTEGRATIONS` environment variable).
 
-Set up these environment variables in your system:
+For corporate proxy and custom TLS CA configuration (`HTTP_PROXY`, `HTTPS_PROXY`, and `SSL_CERT_FILE`), see [Corporate proxies and custom TLS certificates](../usage_guide.md#corporate-proxies-and-custom-tls-certificates).
 
-**For macOS/Linux:**
-```bash
-export SOAR_URL="https://your-soar-instance.example.com"
-export SOAR_APP_KEY="your-soar-api-key"
-```
+## Core tools (17 tools)
 
-**For Windows PowerShell:**
-```powershell
-$Env:SOAR_URL = "https://your-soar-instance.example.com"
-$Env:SOAR_APP_KEY = "your-soar-api-key"
-```
+These 17 tools are always registered regardless of `--integrations`.
 
-For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
-
-If the server closes with a `Failed to fetch valid scopes from SOAR` error, confirm that `SOAR_URL` points to your SOAR base URL rather than your Backstory URL. The [usage guide](../usage_guide.md) includes steps for finding the correct value.
-
-### Available Integrations
-
-The `--integrations` flag in the server configuration allows you to enable specific integrations. The integration modules are located in the `marketplace/` directory. Here's a subset of the available integrations:
-
-- **ServiceNow** - Create/update tickets in ServiceNow
-- **CSV** - Export data to CSV files
-- **Siemplify** - Advanced Siemplify-specific features
-- **Jira** - Create/update Jira issues
-- **Slack** - Send notifications to Slack
-- **Email** - Send email notifications
-- **VirusTotal** - Enrich indicators with VirusTotal data
-- **Active Directory** - Query and manage Active Directory
-- **Microsoft Defender ATP** - Integration with Microsoft Defender for Endpoint
-- **Splunk** - Query and retrieve data from Splunk
-- **Sentinel One** - Endpoint protection and response
-- **QRadar** - Integration with IBM QRadar SIEM
-- **Recorded Future** - Threat intelligence enrichment
-- **Tenable.io** - Vulnerability management
-- **Rapid7 InsightVM** - Vulnerability management
-- **Tanium** - Endpoint management and security
-- **Zscaler** - Cloud security
-- **And many more** - Over 100 integrations are available in the marketplace
-
-For detailed documentation on each integration, see the [SOAR Integrations](../soar_integrations/index.md) section.
-
-Refer to the files in the `server/secops-soar/marketplace/` directory for a complete list of available integrations. Each integration module provides specific tools for interacting with the corresponding service.
-
-### Authentication Methods
-
-The server supports two authentication methods:
-
-1. **API Key** (Recommended)
-   - Set `SOAR_APP_KEY` environment variable
-   - Create this key in the SOAR platform under Settings > API Keys
-
-2. **Username/Password** (Legacy)
-   - Set `SOAR_USERNAME` and `SOAR_PASSWORD` environment variables
-   - Not recommended for production deployments
-
-## Core Tools (Case Management & Entities)
-
-These tools are always available.
-
-- **`create_case(name, priority=None, description=None, environment=None)`**
-    - **Description:** Creates a new manual case in the SOAR platform for tracking a security incident or investigation.
-    - **Parameters:**
-        - `name` (required): The name or title of the case.
-        - `priority` (optional): The priority level (e.g., "PriorityInfo", "PriorityLow", "PriorityMedium", "PriorityHigh", "PriorityCritical").
-        - `description` (optional): A description providing context about the security incident.
-        - `environment` (optional): The environment for the case.
-    - **Returns:** The newly created case details including its assigned ID.
-    - **Return Example:**
-      ```json
-      {
-        "id": 12350,
-        "identifier": "SEC-12350",
-        "name": "Suspicious Login Attempts from External IP",
-        "description": "Multiple failed login attempts detected from IP 203.0.113.50",
-        "priority": "PriorityHigh",
-        "status": "New",
-        "creationTime": "2023-09-15T16:00:00Z"
-      }
-      ```
+### Case lifecycle and triage
 
 - **`list_cases()`**
-    - **Description:** Lists available cases in the SOAR platform.
-    - **Returns:** A list of cases with basic information like ID, name, status, and priority.
-    - **Return Example:**
-      ```json
-      [
-        {
-          "id": 12345,
-          "identifier": "SEC-12345",
-          "name": "Suspicious Login Attempts",
-          "description": "Multiple failed login attempts from external IP",
-          "priority": "High",
-          "status": "In Progress",
-          "assignedUser": "john.analyst",
-          "creationTime": "2023-09-15T10:30:45Z"
-        },
-        {
-          "id": 12346,
-          "identifier": "SEC-12346",
-          "name": "Malware Detection - Emotet",
-          "description": "Emotet malware detected on user workstation",
-          "priority": "Critical",
-          "status": "New",
-          "assignedUser": null,
-          "creationTime": "2023-09-15T11:22:33Z"
-        }
-      ]
-      ```
-
+  - Lists active SOAR cases with case ID, title, priority, stage, status, assignee, and creation timestamp.
+- **`get_case_full_details(case_id)`**
+  - Retrieves full details for `case_id`, combining case metadata, alert summaries, involved entities, case comments, and tags.
+- **`create_case(name, priority=None, description=None, environment=None)`**
+  - Creates a manual SOAR case. Optional `priority` accepts `"PriorityInfo"`, `"PriorityLow"`, `"PriorityMedium"`, `"PriorityHigh"`, or `"PriorityCritical"`.
 - **`post_case_comment(case_id, comment)`**
-    - **Description:** Adds a textual comment to a specific case.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `comment` (required): The comment text to add.
-    - **Returns:** Confirmation of comment addition with timestamp and author information.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "comment_id": 56789,
-        "timestamp": "2023-09-15T14:22:10Z",
-        "author": "claude_assistant",
-        "text": "Analysis complete: Malware matches Emotet signature. Recommend isolating the host."
-      }
-      ```
+  - Posts a text comment to the case wall of `case_id`.
+- **`change_case_priority(case_id, case_priority)`**
+  - Updates the priority of `case_id` (`"PriorityInfo"`, `"PriorityLow"`, `"PriorityMedium"`, `"PriorityHigh"`, or `"PriorityCritical"`).
+- **`update_case_description(case_id, description)`**
+  - Replaces the description text on `case_id`.
+- **`assign_case(case_id, user)`**
+  - Assigns `case_id` to an analyst username, email address, or SOC role.
+- **`change_case_stage(case_id, stage)`**
+  - Moves `case_id` to another configured workflow stage (for example, `"Triage"`, `"Investigation"`, `"Assessment"`, or `"Incident"`).
+- **`add_case_tag(case_id, tag)`**
+  - Attaches a classification or workflow tag to `case_id`.
+- **`remove_case_tag(case_id, tag)`**
+  - Removes an existing tag from `case_id`.
+- **`close_case(case_id, root_cause, comment, reason, tags=None)`**
+  - Closes `case_id`. `reason` must be one of `"Malicious"`, `"NotMalicious"`, `"Maintenance"`, or `"Inconclusive"`. Optional `tags` accepts comma-separated tags to apply on closure.
+
+### Alerts and underlying events
 
 - **`list_alerts_by_case(case_id)`**
-    - **Description:** Lists all alerts associated with a specific case ID.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-    - **Returns:** A list of alerts with their details.
-    - **Return Example:**
-      ```json
-      [
-        {
-          "id": 34567,
-          "name": "Malware Detection",
-          "rule": "AV Detection - Emotet",
-          "description": "Antivirus detected Emotet malware on workstation",
-          "severity": "High",
-          "creationTime": "2023-09-15T11:20:15Z",
-          "deviceVendor": "Microsoft Defender",
-          "deviceProduct": "Endpoint Protection",
-          "environment": "Corporate"
-        },
-        {
-          "id": 34568,
-          "name": "Suspicious Network Connection",
-          "rule": "Outbound C2 Traffic",
-          "description": "Connection to known C2 server",
-          "severity": "Critical",
-          "creationTime": "2023-09-15T11:22:33Z",
-          "deviceVendor": "Palo Alto",
-          "deviceProduct": "Firewall",
-          "environment": "Corporate"
-        }
-      ]
-      ```
-
+  - Lists all alerts grouped under `case_id`, including alert ID, rule generator, severity, vendor, product, and environment.
 - **`list_alert_group_identifiers_by_case(case_id)`**
-    - **Description:** Lists the unique group identifiers for alerts within a specific case.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-    - **Returns:** A list of alert group identifiers.
-    - **Return Example:**
-      ```json
-      [
-        "Malware_Detection_Group_23456",
-        "Network_Activity_Group_23457"
-      ]
-      ```
-
+  - Returns the `alert_group_identifiers` strings for `case_id`. Pass these identifiers when invoking marketplace integration action tools against a case.
 - **`list_events_by_alert(case_id, alert_id)`**
-    - **Description:** Lists the events associated with a particular alert within a given case.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case containing the alert.
-        - `alert_id` (required): The ID of the specific alert.
-    - **Returns:** A list of events with their details.
-    - **Return Example:**
-      ```json
-      [
-        {
-          "id": 78901,
-          "name": "Malware Detected",
-          "description": "Emotet malware detected in file: malicious.exe",
-          "eventTime": "2023-09-15T11:20:10Z",
-          "rawData": {
-            "fileName": "malicious.exe",
-            "filePath": "C:\\Users\\user\\Downloads\\",
-            "fileHash": "a1b2c3d4e5f6g7h8i9j0",
-            "malwareType": "Trojan",
-            "malwareFamily": "Emotet"
-          }
-        },
-        {
-          "id": 78902,
-          "name": "Process Creation",
-          "description": "Suspicious process created from malicious.exe",
-          "eventTime": "2023-09-15T11:20:15Z",
-          "rawData": {
-            "parentProcess": "malicious.exe",
-            "childProcess": "svchost.exe",
-            "commandLine": "svchost.exe -k netsvcs",
-            "pid": 4567,
-            "user": "user123"
-          }
-        }
-      ]
-      ```
+  - Lists the security events attached to `alert_id` inside `case_id`, including raw event fields.
 
-- **`change_case_priority(case_id, case_priority)`**
-    - **Description:** Modifies the priority level of a specific case.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `case_priority` (required): The desired priority level (e.g., "PriorityLow", "PriorityMedium", "PriorityHigh", "PriorityCritical").
-    - **Returns:** Confirmation of the priority change.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "previous_priority": "PriorityMedium",
-        "new_priority": "PriorityHigh",
-        "timestamp": "2023-09-15T14:30:22Z"
-      }
-      ```
-
-- **`update_case_description(case_id, description)`**
-    - **Description:** Updates the description of a specific case. This replaces the existing description entirely.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `description` (required): The new description text for the case.
-    - **Returns:** Confirmation of the description update.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "description": "Confirmed phishing campaign targeting finance department. Three users clicked malicious links.",
-        "timestamp": "2023-09-15T15:45:30Z"
-      }
-      ```
-
-- **`close_case(case_id, root_cause, comment, reason, tags=None)`**
-    - **Description:** Closes a specific case by setting its root cause, close reason, and a closing comment. Marks the end of the investigation lifecycle.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `root_cause` (required): The determined root cause of the incident.
-        - `comment` (required): A comment explaining the closure decision.
-        - `reason` (required): The close reason category. Must be one of: "Malicious", "NotMalicious", "Maintenance", "Inconclusive".
-        - `tags` (optional): Comma-separated tags to apply to the case when closing.
-    - **Returns:** Confirmation of the case closure.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "status": "Closed",
-        "reason": "Malicious",
-        "root_cause": "Phishing email with credential harvester",
-        "timestamp": "2023-09-15T16:00:00Z"
-      }
-      ```
-
-- **`assign_case(case_id, user)`**
-    - **Description:** Assigns a specific analyst or responder to a specific case, establishing ownership for the investigation.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `user` (required): The username or email of the user to assign.
-    - **Returns:** Confirmation of the assignment.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "assigned_user": "john.analyst@example.com",
-        "timestamp": "2023-09-15T14:35:00Z"
-      }
-      ```
-
-- **`change_case_stage(case_id, stage)`**
-    - **Description:** Updates the workflow stage of a specific case to reflect its current position in the incident response lifecycle. Stages are configurable per SOAR deployment.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `stage` (required): The new stage name (e.g., "Triage", "Investigation", "Containment", "Remediation").
-    - **Returns:** Confirmation of the stage change.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "stage": "Investigation",
-        "timestamp": "2023-09-15T14:40:00Z"
-      }
-      ```
-
-- **`add_case_tag(case_id, tag)`**
-    - **Description:** Adds a descriptive tag to a specific case for categorization, filtering, and reporting purposes.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `tag` (required): The tag to add (e.g., "phishing", "ransomware").
-    - **Returns:** Confirmation of the tag addition.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "tag": "phishing",
-        "timestamp": "2023-09-15T14:45:00Z"
-      }
-      ```
-
-- **`remove_case_tag(case_id, tag)`**
-    - **Description:** Removes a previously applied tag from a specific case.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `tag` (required): The tag to remove.
-    - **Returns:** Confirmation of the tag removal.
-    - **Return Example:**
-      ```json
-      {
-        "success": true,
-        "case_id": 12345,
-        "tag": "false-positive",
-        "removed": true,
-        "timestamp": "2023-09-15T14:50:00Z"
-      }
-      ```
+### Entities
 
 - **`get_entities_by_alert_group_identifiers(case_id, alert_group_identifiers)`**
-    - **Description:** Retrieves entities (like IPs, users, hosts) involved in one or more alert groups within a case. Can also be used to get target entities for manual actions.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-        - `alert_group_identifiers` (required): A list of alert group identifiers.
-    - **Returns:** A list of entities with their details.
-    - **Return Example:**
-      ```json
-      [
-        {
-          "identifier": "10.0.0.25",
-          "entityType": "IP Address",
-          "environment": "Corporate",
-          "isSuspicious": true,
-          "isEnriched": true,
-          "enrichmentData": {
-            "geolocation": {
-              "country": "United States",
-              "city": "New York"
-            },
-            "organization": "Example Corp",
-            "isInternal": true
-          }
-        },
-        {
-          "identifier": "user123",
-          "entityType": "User",
-          "environment": "Corporate",
-          "isSuspicious": false,
-          "isEnriched": true,
-          "enrichmentData": {
-            "department": "Finance",
-            "title": "Accountant",
-            "manager": "manager456",
-            "email": "user123@example.com"
-          }
-        }
-      ]
-      ```
-
+  - Lists entities (IP addresses, hostnames, users, hashes, domains) involved in the specified `alert_group_identifiers` within `case_id`.
 - **`get_entity_details(entity_identifier, entity_type, entity_environment)`**
-    - **Description:** Fetches detailed information about a specific entity identified by its identifier, type, and environment.
-    - **Parameters:**
-        - `entity_identifier` (required): The unique identifier of the entity.
-        - `entity_type` (required): The type of the entity (e.g., "IP Address", "User").
-        - `entity_environment` (required): The environment the entity belongs to.
-    - **Returns:** Detailed information about the entity.
-    - **Return Example:**
-      ```json
-      {
-        "identifier": "10.0.0.25",
-        "entityType": "IP Address",
-        "environment": "Corporate",
-        "firstSeen": "2023-08-01T08:15:30Z",
-        "lastSeen": "2023-09-15T14:22:10Z",
-        "associatedCases": [12345, 12340, 12335],
-        "isSuspicious": true,
-        "isEnriched": true,
-        "enrichmentData": {
-          "geolocation": {
-            "country": "United States",
-            "city": "New York",
-            "coordinates": {
-              "latitude": 40.7128,
-              "longitude": -74.0060
-            }
-          },
-          "organization": "Example Corp",
-          "isInternal": true,
-          "subnet": "10.0.0.0/24",
-          "assetType": "Workstation",
-          "owner": "user123",
-          "department": "Finance"
-        }
-      }
-      ```
-
+  - Retrieves full enrichment data, first-seen and last-seen timestamps, suspicious flags, and related case IDs for a specific entity (`entity_identifier`, `entity_type`, and `entity_environment`).
 - **`search_entity(term=None, type=None, is_suspicious=None, is_internal_asset=None, is_enriched=None, network_name=None, environment_name=None)`**
-    - **Description:** Searches for entities within the SOAR platform based on various optional criteria.
-    - **Parameters:** (All optional)
-        - `term`: A search term (e.g., an IP address, username).
-        - `type`: A list of entity types to filter by.
-        - `is_suspicious`: Boolean filter for suspicious status.
-        - `is_internal_asset`: Boolean filter for internal asset status.
-        - `is_enriched`: Boolean filter for enrichment status.
-        - `network_name`: List of network names to filter by.
-        - `environment_name`: List of environment names to filter by.
-    - **Returns:** A list of entities matching the search criteria.
-    - **Return Example:**
-      ```json
-      [
-        {
-          "identifier": "10.0.0.25",
-          "entityType": "IP Address",
-          "environment": "Corporate",
-          "isSuspicious": true,
-          "isInternalAsset": true
-        },
-        {
-          "identifier": "user123",
-          "entityType": "User",
-          "environment": "Corporate",
-          "isSuspicious": false,
-          "isInternalAsset": true
-        }
-      ]
-      ```
+  - Searches entities across the SOAR platform with optional filters for `term`, `type` (list of entity types), `is_suspicious`, `is_internal_asset`, `is_enriched`, `network_name`, and `environment_name`.
 
-- **`get_case_full_details(case_id)`**
-    - **Description:** Retrieves comprehensive details for a single case, including its basic information, associated alerts, and comments.
-    - **Parameters:**
-        - `case_id` (required): The ID of the case.
-    - **Returns:** Comprehensive details about the case.
-    - **Return Example:**
-      ```json
-      {
-        "id": 12345,
-        "identifier": "SEC-12345",
-        "name": "Suspicious Login Attempts",
-        "description": "Multiple failed login attempts from external IP",
-        "priority": "High",
-        "status": "In Progress",
-        "assignedUser": "john.analyst",
-        "creationTime": "2023-09-15T10:30:45Z",
-        "modificationTime": "2023-09-15T14:30:22Z",
-        "alerts": [
-          {
-            "id": 34567,
-            "name": "Failed Login Attempt",
-            "severity": "Medium",
-            "count": 12
-          }
-        ],
-        "entities": [
-          {
-            "identifier": "203.0.113.100",
-            "entityType": "IP Address",
-            "isSuspicious": true
-          },
-          {
-            "identifier": "admin.user",
-            "entityType": "User",
-            "isSuspicious": false
-          }
-        ],
-        "comments": [
-          {
-            "id": 56789,
-            "author": "john.analyst",
-            "text": "Investigating source IP",
-            "timestamp": "2023-09-15T11:30:45Z"
-          },
-          {
-            "id": 56790,
-            "author": "claude_assistant",
-            "text": "IP belongs to known threat actor group APT28",
-            "timestamp": "2023-09-15T14:22:10Z"
-          }
-        ],
-        "tags": ["brute-force", "external-threat"]
-      }
-      ```
+## Dynamic marketplace integration tools
 
-## Dynamic Integration Tools (Marketplace)
+Passing `--integrations <Name1>,<Name2>` loads the corresponding Python modules from `server/secops-soar/secops_soar_mcp/marketplace/` (integration names are matched case-insensitively with underscores ignored, so `--integrations ServiceNow,EmailV2,CSV,Okta` loads `servicenow.py`, `emailv2.py`, `csv.py`, and `okta.py`).
 
-This server can dynamically load additional tools based on integrations enabled via the `--integrations` command-line flag when the server is started. These tools correspond to modules found in the `marketplace/` directory.
+Browse the full catalog of over 290 integration references in [SOAR integrations](../soar_integrations/index.md). Every marketplace action executes within the context of a SOAR case and accepts `case_id`, `alert_group_identifiers` (obtainable via `list_alert_group_identifiers_by_case`), optional `target_entities`, and optional `scope`.
 
-### Available Integrations
+Representative marketplace modules and verified tool names:
 
-For detailed documentation on each integration, see the [SOAR Integrations](../soar_integrations/index.md) section.
+### ServiceNow (`--integrations ServiceNow`)
 
-#### ServiceNow Integration
+- `service_now_create_incident` and `service_now_create_alert_incident`: Create a ServiceNow incident linked to a SOAR case or alert group.
+- `service_now_update_incident`, `service_now_get_incident`, and `service_now_close_incident`: Update fields, fetch status, or resolve an existing incident by `incident_number`.
+- `service_now_add_comment` and `service_now_ping`: Post comments to an incident or verify connectivity.
 
-Tools for creating and managing ServiceNow tickets:
+### Jira (`--integrations Jira`)
 
-- **`servicenow_create_ticket(case_id, summary=None, description=None, priority=None, ticket_type="Incident")`**
-  - Creates a ServiceNow ticket linked to a SOAR case
+- `jira_create_issue` and `jira_create_alert_issue`: Create a Jira issue in `project_key` linked to the active case.
+- `jira_update_issue`, `jira_assign_issue`, `jira_add_comment`, `jira_get_issues`, and `jira_list_issues`: Manage and query Jira issues from case triage.
 
-- **`servicenow_update_ticket(case_id, ticket_number, status=None, resolution_notes=None)`**
-  - Updates an existing ServiceNow ticket
+### Slack (`--integrations Slack`)
 
-#### CSV Integration
+- `slack_send_message`, `slack_send_advanced_message`, and `slack_send_interactive_message`: Post responder notifications or approval prompts to a Slack channel or user.
+- `slack_list_channels`, `slack_create_channel`, and `slack_get_channel_or_user_conversation_history`: Manage incident channels and retrieve thread history.
 
-Tools for exporting data to CSV files:
+### EmailV2 (`--integrations EmailV2`)
 
-- **`csv_export_case(case_id, file_path=None)`**
-  - Exports case details to a CSV file
+- `email_v2_send_email`, `email_v2_send_thread_reply`, and `email_v2_forward_email`: Send outbound notifications or replies from a configured mailbox.
+- `email_v2_search_email` and `email_v2_save_email_attachments_to_case`: Search mailbox folders and attach evidence to the SOAR case wall.
 
-- **`csv_export_entities(case_id, entity_types=None, file_path=None)`**
-  - Exports entities from a case to a CSV file
+### CSV (`--integrations CSV`)
 
-#### Jira Integration
+- `csv_csv_search_by_entity` and `csv_csv_search_by_string`: Search local CSV files on the SOAR server by case entity or string match.
+- `csv_save_json_to_csv`: Serialize JSON output to a CSV file path.
 
-Tools for creating and managing Jira issues:
+### Okta (`--integrations Okta`)
 
-- **`jira_create_issue(case_id, project_key, issue_type="Bug", summary=None, description=None, priority=None)`**
-  - Creates a Jira issue linked to a SOAR case
+- `okta_get_user`, `okta_list_users`, and `okta_list_user_groups`: Inspect Okta account status and group memberships.
+- `okta_disable_user`, `okta_reset_password`, `okta_assign_role`, and `okta_unassign_role`: Execute identity containment and recovery actions.
 
-- **`jira_update_issue(case_id, issue_key, status=None, resolution=None, comment=None)`**
-  - Updates an existing Jira issue
+## Usage examples
 
-#### Slack Integration
+### Triage an open case and open a ServiceNow incident
 
-Tools for sending notifications to Slack:
+1. List open cases in the queue:
+   `list_cases()`
+2. Inspect full case context, alerts, and entities for case `12346`:
+   `get_case_full_details(case_id=12346)`
+3. Retrieve alert group identifiers and underlying alert events:
+   `list_alert_group_identifiers_by_case(case_id=12346)`
+   `list_events_by_alert(case_id=12346, alert_id=34567)`
+4. Record responder notes and raise priority:
+   `post_case_comment(case_id=12346, comment="Confirmed C2 callback on workstation-1234. Escalating to High.")`
+   `change_case_priority(case_id=12346, case_priority="PriorityHigh")`
+5. Open a linked ServiceNow incident (when started with `--integrations ServiceNow`):
 
-- **`slack_send_notification(case_id, channel, message=None, include_details=True)`**
-  - Sends a notification about a case to a Slack channel
+   ```python
+   service_now_create_incident(
+     case_id=12346,
+     alert_group_identifiers=["Malware_Detection_Group_23456"],
+     short_description="Malware callback on workstation-1234",
+     description="Isolate workstation-1234 and reimage per IR playbook.",
+     urgency="1",
+     impact="2",
+   )
+   ```
 
-#### Email Integration
+### Pivot across cases sharing a suspicious entity
 
-Tools for sending email notifications:
+1. Fetch alert-group entities for the active case:
+   `get_entities_by_alert_group_identifiers(case_id=12346, alert_group_identifiers=["Network_Activity_Group_23457"])`
+2. Inspect historical enrichment and associated case IDs for `203.0.113.100`:
+   `get_entity_details(entity_identifier="203.0.113.100", entity_type="ADDRESS", entity_environment="Default Environment")`
+3. Search SOAR for related suspicious internal assets:
+   `search_entity(term="203.0.113.100", is_suspicious=True)`
 
-- **`email_send_notification(case_id, recipients, subject=None, body=None, include_details=True)`**
-  - Sends an email notification about a case
+## Additional resources
 
-## Usage Examples
-
-### Example 1: Case Investigation Workflow
-
-```
-User: What security cases need my attention right now?
-
-AI uses: list_cases()
-
-AI: I found 3 open cases:
-
-1. SEC-12345: Suspicious Login Attempts (High Priority)
-   Status: In Progress, Assigned to: john.analyst
-
-2. SEC-12346: Malware Detection - Emotet (Critical Priority)
-   Status: New, Unassigned
-
-3. SEC-12347: Data Exfiltration Alert (Medium Priority)
-   Status: New, Unassigned
-
-User: Tell me more about the Emotet malware case.
-
-AI uses: get_case_full_details(12346)
-
-AI: Case SEC-12346: Malware Detection - Emotet
-Critical Priority, Created: 15 minutes ago
-
-Alerts:
-- Malware Detection (High): AV detected Emotet malware
-- Suspicious Network Connection (Critical): Connection to C2 server
-
-Entities:
-- workstation-1234 (Hostname)
-- user123 (User)
-- 203.0.113.100 (IP Address, Suspicious)
-
-No comments on this case yet.
-
-User: What events were captured in the malware detection alert?
-
-AI uses: list_alerts_by_case(12346)
-[AI identifies the alert ID as 34567]
-
-AI uses: list_events_by_alert(12346, 34567)
-
-AI: The malware detection alert contains these events:
-
-1. Malware Detected (2023-09-15 11:20:10)
-   Emotet malware detected in file: malicious.exe
-   File location: C:\Users\user\Downloads\
-   File hash: a1b2c3d4e5f6g7h8i9j0
-
-2. Process Creation (2023-09-15 11:20:15)
-   Suspicious process created from malicious.exe
-   Command: svchost.exe -k netsvcs
-   PID: 4567, User: user123
-
-User: Add a comment to the case that I'm investigating this and change priority to high.
-
-AI uses: post_case_comment(12346, "Starting investigation of the Emotet malware detection. Will isolate affected host.")
-
-AI uses: change_case_priority(12346, "PriorityHigh")
-
-AI: I've added your comment to the case and changed the priority to High.
-
-User: Can you create a ServiceNow ticket for this case?
-
-AI uses: servicenow_create_ticket(
-  case_id=12346,
-  summary="Emotet Malware Incident - workstation-1234",
-  description="Emotet malware detected on workstation-1234. User workstation has been isolated. Need IT assistance with remediation.",
-  priority="High"
-)
-
-AI: Created ServiceNow ticket INC0012345 for this case. The ticket is assigned to the Security Incident Response team with High priority.
-```
-
-### Example 2: Entity Investigation
-
-```
-User: Can you find information about the suspicious IP address in the malware case?
-
-AI uses: get_entities_by_alert_group_identifiers(12346, ["Network_Activity_Group_23457"])
-[AI identifies the suspicious IP as 203.0.113.100]
-
-AI uses: get_entity_details("203.0.113.100", "IP Address", "Corporate")
-
-AI: IP Address: 203.0.113.100
-- Classification: External, Suspicious
-- First seen: 2023-09-15 11:22:10
-- Associated with 1 case (SEC-12346)
-- Enrichment data:
-  - Country: Russia
-  - City: Moscow
-  - ISP: Example Telecom
-  - Known malicious: Yes (Confidence: High)
-  - Threat intelligence tags: Emotet C2, Botnet Infrastructure
-
-User: Are there any other entities in our environment that have communicated with this IP?
-
-AI uses: search_entity(term="203.0.113.100")
-
-AI: I found 3 entities that have had communications with this IP:
-
-1. workstation-1234 (Hostname)
-   Status: Suspicious, Last communication: 2023-09-15 11:22:10
-
-2. workstation-5678 (Hostname)
-   Status: Suspicious, Last communication: 2023-09-15 09:15:30
-
-3. user456 (User)
-   Status: Under investigation
-```
-
-## Additional Resources
-
-- [Google SecOps SOAR Documentation](https://cloud.google.com/chronicle/docs/soar/overview)
-- [SOAR API Reference](https://cloud.google.com/chronicle/docs/soar/api/overview)
-- [SOAR Playbook Development Guide](https://cloud.google.com/chronicle/docs/soar/playbooks/overview)
+- [Google SecOps SOAR overview](https://cloud.google.com/chronicle/docs/soar/overview)
+- [Google SecOps SOAR integrations reference](../soar_integrations/index.md)
+- [Google SecOps SOAR playbooks documentation](https://cloud.google.com/chronicle/docs/soar/playbooks/overview)
