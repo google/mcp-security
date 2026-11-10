@@ -111,7 +111,7 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_domain(
     domain: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> list[dict[str, typing.Any]]:
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve entities related to the the given domain.
 
     The following table shows a summary of available relationships for domain objects.
@@ -156,7 +156,7 @@ async def get_entities_related_to_a_domain(
       descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
       limit: Limit the number of entities to retrieve. 10 by default.
     Returns:
-      List of entities related to the domain.
+      List of entities related to the domain, or an error dictionary.
   """
   if not relationship_name in DOMAIN_RELATIONSHIPS:
     return {
@@ -196,7 +196,7 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
 @server.tool()
 async def get_entities_related_to_an_ip_address(
     ip_address: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> list[dict[str, typing.Any]]:
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve entities related to the the given IP Address.
 
     The following table shows a summary of available relationships for IP Address objects.
@@ -232,7 +232,7 @@ async def get_entities_related_to_an_ip_address(
       descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
       limit: Limit the number of entities to retrieve. 10 by default.
     Returns:
-      List of entities related to the IP Address.
+      List of entities related to the IP Address, or an error dictionary.
   """
   if not relationship_name in IP_RELATIONSHIPS:
     return {

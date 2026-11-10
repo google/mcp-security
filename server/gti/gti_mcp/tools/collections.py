@@ -86,7 +86,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_collection(
     id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
@@ -118,7 +118,7 @@ async def get_entities_related_to_a_collection(
       limit (optional): Limit the number of collections to retrieve. 10 by default.
       descriptors_only (optional)): Bool. Default True. Must be False when the target object type is 'attack_techniques'.
     Returns:
-      List of objects related to the collection.
+      List of objects related to the collection, or an error dictionary.
   """
   if not relationship_name in COLLECTION_RELATIONSHIPS:
       return {
