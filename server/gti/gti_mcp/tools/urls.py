@@ -72,7 +72,7 @@ def url_to_base64(url: str) -> str:
 
 
 @server.tool()
-async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a comprehensive URL analysis report from Google Threat Intelligence.
 
   Args:
@@ -95,7 +95,7 @@ async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]
 @server.tool()
 async def get_entities_related_to_an_url(
     url: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given URL.
 
     The following table shows a summary of available relationships for URL objects.

@@ -1549,6 +1549,42 @@ async def test_none_default_params_accept_null():
 
 
 @pytest.mark.asyncio(loop_scope="session")
+async def test_dict_returning_tools_keep_wrapped_output_schema():
+    """Tools returning `typing.Dict` keep the {"result": ...} outputSchema.
+
+    FastMCP builds an unwrapped schema only for built-in `dict[...]` (and
+    none at all for bare `dict`), so these return annotations stay
+    `typing.Dict` with `# noqa: UP006`. Rewriting them would change
+    outputSchema and structuredContent for clients.
+    """
+    expected = {
+        "create_collection",
+        "get_collection_mitre_tree",
+        "get_collection_report",
+        "get_domain_report",
+        "get_file_behavior_report",
+        "get_file_behavior_summary",
+        "get_file_report",
+        "get_hunting_ruleset",
+        "get_ip_address_report",
+        "get_threat_profile",
+        "get_url_report",
+        "update_collection_attributes",
+    }
+
+    async with client_session(server._mcp_server) as client:
+        tools_result = await client.list_tools()
+
+    schemas = {tool.name: tool.outputSchema for tool in tools_result.tools}
+    assert expected <= schemas.keys()
+    for name in sorted(expected):
+        schema = schemas[name]
+        assert schema is not None, name
+        assert schema["required"] == ["result"], name
+        assert schema["properties"]["result"]["type"] == "object", name
+
+
+@pytest.mark.asyncio(loop_scope="session")
 async def test_search_threats_accepts_null_collection_type():
     """An explicit null `collection_type` behaves like omitting it."""
 

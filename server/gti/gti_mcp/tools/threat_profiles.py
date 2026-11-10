@@ -22,7 +22,7 @@ from ..server import server, vt_client
 @server.tool()
 async def list_threat_profiles(
     ctx: Context, limit: int = 10
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """List your Threat Profiles at Google Threat Intelligence.
 
   Threat Profiles filter all of Google TI's threat intelligence
@@ -54,7 +54,7 @@ async def list_threat_profiles(
 @server.tool()
 async def get_threat_profile(
     profile_id: str, ctx: Context
-) -> typing.Dict[str, typing.Any]:
+) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get Threat Profile object.
 
   A threat profile object contains the following attributes:
@@ -102,7 +102,7 @@ async def get_threat_profile(
 @server.tool()
 async def get_threat_profile_recommendations(
     profile_id: str, ctx: Context, limit: int = 10
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Returns the list of objects associated to a given Threat Profile.
 
   Each of these objects has one of the following types:
@@ -147,7 +147,7 @@ async def get_threat_profile_recommendations(
 @server.tool()
 async def get_threat_profile_associations_timeline(
     profile_id: str, ctx: Context, limit: int = 10
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Retrieves the associations timeline for the given Threat Profile.
 
   Some important response attributes:
