@@ -19,7 +19,7 @@ setup = setuptools.setup
 
 setup(
     name="google-secops-mcp",
-    version="0.7.1",
+    version="0.8.0",
     py_modules=["secops_mcp", "main"],  # Include both modules
     install_requires=[
         "httpx>=0.28.1",
