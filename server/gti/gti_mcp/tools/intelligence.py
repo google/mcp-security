@@ -106,7 +106,7 @@ async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str,
 @server.tool()
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
-) -> list[dict[str, typing.Any]]:
+) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
   """Retrieve entities related to the the given Hunting Ruleset.
 
     The following table shows a summary of available relationships for Hunting ruleset objects.
@@ -120,7 +120,7 @@ async def get_entities_related_to_a_hunting_ruleset(
       relationship_name (required): Relationship name.
       limit: Limit the number of entities to retrieve. 10 by default.
     Returns:
-      List of objects related to the Hunting ruleset.
+      List of objects related to the Hunting ruleset, or an error dictionary.
   """
   if not relationship_name in HUNTING_RULESET_RELATIONSHIPS:
       return {

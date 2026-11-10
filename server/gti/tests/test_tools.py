@@ -1562,3 +1562,43 @@ async def test_search_threats_accepts_null_collection_type():
 
     assert not result.isError, result.content[0].text
     mock_iterator.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "tool_name, arguments",
+    [
+        (
+            "get_entities_related_to_a_domain",
+            {"domain": "theevil.com", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_ip_address",
+            {"ip_address": "8.8.8.8", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "http://theevil.com/", "descriptors_only": True},
+        ),
+        ("get_entities_related_to_a_collection", {"id": "collection_1"}),
+        ("get_entities_related_to_a_hunting_ruleset", {"ruleset_id": "1234"}),
+    ],
+)
+async def test_get_entities_related_invalid_relationship_returns_error(
+    tool_name, arguments
+):
+    """An unknown relationship_name comes back as an error dict, not a ToolError.
+
+    The tools return the error dict before any API call. With a list-only
+    return annotation, FastMCP's output validation rejects that dict.
+    """
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            tool_name,
+            arguments={**arguments, "relationship_name": "not_a_relationship"},
+        )
+        assert not result.isError
+        assert result.structuredContent is not None
+        payload = result.structuredContent["result"]
+        assert isinstance(payload, dict)
+        assert "Relationship not_a_relationship does not exist" in payload["error"]
