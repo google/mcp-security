@@ -420,6 +420,16 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:  # no
   return utils.sanitize_response(data.get("data", {}))
 
 
+def _api_error(data: typing.Any) -> dict[str, str]:
+  """Builds an error dict from a GTI response that has no `data` object."""
+  error_info = data.get("error") if isinstance(data, dict) else None
+  if isinstance(error_info, dict):
+    detail = error_info.get("message") or error_info.get("code")
+  else:
+    detail = None
+  return {"error": f"API Error: {detail or 'Unknown error'}"}
+
+
 @server.tool()
 async def create_collection(
     name: str,
@@ -452,6 +462,8 @@ async def create_collection(
     
     res = await client.post_async("/collections", json_data=collection_data)
     data = await res.json_async()
+  if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+    return _api_error(data)
   return utils.sanitize_response(data["data"])
 
 
@@ -480,6 +492,8 @@ async def update_collection_attributes(
         f"/collections/{id}", json_data=collection_data
     )
     data = await res.json_async()
+  if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+    return _api_error(data)
   return utils.sanitize_response(data["data"])
 
 
