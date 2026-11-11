@@ -1712,3 +1712,68 @@ async def test_update_collection_attributes_api_error_returns_error(
         )
         assert not result.isError, result.content[0].text
         assert result.structuredContent["result"] == {"error": expected_error}
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    "operation, method, status, api_response, expected",
+    [
+        (
+            "add",
+            "POST",
+            404,
+            {"error": {"code": "NotFoundError", "message": "Collection not found"}},
+            "Error updating collection: API Error: Collection not found",
+        ),
+        (
+            "remove",
+            "DELETE",
+            403,
+            {"error": {"code": "ForbiddenError"}},
+            "Error updating collection: API Error: ForbiddenError",
+        ),
+    ],
+)
+async def test_update_iocs_in_collection_api_error_keeps_message(
+    make_httpserver_ipv4, operation, method, status, api_response, expected
+):
+    """A GTI error response on add/remove keeps the API's reason in the result."""
+    collection_id = f"iocs_error_{operation}_{status}"
+    make_httpserver_ipv4.expect_oneshot_request(
+        f"/api/v3/collections/{collection_id}/domains", method=method
+    ).respond_with_json(api_response, status=status)
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "update_iocs_in_collection",
+            arguments={
+                "id": collection_id,
+                "relationship": "domains",
+                "iocs": ["evil.com"],
+                "operation": operation,
+            },
+        )
+        assert not result.isError, result.content[0].text
+        assert result.content[0].text == expected
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_update_iocs_in_collection_non_json_error(make_httpserver_ipv4):
+    """A non-JSON error body (e.g. a proxy page) still returns an error string."""
+    collection_id = "iocs_error_html"
+    make_httpserver_ipv4.expect_oneshot_request(
+        f"/api/v3/collections/{collection_id}/domains", method="POST"
+    ).respond_with_data("<html>Bad gateway</html>", status=502, content_type="text/html")
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "update_iocs_in_collection",
+            arguments={
+                "id": collection_id,
+                "relationship": "domains",
+                "iocs": ["evil.com"],
+                "operation": "add",
+            },
+        )
+        assert not result.isError, result.content[0].text
+        assert result.content[0].text == "Error updating collection: API Error: Unknown error"
