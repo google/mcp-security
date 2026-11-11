@@ -41,3 +41,28 @@ async def test_fetch_object_handles_api_error():
     assert f"VirusTotal API Error: {error_code} - {error_message}" in result["error"]
     assert "details" in result
     assert "The requested domain 'test.com' could not be found" in result["details"]
+
+def test_remove_fields_top_level_and_dotted():
+    data = {
+        "memory_dumps": ["x"],
+        "processes_tree": [{"name": "a"}],
+        "attributes": {
+            "aggregations": {
+                "files": {
+                    "imphash": [{"value": "h"}],
+                    "exiftool_authors": [{"value": "n"}],
+                }
+            }
+        },
+    }
+    utils.remove_fields(
+        data,
+        [
+            "memory_dumps",
+            "attributes.aggregations.files.exiftool_authors",
+        ],
+    )
+    assert "memory_dumps" not in data
+    assert data["processes_tree"] == [{"name": "a"}]
+    assert "imphash" in data["attributes"]["aggregations"]["files"]
+    assert "exiftool_authors" not in data["attributes"]["aggregations"]["files"]

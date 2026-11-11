@@ -677,7 +677,9 @@ async def test_get_simple_tools(
                 "filter": "collection_type:vulnerability APT44", 
                 "order": "relevance-",
                 "relationships": ",".join(tools.COLLECTION_KEY_RELATIONSHIPS),
-                "exclude_attributes": tools.COLLECTION_EXCLUDED_ATTRS,
+                "exclude_attributes": ",".join(
+                    [tools.COLLECTION_EXCLUDED_ATTRS, *tools.VULNERABILITY_EXCLUDED_ATTRS]
+                ),
             },
             {
                 "data": [{

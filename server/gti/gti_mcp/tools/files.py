@@ -83,6 +83,44 @@ FILE_KEY_RELATIONSHIPS = [
     "associations",
 ]
 
+# Fields excluded (via the `exclude_attributes` API param) from "behaviours"
+# relationship results returned by `get_entities_related_to_a_file`. Only
+# applied when relationship_name == "behaviours" and descriptors_only is
+# False. Exclude bulky / low-signal dumps; keep core behavioral pivots
+# (processes_tree, processes_created, command_executions, ip_traffic,
+# http_conversations, files_dropped, attack_techniques, signature_matches,
+# ids_alerts, mutexes_created).
+FILE_BEHAVIOUR_EXCLUDED_ATTRS = [
+    "memory_dumps",
+    "processes_terminated",
+    "registry_keys_opened",
+    "files_written",
+    "files_deleted",
+    "files_opened",
+]
+
+# Fields stripped client-side from `get_file_behavior_summary`. The
+# behaviour_summary endpoint does not support exclude_attributes, so these
+# are removed after the fact. Keep hunting / behavioral pivots listed above.
+FILE_BEHAVIOR_SUMMARY_EXCLUDED_ATTRS = [
+    "memory_dumps",
+    "text_highlighted",
+    "files_opened",
+    "modules_loaded",
+    "mutexes_opened",
+    "processes_terminated",
+    "registry_keys_opened",
+    "registry_keys_deleted",
+    "registry_keys_set",
+    "files_written",
+    "files_deleted",
+    "files_copied",
+    "tags",
+    "processes_injected",
+    "memory_pattern_urls",
+    "memory_pattern_domains",
+]
+
 
 @server.tool()
 async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
@@ -178,6 +216,12 @@ async def get_entities_related_to_a_file(
             f"Available relationships are: {','.join(FILE_RELATIONSHIPS)}"
         }
 
+    params = None
+    if relationship_name == "behaviours" and not descriptors_only:
+      params = {
+          "exclude_attributes": ",".join(FILE_BEHAVIOUR_EXCLUDED_ATTRS)
+      }
+
     async with vt_client(ctx) as client:
       res = await utils.fetch_object_relationships(
           client,
@@ -185,7 +229,8 @@ async def get_entities_related_to_a_file(
           hash,
           relationships=[relationship_name],
           descriptors_only=descriptors_only,
-          limit=limit)
+          limit=limit,
+          params=params)
     return utils.sanitize_response(res.get(relationship_name, []))
 
 
@@ -239,12 +284,14 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
 
   if "data" not in res:
       if "error" in res:
-          logging.warning(f"VirusTotal API Error: {res['error']}")
+          logging.warning("VirusTotal API Error: %s", res["error"])
           return {"error": f"VirusTotal API Error: {res['error']}"}
-      logging.warning(f"Unexpected response format from VirusTotal API: {res}")
+      logging.warning(
+          "Unexpected response format from VirusTotal API: %s", res)
       return {"error": f"Unexpected response format from VirusTotal API: {res}"}
 
-  return utils.sanitize_response(res["data"])
+  data = utils.remove_fields(res["data"], FILE_BEHAVIOR_SUMMARY_EXCLUDED_ATTRS)
+  return utils.sanitize_response(data)
 
 
 @server.tool()
