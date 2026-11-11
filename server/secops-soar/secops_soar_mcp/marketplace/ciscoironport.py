@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the IronPort integration.
 
     @mcp.tool()
-    async def iron_port_get_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_type: Annotated[List[str], Field(..., description="The type of the report to fetch. Note: mail_sender_ip_hostname_detail and mail_incoming_ip_hostname_detail reports work based on Siemplify IP or Host entities;  mail_users_detail works on Siemplify User entity (with email address). Other reports are working without Siemplify entities.")], search_reports_data_for_last_x_days: Annotated[str, Field(..., description="Specify a time frame in days for which to search for reports data. By default is set to last 7 days.")], max_records_to_return: Annotated[str, Field(..., description="Specify a time frame in days for which to search for reports data. By default is set to last 7 days.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def iron_port_get_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_type: Annotated[list[str], Field(..., description="The type of the report to fetch. Note: mail_sender_ip_hostname_detail and mail_incoming_ip_hostname_detail reports work based on Siemplify IP or Host entities;  mail_users_detail works on Siemplify User entity (with email address). Other reports are working without Siemplify entities.")], search_reports_data_for_last_x_days: Annotated[str, Field(..., description="Specify a time frame in days for which to search for reports data. By default is set to last 7 days.")], max_records_to_return: Annotated[str, Field(..., description="Specify a time frame in days for which to search for reports data. By default is set to last 7 days.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Fetch specific Ironport report information.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -105,15 +105,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def iron_port_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def iron_port_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test Connectivity
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -179,15 +179,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def iron_port_get_all_recipients_by_sender(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], sender: Annotated[str, Field(..., description="The sender email address to filter by")], search_emails_for_last_x: Annotated[str, Field(..., description="Specify a time frame for which to search for emails. Note that this value should be set accordingly to the amount of emails processed by Ironport, if big enough value will be provided action can time out.")], set_search_email_period_in: Annotated[List[str], Field(..., description="Specify if search emails should be done with the period of days or hours.")], max_recipients_to_return: Annotated[str, Field(default=None, description="Specify how many recipients action should return.")], page_size: Annotated[str, Field(default=None, description="Specify the page size for the action to use when searching for emails.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def iron_port_get_all_recipients_by_sender(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], sender: Annotated[str, Field(..., description="The sender email address to filter by")], search_emails_for_last_x: Annotated[str, Field(..., description="Specify a time frame for which to search for emails. Note that this value should be set accordingly to the amount of emails processed by Ironport, if big enough value will be provided action can time out.")], set_search_email_period_in: Annotated[list[str], Field(..., description="Specify if search emails should be done with the period of days or hours.")], max_recipients_to_return: Annotated[str, Field(default=None, description="Specify how many recipients action should return.")], page_size: Annotated[str, Field(default=None, description="Specify the page size for the action to use when searching for emails.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get a list of recipients who received emails from a given sender. Note: for action to work, please make sure that message tracking is enabled in IronPort, along with AsyncOS API.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -260,15 +260,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def iron_port_get_all_recipients_by_subject(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject to filter by")], search_emails_for_last_x: Annotated[str, Field(..., description="Specify a time frame for which to search for emails. Note that this value should be set accordingly to the amount of emails processed by Ironport, if big enough value will be provided action can time out.")], set_search_email_period_in: Annotated[List[str], Field(..., description="Specify if search emails should be done with the period of days or hours.")], max_recipients_to_return: Annotated[str, Field(default=None, description="Specify how many recipients action should return.")], page_size: Annotated[str, Field(default=None, description="Specify the page size for the action to use when searching for emails.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def iron_port_get_all_recipients_by_subject(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="The subject to filter by")], search_emails_for_last_x: Annotated[str, Field(..., description="Specify a time frame for which to search for emails. Note that this value should be set accordingly to the amount of emails processed by Ironport, if big enough value will be provided action can time out.")], set_search_email_period_in: Annotated[list[str], Field(..., description="Specify if search emails should be done with the period of days or hours.")], max_recipients_to_return: Annotated[str, Field(default=None, description="Specify how many recipients action should return.")], page_size: Annotated[str, Field(default=None, description="Specify the page size for the action to use when searching for emails.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get a list of all recipients that received an email with the same subject. Note: for action to work, please make sure that message tracking is enabled in IronPort, along with AsyncOS API.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

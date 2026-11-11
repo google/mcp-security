@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the PaloAltoCortexXDR integration.
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_add_hashes_to_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(default=None, description="Provide additional comment that represents additional information regarding the action.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_add_hashes_to_block_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(default=None, description="Provide additional comment that represents additional information regarding the action.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """The action will add files which do not exist in the allow or block lists to a block list. Note - only SH256 format  for file hashes is supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -104,15 +104,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_update_an_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident to be updated.")], assigned_user_name: Annotated[str, Field(default=None, description="The updated full name of the incident assignee.")], severity: Annotated[List[str], Field(default=None, description="Administrator-defined severity")], status: Annotated[List[str], Field(default=None, description="Updated incident status")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_update_an_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident to be updated.")], assigned_user_name: Annotated[str, Field(default=None, description="The updated full name of the incident assignee.")], severity: Annotated[list[str], Field(default=None, description="Administrator-defined severity")], status: Annotated[list[str], Field(default=None, description="Updated incident status")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """The ability to set a specific XDR incident as under investigation, assign to named users, etc.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -185,15 +185,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to Palo Alto Cortex XDR
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -259,15 +259,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_get_endpoint_agent_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_get_endpoint_agent_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get the agent report for an endpoint.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -333,15 +333,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident for which you want to retrieve data.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident for which you want to retrieve data.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get data of a specific incident including alerts and key artifacts.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -408,15 +408,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_resolve_an_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident to be updated.")], status: Annotated[List[str], Field(..., description="Updated incident status")], resolve_comment: Annotated[str, Field(default=None, description="Descriptive comment explaining the incident change.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_resolve_an_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], incident_id: Annotated[str, Field(..., description="The ID of the incident to be updated.")], status: Annotated[list[str], Field(..., description="Updated incident status")], resolve_comment: Annotated[str, Field(default=None, description="Descriptive comment explaining the incident change.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """The ability to close XDR incidents with a close reason.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -486,15 +486,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Enrich Siemplify Host and IP entities based on the information from the Palo Alto Cortex XDR.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -560,15 +560,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_isolate_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_isolate_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Isolate an endpoint.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -634,15 +634,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def palo_alto_cortex_xdr_unisolate_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def palo_alto_cortex_xdr_unisolate_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Unisolate an endpoint.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

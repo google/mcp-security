@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the CofenseTriage integration.
 
     @mcp.tool()
-    async def cofense_triage_add_tags_to_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report to which you want to add tags.")], tags: Annotated[str, Field(..., description="Specify a comma-separated list of tags that need to be applied to the report.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_add_tags_to_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report to which you want to add tags.")], tags: Annotated[str, Field(..., description="Specify a comma-separated list of tags that need to be applied to the report.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add tags to a report in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -104,15 +104,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_categorize_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report to which you want to add tags.")], category_name: Annotated[str, Field(..., description="Specify the name of the category that should be applied to the report. Available categories can be found in the \u201cList Categories\u201d action.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_categorize_report(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report to which you want to add tags.")], category_name: Annotated[str, Field(..., description="Specify the name of the category that should be applied to the report. Available categories can be found in the \u201cList Categories\u201d action.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Categorize a report in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -180,15 +180,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_execute_playbook(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report on which you want to execute the playbook.")], playbook_name: Annotated[str, Field(..., description="Specify the name of the playbook that needs to be executed.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_execute_playbook(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report on which you want to execute the playbook.")], playbook_name: Annotated[str, Field(..., description="Specify the name of the playbook that needs to be executed.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Initiate a playbook execution in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -256,15 +256,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_list_playbooks(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[List[str], Field(default=None, description="Specify the key that needs to be used to filter playbooks.")], filter_logic: Annotated[List[str], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter. Note: \"Equals\" logic is case sensitive, while \"Contains\" is case insensitive.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[str, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records. Maximum: 200.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_list_playbooks(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[list[str], Field(default=None, description="Specify the key that needs to be used to filter playbooks.")], filter_logic: Annotated[list[str], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter. Note: \"Equals\" logic is case sensitive, while \"Contains\" is case insensitive.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value provided in the \"Filter Key\" parameter.")], max_records_to_return: Annotated[str, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records. Maximum: 200.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available playbooks in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -338,15 +338,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_list_reports_related_to_threat_indicators(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, action will create a case wall table with information about reports,")], max_reports_to_return: Annotated[str, Field(default=None, description="Specify how many reports to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_list_reports_related_to_threat_indicators(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, action will create a case wall table with information about reports,")], max_reports_to_return: Annotated[str, Field(default=None, description="Specify how many reports to return.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List reports related to threat indicators in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -416,15 +416,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_get_report_headers(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report for which you want to retrieve headers.")], max_headers_to_return: Annotated[str, Field(default=None, description="Specify how many headers to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_get_report_headers(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report for which you want to retrieve headers.")], max_headers_to_return: Annotated[str, Field(default=None, description="Specify how many headers to return.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about the header related to the report from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -493,15 +493,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Cofense Triage with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -567,15 +567,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_get_domain_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_get_domain_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about the domain from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -641,15 +641,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_get_report_reporters(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report for which you want to retrieve reporters.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_get_report_reporters(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the id of the report for which you want to retrieve reporters.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about the reporter related to the report from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -716,15 +716,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_list_categories(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], names: Annotated[str, Field(default=None, description="Specify a comma-separated list of category names, This parameter is useful to check, whether a category with the specified name exists.")], lowest_score_to_fetch: Annotated[str, Field(default=None, description="Specify what should be the lowest accepted score for the category. This parameter can work with negative values.")], only_malicious: Annotated[bool, Field(default=None, description="If enabled, action will only return malicious categories.")], only_archived: Annotated[bool, Field(default=None, description="If enabled, action will only return archived categories.")], only_non_archived: Annotated[bool, Field(default=None, description="If enabled, action will return only non-archived categories.")], only_non_malicious: Annotated[bool, Field(default=None, description="If enabled, action will return only non-malicious categories.")], max_categories_to_return: Annotated[str, Field(default=None, description="Specify how many categories to return.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_list_categories(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], names: Annotated[str, Field(default=None, description="Specify a comma-separated list of category names, This parameter is useful to check, whether a category with the specified name exists.")], lowest_score_to_fetch: Annotated[str, Field(default=None, description="Specify what should be the lowest accepted score for the category. This parameter can work with negative values.")], only_malicious: Annotated[bool, Field(default=None, description="If enabled, action will only return malicious categories.")], only_archived: Annotated[bool, Field(default=None, description="If enabled, action will only return archived categories.")], only_non_archived: Annotated[bool, Field(default=None, description="If enabled, action will return only non-archived categories.")], only_non_malicious: Annotated[bool, Field(default=None, description="If enabled, action will return only non-malicious categories.")], max_categories_to_return: Annotated[str, Field(default=None, description="Specify how many categories to return.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List available categories in Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -804,15 +804,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_get_threat_indicator_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_get_threat_indicator_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about the entities based on the threat indicator details from Cofense Triage. Note: Only MD5 and SHA256 hashes are supported.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -878,15 +878,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_download_report_preview(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report, which contains the raw email that needs to be downloaded.")], download_folder: Annotated[str, Field(..., description="Specify the absolute path to the download folder. Note: Name will be constructed in the following way {report id}.eml.")], image_format: Annotated[List[str], Field(..., description="Specify the format of the image.")], overwrite: Annotated[bool, Field(default=None, description="If enabled, action will overwrite the file with the same name and filepath.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight that contains raw email of the report.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_download_report_preview(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report, which contains the raw email that needs to be downloaded.")], download_folder: Annotated[str, Field(..., description="Specify the absolute path to the download folder. Note: Name will be constructed in the following way {report id}.eml.")], image_format: Annotated[list[str], Field(..., description="Specify the format of the image.")], overwrite: Annotated[bool, Field(default=None, description="If enabled, action will overwrite the file with the same name and filepath.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight that contains raw email of the report.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Download image preview from the email related to the report from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -959,15 +959,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_download_report_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report, which contains the raw email that needs to be downloaded.")], download_folder: Annotated[str, Field(..., description="Specify the absolute path to the download folder. Note: Name will be constructed in the following way {report id}.eml.")], overwrite: Annotated[bool, Field(default=None, description="If enabled, action will overwrite the file with the same name and filepath.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight that contains raw email of the report.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_download_report_email(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], report_id: Annotated[str, Field(..., description="Specify the ID of the report, which contains the raw email that needs to be downloaded.")], download_folder: Annotated[str, Field(..., description="Specify the absolute path to the download folder. Note: Name will be constructed in the following way {report id}.eml.")], overwrite: Annotated[bool, Field(default=None, description="If enabled, action will overwrite the file with the same name and filepath.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight that contains raw email of the report.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Download raw email related to the report from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1039,15 +1039,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cofense_triage_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Specify, what should be the risk score threshold for Siemplify to label that URL as suspicious. Maximum is 100.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cofense_triage_enrich_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], risk_score_threshold: Annotated[str, Field(..., description="Specify, what should be the risk score threshold for Siemplify to label that URL as suspicious. Maximum is 100.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about the URL from Cofense Triage.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

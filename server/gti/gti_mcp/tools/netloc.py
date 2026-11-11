@@ -89,7 +89,7 @@ IP_KEY_RELATIONSHIPS = [
 
 
 @server.tool()
-async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a comprehensive domain analysis report from Google Threat Intelligence.
 
   Args:
@@ -111,7 +111,7 @@ async def get_domain_report(domain: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_domain(
     domain: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given domain.
 
     The following table shows a summary of available relationships for domain objects.
@@ -175,7 +175,7 @@ async def get_entities_related_to_a_domain(
 
 
 @server.tool()
-async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a comprehensive IP Address analysis report from Google Threat Intelligence.
 
   Args:
@@ -196,7 +196,7 @@ async def get_ip_address_report(ip_address: str, ctx: Context) -> typing.Dict[st
 @server.tool()
 async def get_entities_related_to_an_ip_address(
     ip_address: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given IP Address.
 
     The following table shows a summary of available relationships for IP Address objects.

@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the SpyCloud integration.
 
     @mcp.tool()
-    async def spy_cloud_list_entity_breaches(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[List[str], Field(..., description="Specify a time frame for the search. If \"Custom\" is selected, you also need to provide \"Start Time\".")], catalog_filter: Annotated[str, Field(default=None, description="Specify the name of the category in which you want to search for breaches.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the search. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601. Note: action will only take the datetime for action execution.")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the search. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time. Note: action will only take the datetime for action execution.")], max_breaches_to_return: Annotated[str, Field(default=None, description="Specify how many breaches to return per entity. Default: 1. Maximum: 1000.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def spy_cloud_list_entity_breaches(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[list[str], Field(..., description="Specify a time frame for the search. If \"Custom\" is selected, you also need to provide \"Start Time\".")], catalog_filter: Annotated[str, Field(default=None, description="Specify the name of the category in which you want to search for breaches.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the search. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601. Note: action will only take the datetime for action execution.")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the search. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time. Note: action will only take the datetime for action execution.")], max_breaches_to_return: Annotated[str, Field(default=None, description="Specify how many breaches to return per entity. Default: 1. Maximum: 1000.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Return information about breaches related to entities. Supported entity types: IP Address, Username, Email Address (Username entity that matches email regex), Domain (action will strip domain part from URL entity).
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -111,15 +111,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def spy_cloud_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def spy_cloud_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the SpyCloud with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -185,7 +185,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def spy_cloud_list_catalogs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[List[str], Field(..., description="Specify a time frame for the search. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_logic: Annotated[List[str], Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. \"Equal\" works with \"title\" parameter, while \"Contains\" works with all values in response. If nothing is provided in this parameter, the filter will not be applied.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the search. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the search. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], max_catalogs_to_return: Annotated[str, Field(default=None, description="Specify how many catalogs to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def spy_cloud_list_catalogs(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[list[str], Field(..., description="Specify a time frame for the search. If \"Custom\" is selected, you also need to provide \"Start Time\".")], filter_logic: Annotated[list[str], Field(default=None, description="Specify what filter logic should be applied.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \"Equal\" is selected, action will try to find the exact match among results and if \"Contains\" is selected, action will try to find results that contain that substring. \"Equal\" works with \"title\" parameter, while \"Contains\" works with all values in response. If nothing is provided in this parameter, the filter will not be applied.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the search. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the search. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter will use current time.")], max_catalogs_to_return: Annotated[str, Field(default=None, description="Specify how many catalogs to return. Default: 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List available catalogs in SpyCloud.
 
@@ -194,9 +194,9 @@ Action Parameters: Filter Logic: Specify what filter logic should be applied., F
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -17,7 +17,6 @@ To run these tests:
 import time
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Dict
 
 import pytest
 
@@ -36,7 +35,7 @@ class TestChronicleRuleExclusionMCP:
 
     @pytest.mark.asyncio
     async def test_rule_exclusion_lifecycle(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test complete lifecycle of rule exclusions.
 
@@ -184,7 +183,7 @@ class TestChronicleRuleExclusionMCP:
 
     @pytest.mark.asyncio
     async def test_compute_rule_exclusion_activity(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test computing rule exclusion activity.
 
@@ -263,7 +262,7 @@ class TestChronicleRuleExclusionMCP:
 
     @pytest.mark.asyncio
     async def test_list_rule_exclusions_pagination(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing rule exclusions with pagination.
 
@@ -316,7 +315,7 @@ class TestChronicleRuleExclusionMCP:
 
     @pytest.mark.asyncio
     async def test_get_nonexistent_rule_exclusion(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test getting a non-existent rule exclusion.
 

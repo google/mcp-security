@@ -15,7 +15,6 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -26,10 +25,10 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def lookup_entity(
     entity_value: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
     hours_back: int = 24,
-    region: Optional[str] = None,
+    region: str | None = None,
 ) -> str:
     """Look up an entity (IP, domain, hash, user, etc.) in Chronicle SIEM for enrichment.
 

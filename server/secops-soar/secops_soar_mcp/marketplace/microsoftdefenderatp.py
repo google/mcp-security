@@ -20,7 +20,7 @@ from secops_soar_mcp.utils.models import (
     TargetEntity,
 )
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -35,13 +35,13 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_run_advanced_hunting_query(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         query: Annotated[
             str, Field(..., description="Advanced hunting query to execute")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -59,9 +59,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -139,7 +139,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_get_machine_related_alerts(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         status: Annotated[
             str,
@@ -170,7 +170,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -188,9 +188,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -275,13 +275,13 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_wait_task_status(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         task_i_ds: Annotated[
             str, Field(..., description="Task IDs list. Comma-separated string")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -299,9 +299,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -379,7 +379,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_get_file_related_machines(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         machine_name: Annotated[
             str, Field(default=None, description="Full Machine Name to look for")
@@ -408,7 +408,7 @@ def register_tools(mcp: FastMCP):
             str, Field(default=None, description="RBAC Group ID to look for.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -426,9 +426,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -517,13 +517,13 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_get_current_task_status(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         task_i_ds: Annotated[
             str, Field(..., description="Task IDs list. Comma-separated string")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -541,9 +541,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -621,7 +621,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_create_stop_and_quarantine_file_specific_machine_task(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         sha1_file_hash_to_quarantine: Annotated[
             str, Field(..., description="SHA1 File Hash to Quarantine")
@@ -630,7 +630,7 @@ def register_tools(mcp: FastMCP):
             str, Field(..., description="Comment to associate with the action")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -648,9 +648,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -729,14 +729,14 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_create_isolate_machine_task(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         isolation_type: Annotated[str, Field(..., description="Isolation type")],
         comment: Annotated[
             str, Field(..., description="Comment why the machine needs to be isolated")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -754,9 +754,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -835,27 +835,27 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_update_alert(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         alert_id: Annotated[
             str, Field(..., description="Microsoft Defender ATP Alert ID to update.")
         ],
         status: Annotated[
-            List[str], Field(default=None, description="Status of the alert")
+            list[str], Field(default=None, description="Status of the alert")
         ],
         assigned_to: Annotated[
             str, Field(default=None, description="User who is assigned to this alert")
         ],
         classification: Annotated[
-            List[str],
+            list[str],
             Field(default=None, description="Classification to update alert with"),
         ],
         determination: Annotated[
-            List[str],
+            list[str],
             Field(default=None, description="Determination to update alert with"),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -873,9 +873,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -961,7 +961,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_list_alerts(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         time_frame: Annotated[
             str,
@@ -999,7 +999,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1017,9 +1017,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1106,10 +1106,10 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_ping(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1127,9 +1127,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1206,10 +1206,10 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_get_machine_logon_users(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1227,9 +1227,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1306,7 +1306,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_list_machines(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         last_seen_time_frame: Annotated[
             str,
@@ -1342,7 +1342,7 @@ def register_tools(mcp: FastMCP):
             str, Field(default=None, description="RBAC Group ID to look for.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1360,9 +1360,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1453,7 +1453,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_list_indicators(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         indicators: Annotated[
             str,
@@ -1491,7 +1491,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1509,9 +1509,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1598,17 +1598,17 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_submit_entity_indicators(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         action: Annotated[
-            List[str],
+            list[str],
             Field(
                 ...,
                 description='Specify the action that needs to be applied to the entities. Note: "Block And Remediate" is supported only for filehash entities.',
             ),
         ],
         severity: Annotated[
-            List[str],
+            list[str],
             Field(..., description="Specify the severity for the found entities."),
         ],
         indicator_alert_title: Annotated[
@@ -1636,7 +1636,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1654,9 +1654,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1741,7 +1741,7 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_get_file_related_alerts(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         status: Annotated[
             str,
@@ -1772,7 +1772,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1790,9 +1790,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1877,10 +1877,10 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_enrich_entities(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -1898,9 +1898,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1977,10 +1977,10 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_create_run_antivirus_scan_task(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         antivirus_scan_type: Annotated[
-            List[str], Field(..., description="Antivirus Scan Type")
+            list[str], Field(..., description="Antivirus Scan Type")
         ],
         comment: Annotated[
             str,
@@ -1990,7 +1990,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -2008,9 +2008,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2089,13 +2089,13 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_create_unisolate_machine_task(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         comment: Annotated[
             str, Field(..., description="Comment why the machine needs to be isolated")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -2113,9 +2113,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2193,10 +2193,10 @@ def register_tools(mcp: FastMCP):
     async def microsoft_defender_atp_delete_entity_indicators(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
         target_entities: Annotated[
-            List[TargetEntity],
+            list[TargetEntity],
             Field(
                 default_factory=list,
                 description="Optional list of specific target entities (Identifier, EntityType) to run the action on.",
@@ -2214,9 +2214,9 @@ def register_tools(mcp: FastMCP):
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
 
         if target_entities:
             # Specific target entities provided, ignore scope parameter

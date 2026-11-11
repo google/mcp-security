@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the LogRhythm integration.
 
     @mcp.tool()
-    async def log_rhythm_add_alarm_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alarm_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of alarms that need to be added to the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_add_alarm_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], alarm_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of alarms that need to be added to the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add alarm to case in LogRhythm.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -103,7 +103,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_download_case_files(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], download_folder_path: Annotated[str, Field(..., description="Specify the path to the folder, where you want to store the case files.")], overwrite: Annotated[bool, Field(..., description="If enabled, action will overwrite the file with the same name.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_download_case_files(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], download_folder_path: Annotated[str, Field(..., description="Specify the path to the folder, where you want to store the case files.")], overwrite: Annotated[bool, Field(..., description="If enabled, action will overwrite the file with the same name.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Download files related to the case in LogRhythm.
 
@@ -112,9 +112,9 @@ Action Parameters: Case ID: Specify the ID of the case from which you want to do
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -182,7 +182,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_list_entity_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[List[str], Field(default=None, description="Specify a time frame for the results. If \u201cCustom\u201d is selected, you also need to provide \u201cStart Time\u201d.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter. Format: ISO 8601. Example: 2021-04-23T12:38Z")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter then this parameter will use current time.")], sort_order: Annotated[List[str], Field(default=None, description="Specify the sorting logic for the query.")], max_events_to_return: Annotated[str, Field(default=None, description="Specify how many events to return. Default: 50")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_list_entity_events(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], time_frame: Annotated[list[str], Field(default=None, description="Specify a time frame for the results. If \u201cCustom\u201d is selected, you also need to provide \u201cStart Time\u201d.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter. Format: ISO 8601. Example: 2021-04-23T12:38Z")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \u201cCustom\u201d is selected for the \u201cTime Frame\u201d parameter then this parameter will use current time.")], sort_order: Annotated[list[str], Field(default=None, description="Specify the sorting logic for the query.")], max_events_to_return: Annotated[str, Field(default=None, description="Specify how many events to return. Default: 50")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List events related to entities in LogRhythm. Supported entities: Hostname, IP Address, User, CVE, Hash, URL. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
@@ -191,9 +191,9 @@ Action Parameters: Time Frame: Name of the watchlist from which you want to remo
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -269,7 +269,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_get_alarm_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alarm_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of alarm IDs for which we need to retrieve details.")], max_events_to_fetch: Annotated[str, Field(default=None, description="Specify how many events to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_get_alarm_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], alarm_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of alarm IDs for which we need to retrieve details.")], max_events_to_fetch: Annotated[str, Field(default=None, description="Specify how many events to return. Default: 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get alarm details in LogRhythm
 
@@ -278,9 +278,9 @@ Action Parameters: Alarm IDs: Specify a comma-separated list of alarm IDs for wh
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -349,15 +349,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the LogRhythm with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -423,7 +423,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_add_note_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], note: Annotated[str, Field(..., description="Specify a note that should be added to the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_add_note_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], note: Annotated[str, Field(..., description="Specify a note that should be added to the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add a note to the case in LogRhythm.
 
@@ -432,9 +432,9 @@ Action Parameters: Case ID: Specify the ID of the case to which you want to add 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -501,7 +501,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_update_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(default=None, description="Specify a new name for the case.")], priority: Annotated[List[str], Field(default=None, description="Specify a new priority for the case.")], due_date: Annotated[str, Field(default=None, description="Specify a new due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z")], description: Annotated[str, Field(default=None, description="Specify a new description for the case.")], resolution: Annotated[str, Field(default=None, description="Specify how the case was resolved.")], status: Annotated[List[str], Field(default=None, description="Specify the new status for the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_update_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(default=None, description="Specify a new name for the case.")], priority: Annotated[list[str], Field(default=None, description="Specify a new priority for the case.")], due_date: Annotated[str, Field(default=None, description="Specify a new due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z")], description: Annotated[str, Field(default=None, description="Specify a new description for the case.")], resolution: Annotated[str, Field(default=None, description="Specify how the case was resolved.")], status: Annotated[list[str], Field(default=None, description="Specify the new status for the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Update a case in LogRhythm.
 
@@ -510,9 +510,9 @@ Action Parameters: Case ID: Specify the ID of the case that needs to be updated.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -590,7 +590,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_create_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name for the case.")], priority: Annotated[List[str], Field(..., description="Specify the priority for the case.")], due_date: Annotated[str, Field(default=None, description="Specify the due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z")], description: Annotated[str, Field(default=None, description="Specify a description for the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_create_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], name: Annotated[str, Field(..., description="Specify the name for the case.")], priority: Annotated[list[str], Field(..., description="Specify the priority for the case.")], due_date: Annotated[str, Field(default=None, description="Specify the due date for the case. Format: ISO 8601. Example: 2021-04-23T12:38Z")], description: Annotated[str, Field(default=None, description="Specify a description for the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Create a case in LogRhythm.
 
@@ -599,9 +599,9 @@ Action Parameters: Name: Specify the name for the case., Priority: Specify the p
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -673,7 +673,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_add_comment_to_alarm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alarm_id: Annotated[str, Field(..., description="Specify the ID of the alarm to which you need to add a comment in LogRhythm.")], comment: Annotated[str, Field(..., description="Specify a comment that needs to be added to the alarm.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_add_comment_to_alarm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], alarm_id: Annotated[str, Field(..., description="Specify the ID of the alarm to which you need to add a comment in LogRhythm.")], comment: Annotated[str, Field(..., description="Specify a comment that needs to be added to the alarm.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add comment to alarm in LogRhythm.
 
@@ -682,9 +682,9 @@ Action Parameters: Alarm ID: Specify the ID of the alarm to which you need to ad
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -752,7 +752,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_list_case_evidence(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], status_filter: Annotated[str, Field(default=None, description="Specify a comma-separated list of status filters for the evidence. Possible values: pending, completed, failed. If nothing is provided, action will return evidence from all statuses.")], type_filter: Annotated[str, Field(default=None, description="Specify a comma-separated list of type filters for the evidence. Possible values: alarm, userEvents, log, note, file. If nothing is provided, action will return evidence from all types.")], max_evidences_to_return: Annotated[str, Field(default=None, description="Specify how much evidence to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_list_case_evidence(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], status_filter: Annotated[str, Field(default=None, description="Specify a comma-separated list of status filters for the evidence. Possible values: pending, completed, failed. If nothing is provided, action will return evidence from all statuses.")], type_filter: Annotated[str, Field(default=None, description="Specify a comma-separated list of type filters for the evidence. Possible values: alarm, userEvents, log, note, file. If nothing is provided, action will return evidence from all types.")], max_evidences_to_return: Annotated[str, Field(default=None, description="Specify how much evidence to return. Default: 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List case evidence in LogRhythm.
 
@@ -761,9 +761,9 @@ Action Parameters: Case ID: Specify the ID of the case for which you want to ret
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -835,7 +835,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_attach_file_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separate list of absolute file paths.")], note: Annotated[str, Field(default=None, description="Specify a note that should be added to the case alongside the file.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_attach_file_to_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separate list of absolute file paths.")], note: Annotated[str, Field(default=None, description="Specify a note that should be added to the case alongside the file.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Attach file to case in LogRhythm. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed.
 
@@ -844,9 +844,9 @@ Action Parameters: Case ID: Specify the ID of the case to which you want to atta
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -915,7 +915,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_update_alarm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alarm_id: Annotated[str, Field(..., description="Specify the ID of the alarm that needs to be updated in LogRhythm.")], status: Annotated[List[str], Field(default=None, description="Specify the status for the alarm.")], risk_score: Annotated[str, Field(default=None, description="Specify a new risk score for the alarm. Maximum: 100.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_update_alarm(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], alarm_id: Annotated[str, Field(..., description="Specify the ID of the alarm that needs to be updated in LogRhythm.")], status: Annotated[list[str], Field(default=None, description="Specify the status for the alarm.")], risk_score: Annotated[str, Field(default=None, description="Specify a new risk score for the alarm. Maximum: 100.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Update Alarm in LogRhythm.
 
@@ -924,9 +924,9 @@ Action Parameters: Alarm ID: Specify the ID of the alarm that needs to be update
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -997,7 +997,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def log_rhythm_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def log_rhythm_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], create_insight: Annotated[bool, Field(default=None, description="If enabled, action will create an insight containing all of the retrieved information about the entity.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Enrich entities using information from LogRhythm. Supported entities: Hostname, IP Address.
 
@@ -1006,9 +1006,9 @@ Action Parameters: Create Insight: If enabled, the action creates an insight con
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

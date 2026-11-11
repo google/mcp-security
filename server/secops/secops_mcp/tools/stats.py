@@ -14,7 +14,7 @@
 """Security Operations MCP tools for Chronicle stats/aggregation queries."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 from secops_mcp.utils import parse_time_range
@@ -26,14 +26,14 @@ logger = logging.getLogger("secops-mcp")
 async def get_stats(
     query: str,
     hours_back: int = 24,
-    start_time: Optional[str] = None,
-    end_time: Optional[str] = None,
+    start_time: str | None = None,
+    end_time: str | None = None,
     max_values: int = 60,
     timeout: int = 120,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Run a YARA-L 2.0 stats/aggregation query against Chronicle UDM events.
 
     Executes a Chronicle UDM query using YARA-L 2.0 match and outcome sections,

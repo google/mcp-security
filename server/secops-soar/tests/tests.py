@@ -24,7 +24,6 @@ To run these tests:
 
 import mcp
 import pytest
-from typing import Optional
 
 from secops_soar_mcp.server import mcp as mcp_server
 
@@ -48,7 +47,7 @@ async def test_tool(tool_name, tool_arguments, expected_substring):
 
 async def call_tool_and_get_text_response(
     tool_name: str,
-    tool_arguments: Optional[dict] = None,  # Optional arguments for the tool
+    tool_arguments: dict | None = None,  # Optional arguments for the tool
 ) -> str:
     """
     Calls the specified MCP tool, performs standard checks, and returns the text response.

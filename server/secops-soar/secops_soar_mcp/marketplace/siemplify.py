@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,7 +28,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Siemplify integration.
 
     @mcp.tool()
-    async def siemplify_get_similar_cases(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_generator: Annotated[bool, Field(..., description="Search for similar cases by the same Rule Generator. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], port: Annotated[bool, Field(..., description="Search for similar cases by the same Port number. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], category_outcome: Annotated[bool, Field(..., description="Search for similar cases by the same Category Outcome. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], entity_identifier: Annotated[bool, Field(..., description="Search for similar cases containing the same Entity Identifier. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], days_back: Annotated[str, Field(..., description="Defines how many days back the search should look for similar cases.")], include_open_cases: Annotated[bool, Field(default=None, description="Search open cases")], include_closed_cases: Annotated[bool, Field(default=None, description="Search closed cases")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_get_similar_cases(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], rule_generator: Annotated[bool, Field(..., description="Search for similar cases by the same Rule Generator. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], port: Annotated[bool, Field(..., description="Search for similar cases by the same Port number. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], category_outcome: Annotated[bool, Field(..., description="Search for similar cases by the same Category Outcome. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], entity_identifier: Annotated[bool, Field(..., description="Search for similar cases containing the same Entity Identifier. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], days_back: Annotated[str, Field(..., description="Defines how many days back the search should look for similar cases.")], include_open_cases: Annotated[bool, Field(default=None, description="Search open cases")], include_closed_cases: Annotated[bool, Field(default=None, description="Search closed cases")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Search for similar cases and return their Ids
 
@@ -37,9 +37,9 @@ Action Parameters: Rule Generator: Optional If selected, the action searches for
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -114,7 +114,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_mark_as_important(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_mark_as_important(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Mark case as important
 
@@ -123,9 +123,9 @@ Action Parameters: None.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -191,7 +191,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_create_or_update_entity_properties(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], entity_field: Annotated[str, Field(..., description="Field that has to be created or updated.")], field_value: Annotated[str, Field(..., description="Value that has to be set to the field.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_create_or_update_entity_properties(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], entity_field: Annotated[str, Field(..., description="Field that has to be created or updated.")], field_value: Annotated[str, Field(..., description="Value that has to be set to the field.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Create\Change properties for entities in an entity scope.
 
@@ -200,9 +200,9 @@ Action Parameters: Entity Field: Required. The name of the entity field to creat
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -270,7 +270,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_change_priority(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], priority: Annotated[str, Field(..., description="Priority, which should be set for the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_change_priority(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], priority: Annotated[str, Field(..., description="Priority, which should be set for the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Automatically change case priority to the given input
 
@@ -279,9 +279,9 @@ Action Parameters: Priority: Required. The priority to set for the case.The poss
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -348,15 +348,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_create_gemini_case_summary(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_create_gemini_case_summary(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a summary of the case using Gemini AI.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -422,7 +422,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_set_risk_score(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], risk_score: Annotated[str, Field(..., description="Specify risk score that needs to be set.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_set_risk_score(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], risk_score: Annotated[str, Field(..., description="Specify risk score that needs to be set.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Set risk score for a SOAR case. Note: This action is only supported from Chronicle SOAR version 6.3.6 and higher.
 
@@ -431,9 +431,9 @@ Action Parameters: Risk Score: Required. The risk score to set for the selected 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -500,7 +500,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_set_custom_fields(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_fields_data: Annotated[str, Field(..., description="The values to update for the custom fields. You can update multiple custom fields in a single action run.")], append_values: Annotated[bool, Field(default=None, description="If selected, the action appends the inputs from the \"Custom Fields Data\" parameter to the existing values of the custom fields. If not selected, the action overwrites the existing values with the inputs from the \"Custom Fields Data\" parameter. Not selected by default.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_set_custom_fields(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], custom_fields_data: Annotated[str, Field(..., description="The values to update for the custom fields. You can update multiple custom fields in a single action run.")], append_values: Annotated[bool, Field(default=None, description="If selected, the action appends the inputs from the \"Custom Fields Data\" parameter to the existing values of the custom fields. If not selected, the action overwrites the existing values with the inputs from the \"Custom Fields Data\" parameter. Not selected by default.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Preview. Set values for custom fields.
 
@@ -509,9 +509,9 @@ Action Parameters: Scope: Required.The scope to set for the custom fields. The p
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -580,7 +580,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_set_case_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], sla_period: Annotated[str, Field(..., description="The period of time after which the SLA is in breach.")], sla_time_unit: Annotated[List[str], Field(..., description="Specify the unit for SLA Time.")], sla_time_to_critical_period: Annotated[str, Field(..., description="The period of time after which the SLA enters the critical period.")], sla_time_to_critical_unit: Annotated[List[str], Field(..., description="Specify the unit for SLA Time To Critical.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_set_case_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], sla_period: Annotated[str, Field(..., description="The period of time after which the SLA is in breach.")], sla_time_unit: Annotated[list[str], Field(..., description="Specify the unit for SLA Time.")], sla_time_to_critical_period: Annotated[str, Field(..., description="The period of time after which the SLA enters the critical period.")], sla_time_to_critical_unit: Annotated[list[str], Field(..., description="Specify the unit for SLA Time To Critical.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Set the SLA for a case. This action has the highest priority and it will override the existing SLA defined for the specific case.
 
@@ -589,9 +589,9 @@ Action Parameters: SLA Period: Required. The SLA breach period.The default value
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -661,7 +661,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_is_in_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_is_in_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Check whether an Entity Identifier is part of a predefined dynamic categorized Custom List
 
@@ -670,9 +670,9 @@ Action Parameters: Category: Required. A custom list category to check for alert
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -739,15 +739,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_test_siemplify_proxy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], endpoint_url: Annotated[str, Field(..., description="The endpoint to try to connect to")], http_method: Annotated[str, Field(..., description="The HTTP method to use when connecting to the endpoint")], verify_ssl: Annotated[bool, Field(..., description="Whether to verify SSL certificate or not.")], body: Annotated[str, Field(default=None, description="The body of the HTTP request")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_test_siemplify_proxy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], endpoint_url: Annotated[str, Field(..., description="The endpoint to try to connect to")], http_method: Annotated[str, Field(..., description="The HTTP method to use when connecting to the endpoint")], verify_ssl: Annotated[bool, Field(..., description="Whether to verify SSL certificate or not.")], body: Annotated[str, Field(default=None, description="The body of the HTTP request")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connection to a given endpoint using proxy settings configured in Siemplify.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -818,7 +818,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_case_tag(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], tag: Annotated[str, Field(..., description="Tag to be added to the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_case_tag(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], tag: Annotated[str, Field(..., description="Tag to be added to the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add given tag to the case the current alert is grouped to
 
@@ -827,9 +827,9 @@ Action Parameters: Tag: Required.A tag to add to the case.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -896,7 +896,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_close_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], reason: Annotated[str, Field(..., description="Alert closure reason.")], root_cause: Annotated[str, Field(..., description="Root cause of the alert closure.")], comment: Annotated[str, Field(..., description="Comment content.")], assign_to_user: Annotated[str, Field(default=None, description="User that the closed case will be assigned to.")], tags: Annotated[str, Field(default=None, description="Comma separated tags values.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_close_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], reason: Annotated[str, Field(..., description="Alert closure reason.")], root_cause: Annotated[str, Field(..., description="Root cause of the alert closure.")], comment: Annotated[str, Field(..., description="Comment content.")], assign_to_user: Annotated[str, Field(default=None, description="User that the closed case will be assigned to.")], tags: Annotated[str, Field(default=None, description="Comma separated tags values.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Closes the current alert
 
@@ -905,9 +905,9 @@ Action Parameters: Reason: Required.A reason for closing the alert. The possible
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -980,7 +980,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_add_to_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category to be used.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_add_to_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category to be used.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add an Entity Identifier to a categorized Custom List, in order to perform future comparisons in other actions.
 
@@ -989,9 +989,9 @@ Action Parameters: Category: Required.A custom list of categories to use.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1058,7 +1058,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_case_comment(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(..., description="Comment to be added to the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_case_comment(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], comment: Annotated[str, Field(..., description="Comment to be added to the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add a comment to the case the current alert has been grouped to
 
@@ -1067,9 +1067,9 @@ Action Parameters: Comment: Required.A comment to add to the case.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1136,7 +1136,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_permitted_alert_time(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], permitted_start_time: Annotated[str, Field(..., description="Start of the timeframe, when alerts are allowed. For example: 9:55:24")], permitted_end_time: Annotated[str, Field(..., description="End of the timeframe, when alerts are allowed. For example: 17:23:21")], input_timezone: Annotated[str, Field(..., description="Timezone name. For example: UTC")], monday: Annotated[bool, Field(default=None, description="")], tuesday: Annotated[bool, Field(default=None, description="")], wednesday: Annotated[bool, Field(default=None, description="")], thursday: Annotated[bool, Field(default=None, description="")], friday: Annotated[bool, Field(default=None, description="")], saturday: Annotated[bool, Field(default=None, description="")], sunday: Annotated[bool, Field(default=None, description="")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_permitted_alert_time(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], permitted_start_time: Annotated[str, Field(..., description="Start of the timeframe, when alerts are allowed. For example: 9:55:24")], permitted_end_time: Annotated[str, Field(..., description="End of the timeframe, when alerts are allowed. For example: 17:23:21")], input_timezone: Annotated[str, Field(..., description="Timezone name. For example: UTC")], monday: Annotated[bool, Field(default=None, description="")], tuesday: Annotated[bool, Field(default=None, description="")], wednesday: Annotated[bool, Field(default=None, description="")], thursday: Annotated[bool, Field(default=None, description="")], friday: Annotated[bool, Field(default=None, description="")], saturday: Annotated[bool, Field(default=None, description="")], sunday: Annotated[bool, Field(default=None, description="")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Check case time according to a given time condition
 
@@ -1145,9 +1145,9 @@ Action Parameters: Permitted Start Time: Required. The start time of the permitt
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1230,7 +1230,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_open_web_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Title for URL.")], url: Annotated[str, Field(..., description="Target URL.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_open_web_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="Title for URL.")], url: Annotated[str, Field(..., description="Target URL.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Generate a browser link
 
@@ -1239,9 +1239,9 @@ Action Parameters: Title: Required.The title for the URL., URL: Required.The tar
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1309,7 +1309,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_change_case_stage(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], stage: Annotated[str, Field(..., description="Stage to which the case should be moved to.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_change_case_stage(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], stage: Annotated[str, Field(..., description="Stage to which the case should be moved to.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Change case stage to handling
 
@@ -1318,9 +1318,9 @@ Action Parameters: Stage: Required. The stage to move the case to.The possible v
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1387,7 +1387,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_add_general_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="The title of the insight.")], message: Annotated[str, Field(..., description="The message that will be placed on the insight.")], triggered_by: Annotated[str, Field(default=None, description="A description for the cause of this insight")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_add_general_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], title: Annotated[str, Field(..., description="The title of the insight.")], message: Annotated[str, Field(..., description="The message that will be placed on the insight.")], triggered_by: Annotated[str, Field(default=None, description="A description for the cause of this insight")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add a general insight configurable message to the case
 
@@ -1396,9 +1396,9 @@ Action Parameters: Title: Required.The title of the insight., Message: Required.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1468,15 +1468,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_resume_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_resume_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Automatically resume the alert SLA
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1542,7 +1542,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_instruction(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], instruction: Annotated[str, Field(..., description="Instruction content.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_instruction(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], instruction: Annotated[str, Field(..., description="Instruction content.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Set an instruction for the analyst
 
@@ -1551,9 +1551,9 @@ Action Parameters: Instruction: Required. The instruction content for the analys
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1620,7 +1620,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Test Connectivity
 
@@ -1629,9 +1629,9 @@ Action Parameters: None.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1697,15 +1697,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_get_case_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], fields_to_return: Annotated[str, Field(default=None, description="Specify a comma-separated list of fields that need to be returned. If nothing is provided, all fields are returned. Getting nested values can be done using \\\"Nested Keys Delimiter\\\" value to chain nested keys and list indexes. For example, if the delimiter is \\\".\\\": key_1.nested_key_1.0.nested_key_2, key_2, key_3.1.nested_key_1")], nested_keys_delimiter: Annotated[str, Field(default=None, description="The delimiter to split nested keys. If missing or not provided fetching nested keys is not possible. Cannot be a comma (\\\",\\\")")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_get_case_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], fields_to_return: Annotated[str, Field(default=None, description="Specify a comma-separated list of fields that need to be returned. If nothing is provided, all fields are returned. Getting nested values can be done using \\\"Nested Keys Delimiter\\\" value to chain nested keys and list indexes. For example, if the delimiter is \\\".\\\": key_1.nested_key_1.0.nested_key_2, key_2, key_3.1.nested_key_1")], nested_keys_delimiter: Annotated[str, Field(default=None, description="The delimiter to split nested keys. If missing or not provided fetching nested keys is not possible. Cannot be a comma (\\\",\\\")")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """This action will get all the data from a case and return a JSON result.  The result includes comments, entity information, insights, playbooks that ran, alert information and events.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1775,15 +1775,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_set_scope_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], context_scope: Annotated[List[str], Field(..., description="Specify the Siemplify context scope to return context keys for.")], key_name: Annotated[str, Field(..., description="Specify the key name to set context value for.")], key_value: Annotated[str, Field(..., description="Specify the value to store under the specified key.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_set_scope_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], context_scope: Annotated[list[str], Field(..., description="Specify the Siemplify context scope to return context keys for.")], key_name: Annotated[str, Field(..., description="Specify the key name to set context value for.")], key_value: Annotated[str, Field(..., description="Specify the value to store under the specified key.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Action sets a value for a key specified that is stored in the Siemplify database. Available scopes to get context values for: Alert, Case, Global. Action is not working on Siemplify entities. Note: Key Name parameter is case insensitive.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1852,7 +1852,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_add_tags_to_similar_cases(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], rule_generator: Annotated[bool, Field(..., description="Search for similar cases by the same Rule Generator. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], port: Annotated[bool, Field(..., description="Search for similar cases by the same Port number. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], category_outcome: Annotated[bool, Field(..., description="Search for similar cases by the same Category Outcome. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], entity_identifier: Annotated[bool, Field(..., description="Search for similar cases containing the same Entity Identifier. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], days_back: Annotated[str, Field(..., description="Defines how many days back the search should look for similar cases.")], tags: Annotated[str, Field(..., description="Specify a comma-separated list of tags that you want to add to similar cases.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_add_tags_to_similar_cases(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], rule_generator: Annotated[bool, Field(..., description="Search for similar cases by the same Rule Generator. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], port: Annotated[bool, Field(..., description="Search for similar cases by the same Port number. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], category_outcome: Annotated[bool, Field(..., description="Search for similar cases by the same Category Outcome. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], entity_identifier: Annotated[bool, Field(..., description="Search for similar cases containing the same Entity Identifier. Note: All these search criteria are joined using logical 'AND' condition and will be used in the same search.")], days_back: Annotated[str, Field(..., description="Defines how many days back the search should look for similar cases.")], tags: Annotated[str, Field(..., description="Specify a comma-separated list of tags that you want to add to similar cases.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add tags to similar cases and return their Ids
 
@@ -1861,9 +1861,9 @@ Action Parameters: Rule Generator: Optional If selected, the action searches for
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1935,7 +1935,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_add_entity_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], message: Annotated[str, Field(..., description="Message content to be added.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_add_entity_insight(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], message: Annotated[str, Field(..., description="Message content to be added.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add an insight configurable message to each targeted entity
 
@@ -1944,9 +1944,9 @@ Action Parameters: Message: Required.A message content to add to the entity. Thi
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2013,7 +2013,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_attach_playbook_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], playbook_name: Annotated[str, Field(..., description="Playbook, which should be attached to an alert.")], allow_duplicates: Annotated[bool, Field(default=None, description="If selected, action will allow the same playbook to be attached multiple times to the alert.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_attach_playbook_to_alert(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], playbook_name: Annotated[str, Field(..., description="Playbook, which should be attached to an alert.")], allow_duplicates: Annotated[bool, Field(default=None, description="If selected, action will allow the same playbook to be attached multiple times to the alert.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Attach a specific playbook to an alert
 
@@ -2022,9 +2022,9 @@ Action Parameters: Playbook Name: Required. The name of the playbook to attach t
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2093,7 +2093,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_close_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], reason: Annotated[str, Field(..., description="Closure reason.")], root_cause: Annotated[str, Field(..., description="Root cause of the case closure.")], comment: Annotated[str, Field(..., description="Comment content.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_close_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], reason: Annotated[str, Field(..., description="Closure reason.")], root_cause: Annotated[str, Field(..., description="Root cause of the case closure.")], comment: Annotated[str, Field(..., description="Comment content.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Closes the case the current alert has been grouped to
 
@@ -2102,9 +2102,9 @@ Action Parameters: Reason: Required.A reason for closing the case. The possible 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2173,7 +2173,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_assign_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], assigned_user: Annotated[str, Field(..., description="User or Usergroup to whom a case should be assigned.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_assign_case(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], assigned_user: Annotated[str, Field(..., description="User or Usergroup to whom a case should be assigned.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Assign case to specific user or usergroup
 
@@ -2182,9 +2182,9 @@ Action Parameters: Assigned User: Required.A user or a user group to assign a ca
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2251,7 +2251,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_wait_for_custom_fields(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], custom_fields_data: Annotated[str, Field(..., description="The conditions that are required for the custom fields for the action to resume running a playbook. Configure the custom field names and their required values as a JSON object.\nIf you set conditions for multiple fields, the action waits for all fields to match their respective conditions.\nThe action behavior depends on the input that you provide.\nFor the action to resume running a playbook with any value in a custom field, configure an empty string for the custom field as follows:\n{\n\u201cCustom Field\u201d: \u201c\u201d\n}\nFor the action to resume running a playbook when the custom field equals to a specific value (\u201cValue 1\u201d), specify the value for the custom field as follows:\n{\n\u201cCustom Field\u201d: \u201cValue 1\u201d\n}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_wait_for_custom_fields(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], custom_fields_data: Annotated[str, Field(..., description="The conditions that are required for the custom fields for the action to resume running a playbook. Configure the custom field names and their required values as a JSON object.\nIf you set conditions for multiple fields, the action waits for all fields to match their respective conditions.\nThe action behavior depends on the input that you provide.\nFor the action to resume running a playbook with any value in a custom field, configure an empty string for the custom field as follows:\n{\n\u201cCustom Field\u201d: \u201c\u201d\n}\nFor the action to resume running a playbook when the custom field equals to a specific value (\u201cValue 1\u201d), specify the value for the custom field as follows:\n{\n\u201cCustom Field\u201d: \u201cValue 1\u201d\n}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Preview. Wait for custom fields values to continue playbook execution.
 
@@ -2260,9 +2260,9 @@ Action Parameters: Scope: Required.The scope to set for the custom fields. The p
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2329,7 +2329,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_create_entity(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], entities_identifies: Annotated[str, Field(..., description="Entity identifier or comma-separated list of identifiers (Example: value1,value2,value3).")], entity_type: Annotated[str, Field(..., description="Siemplify entity type. Example: HOSTNAME / USERNAME / etc.")], is_internal: Annotated[bool, Field(..., description="Mark if entities are part of an internal network.")], is_suspicious: Annotated[bool, Field(..., description="Mark if entities are suspicious.")], delimiter: Annotated[str, Field(default=None, description="Provide a delimiter character, with which the action will split the input it gets into a number of entities instead of a single one. If no value will be provided, action will not perform any splitting on the input, and it will be handled as a single entity. Note - Please make sure to read our documentation regarding the differences in the delimiter's behavior, between different Siemplify's platform versions 5.6.0 inclusive and 5.6.2 exclusive.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_create_entity(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], entities_identifies: Annotated[str, Field(..., description="Entity identifier or comma-separated list of identifiers (Example: value1,value2,value3).")], entity_type: Annotated[str, Field(..., description="Siemplify entity type. Example: HOSTNAME / USERNAME / etc.")], is_internal: Annotated[bool, Field(..., description="Mark if entities are part of an internal network.")], is_suspicious: Annotated[bool, Field(..., description="Mark if entities are suspicious.")], delimiter: Annotated[str, Field(default=None, description="Provide a delimiter character, with which the action will split the input it gets into a number of entities instead of a single one. If no value will be provided, action will not perform any splitting on the input, and it will be handled as a single entity. Note - Please make sure to read our documentation regarding the differences in the delimiter's behavior, between different Siemplify's platform versions 5.6.0 inclusive and 5.6.2 exclusive.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Creates an entity and adds to requested alert. Note - Please make sure to read our documentation regarding the differences in the delimiter’s behavior, between different Siemplify’s platform versions 5.6.0 inclusive and 5.6.2 exclusive, here: https://cloud.google.com/chronicle/docs/soar/marketplace-integrations/siemplify#create-entity
 
@@ -2338,9 +2338,9 @@ Action Parameters: Entities Identifies: Required. A comma-separated list of enti
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2412,7 +2412,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_update_case_description(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[str, Field(..., description="Specify what description should be set for the case.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_update_case_description(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], description: Annotated[str, Field(..., description="Specify what description should be set for the case.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Ability to set Case Description from playbooks.
 
@@ -2421,9 +2421,9 @@ Action Parameters: Description: Required. The description to set for the case.
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2490,7 +2490,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_raise_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], soc_role: Annotated[str, Field(default=None, description="Role to which the case should be assigned.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_raise_incident(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], soc_role: Annotated[str, Field(default=None, description="Role to which the case should be assigned.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Raise case incident (Note - Used to mark critical true positive cases)
 
@@ -2499,9 +2499,9 @@ Action Parameters: Soc Role: OptionalThe {{google_secops_name_short}} Security O
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2569,15 +2569,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_run_remote(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], publisher_name: Annotated[str, Field(..., description="Publisher instance name to be used.")], remote_integration_name: Annotated[str, Field(..., description="Remote integration name to be used.")], remote_action_name: Annotated[str, Field(..., description="Remote action name to be used.")], remote_context_data: Annotated[str, Field(..., description="Remote action context data.")], remote_action_script: Annotated[str, Field(..., description="Remote action script content to be executed.")], agent_id: Annotated[str, Field(..., description="Action's target agent id.")], installed_integrations_shared_folder: Annotated[str, Field(..., description="Installed Integrations Shared Folder")], verify_ssl: Annotated[bool, Field(default=None, description="Enables\\Disables SSL Verification between Siemplify's machine and the remote Publisher")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_run_remote(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], publisher_name: Annotated[str, Field(..., description="Publisher instance name to be used.")], remote_integration_name: Annotated[str, Field(..., description="Remote integration name to be used.")], remote_action_name: Annotated[str, Field(..., description="Remote action name to be used.")], remote_context_data: Annotated[str, Field(..., description="Remote action context data.")], remote_action_script: Annotated[str, Field(..., description="Remote action script content to be executed.")], agent_id: Annotated[str, Field(..., description="Action's target agent id.")], installed_integrations_shared_folder: Annotated[str, Field(..., description="Installed Integrations Shared Folder")], verify_ssl: Annotated[bool, Field(default=None, description="Enables\\Disables SSL Verification between Siemplify's machine and the remote Publisher")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Run remote action via publisher
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2652,15 +2652,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_pause_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], message: Annotated[str, Field(default=None, description="Pause Reason")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_pause_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], message: Annotated[str, Field(default=None, description="Pause Reason")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Automatically pause the alert SLA
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2728,7 +2728,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_remove_from_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category to be used.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_remove_from_custom_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], category: Annotated[str, Field(..., description="Custom list category to be used.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Remove an Entity Identifier from a categorized Custom List, in order to perform future comparisons in other actions.
 
@@ -2737,9 +2737,9 @@ Action Parameters: Category: Required. The custom list category name from which 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2806,7 +2806,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_change_alert_priority(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], alert_priority: Annotated[str, Field(..., description="Priority to which the alert should be moved to.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_change_alert_priority(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], alert_priority: Annotated[str, Field(..., description="Priority to which the alert should be moved to.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Automatically change the alert priority to the given input. Note: This action is compatible only with Siemplify version 5.6 and higher.
 
@@ -2815,9 +2815,9 @@ Action Parameters: Alert Priority: Required. The new priority for the alert.The 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2884,7 +2884,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_set_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], sla_period: Annotated[str, Field(..., description="The period of time after which the SLA is in breach.")], sla_time_unit: Annotated[List[str], Field(..., description="Specify the unit for SLA Time.")], sla_time_to_critical_period: Annotated[str, Field(..., description="The period of time after which the SLA enters the critical period.")], sla_time_to_critical_unit: Annotated[List[str], Field(..., description="Specify the unit for SLA Time To Critical.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_set_alert_sla(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], sla_period: Annotated[str, Field(..., description="The period of time after which the SLA is in breach.")], sla_time_unit: Annotated[list[str], Field(..., description="Specify the unit for SLA Time.")], sla_time_to_critical_period: Annotated[str, Field(..., description="The period of time after which the SLA enters the critical period.")], sla_time_to_critical_unit: Annotated[list[str], Field(..., description="Specify the unit for SLA Time To Critical.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Set the SLA for an alert. This action has the highest priority and it will override the existing SLA defined for the specific alert.
 
@@ -2893,9 +2893,9 @@ Action Parameters: SLA Period: Required. The SLA breach period.The default value
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -2965,7 +2965,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_get_connector_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], connector_identifier: Annotated[str, Field(..., description="Specify connector identifier to list context keys for. Parameter works together with \"Connector Identifier Filter Logic\" parameter")], key_name: Annotated[str, Field(..., description="Optionally specify the key name to get context value for.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, the case wall table will be created as part of action results.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_get_connector_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], connector_identifier: Annotated[str, Field(..., description="Specify connector identifier to list context keys for. Parameter works together with \"Connector Identifier Filter Logic\" parameter")], key_name: Annotated[str, Field(..., description="Optionally specify the key name to get context value for.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, the case wall table will be created as part of action results.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Action gets a value stored under a specified key in the Siemplify database for a connector context. Action is not working on Siemplify entities.
 
@@ -2974,9 +2974,9 @@ Action Parameters: Connector Identifier: Required. The connector identifier for 
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -3046,7 +3046,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_get_scope_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], context_scope: Annotated[List[str], Field(..., description="Specify the Siemplify context scope to return context keys for.")], key_name: Annotated[str, Field(..., description="Optionally specify the key name to get context value for.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, the case wall table will be created as part of action results.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_get_scope_context_value(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], context_scope: Annotated[list[str], Field(..., description="Specify the Siemplify context scope to return context keys for.")], key_name: Annotated[str, Field(..., description="Optionally specify the key name to get context value for.")], create_case_wall_table: Annotated[bool, Field(default=None, description="If enabled, the case wall table will be created as part of action results.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Action gets a value stored under a specified key in the Siemplify database. Available scopes to get context values for: Alert, Case, Global. Action is not working on Siemplify entities.
 
@@ -3055,9 +3055,9 @@ Action Parameters: Context Scope: Required. The context scope to retrieve data f
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -3127,7 +3127,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def siemplify_remove_tag(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], tag: Annotated[str, Field(..., description="Specify the tag that needs to be removed. Comma seperated values.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def siemplify_remove_tag(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], tag: Annotated[str, Field(..., description="Specify the tag that needs to be removed. Comma seperated values.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Remove tags from a case.
 
@@ -3136,9 +3136,9 @@ Action Parameters: Tag: Required.A comma-separated list of tags to remove from a
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

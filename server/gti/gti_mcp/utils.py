@@ -88,7 +88,7 @@ async def fetch_object_relationships(
     vt_client: vt.Client,
     resource_collection_type: str,
     resource_id: str,
-    relationships: typing.List[str],
+    relationships: list[str],
     params: dict[str, typing.Any] | None = None,
     descriptors_only: bool = True,
     limit: int = 10):

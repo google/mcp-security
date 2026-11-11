@@ -17,7 +17,6 @@ import asyncio
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 import typer
 from rich.console import Console
 from mcp_security_agent import __version__
@@ -46,14 +45,14 @@ def info():
 
 
 def _apply_cli_overrides(
-    secops: Optional[bool] = None,
-    scc: Optional[bool] = None,
-    gti: Optional[bool] = None,
-    soar: Optional[bool] = None,
-    vertex: Optional[bool] = None,
-    model: Optional[str] = None,
-    project: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    secops: bool | None = None,
+    scc: bool | None = None,
+    gti: bool | None = None,
+    soar: bool | None = None,
+    vertex: bool | None = None,
+    model: str | None = None,
+    project: str | None = None,
+    customer_id: str | None = None,
 ) -> None:
     """Applies CLI flag overrides to environment variables before settings initialization."""
     if secops is not None:
@@ -99,15 +98,15 @@ def _display_active_toolsets(settings: AgentSettings) -> None:
 
 @app.command()
 def chat(
-    query: Optional[str] = typer.Argument(None, help="Optional single-turn investigation query to execute"),
-    secops: Optional[bool] = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
-    scc: Optional[bool] = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
-    gti: Optional[bool] = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
-    soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
-    vertex: Optional[bool] = typer.Option(None, "--vertex/--no-vertex", help="Use Vertex AI for LLM requests"),
-    model: Optional[str] = typer.Option(None, "--model", help="Gemini model to use (e.g. gemini-2.5-flash)"),
-    project: Optional[str] = typer.Option(None, "--project", help="Google Cloud project ID"),
-    customer_id: Optional[str] = typer.Option(None, "--customer-id", help="Chronicle Customer ID (UUID)"),
+    query: str | None = typer.Argument(None, help="Optional single-turn investigation query to execute"),
+    secops: bool | None = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
+    scc: bool | None = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
+    gti: bool | None = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
+    soar: bool | None = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
+    vertex: bool | None = typer.Option(None, "--vertex/--no-vertex", help="Use Vertex AI for LLM requests"),
+    model: str | None = typer.Option(None, "--model", help="Gemini model to use (e.g. gemini-2.5-flash)"),
+    project: str | None = typer.Option(None, "--project", help="Google Cloud project ID"),
+    customer_id: str | None = typer.Option(None, "--customer-id", help="Chronicle Customer ID (UUID)"),
 ):
     """Start an interactive terminal chat session with the SOC agent powered by ADK v2."""
     _apply_cli_overrides(
@@ -165,16 +164,16 @@ def chat(
 @app.command()
 def serve(
     host: str = typer.Option("0.0.0.0", help="Host address to bind"),
-    port: Optional[int] = typer.Option(None, help="Port to listen on (defaults to $PORT or 8080)"),
+    port: int | None = typer.Option(None, help="Port to listen on (defaults to $PORT or 8080)"),
     reload: bool = typer.Option(False, "--reload", help="Enable auto-reload for development"),
-    secops: Optional[bool] = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
-    scc: Optional[bool] = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
-    gti: Optional[bool] = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
-    soar: Optional[bool] = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
-    vertex: Optional[bool] = typer.Option(None, "--vertex/--no-vertex", help="Use Vertex AI for LLM requests"),
-    model: Optional[str] = typer.Option(None, "--model", help="Gemini model to use (e.g. gemini-2.5-flash)"),
-    project: Optional[str] = typer.Option(None, "--project", help="Google Cloud project ID"),
-    customer_id: Optional[str] = typer.Option(None, "--customer-id", help="Chronicle Customer ID (UUID)"),
+    secops: bool | None = typer.Option(None, "--secops/--no-secops", help="Enable or disable SecOps SIEM MCP"),
+    scc: bool | None = typer.Option(None, "--scc/--no-scc", help="Enable or disable SCC MCP"),
+    gti: bool | None = typer.Option(None, "--gti/--no-gti", help="Enable or disable GTI MCP"),
+    soar: bool | None = typer.Option(None, "--soar/--no-soar", help="Enable or disable SecOps SOAR MCP"),
+    vertex: bool | None = typer.Option(None, "--vertex/--no-vertex", help="Use Vertex AI for LLM requests"),
+    model: str | None = typer.Option(None, "--model", help="Gemini model to use (e.g. gemini-2.5-flash)"),
+    project: str | None = typer.Option(None, "--project", help="Google Cloud project ID"),
+    customer_id: str | None = typer.Option(None, "--customer-id", help="Chronicle Customer ID (UUID)"),
 ):
     """Run the FastAPI web server and Cloud Run REST API."""
     _apply_cli_overrides(

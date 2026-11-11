@@ -17,7 +17,7 @@ import json
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -28,14 +28,14 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def ingest_raw_log(
     log_type: str,
-    log_message: Union[str, List[str]],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    forwarder_id: Optional[str] = None,
-    labels: Optional[Dict[str, str]] = None,
-    log_entry_time: Optional[str] = None,
-    collection_time: Optional[str] = None,
+    log_message: str | list[str],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    forwarder_id: str | None = None,
+    labels: dict[str, str] | None = None,
+    log_entry_time: str | None = None,
+    collection_time: str | None = None,
 ) -> str:
     """Ingest raw logs directly into Chronicle SIEM.
 
@@ -144,10 +144,10 @@ async def ingest_raw_log(
 
 @server.tool()
 async def ingest_udm_events(
-    udm_events: Union[Dict[str, Any], List[Dict[str, Any]]],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    udm_events: dict[str, Any] | list[dict[str, Any]],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Ingest UDM events directly into Chronicle SIEM.
 
@@ -293,10 +293,10 @@ async def ingest_udm_events(
 
 @server.tool()
 async def get_available_log_types(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    search_term: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    search_term: str | None = None,
 ) -> str:
     """Get available log types supported by Chronicle for ingestion.
 

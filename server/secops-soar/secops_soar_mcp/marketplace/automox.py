@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,7 +28,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Automox integration.
 
     @mcp.tool()
-    async def automox_list_policies(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[List[str], Field(default=None, description="Specify the key that needs to be used to filter policy.")], filter_logic: Annotated[List[str], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \u201cEqual\u201c is selected, action will try to find the exact match among results and if \u201cContains\u201c is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], max_records_to_return: Annotated[str, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def automox_list_policies(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], filter_key: Annotated[list[str], Field(default=None, description="Specify the key that needs to be used to filter policy.")], filter_logic: Annotated[list[str], Field(default=None, description="Specify what filter logic should be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], filter_value: Annotated[str, Field(default=None, description="Specify what value should be used in the filter. If \u201cEqual\u201c is selected, action will try to find the exact match among results and if \u201cContains\u201c is selected, action will try to find results that contain that substring. If nothing is provided in this parameter, the filter will not be applied. Filtering logic is working based on the value  provided in the \u201cFilter Key\u201d parameter.")], max_records_to_return: Annotated[str, Field(default=None, description="Specify how many records to return. If nothing is provided, action will return 50 records.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List available policies in Automox.
 
@@ -37,9 +37,9 @@ Action Parameters: Filter Key: Specify the key that needs to be used to filter p
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -113,7 +113,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def automox_execute_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], remediation_scope: Annotated[List[str], Field(..., description="Specify the remediation scope for the action. If \u201cOnly Entities\u201d is selected, then action will execute policies only on the valid entities in the scope. If \u201cAll Devices\u201d is selected, then action will execute the policy on all devices in the organization.")], policy_name: Annotated[str, Field(..., description="Specify the name of the policy that needs to be executed.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def automox_execute_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], remediation_scope: Annotated[list[str], Field(..., description="Specify the remediation scope for the action. If \u201cOnly Entities\u201d is selected, then action will execute policies only on the valid entities in the scope. If \u201cAll Devices\u201d is selected, then action will execute the policy on all devices in the organization.")], policy_name: Annotated[str, Field(..., description="Specify the name of the policy that needs to be executed.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Execute a policy in Automox. Supported entities: Hostname, IP Address.
 
@@ -122,9 +122,9 @@ Action Parameters: Remediation Scope: Specify the remediation scope for the acti
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -192,15 +192,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def automox_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def automox_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Automox with parameters provided at the integration configuration page on the Marketplace tab
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -266,7 +266,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def automox_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], return_patches: Annotated[bool, Field(default=None, description="If enabled, action will return a list of patches that need to be updated on the machine. Note: action will not return patches that were installed or the ones that are currently ignored.")], max_patches_to_return: Annotated[str, Field(default=None, description="Specify how many patches to return. If nothing is provided, action will return 50 patches.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def automox_enrich_entities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], return_patches: Annotated[bool, Field(default=None, description="If enabled, action will return a list of patches that need to be updated on the machine. Note: action will not return patches that were installed or the ones that are currently ignored.")], max_patches_to_return: Annotated[str, Field(default=None, description="Specify how many patches to return. If nothing is provided, action will return 50 patches.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Enrich entities using information from Automox. Supported entities: Hostname, IP Address.
 
@@ -275,9 +275,9 @@ Action Parameters: Return Patches: If enabled, the action returns a list of patc
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -347,7 +347,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def automox_execute_device_command(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], command: Annotated[List[str], Field(default=None, description="Specify a command that needs to be executed on the device. Note: if \"Install Specific Patches\" is provided, parameter \"Patch Names\" is mandatory.")], patch_names: Annotated[str, Field(default=None, description="Specify a comma-separated list of patches that need to be installed.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def automox_execute_device_command(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], command: Annotated[list[str], Field(default=None, description="Specify a command that needs to be executed on the device. Note: if \"Install Specific Patches\" is provided, parameter \"Patch Names\" is mandatory.")], patch_names: Annotated[str, Field(default=None, description="Specify a comma-separated list of patches that need to be installed.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Execute a command on the endpoint in Automox. Supported entities: Hostname, IP Address. Note: Action is running as async, please adjust script timeout value in Chronicle SOAR for action as needed.
 
@@ -356,9 +356,9 @@ Action Parameters: Command: Specify a command that needs to be executed on the d
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

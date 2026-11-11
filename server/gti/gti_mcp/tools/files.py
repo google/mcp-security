@@ -15,7 +15,6 @@ import logging
 import typing
 import urllib.parse
 import json
-import asyncio
 
 from mcp.server.fastmcp import Context
 
@@ -86,7 +85,7 @@ FILE_KEY_RELATIONSHIPS = [
 
 
 @server.tool()
-async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a comprehensive file analysis report using its hash (MD5/SHA-1/SHA-256).
 
   Returns a concise summary of key threat details including
@@ -110,7 +109,7 @@ async def get_file_report(hash: str, ctx: Context) -> typing.Dict[str, typing.An
 @server.tool()
 async def get_entities_related_to_a_file(
     hash: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10,
-) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
     """Retrieve entities related to the the given file hash.
 
     The following table shows a summary of available relationships for file objects.
@@ -193,7 +192,7 @@ async def get_entities_related_to_a_file(
 @server.tool()
 async def get_file_behavior_report(
     file_behaviour_id: str, ctx: Context
-) -> typing.Dict[str, typing.Any]:
+) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Retrieve the file behaviour report of the given file behaviour identifier.
 
   You can get all the file behaviour of a given a file by calling `get_entities_related_to_a_file` as the file hash and the `behaviours` as relationship name.
@@ -226,7 +225,7 @@ async def get_file_behavior_report(
 
 
 @server.tool()
-async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Retrieve a summary of all the file behavior reports from all the sandboxes.
 
   Args:
@@ -273,10 +272,10 @@ async def search_digital_threat_monitoring(
     query: str,
     ctx: Context,
     size: int = 10,
-    since: typing.Optional[str] = None,
-    until: typing.Optional[str] = None,
-    page: typing.Optional[str] = None,
-    truncate: typing.Optional[str] = None,
+    since: str | None = None,
+    until: str | None = None,
+    page: str | None = None,
+    truncate: str | None = None,
     sanitize: bool = True,
 ) -> dict:
   """Search for historical data in Digital Threat Monitoring (DTM) using Lucene syntax.
@@ -416,7 +415,7 @@ async def search_digital_threat_monitoring(
         return {"error": f"API returned an HTML error page instead of JSON: {response_text}"}
       
       res_json = await res.json_async()
-    except (asyncio.TimeoutError, TimeoutError): # Catch both
+    except TimeoutError:  # asyncio.TimeoutError is TimeoutError on Python 3.11+
       return {"error": "The request timed out. Please try reducing the scope of your query by using `since` and `until` parameters to add time delimiters"}
     except json.JSONDecodeError as json_error:
       logging.error(f"Failed to parse JSON response: {json_error}")

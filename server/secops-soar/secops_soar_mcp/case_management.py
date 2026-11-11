@@ -17,7 +17,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import CasePriority
 from logger_utils import get_logger
-from typing import Annotated, Optional, List
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
@@ -29,7 +29,7 @@ def register_tools(mcp: FastMCP):
     async def create_case(
         name: Annotated[str, Field(..., description="The name or title of the case.")],
         priority: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The priority of the case.",
@@ -46,14 +46,14 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         description: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="A description for the case providing context about the security incident.",
             ),
         ],
         environment: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The environment for the case.",
@@ -110,7 +110,7 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def list_cases(
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -191,7 +191,7 @@ def register_tools(mcp: FastMCP):
     async def list_alerts_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -241,7 +241,7 @@ def register_tools(mcp: FastMCP):
     async def list_alert_group_identifiers_by_case(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -290,7 +290,7 @@ def register_tools(mcp: FastMCP):
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_id: Annotated[str, Field(..., description="The ID of the alert.")],
         next_page_token: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The nextPageToken to fetch the next page of results.",
@@ -474,7 +474,7 @@ def register_tools(mcp: FastMCP):
             ),
         ],
         tags: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="Optional comma-separated tags to apply to the case when closing.",
@@ -709,7 +709,7 @@ def register_tools(mcp: FastMCP):
     async def get_entities_by_alert_group_identifiers(
         case_id: Annotated[str, Field(..., description="The ID of the case.")],
         alert_group_identifiers: Annotated[
-            List[str], Field(..., description="Identifiers for the alert groups.")
+            list[str], Field(..., description="Identifiers for the alert groups.")
         ],
     ):
         """Retrieve entities (e.g., IP addresses, hostnames, users) involved in specific alert groups within a case.
@@ -805,49 +805,49 @@ def register_tools(mcp: FastMCP):
     @mcp.tool()
     async def search_entity(
         term: Annotated[
-            Optional[str],
+            str | None,
             Field(
                 default=None,
                 description="The term to search for",
             ),
         ],
         type: Annotated[
-            Optional[List[str]],
+            list[str] | None,
             Field(
                 default=None,
                 description="The type of the entity",
             ),
         ],
         is_suspicious: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is suspicious",
             ),
         ],
         is_internal_asset: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is an internal asset",
             ),
         ],
         is_enriched: Annotated[
-            Optional[bool],
+            bool | None,
             Field(
                 default=None,
                 description="A boolean that states if the entity is enriched",
             ),
         ],
         network_name: Annotated[
-            Optional[List[str]],
+            list[str] | None,
             Field(
                 default=None,
                 description="The network name",
             ),
         ],
         environment_name: Annotated[
-            Optional[List[str]],
+            list[str] | None,
             Field(
                 default=None,
                 description="The environment name",

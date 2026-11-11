@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,7 +28,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the BitSight integration.
 
     @mcp.tool()
-    async def bit_sight_list_company_highlights(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return highlights.")], time_frame: Annotated[List[str], Field(default=None, description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide the \"Start Time\" parameter.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter uses current time.")], max_highlights_to_return: Annotated[str, Field(default=None, description="Specify the number of  highlights you want to return. Default: 20.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bit_sight_list_company_highlights(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return highlights.")], time_frame: Annotated[list[str], Field(default=None, description="Specify a time frame for the results. If \"Custom\" is selected, you also need to provide the \"Start Time\" parameter.")], start_time: Annotated[str, Field(default=None, description="Specify the start time for the results. This parameter is mandatory, if \"Custom\" is selected for the \"Time Frame\" parameter. Format: ISO 8601")], end_time: Annotated[str, Field(default=None, description="Specify the end time for the results. Format: ISO 8601. If nothing is provided and \"Custom\" is selected for the \"Time Frame\" parameter then this parameter uses current time.")], max_highlights_to_return: Annotated[str, Field(default=None, description="Specify the number of  highlights you want to return. Default: 20.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List highlights related to the company in BitSight.
 
@@ -37,9 +37,9 @@ Action Parameters: Company Name: Specify the name of the company for which you w
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -114,7 +114,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bit_sight_get_company_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return details.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bit_sight_get_company_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return details.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get information about a company in BitSight.
 
@@ -123,9 +123,9 @@ Action Parameters: Company Name: Specify the name of the company for which you w
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -192,15 +192,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bit_sight_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bit_sight_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the BitSight with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -266,7 +266,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def bit_sight_list_company_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return vulnerabilities.")], only_high_confidence: Annotated[bool, Field(default=None, description="If enabled, action will only return vulnerabilities with high confidence.")], max_vulnerabilities_to_return: Annotated[str, Field(default=None, description="Specify how many vulnerabilities you want to return. Default: 50.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def bit_sight_list_company_vulnerabilities(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], company_name: Annotated[str, Field(..., description="Specify the name of the company for which you want to return vulnerabilities.")], only_high_confidence: Annotated[bool, Field(default=None, description="If enabled, action will only return vulnerabilities with high confidence.")], max_vulnerabilities_to_return: Annotated[str, Field(default=None, description="Specify how many vulnerabilities you want to return. Default: 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List vulnerabilities related to the company in BitSight.
 
@@ -275,9 +275,9 @@ Action Parameters: Company Name: Specify the name of the company for which you w
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

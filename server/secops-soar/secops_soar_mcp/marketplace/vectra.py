@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Vectra integration.
 
     @mcp.tool()
-    async def vectra_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Fetch endpoint's system information by its hostname or IP address.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -102,7 +102,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_update_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[List[str], Field(..., description="Select on which item type you want to update a note.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], note: Annotated[str, Field(..., description="Specify what note you want to have on the detection/endpoint.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_update_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[list[str], Field(..., description="Select on which item type you want to update a note.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], note: Annotated[str, Field(..., description="Specify what note you want to have on the detection/endpoint.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Update note for the endpoint or detection.
 
@@ -111,9 +111,9 @@ Action Parameters: Item Type: Select on which item type you want to update a not
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -182,15 +182,15 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to Vectra with parameters provided at the integration configuration page on Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -256,7 +256,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_remove_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[List[str], Field(..., description="Select from which item type you want to remove tags.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], tags: Annotated[str, Field(..., description="Specify what tags you want to remove from detection/endpoint. Tags should be separated by comma, e.g tag1, tag2.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_remove_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[list[str], Field(..., description="Select from which item type you want to remove tags.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], tags: Annotated[str, Field(..., description="Specify what tags you want to remove from detection/endpoint. Tags should be separated by comma, e.g tag1, tag2.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Remove tags from the endpoint or detection in Vectra.
 
@@ -265,9 +265,9 @@ Action Parameters: Item Type: Select from which item type you want to remove tag
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -336,7 +336,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_get_triage_rule_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], triage_rule_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of triage rule IDs. Example: 28,29.")], create_insights: Annotated[bool, Field(default=None, description="If enabled, action will create a separate insight for every processed triage rule.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_get_triage_rule_details(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], triage_rule_i_ds: Annotated[str, Field(..., description="Specify a comma-separated list of triage rule IDs. Example: 28,29.")], create_insights: Annotated[bool, Field(default=None, description="If enabled, action will create a separate insight for every processed triage rule.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get detailed information about triage rules.
 
@@ -345,9 +345,9 @@ Action Parameters: Triage Rule IDs: Specify a comma-separated list of triage rul
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -416,7 +416,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_update_detection_status(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the detection ID on which you want to update the status.")], status: Annotated[List[str], Field(..., description="Specify what status to set on the detection.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_update_detection_status(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], detection_id: Annotated[str, Field(..., description="Specify the detection ID on which you want to update the status.")], status: Annotated[list[str], Field(..., description="Specify what status to set on the detection.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Update status of the detection.
 
@@ -425,9 +425,9 @@ Action Parameters: Detection ID: Specify the detection ID on which you want to u
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -495,7 +495,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def vectra_add_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[List[str], Field(..., description="Select to which item type you want to add tags.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], tags: Annotated[str, Field(..., description="Specify what tags you want to add to detection/endpoint. Tags should be separated by comma, e.g tag1, tag2.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def vectra_add_tags(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], item_type: Annotated[list[str], Field(..., description="Select to which item type you want to add tags.")], item_id: Annotated[str, Field(..., description="Specify ID of the detection/endpoint.")], tags: Annotated[str, Field(..., description="Specify what tags you want to add to detection/endpoint. Tags should be separated by comma, e.g tag1, tag2.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add tags to the endpoint or detection in Vectra.
 
@@ -504,9 +504,9 @@ Action Parameters: Item Type: Select to which item type you want to add tags., I
 Returns:
 dict: A dictionary containing the result of the action execution.
 """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

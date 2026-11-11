@@ -14,7 +14,7 @@
 """Security Operations MCP tools for watchlist management."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -28,10 +28,10 @@ async def create_watchlist(
     display_name: str,
     multiplying_factor: float,
     description: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Create a new watchlist in Chronicle SIEM.
 
     Creates a watchlist for managing entity risk scores and monitoring
@@ -125,15 +125,15 @@ async def create_watchlist(
 @server.tool()
 async def update_watchlist(
     watchlist_id: str,
-    display_name: Optional[str] = None,
-    description: Optional[str] = None,
-    multiplying_factor: Optional[float] = None,
-    entity_population_mechanism: Optional[Dict[str, Any]] = None,
-    watchlist_user_preferences: Optional[Dict[str, Any]] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    display_name: str | None = None,
+    description: str | None = None,
+    multiplying_factor: float | None = None,
+    entity_population_mechanism: dict[str, Any] | None = None,
+    watchlist_user_preferences: dict[str, Any] | None = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Update an existing watchlist in Chronicle SIEM.
 
     Updates watchlist properties including display name, description,
@@ -227,10 +227,10 @@ async def update_watchlist(
 async def delete_watchlist(
     watchlist_id: str,
     force: bool = False,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Delete a watchlist from Chronicle SIEM.
 
     Permanently removes a watchlist from Chronicle. Use the force parameter
@@ -321,10 +321,10 @@ async def delete_watchlist(
 @server.tool()
 async def get_watchlist(
     watchlist_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Get detailed information about a specific watchlist.
 
     Retrieves complete configuration and details for a watchlist by its ID,
@@ -401,13 +401,13 @@ async def get_watchlist(
 
 @server.tool()
 async def list_watchlists(
-    page_size: Optional[int] = None,
-    page_token: Optional[str] = None,
+    page_size: int | None = None,
+    page_token: str | None = None,
     as_list: bool = False,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """List all watchlists in Chronicle SIEM.
 
     Retrieves a list of all watchlists configured in Chronicle with their

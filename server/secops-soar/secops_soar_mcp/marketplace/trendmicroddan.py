@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the TrendMicroDDAN integration.
 
     @mcp.tool()
-    async def trend_micro_ddan_submit_file_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_ur_ls: Annotated[str, Field(..., description="Specify a comma-separated list of the URLs that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_ddan_submit_file_url(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], file_ur_ls: Annotated[str, Field(..., description="Specify a comma-separated list of the URLs that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit a file via URLs in Trend Micro DDAN. Note: Action is running as async, adjust the script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -115,15 +115,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_ddan_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_ddan_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to Trend Micro DDAN with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -189,15 +189,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_ddan_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of the absolute file paths that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_ddan_submit_file(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of the absolute file paths that point to the file that needs to be analyzed.")], fetch_event_log: Annotated[bool, Field(default=None, description="If enabled, action will fetch event logs related to the files.")], fetch_suspicious_objects: Annotated[bool, Field(default=None, description="If enabled, action will fetch suspicious objects.")], fetch_sandbox_screenshot: Annotated[bool, Field(default=None, description="If enabled, action will try to fetch a sandbox screenshot related to the files.")], resubmit_file: Annotated[bool, Field(default=None, description="If enabled, action will not check if there was a submission for this file previously.")], max_event_logs_to_return: Annotated[str, Field(default=None, description="Specify how many event logs to return. Default: 50. Max: 200.")], max_suspicious_objects_to_return: Annotated[str, Field(default=None, description="Specify how many suspicious objects to return. Default: 50. Max: 200.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Submit files in Trend Micro DDAN. Note: Action is running as async, adjust the script timeout value in Chronicle SOAR IDE for action as needed.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -17,7 +17,6 @@ import os
 import pytest
 import pytest_asyncio
 from secops_soar_mcp import bindings
-from typing import Dict
 
 
 @pytest.fixture
@@ -31,7 +30,7 @@ def config_path() -> str:
 
 
 @pytest.fixture
-def soar_config(config_path: str) -> Dict[str, str]:
+def soar_config(config_path: str) -> dict[str, str]:
     """Load SOAR configuration from the config file.
 
     Args:
@@ -57,13 +56,13 @@ def soar_config(config_path: str) -> Dict[str, str]:
         return json.load(f)
 
 
-def update_env_vars(soar_config: Dict[str, str]):
+def update_env_vars(soar_config: dict[str, str]):
     for key, value in soar_config.items():
         os.environ[key] = value
 
 
 @pytest_asyncio.fixture(loop_scope="session", autouse=True)
-async def setup_bindings(soar_config: Dict[str, str]):
+async def setup_bindings(soar_config: dict[str, str]):
     """Ensures bindings are done once before tests in this module run."""
     update_env_vars(soar_config)
     await bindings.bind()

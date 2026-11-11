@@ -7,7 +7,7 @@ for the secops-mcp tools.
 import json
 import os
 import pathlib
-from typing import Dict, Generator, Any
+from typing import Any
 
 import pytest
 try:
@@ -27,7 +27,7 @@ def config_path() -> str:
 
 
 @pytest.fixture
-def chronicle_config(config_path: str) -> Dict[str, str]:
+def chronicle_config(config_path: str) -> dict[str, str]:
     """Load Chronicle configuration from the config file.
     
     Args:
@@ -55,7 +55,7 @@ def chronicle_config(config_path: str) -> Dict[str, str]:
 
 
 @pytest.fixture
-def chronicle_client(chronicle_config: Dict[str, str]) -> Any:
+def chronicle_client(chronicle_config: dict[str, str]) -> Any:
     """Initialize Chronicle client using the configuration.
     
     Args:
