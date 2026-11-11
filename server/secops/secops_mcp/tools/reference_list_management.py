@@ -14,7 +14,6 @@
 """Security Operations MCP tools for reference list management."""
 
 import logging
-from typing import Any
 
 from secops.chronicle import ReferenceListView
 from secops_mcp.server import get_chronicle_client, server

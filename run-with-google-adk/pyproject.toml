@@ -11,6 +11,14 @@ requires-python = ">=3.11"
 authors = [
     { name = "Google LLC" }
 ]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+]
 dependencies = [
     "google-adk>=2.0.0",
     "google-genai>=1.20.0",
@@ -22,7 +30,7 @@ dependencies = [
     "uvicorn>=0.30.0",
     "python-dotenv>=1.0.0",
     "rich>=13.0.0",
-    "typer>=0.12.4",
+    "typer>=0.16.0",
 ]
 
 [project.optional-dependencies]

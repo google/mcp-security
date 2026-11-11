@@ -14,7 +14,6 @@
 """Security Operations MCP tools for data table management."""
 
 import logging
-from typing import Any
 
 from secops_mcp.server import get_chronicle_client, server
 

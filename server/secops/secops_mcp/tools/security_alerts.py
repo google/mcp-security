@@ -17,7 +17,6 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 
-from typing import Any
 from secops_mcp.server import get_chronicle_client, server
 
 
