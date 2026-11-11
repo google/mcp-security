@@ -1622,7 +1622,7 @@ async def test_create_collection_api_error_returns_error(
 ):
     """A GTI error response comes back as an error dict, not KeyError: 'data'."""
     name = f"error collection {status} {expected_error}"
-    make_httpserver_ipv4.expect_request(
+    make_httpserver_ipv4.expect_oneshot_request(
         "/api/v3/collections",
         method="POST",
         json={
@@ -1652,6 +1652,11 @@ async def test_create_collection_api_error_returns_error(
             {"error": {"code": "NotFoundError", "message": "Collection not found"}},
             "API Error: Collection not found",
         ),
+        (
+            404,
+            {"error": {"code": "NotFoundError"}},
+            "API Error: NotFoundError",
+        ),
         (200, {"data": None}, "API Error: Unknown error"),
     ],
 )
@@ -1660,7 +1665,7 @@ async def test_update_collection_attributes_api_error_returns_error(
 ):
     """A GTI error response comes back as an error dict, not KeyError: 'data'."""
     collection_id = f"missing_collection_{status}"
-    make_httpserver_ipv4.expect_request(
+    make_httpserver_ipv4.expect_oneshot_request(
         f"/api/v3/collections/{collection_id}", method="PATCH"
     ).respond_with_json(api_response, status=status)
 
