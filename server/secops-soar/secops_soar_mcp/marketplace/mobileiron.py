@@ -251,7 +251,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mobile_iron_list_devices(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], fields_to_fetch: Annotated[str, Field(default=None, description="The values of the inserted fields will be fetched for a device(Has to be comma separated string), ex: ios.DeviceName,user.display_name,user.email_address,user.user_id")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mobile_iron_list_devices(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], fields_to_fetch: Annotated[str | None, Field(default=None, description="The values of the inserted fields will be fetched for a device(Has to be comma separated string), ex: ios.DeviceName,user.display_name,user.email_address,user.user_id")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Get the list of al the devices at the system.
 
@@ -408,7 +408,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mobile_iron_fetch_system_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], fields_to_fetch: Annotated[str, Field(default=None, description="The values of the inserted fields will be fetched for a device(Has to be comma separated string), ex: ios.DeviceName,user.display_name,user.email_address,user.user_id")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mobile_iron_fetch_system_information(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], fields_to_fetch: Annotated[str | None, Field(default=None, description="The values of the inserted fields will be fetched for a device(Has to be comma separated string), ex: ios.DeviceName,user.display_name,user.email_address,user.user_id")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Fetch system information for device by it's IP adddress.
 

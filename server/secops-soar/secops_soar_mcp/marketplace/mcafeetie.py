@@ -28,7 +28,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the McAfeeTIEDXL integration.
 
     @mcp.tool()
-    async def mc_afee_tiedxl_get_file_reputation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], enrich_with_all_services: Annotated[bool, Field(default=None, description="If checked, enrich with all results from all returned services. Else, store only the worst reputation as enrichment.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_tiedxl_get_file_reputation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], enrich_with_all_services: Annotated[bool | None, Field(default=None, description="If checked, enrich with all results from all returned services. Else, store only the worst reputation as enrichment.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get file reputation
 
         Returns:
@@ -104,7 +104,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def mc_afee_tiedxl_set_file_reputation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], trust_level: Annotated[str, Field(..., description="The trust level to set to the file's reputation")], file_name: Annotated[str, Field(default=None, description="The name of the file")], comment: Annotated[str, Field(default=None, description="The comment to add to the file's reputation")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_tiedxl_set_file_reputation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], trust_level: Annotated[str, Field(..., description="The trust level to set to the file's reputation")], file_name: Annotated[str | None, Field(default=None, description="The name of the file")], comment: Annotated[str | None, Field(default=None, description="The comment to add to the file's reputation")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Set a file's enterprise reputation
 
         Returns:
