@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the AWSIAM integration.
 
     @mcp.tool()
-    async def awsiam_list_policies(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], only_attached: Annotated[bool | None, Field(default=None, description="When checked, filtering the results to only the policies that are attached to an IAM user, group or role. When unchecked, all policies will be returned.")], max_policies_to_return: Annotated[str | None, Field(default=None, description="Specify how many policies to return. Default is 100. Maximum is 1000.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awsiam_list_policies(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], only_attached: Annotated[bool | None, Field(default=None, description="When checked, filtering the results to only the policies that are attached to an IAM user, group or role. When unchecked, all policies will be returned.")], max_policies_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many policies to return. Default is 100. Maximum is 1000.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List all the managed policies that are available in your AWS account, including your own customer-defined managed policies and all AWS managed policies. You can filter the list of policies that are returned using the optional Only Attached, Scope, and Policy Usage parameters. For example, to list only the customer managed policies in your AWS account, set Scope to Local. To list only AWS managed policies, set Scope to AWS.
 
         Returns:
@@ -331,7 +332,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awsiam_list_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], max_groups_to_return: Annotated[str | None, Field(default=None, description="Specify how many groups to return. Maximum is 1000 groups. Default is 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awsiam_list_groups(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], max_groups_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many groups to return. Maximum is 1000 groups. Default is 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get a list of all groups in the IAM.
 
         Returns:
@@ -560,7 +561,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awsiam_create_a_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Name of the policy to create. Policy name can not include spaces and must contain only alphanumeric characters and/or the following: +=.@_-. Policy names must be unique within an account.")], policy_document: Annotated[str, Field(..., description="The JSON policy document that you want to use as the content for the new policy.")], description: Annotated[str | None, Field(default=None, description="Description of the policy.Typically used to store information about the permissions defined in the policy. For example, \"Grants access to production DynamoDB tables.\" The policy description is immutable. After a value is assigned, it cannot be changed.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awsiam_create_a_policy(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], policy_name: Annotated[str, Field(..., description="Name of the policy to create. Policy name can not include spaces and must contain only alphanumeric characters and/or the following: +=.@_-. Policy names must be unique within an account.")], policy_document: Annotated[str, Field(..., description="The JSON policy document that you want to use as the content for the new policy.")], description: Annotated[OptionalStr, Field(default=None, description="Description of the policy.Typically used to store information about the permissions defined in the policy. For example, \"Grants access to production DynamoDB tables.\" The policy description is immutable. After a value is assigned, it cannot be changed.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create an IAM customer managed policy for your AWS account. This action creates a policy version with a version identifier of v1and sets v1 as the policy's default version.
 
         Returns:
@@ -787,7 +788,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def awsiam_list_users(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], max_users_to_return: Annotated[str | None, Field(default=None, description="Specify how many users to return. Maximum is 1000 users. Default is 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def awsiam_list_users(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], max_users_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many users to return. Maximum is 1000 users. Default is 50.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Get a list of all users in the IAM.
 
         Returns:

@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the CiscoOrbital integration.
 
     @mcp.tool()
-    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[str | None, Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[str | None, Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[str | None, Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[bool | None, Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cisco_orbital_execute_query(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Specify the query that needs to be executed.")], name: Annotated[OptionalStr, Field(default=None, description="Specify the name for the query job. If nothing is specified, action will use a name in the following format: Siemplify-{guid}")], custom_context_fields: Annotated[OptionalStr, Field(default=None, description="Specify additional custom context fields that should be added to the job. Format: key_1:value_1,key_2:value_1.")], max_results_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many results should be returned.")], hide_case_wall_table: Annotated[bool | None, Field(default=None, description="If enabled, action will not prepare a case wall table.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute queries on endpoints based on IP and Hostname entities in Cisco Orbital. Note: Action is running as async, please adjust script timeout value in Siemplify IDE for action as needed. Maximum timeout is 24 hours.
 
         Returns:

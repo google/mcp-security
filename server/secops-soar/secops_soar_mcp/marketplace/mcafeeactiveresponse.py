@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the McAfeeActiveResponse integration.
 
     @mcp.tool()
-    async def mc_afee_active_response_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], collectors: Annotated[str, Field(..., description="The collectors to search in")], filter_collector: Annotated[str | None, Field(default=None, description="The collector filter")], filter_by: Annotated[str | None, Field(default=None, description="The field to filter by")], filter_operator: Annotated[str | None, Field(default=None, description="The operator of the filter. Must be on of those: GreaterEqualThan,GreaterThan,LessEqualThan,LessThan,Equals,Contains,StartWith,EndsWith,Before,After")], filter_value: Annotated[str | None, Field(default=None, description="The filter value")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_active_response_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], collectors: Annotated[str, Field(..., description="The collectors to search in")], filter_collector: Annotated[OptionalStr, Field(default=None, description="The collector filter")], filter_by: Annotated[OptionalStr, Field(default=None, description="The field to filter by")], filter_operator: Annotated[OptionalStr, Field(default=None, description="The operator of the filter. Must be on of those: GreaterEqualThan,GreaterThan,LessEqualThan,LessThan,Equals,Contains,StartWith,EndsWith,Before,After")], filter_value: Annotated[OptionalStr, Field(default=None, description="The filter value")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Provide searchat McAfee Active Response.
 
         Returns:

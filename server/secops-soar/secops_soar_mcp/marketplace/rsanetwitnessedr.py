@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -102,7 +103,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def rsa_net_witness_edr_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], iioc_score_threshold: Annotated[str | None, Field(default=None, description="Specify IIOC score threshold for the endpoint. If the endpoint exceeds the threshold, the related entity will be marked as suspicious. If nothing is specified, action won\u2019t check the IIOC score.")], include_ioc_information: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch information about the IOCs that are associated with the endpoint")], max_io_cs_to_return: Annotated[str | None, Field(default=None, description="Specify how many IOCs to return. Maximum is 50. This is RSA Netwitness EDR limitation.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def rsa_net_witness_edr_enrich_endpoint(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], iioc_score_threshold: Annotated[OptionalStr, Field(default=None, description="Specify IIOC score threshold for the endpoint. If the endpoint exceeds the threshold, the related entity will be marked as suspicious. If nothing is specified, action won\u2019t check the IIOC score.")], include_ioc_information: Annotated[bool | None, Field(default=None, description="If enabled, action will fetch information about the IOCs that are associated with the endpoint")], max_io_cs_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many IOCs to return. Maximum is 50. This is RSA Netwitness EDR limitation.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Fetch endpoint's system information by its hostname or IP address.
 
         Returns:

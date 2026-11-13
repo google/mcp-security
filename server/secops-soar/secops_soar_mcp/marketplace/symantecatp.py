@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -552,7 +553,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def symantec_atp_get_incident_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], incident_uuid: Annotated[str, Field(..., description="Specify the UUID of the incident.")], max_comments_to_return: Annotated[str | None, Field(default=None, description="Specify how many comments to return. Maximum is 1000 comments. This is a Symantec ATP limitation.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def symantec_atp_get_incident_comments(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], incident_uuid: Annotated[str, Field(..., description="Specify the UUID of the incident.")], max_comments_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many comments to return. Maximum is 1000 comments. This is a Symantec ATP limitation.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Retrieve comments related to the incident.
 
         Returns:

@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the McAfeeMvisionEDRV2 integration.
 
     @mcp.tool()
-    async def mc_afee_mvision_edrv2_create_investigation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], case_type: Annotated[list[str], Field(..., description="Defines the type of alert.")], priority: Annotated[list[str], Field(..., description="Assigns a priority to the investigation.")], hint: Annotated[str | None, Field(default=None, description="Automatically links related investigations and avoids creating many cases from multiple alerts related to the same incident. If the same hint is used, the evidences will be added to the already existing investigation.")], name: Annotated[str | None, Field(default=None, description="Gives the investigation a meaningful name. If the name is missing, a default case name is assigned.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def mc_afee_mvision_edrv2_create_investigation(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], case_type: Annotated[list[str], Field(..., description="Defines the type of alert.")], priority: Annotated[list[str], Field(..., description="Assigns a priority to the investigation.")], hint: Annotated[OptionalStr, Field(default=None, description="Automatically links related investigations and avoids creating many cases from multiple alerts related to the same incident. If the same hint is used, the evidences will be added to the already existing investigation.")], name: Annotated[OptionalStr, Field(default=None, description="Gives the investigation a meaningful name. If the name is missing, a default case name is assigned.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create investigations for IP addresses and hostnames.
 
         Returns:

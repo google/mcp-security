@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Lastline integration.
 
     @mcp.tool()
-    async def lastline_search_analysis_history(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], search_in_last_x_scans: Annotated[str, Field(..., description="Search for report in last x analyses executed in Lastline.")], submission_name: Annotated[str | None, Field(default=None, description="Submission name to search for. Can be either URL or Filehash in a format of MD5 and SHA1.")], submission_type: Annotated[list[str] | None, Field(default=None, description="Optionally specify a submission type to search for, either URL or FileHash.")], max_hours_backwards: Annotated[str | None, Field(default=None, description="Time frame for which to search for completed analysis tasks.")], skip_first_x_scans: Annotated[str | None, Field(default=None, description="Skip first x scans returned by Lastline API.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def lastline_search_analysis_history(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], search_in_last_x_scans: Annotated[str, Field(..., description="Search for report in last x analyses executed in Lastline.")], submission_name: Annotated[OptionalStr, Field(default=None, description="Submission name to search for. Can be either URL or Filehash in a format of MD5 and SHA1.")], submission_type: Annotated[list[str] | None, Field(default=None, description="Optionally specify a submission type to search for, either URL or FileHash.")], max_hours_backwards: Annotated[OptionalStr, Field(default=None, description="Time frame for which to search for completed analysis tasks.")], skip_first_x_scans: Annotated[OptionalStr, Field(default=None, description="Skip first x scans returned by Lastline API.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Search Lastline completed analysis tasks history. For submission either URL or Filehash in a format of md5 or sha1 can be provided. Note: Action is not working with Siemplify entities, only action input parameters are used.
 

@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the EasyVista integration.
 
     @mcp.tool()
-    async def easy_vista_close_easy_vista_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], comment: Annotated[str | None, Field(default=None, description="Comment explaining the closing of the ticket.")], actions_close_date: Annotated[str | None, Field(default=None, description="Closing date of open actions associated with the ticket and the anticipated closure action. Date should be in the following format: MM/DD/YYYY HH:MM:SS. If the wrong format is provided, action will use current datetime as close date.")], delete_ongoing_actions: Annotated[bool | None, Field(default=None, description="Specify whether to delete the ticket's ongoing actions on ticket closing.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def easy_vista_close_easy_vista_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_identifier: Annotated[str, Field(..., description="EasyVista ticket identifier, eg S201001_000001.")], comment: Annotated[OptionalStr, Field(default=None, description="Comment explaining the closing of the ticket.")], actions_close_date: Annotated[OptionalStr, Field(default=None, description="Closing date of open actions associated with the ticket and the anticipated closure action. Date should be in the following format: MM/DD/YYYY HH:MM:SS. If the wrong format is provided, action will use current datetime as close date.")], delete_ongoing_actions: Annotated[bool | None, Field(default=None, description="Specify whether to delete the ticket's ongoing actions on ticket closing.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Close EasyVista ticket based on the provided parameters. Note: action is not working on Siemplify entities, ticket identifier (rfc_number) should be provided.
 
         Returns:

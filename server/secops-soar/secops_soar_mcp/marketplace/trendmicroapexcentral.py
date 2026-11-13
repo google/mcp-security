@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the TrendMicroApexCentral integration.
 
     @mcp.tool()
-    async def trend_micro_apex_central_create_file_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of file paths that needs to be used to create a UDSO.")], action: Annotated[list[str], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[str | None, Field(default=None, description="Specify an additional note for the provided UDSO.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_apex_central_create_file_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], file_paths: Annotated[str, Field(..., description="Specify a comma-separated list of file paths that needs to be used to create a UDSO.")], action: Annotated[list[str], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[OptionalStr, Field(default=None, description="Specify an additional note for the provided UDSO.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a User-defined suspicious object based on a file in Trend Micro Apex Central.
 
         Returns:
@@ -180,7 +181,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def trend_micro_apex_central_create_entity_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], action: Annotated[list[str], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[str | None, Field(default=None, description="Specify an additional note for the provided UDSO. Warning: this note can't contain more than 256 characters.")], expire_in_days: Annotated[str | None, Field(default=None, description="Specify in how many days the UDSO should expire. If nothing is provided, UDSO will never expire.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def trend_micro_apex_central_create_entity_udso(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], action: Annotated[list[str], Field(..., description="Specify what action should be applied to the UDSO.")], note: Annotated[OptionalStr, Field(default=None, description="Specify an additional note for the provided UDSO. Warning: this note can't contain more than 256 characters.")], expire_in_days: Annotated[OptionalStr, Field(default=None, description="Specify in how many days the UDSO should expire. If nothing is provided, UDSO will never expire.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a User-defined suspicious object based on the entities in Trend Micro Apex Central. Supported entities: IP, URL, Hash. Note: only SHA-1 hashes are supported.
 
         Returns:

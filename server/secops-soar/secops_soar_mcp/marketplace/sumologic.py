@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Sumologic integration.
 
     @mcp.tool()
-    async def sumologic_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Sumologic query to run. e.g: _collector=*")], delete_search_job: Annotated[bool | None, Field(default=None, description="If checked, delete the jobs after a search is completed.")], since: Annotated[str | None, Field(default=None, description="Start date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: Last 30 days.")], to: Annotated[str | None, Field(default=None, description="End date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: now (current utc unixtime).")], limit: Annotated[str | None, Field(default=None, description="Number of results to return. e.g. 10. Default: 25.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def sumologic_search(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], query: Annotated[str, Field(..., description="Sumologic query to run. e.g: _collector=*")], delete_search_job: Annotated[bool | None, Field(default=None, description="If checked, delete the jobs after a search is completed.")], since: Annotated[OptionalStr, Field(default=None, description="Start date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: Last 30 days.")], to: Annotated[OptionalStr, Field(default=None, description="End date of the search, ISO-8601 or unixtime (milliseconds). e.g. 1970-01-01T00:00:00. Default: now (current utc unixtime).")], limit: Annotated[OptionalStr, Field(default=None, description="Number of results to return. e.g. 10. Default: 25.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Run a query and get search resutls from Sumologic
 

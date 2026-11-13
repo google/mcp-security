@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -264,7 +265,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def blue_liv_list_entity_threats(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], label_filter: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of labels, that will be used to filter threats. Note: label filter works with \"OR\" logic.")], module_filter: Annotated[str | None, Field(default=None, description="Specify a comma-separated list of modules, that will be used to filter threats.")], max_threats_to_return: Annotated[str | None, Field(default=None, description="Specify how many threats to return per entity. If nothing is specified action will return 50 threats.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def blue_liv_list_entity_threats(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], label_filter: Annotated[OptionalStr, Field(default=None, description="Specify a comma-separated list of labels, that will be used to filter threats. Note: label filter works with \"OR\" logic.")], module_filter: Annotated[OptionalStr, Field(default=None, description="Specify a comma-separated list of modules, that will be used to filter threats.")], max_threats_to_return: Annotated[OptionalStr, Field(default=None, description="Specify how many threats to return per entity. If nothing is specified action will return 50 threats.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 List threats related to entities in Blueliv. Supported entities: All.
 
