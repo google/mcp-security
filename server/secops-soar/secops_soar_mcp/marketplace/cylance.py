@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the Cylance integration.
 
     @mcp.tool()
-    async def cylance_add_to_global_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], list_type: Annotated[str, Field(..., description="The list to add the hash to. e.g. GlobalSafe")], category: Annotated[str, Field(default=None, description="The category of the hash")], reason: Annotated[str, Field(default=None, description="The reason for adding the hash to the list")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cylance_add_to_global_list(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], list_type: Annotated[str, Field(..., description="The list to add the hash to. e.g. GlobalSafe")], category: Annotated[OptionalStr, Field(default=None, description="The category of the hash")], reason: Annotated[OptionalStr, Field(default=None, description="The reason for adding the hash to the list")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Add a hash to one of the two global lists: GlobalSafe or GlobalQuarantine
 
@@ -488,7 +489,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cylance_change_zone(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], zones_to_add: Annotated[str, Field(default=None, description="The new Zone to add. Comma separated.")], zones_to_remove: Annotated[str, Field(default=None, description="The Zone to be removed. Comma separated.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cylance_change_zone(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], zones_to_add: Annotated[OptionalStr, Field(default=None, description="The new Zone to add. Comma separated.")], zones_to_remove: Annotated[OptionalStr, Field(default=None, description="The Zone to be removed. Comma separated.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Change zone for an endpoint (group of endpoints)
 
@@ -799,7 +800,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def cylance_get_threat_download_link(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], threat_sha256_hash: Annotated[str, Field(default=None, description="Threat SHA256 hashes, in a comma separated list. Note - if parameter value will be left empty, action will use file hash entities as input.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def cylance_get_threat_download_link(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], threat_sha256_hash: Annotated[OptionalStr, Field(default=None, description="Threat SHA256 hashes, in a comma separated list. Note - if parameter value will be left empty, action will use file hash entities as input.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Action fetches The URL you can use to download the file. The action only provides the URL, it does not download the file for you.
 

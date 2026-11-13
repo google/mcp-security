@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -485,7 +486,7 @@ Action is running as async, please adjust script timeout value in Chronicle SOAR
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def forti_manager_execute_script(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], adom_name: Annotated[str, Field(..., description="The name of the ADOM. Default: root.")], policy_package_name: Annotated[str, Field(..., description="The full name of the package, including package name and any parent folders.")], script_name: Annotated[str, Field(..., description="The name of the script to execute.")], device_name: Annotated[str, Field(..., description="The name of the device to execute the script on.")], vdom: Annotated[str, Field(default=None, description="The virtual domain of the device.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def forti_manager_execute_script(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], adom_name: Annotated[str, Field(..., description="The name of the ADOM. Default: root.")], policy_package_name: Annotated[str, Field(..., description="The full name of the package, including package name and any parent folders.")], script_name: Annotated[str, Field(..., description="The name of the script to execute.")], device_name: Annotated[str, Field(..., description="The name of the device to execute the script on.")], vdom: Annotated[OptionalStr, Field(default=None, description="The virtual domain of the device.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Execute existing script.Can be executed on device group and on a single device if VDOM provided.
 
         Returns:
