@@ -77,14 +77,18 @@ def _load_marketplace_module(module_name: str, py_file: Path):
     """
     if module_name in sys.modules:
         return sys.modules[module_name]
+    parent_name, _, child_name = module_name.rpartition(".")
+    parent = importlib.import_module(parent_name)
     spec = importlib.util.spec_from_file_location(module_name, py_file)
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
     try:
         spec.loader.exec_module(module)
-    except Exception:
-        del sys.modules[module_name]
+    except BaseException:
+        sys.modules.pop(module_name, None)
         raise
+    # Bind the module on its package, as a regular import does.
+    setattr(parent, child_name, module)
     return module
 
 
@@ -104,13 +108,6 @@ def register_tools(integrations_arg: str):
         if marketplace_dir.is_dir():
             logger.debug("Scanning for tools in: %s", marketplace_dir)
 
-            init_file = marketplace_dir / "__init__.py"
-            if not init_file.exists():
-                logger.warning(
-                    "Marketplace directory '%s' is missing __init__.py. Tool registration might fail.",
-                    marketplace_dir,
-                )
-
             for py_file in marketplace_dir.glob("*.py"):
                 if py_file.name == "__init__.py" or not py_file.is_file():
                     continue
@@ -129,7 +126,16 @@ def register_tools(integrations_arg: str):
                         "  Attempting to import module: %s", module_import_path
                     )
                     module = _load_marketplace_module(module_import_path, py_file)
+                except Exception as e:
+                    logger.error(
+                        "  * Failed to import module %s. Error: %s",
+                        module_import_path,
+                        e,
+                        exc_info=True,
+                    )
+                    continue
 
+                try:
                     if hasattr(module, "register_tools") and callable(
                         getattr(module, "register_tools")
                     ):
@@ -149,13 +155,6 @@ def register_tools(integrations_arg: str):
                             module_stem,
                         )
 
-                except ImportError as e:
-                    logger.error(
-                        "  * Failed to import module %s. Error: %s",
-                        module_import_path,
-                        e,
-                        exc_info=True,
-                    )
                 except Exception as e:
                     logger.error(
                         "  * Failed during registration call for module %s. Error: %s",
