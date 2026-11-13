@@ -31,9 +31,9 @@ async def search_udm(
     start_time: str | None = None,
     end_time: str | None = None,
     max_events: int | None = None,
-    project_id: str = None,
-    customer_id: str = None,
-    region: str = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Search UDM events using UDM query in Chronicle.
 
