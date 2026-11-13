@@ -14,7 +14,8 @@
 """Main entry point for the SOAR MCP server."""
 
 import asyncio
-import importlib
+import importlib.util
+import sys
 from pathlib import Path
 from secops_soar_mcp import bindings
 from mcp.server.fastmcp import FastMCP
@@ -67,6 +68,26 @@ def get_enabled_integrations_set(integrations_arg: str) -> set:
     return set()
 
 
+def _load_marketplace_module(module_name: str, py_file: Path):
+    """Import a marketplace module from its file path.
+
+    Loading by path works for filenames that contain dots (e.g.
+    "tenable.io.py"), which an import name cannot express, and does not
+    depend on the marketplace directory being on sys.path.
+    """
+    if module_name in sys.modules:
+        return sys.modules[module_name]
+    spec = importlib.util.spec_from_file_location(module_name, py_file)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        del sys.modules[module_name]
+        raise
+    return module
+
+
 def register_tools(integrations_arg: str):
     """Register tools for the MCP server.
 
@@ -99,13 +120,15 @@ def register_tools(integrations_arg: str):
                 )  # The filename without .py (e.g., "csv")
                 if module_stem not in enabled_integrations_set:
                     continue
-                module_import_path = f"marketplace.{module_stem}"  # The import path (e.g., "marketplace.csv")
+                # Dots are not valid in a module name, so "tenable.io" is
+                # loaded as "secops_soar_mcp.marketplace.tenable_io".
+                module_import_path = f"secops_soar_mcp.marketplace.{module_stem.replace('.', '_')}"
 
                 try:
                     logger.debug(
                         "  Attempting to import module: %s", module_import_path
                     )
-                    module = importlib.import_module(module_import_path)
+                    module = _load_marketplace_module(module_import_path, py_file)
 
                     if hasattr(module, "register_tools") and callable(
                         getattr(module, "register_tools")
