@@ -39,3 +39,16 @@ When executing a skill, the agent should first check which tools are available i
 | | Update Rule | *(No direct equivalent)* | `update_rule` | Local tool updates rule text in place via `PATCH /v1/{instance}/rules/{rule_id}?update_mask=text`. |
 | | Validate Rule | `validate_rule` | `validate_rule` | |
 | | Test/Run Rule | `list_rule_detections` | `list_rule_detections` | Use to see historical detections. |
+
+## Threat Intelligence Mapping (GTI & VirusTotal)
+
+When enriching Indicators of Compromise (IoCs) or pivoting on Google Threat Intelligence (GTI) campaigns and threat actors alongside Google SecOps SIEM and SOAR workflows, select the available GTI or VirusTotal MCP toolset (setup details in [`docs/gti_remote_server.md`](../../docs/gti_remote_server.md)):
+
+| Capability | Remote GTI Agentic (`gti-agentic`) | VirusTotal AI Hosted (`virustotal`) | Local `gti-mcp` (`gti`) | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| Multi-turn threat, actor, or malware investigation | `ask_gti_agent` -> `continue_chat` | *(Not exposed)* | *(Use discrete entity and relationship tools)* | `ask_gti_agent` returns synthesized Markdown plus `session_id` for follow-up `continue_chat` calls (set client timeout >= 300 seconds). |
+| Session history and analyst handoff | `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, `delete_session` | *(Not exposed)* | *(Not exposed)* | Shares stateful investigation context across SOC tiers; open [PR #333](https://github.com/google/mcp-security/pull/333) adds local Python session wrappers for `/api/v3/agentspace/sessions`. |
+| File hash report | `ask_gti_agent` | `get_file_report` | `get_file_report`, `get_file_behavior_summary` | `virustotal` (`https://ai.virustotal.com/mcp`) authenticates via browser OAuth 2.1 with no static API key. |
+| Domain, IP, or URL report | `ask_gti_agent` | `get_domain_report`, `get_ip_report`, `get_url_report` | `get_domain_report`, `get_ip_address_report`, `get_url_report` | Note tool naming: `get_ip_report` (`virustotal`) vs. `get_ip_address_report` (`gti-mcp`). |
+| Collection, campaign, or actor IoC pivot | `ask_gti_agent` | *(Not exposed)* | `get_collection_report`, `get_entities_related_to_a_collection`, `search_threats` | Extract campaign IoCs via `gti-agentic` or local `gti-mcp` before running `get_ioc_match` and `udm_search` in Google SecOps. |
+| Standard YARA ruleset and DTM lookups | `ask_gti_agent` | *(Not exposed)* | `get_hunting_ruleset`, `search_digital_threat_monitoring`, `list_threat_profiles` | Standard YARA matches file payloads; use Chronicle `validate_rule` and `create_rule` above for YARA-L 2.0 SIEM UDM event detection rules. |

@@ -280,10 +280,50 @@ IDP_CLIENT_SECRET=demo_client_secret
 Sample reference interfaces:
 
 **Sample XDR Integration:**
-![](./static/demo-xdr.png)
+![Sample XDR integration output](./static/demo-xdr.png)
 
 **Sample IDP Integration:**
-![](./static/demo-idp.png)
+![Sample IDP integration output](./static/demo-idp.png)
+
+### Connecting Remote Streamable HTTP MCP Servers (Google SecOps & GTI Agentic)
+
+Instead of spawning local `stdio` MCP subprocesses, you can attach managed remote Streamable HTTP MCP endpoints to `toolsets` and pass them into `LlmAgent(tools=toolsets, ...)` in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py) with `McpToolset` and `StreamableHTTPConnectionParams`:
+
+- **Google SecOps Remote MCP (`chronicle.us.rep.googleapis.com/mcp`):** Uses Google Cloud Application Default Credentials (ADC); see [`docs/remote_server.md`](../docs/remote_server.md).
+- **Google Threat Intelligence Agentic MCP (`www.virustotal.com/api/v3/agentspace/mcp/`):** Uses stateless Streamable HTTP with an `x-apikey` header (keep the trailing `/` and omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`); see [`docs/gti_remote_server.md`](../docs/gti_remote_server.md).
+
+> **Note:** Setting `GTI_MCP_URL` or `SECOPS_MCP_URL` in `.env` or `AgentSettings` currently hits a placeholder branch in [`src/mcp_security_agent/toolsets.py`](./src/mcp_security_agent/toolsets.py) that logs the URL without constructing a `StreamableHTTPConnectionParams` toolset. Append remote Streamable HTTP endpoints explicitly to `toolsets` in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py) as shown below.
+
+```python
+import os
+from google.adk.agents.llm_agent import LlmAgent
+from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+
+VT_APIKEY = os.environ["VT_APIKEY"]
+GTI_AGENTIC_MCP_URL = "https://www.virustotal.com/api/v3/agentspace/mcp/"
+
+gti_agentic_toolset = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url=GTI_AGENTIC_MCP_URL,
+        headers={
+            "x-apikey": VT_APIKEY,
+        },
+        timeout=300.0,
+        sse_read_timeout=300.0,
+    ),
+)
+
+toolsets = build_mcp_toolsets(settings)
+toolsets.append(gti_agentic_toolset)
+
+agent = LlmAgent(
+    name="SecurityOperationsAgent",
+    model=settings.google_model,
+    instruction=settings.default_prompt or SOC_AGENT_SYSTEM_PROMPT,
+    tools=toolsets,
+    before_model_callback=bmc_trim_llm_request,
+)
+```
 
 ---
 

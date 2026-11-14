@@ -29,9 +29,13 @@ The Cyber Threat Intelligence (CTI) Researcher focuses on the proactive discover
 
 ## Commonly Used MCP Tools
 
-The CTI Researcher primarily utilizes the **`Google Threat Intelligence MCP server` (GTI)** for in-depth threat research, analysis, and IOC/TTP contextualization. They may also use general security knowledge tools.
+The CTI Researcher primarily uses the **`Google Threat Intelligence MCP server` (GTI)** (either the managed [Remote MCP Server for Google Threat Intelligence](../gti_remote_server.md) or the local `gti-mcp` package) for in-depth threat research, analysis, and IOC/TTP contextualization. They may also use general security knowledge tools.
 
-*   **`Google Threat Intelligence MCP server` (GTI):** This is the core toolset for CTI Researchers.
+*   **Remote MCP Server for Google Threat Intelligence (`gti-agentic`) and VirusTotal AI Hosted MCP (`virustotal`):** Zero-install remote endpoints documented in the [Remote MCP Server for Google Threat Intelligence guide](../gti_remote_server.md).
+    *   **Multi-Turn Agentic Investigations (`gti-agentic` at `www.virustotal.com/api/v3/agentspace/mcp/`):** `ask_gti_agent` and `continue_chat` delegate multi-step threat actor, malware, campaign, and IoC pivots to server-side GTI specialist agents; `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, and `delete_session` manage stateful research sessions and analyst handoffs.
+    *   **OAuth 2.1 Direct Indicator Reports (`virustotal` at `ai.virustotal.com/mcp`):** `get_file_report`, `get_domain_report`, `get_ip_report`, and `get_url_report` return direct VirusTotal indicator reports via browser OAuth 2.1 with no static API key.
+
+*   **`Google Threat Intelligence MCP server` (GTI):** This is the core local `stdio` toolset (`gti-mcp`) for CTI Researchers.
     *   **Threat Discovery & Research:**
         *   `search_threats`: Broad searches for threats, filterable by `collection_type` (threat-actor, malware-family, campaign, report, vulnerability).
         *   `search_campaigns`: Specific searches for threat campaigns.

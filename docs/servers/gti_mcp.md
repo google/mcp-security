@@ -2,6 +2,10 @@
 
 This server provides tools for interacting with the Google Threat Intelligence (VirusTotal) API.
 
+## Remote MCP Server for Google Threat Intelligence
+
+If your organization has a Google Threat Intelligence Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC) license and wants a zero-install stateless Streamable HTTP endpoint for multi-turn investigations at `https://www.virustotal.com/api/v3/agentspace/mcp/` (or if you want browser OAuth 2.1 direct indicator reports at `https://ai.virustotal.com/mcp` without managing a static API key), see the [Remote MCP Server for Google Threat Intelligence guide](../gti_remote_server.md). You can register the remote endpoints and this local `gti-mcp` server side by side under distinct server keys.
+
 ## Configuration
 
 To use this server, you need a VirusTotal API key:

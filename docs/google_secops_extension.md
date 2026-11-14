@@ -7,8 +7,9 @@ This folder contains the **Google SecOps Extension**, providing specialized skil
 The extension `extensions/google-secops` packages setup and key security workflows into [skills](https://agentskills.io/specification). 
 
 These skills are **Adaptive**, designed to work seamlessly with:
- *   [Google SecOps Remote MCP Server](https://google.github.io/mcp-security/docs/remote_server.html) (Preferred)
+ *   [Google SecOps Remote MCP Server](remote_server.md) (Preferred)
  *   **Local Python Tools** (Fallback)
+ *   [Remote MCP Server for Google Threat Intelligence](gti_remote_server.md) or local `gti-mcp` (Optional external IoC and campaign enrichment; see [`TOOL_MAPPING.md`](https://github.com/google/mcp-security/blob/main/extensions/google-secops/TOOL_MAPPING.md))
 
 This allows the skills to function in diverse environments, automatically selecting the best available tool for the job.
     
@@ -63,7 +64,7 @@ You will be prompted for two environment variables for the MCP configuration:
 
 ### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
 *   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/config.json`).
+*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/settings.json`).
 
 ### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
@@ -96,7 +97,7 @@ The skills employ an **Adaptive Execution** strategy to ensure robustness:
 2.  **Prioritize Remote**: If the **Remote MCP Server** is connected, the skill uses remote tools (e.g., `list_cases`, `udm_search`) for maximum capability.
 3.  **Fallback to Local**: If remote tools are unavailable, the skill automatically falls back to **Local Python Tools** (e.g., `search_security_events`).
 
-For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](../TOOL_MAPPING.md).
+For a detailed mapping of Remote vs. Local capabilities, see [`TOOL_MAPPING.md`](https://github.com/google/mcp-security/blob/main/extensions/google-secops/TOOL_MAPPING.md).
 
 
 ## Cross-Compatibility

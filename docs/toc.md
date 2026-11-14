@@ -4,6 +4,7 @@
 *   [Usage Guide](usage_guide.md)
 *   [Servers](servers/index.md)
     *   [Remote MCP Server](remote_server.md)
+    *   [Remote MCP Server for Google Threat Intelligence](gti_remote_server.md)
     *   [Google Threat Intelligence](servers/gti_mcp.md)
     *   [Security Command Center](servers/scc_mcp.md)
     *   [SecOps](servers/secops_mcp.md)

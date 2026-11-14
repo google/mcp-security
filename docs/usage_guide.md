@@ -30,6 +30,8 @@ Before you begin, make sure you have:
 
 ## Getting Started
 
+If you prefer a managed Streamable HTTP endpoint with no local Python installation, see the [Remote MCP Server for Google SecOps guide](remote_server.md) and the [Remote MCP Server for Google Threat Intelligence guide](gti_remote_server.md).
+
 ### Step 1: Clone the Repository
 
 Clone this repository to your local machine:

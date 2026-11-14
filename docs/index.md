@@ -4,7 +4,7 @@ Welcome to the documentation for the Google MCP Security project. This project p
 
 ## Project Overview
 
-This repository contains four MCP servers that provide access to different Google security products:
+This project provides managed remote MCP endpoints (for [Google SecOps](remote_server.md) and [Google Threat Intelligence](gti_remote_server.md)) alongside four local open-source Python MCP servers that provide access to Google's security products:
 
 1. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
 2. **Google Security Operations SOAR** - For security orchestration, automation, and response
@@ -30,6 +30,7 @@ If you're new to this project, we recommend starting with the [Usage Guide](usag
 Each component provides different capabilities:
 
 - [**Remote MCP Server**](remote_server.md) - Fully managed, enterprise-ready MCP server for Google SecOps (Recommended)
+- [**Remote MCP Server for Google Threat Intelligence**](gti_remote_server.md) - Managed Agentic MCP server for multi-turn threat intelligence investigations, plus OAuth 2.1 VirusTotal AI Hosted MCP setup
 - [**Autonomous SOC Agent (Google ADK v2)**](../run-with-google-adk/README.md) - Prebuilt autonomous security operations agent with CLI REPL, FastAPI server, and native MCP multi-transport
 
 - [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
