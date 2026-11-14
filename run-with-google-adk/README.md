@@ -285,6 +285,32 @@ Sample reference interfaces:
 **Sample IDP Integration:**
 ![](./static/demo-idp.png)
 
+### Connecting Remote Streamable HTTP MCP Servers (Google SecOps & GTI Agentic)
+
+Instead of spawning local `stdio` MCP subprocesses, you can attach managed remote Streamable HTTP MCP endpoints directly to `LlmAgent(tools=[...])` with `McpToolset` and `StreamableHTTPConnectionParams`:
+
+- **Google SecOps Remote MCP (`chronicle.us.rep.googleapis.com/mcp`):** Uses Google Cloud Application Default Credentials (ADC); see [`docs/remote_server.md`](../docs/remote_server.md).
+- **Google Threat Intelligence Agentic MCP (`www.virustotal.com/api/v3/agentspace/mcp/`):** Uses stateless Streamable HTTP with an `x-apikey` header (keep the trailing `/` and omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`); see [`docs/gti_remote_server.md`](../docs/gti_remote_server.md).
+
+```python
+import os
+from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+
+VT_APIKEY = os.environ["VT_APIKEY"]
+GTI_AGENTIC_MCP_URL = "https://www.virustotal.com/api/v3/agentspace/mcp/"
+
+gti_agentic_toolset = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url=GTI_AGENTIC_MCP_URL,
+        headers={
+            "x-apikey": VT_APIKEY,
+        },
+        timeout=300.0,
+        sse_read_timeout=300.0,
+    ),
+)
+```
+
 ---
 
 ## Testing & Verification

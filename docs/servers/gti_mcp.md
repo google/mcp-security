@@ -4,7 +4,7 @@ This server provides tools for interacting with the Google Threat Intelligence (
 
 ## Remote Agentic MCP server
 
-If your organization has a Google Threat Intelligence Enterprise or Enterprise Plus license and wants a zero-install Streamable HTTP endpoint for multi-turn investigations at `https://www.virustotal.com/api/v3/agentspace/mcp/` in public preview, see the [Remote MCP server for Google Threat Intelligence guide](../gti_remote_server.md). You can register both the remote Agentic endpoint and this local `gti-mcp` server side by side using the same API key.
+If your organization has a Google Threat Intelligence Enterprise or Enterprise Plus license and wants a zero-install stateless Streamable HTTP endpoint for multi-turn investigations at `https://www.virustotal.com/api/v3/agentspace/mcp/` (or if you want browser OAuth 2.1 direct indicator reports at `https://ai.virustotal.com/mcp` without managing a static API key), see the [Remote MCP server for Google Threat Intelligence guide](../gti_remote_server.md). You can register the remote endpoints and this local `gti-mcp` server side by side under distinct server keys.
 
 ## Configuration
 

@@ -99,96 +99,117 @@ class Canvas:
 
 def render_remote_vs_local():
   c = Canvas(
-      940,
-      340,
-      "Remote GTI Agentic MCP endpoint versus local gti-mcp server",
+      960,
+      470,
+      "Comparison of Remote GTI Agentic MCP, VirusTotal AI Hosted MCP, and local gti-mcp",
   )
 
   c.box(
       24,
-      115,
+      175,
       216,
-      96,
+      110,
       [
           "MCP client",
           "Gemini CLI, Antigravity,",
-          "Goose, Claude Code,",
+          "Goose, Claude Code, Codex,",
           "Cursor, VS Code, ADK",
       ],
       mono=False,
   )
 
+  # Lane 1: Remote GTI Agentic MCP
   c.box(
-      316,
-      32,
-      320,
-      104,
+      312,
+      28,
+      336,
+      108,
       [
           "Remote GTI Agentic MCP (gti-agentic)",
           "www.virustotal.com/api/v3/agentspace/mcp/",
-          "Streamable HTTP + x-apikey header",
-          "7 stateful session tools",
+          "Stateless Streamable HTTP + x-apikey",
+          "7 specialist-agent session tools",
       ],
   )
-  c.arrow([(240, 148), (316, 84)])
-
+  c.arrow([(240, 200), (312, 82)])
   c.box(
-      316,
-      190,
-      320,
-      104,
+      720,
+      28,
+      216,
+      108,
       [
-          "Local GTI MCP server (gti-mcp)",
+          "GTI Agentic platform",
+          "Server-side threat and",
+          "malware specialist agents",
+          "GTI Enterprise / Plus",
+      ],
+      mono=False,
+  )
+  c.arrow([(648, 82), (720, 82)])
+
+  # Lane 2: VirusTotal AI Hosted MCP
+  c.box(
+      312,
+      176,
+      336,
+      108,
+      [
+          "VirusTotal AI Hosted MCP (virustotal)",
+          "ai.virustotal.com/mcp",
+          "Streamable HTTP + Browser OAuth 2.1",
+          "Direct IP, file, domain, URL reports",
+      ],
+  )
+  c.arrow([(240, 230), (312, 230)])
+  c.box(
+      720,
+      176,
+      216,
+      108,
+      [
+          "VirusTotal AI service",
+          "OAuth sign-in (no API key)",
+          "Lookup and scan tools",
+          "Published free-tier quota",
+      ],
+      mono=False,
+  )
+  c.arrow([(648, 230), (720, 230)])
+
+  # Lane 3: Local open-source gti-mcp
+  c.box(
+      312,
+      324,
+      336,
+      108,
+      [
+          "Local GTI MCP server (gti)",
           "uvx gti_mcp + VT_APIKEY",
-          "stdio transport",
-          "Direct VirusTotal API v3 tools",
+          "Local stdio Python process",
+          "36 direct VirusTotal API v3 tools",
       ],
       dashed=True,
   )
-  c.arrow([(240, 178), (316, 242)], dashed=True)
-
+  c.arrow([(240, 260), (312, 378)], dashed=True)
   c.box(
-      712,
-      32,
-      204,
-      104,
+      720,
+      324,
+      216,
+      108,
       [
-          "GTI Agentic platform",
-          "Specialist threat and",
-          "malware agents",
-          "Enterprise / Plus license",
+          "GTI / VirusTotal API v3",
+          "Collections, DTM, standard",
+          "YARA rulesets, Threat",
+          "Profiles, IoC graphs",
       ],
       mono=False,
   )
-  c.arrow([(636, 84), (712, 84)])
-
-  c.box(
-      712,
-      190,
-      204,
-      104,
-      [
-          "Google Threat Intelligence",
-          "VirusTotal API v3",
-          "Collections, files, rules,",
-          "domains, IPs, and URLs",
-      ],
-      mono=False,
-  )
-  c.arrow([(636, 242), (712, 242)], dashed=True)
-  c.arrow([(814, 136), (814, 190)])
+  c.arrow([(648, 378), (720, 378)], dashed=True)
 
   c.label(
-      476,
-      166,
-      "Run either option, or register both side by side",
-      size=12,
-      italic=True,
-  )
-  c.label(
-      470,
-      322,
-      "Both options authenticate with the same Google Threat Intelligence API key.",
+      480,
+      454,
+      "Register one endpoint or run multiple servers side by side under distinct server keys.",
       size=12,
       italic=True,
   )

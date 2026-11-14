@@ -6,7 +6,7 @@ Threat Intelligence suite.
 
 ## Remote Agentic MCP server
 
-Organizations with a Google Threat Intelligence Enterprise or Enterprise Plus license can also connect MCP clients directly to the hosted Google Threat Intelligence Agentic MCP endpoint at `https://www.virustotal.com/api/v3/agentspace/mcp/`, available in public preview, with no local Python runtime. See the [Remote MCP server for Google Threat Intelligence guide](https://google.github.io/mcp-security/gti_remote_server.html) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide). Both the remote Agentic server and this local `gti-mcp` package can run side by side using the same `VT_APIKEY`.
+Organizations with a Google Threat Intelligence Enterprise or Enterprise Plus license can also connect MCP clients directly to the hosted Google Threat Intelligence Agentic MCP endpoint at `https://www.virustotal.com/api/v3/agentspace/mcp/` with no local Python runtime, or use the browser OAuth 2.1 [VirusTotal AI Hosted MCP](https://ai.virustotal.com/install.md) (`https://ai.virustotal.com/mcp`) for direct indicator lookups without a static API key. See the [Remote MCP server for Google Threat Intelligence guide](https://google.github.io/mcp-security/gti_remote_server.html) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide). Both remote endpoints and this local `gti-mcp` package can run side by side under distinct server keys.
 
 ## Features
 

@@ -3,13 +3,13 @@
 This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop or the cline.bot VS Code extension) to access Google's security products and services:
 
 1. **Remote MCP Server for Google SecOps** - Fully managed, enterprise-ready MCP server (Recommended)
-2. **Remote MCP Server for Google Threat Intelligence** - Hosted Agentic MCP server in public preview for multi-turn threat intelligence investigations
+2. **Remote MCP Server for Google Threat Intelligence** - Hosted Agentic MCP server for multi-turn threat intelligence investigations
 3. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
 4. **Google Security Operations SOAR** - For security orchestration, automation, and response
 5. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
 6. **Security Command Center (SCC)** - For cloud security and risk management
 
-For the **Remote MCP Server for Google SecOps**, see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559) and the [Google SecOps remote setup guide](docs/remote_server.md). For the **Remote MCP Server for Google Threat Intelligence** in public preview, see the [Google Threat Intelligence remote setup guide](docs/gti_remote_server.md) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide).
+For the **Remote MCP Server for Google SecOps**, see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559) and the [Google SecOps remote setup guide](docs/remote_server.md). For the **Remote MCP Server for Google Threat Intelligence**, see the [Google Threat Intelligence remote setup guide](docs/gti_remote_server.md) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide) (or use the OAuth 2.1 [VirusTotal AI Hosted MCP](https://ai.virustotal.com/install.md) at `https://ai.virustotal.com/mcp` for direct indicator lookups without a static API key).
 
 Each server can be enabled and run separately, allowing flexibility for environments that don't require all capabilities.
 

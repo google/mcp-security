@@ -30,7 +30,7 @@ If you're new to this project, we recommend starting with the [Usage Guide](usag
 Each component provides different capabilities:
 
 - [**Remote MCP Server**](remote_server.md) - Fully managed, enterprise-ready MCP server for Google SecOps (Recommended)
-- [**Remote MCP Server for Google Threat Intelligence**](gti_remote_server.md) - Managed Agentic MCP server in public preview for multi-turn threat intelligence investigations
+- [**Remote MCP Server for Google Threat Intelligence**](gti_remote_server.md) - Managed Agentic MCP server for multi-turn threat intelligence investigations, plus OAuth 2.1 VirusTotal AI Hosted MCP setup
 - [**Autonomous SOC Agent (Google ADK v2)**](../run-with-google-adk/README.md) - Prebuilt autonomous security operations agent with CLI REPL, FastAPI server, and native MCP multi-transport
 
 - [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
