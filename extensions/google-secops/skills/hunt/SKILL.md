@@ -29,7 +29,11 @@ Select the most appropriate procedure from the options below.
 **Workflow**:
 
 1.  **Analyst Input**: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
-2.  **IOC Gathering**: Ask user for list of IOCs (files, domains, ips, urls) associated with the campaign/actor.
+2.  **IOC Gathering**:
+    *   **Check Connected GTI MCP Tools**: Per `extensions/google-secops/TOOL_MAPPING.md`, check whether a Google Threat Intelligence MCP server is connected:
+        *   **Remote GTI Agentic MCP (`gti-agentic`)**: Call `ask_gti_agent` to retrieve associated files, domains, IPs, and URLs for `${GTI_COLLECTION_ID}`.
+        *   **Local GTI MCP (`gti-mcp`)**: Call `get_collection_report` and `get_entities_related_to_a_collection` (`dropped_files`, `contacted_domains`, `contacted_ips`, `contacted_urls`) for `${GTI_COLLECTION_ID}`.
+    *   **Fallback**: Ask the user to supply the IoC list (files, domains, IPs, URLs) only when no GTI MCP server is connected.
 3.  **Initial Scan**:
     *   **Action**: Check for recent hits against these indicators.
     *   **Remote**: `get_ioc_match`.

@@ -170,7 +170,6 @@ toolset = McpToolset(
        url="https://chronicle.us.rep.googleapis.com/mcp",
        headers={
            "Authorization": f"Bearer {get_access_token()}",
-           "Accept": "text/event-stream",
            "x-goog-user-project": "<YOUR_PROJECT_ID>"
        }
    )
