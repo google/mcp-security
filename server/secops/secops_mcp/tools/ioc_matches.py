@@ -15,7 +15,6 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -25,11 +24,11 @@ logger = logging.getLogger('secops-mcp')
 
 @server.tool()
 async def get_ioc_matches(
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
     hours_back: int = 24,
     max_matches: int = 20,
-    region: Optional[str] = None,
+    region: str | None = None,
 ) -> str:
     """Get Indicators of Compromise (IoCs) matches from Chronicle SIEM.
 

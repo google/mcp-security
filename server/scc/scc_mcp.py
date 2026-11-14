@@ -14,7 +14,7 @@
 import logging
 import os
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from google.api_core import exceptions as google_exceptions
 from google.cloud import asset_v1
@@ -59,7 +59,7 @@ except Exception as e:
 
 # --- Helper Function for Proto to Dict Conversion ---
 
-def proto_message_to_dict(message: Any) -> Dict[str, Any]:
+def proto_message_to_dict(message: Any) -> dict[str, Any]:
     """Converts a protobuf message to a dictionary."""
     try:
         return json_format.MessageToDict(message._pb)
@@ -112,7 +112,7 @@ async def search_findings(
     max_findings: int = 50,
     location: str = "global",
     order_by: str = "event_time desc",
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: search_findings
 
     Description: Searches and lists ALL types of Security Command Center findings for a specific project
@@ -229,7 +229,7 @@ async def get_finding_details(
     finding_id: str = None,
     location: str = "global",
     include_resource_details: bool = True,
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: get_finding_details
 
     Description: Gets the full details of a specific finding by its finding ID, including description,
@@ -343,7 +343,7 @@ async def search_findings_by_compliance(
     state: str = "ACTIVE",
     max_findings: int = 50,
     location: str = "global",
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: search_findings_by_compliance
 
     Description: Searches Security Command Center findings by compliance framework information (e.g., CIS benchmarks,
@@ -523,7 +523,7 @@ async def top_vulnerability_findings(
     organization_id: str = None,
     max_findings: int = 20,
     location: str = "global",
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: top_vulnerability_findings
 
     Description: Lists the top ACTIVE, HIGH or CRITICAL severity findings of class VULNERABILITY for a specific project
@@ -618,7 +618,7 @@ async def get_finding_remediation(
     category: str = None,
     finding_id: str = None,
     location: str = "global",
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: get_finding_remediation
 
     Description: Gets the remediation steps (nextSteps) for a specific finding within a project or organization,
@@ -778,7 +778,7 @@ async def set_finding_mute(
     finding_id: str = None,
     mute: str = None,
     location: str = "global",
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: set_finding_mute
 
     Description: Mutes or unmutes a specific Security Command Center finding. Muted findings are

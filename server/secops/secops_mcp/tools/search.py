@@ -15,7 +15,7 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 from secops_mcp.utils import parse_time_range
@@ -28,13 +28,13 @@ logger = logging.getLogger('secops-mcp')
 async def search_udm(
     query: str,
     hours_back: int = 24,
-    start_time: Optional[str] = None,
-    end_time: Optional[str] = None,
-    max_events: Optional[int] = None,
+    start_time: str | None = None,
+    end_time: str | None = None,
+    max_events: int | None = None,
     project_id: str = None,
     customer_id: str = None,
     region: str = None,
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Search UDM events using UDM query in Chronicle.
 
     Args:

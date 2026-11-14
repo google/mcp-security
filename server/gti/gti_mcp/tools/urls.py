@@ -61,16 +61,18 @@ URL_KEY_RELATIONSHIPS = [
 
 
 def url_to_base64(url: str) -> str:
-  """Converts the URL into base64.
+  """Converts the URL into its Google Threat Intelligence URL identifier.
 
-  Without padding, as required by the Google Threat Intelligence API.
+  URL-safe base64 without padding, as required by the API (same as
+  `vt.url_id`). Standard base64 can contain "/" and "+", which turn the
+  identifier into a different API path or a different URL.
   """
-  b = base64.b64encode(url.encode('utf-8'))
+  b = base64.urlsafe_b64encode(url.encode('utf-8'))
   return b.decode('utf-8').rstrip("=")
 
 
 @server.tool()
-async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a comprehensive URL analysis report from Google Threat Intelligence.
 
   Args:
@@ -93,7 +95,7 @@ async def get_url_report(url: str, ctx: Context) -> typing.Dict[str, typing.Any]
 @server.tool()
 async def get_entities_related_to_an_url(
     url: str, relationship_name: str, descriptors_only: bool, ctx: Context, limit: int = 10
-) -> list[dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given URL.
 
     The following table shows a summary of available relationships for URL objects.
@@ -139,7 +141,7 @@ async def get_entities_related_to_an_url(
       descriptors_only (required): Bool. Must be True when the target object type is one of file, domain, url, ip_address or collection.
       limit: Limit the number of objects to retrieve. 10 by default.
     Returns:
-      List of entities related to the URL.
+      List of entities related to the URL, or an error dictionary.
   """
   if not relationship_name in URL_RELATIONSHIPS:
     return {

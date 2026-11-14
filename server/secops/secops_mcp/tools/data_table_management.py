@@ -14,7 +14,6 @@
 """Security Operations MCP tools for data table management."""
 
 import logging
-from typing import Any, Dict, List, Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -26,11 +25,11 @@ logger = logging.getLogger('secops-mcp')
 async def create_data_table(
     name: str,
     description: str,
-    header: Dict[str, str],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-    rows: Optional[List[List[str]]] = None,
+    header: dict[str, str],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+    rows: list[list[str]] | None = None,
 ) -> str:
     """Create a new data table in Chronicle SIEM.
 
@@ -164,10 +163,10 @@ async def create_data_table(
 @server.tool()
 async def add_rows_to_data_table(
     table_name: str,
-    rows: List[List[str]],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    rows: list[list[str]],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Add rows to an existing data table in Chronicle SIEM.
 
@@ -273,9 +272,9 @@ async def add_rows_to_data_table(
 @server.tool()
 async def list_data_table_rows(
     table_name: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
     max_rows: int = 50,
 ) -> str:
     """List rows in a data table in Chronicle SIEM.
@@ -376,10 +375,10 @@ async def list_data_table_rows(
 @server.tool()
 async def delete_data_table_rows(
     table_name: str,
-    row_ids: List[str],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    row_ids: list[str],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Delete specific rows from a data table in Chronicle SIEM.
 

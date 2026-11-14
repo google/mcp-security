@@ -16,7 +16,7 @@ from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import ApiManualActionDataModel, EmailContent, TargetEntity
 import json
-from typing import Optional, List, Dict, Union, Annotated
+from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 from logger_utils import get_logger
@@ -28,15 +28,15 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FreshworksFreshservice integration.
 
     @mcp.tool()
-    async def freshworks_freshservice_list_tickets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_type: Annotated[List[str], Field(default=None, description="Specify ticket type to return.")], requester: Annotated[str, Field(default=None, description="Specify the requester email of tickets to return.")], include_stats: Annotated[bool, Field(default=None, description="If enabled, action will return additional stats on the tickets.")], search_for_last_x_hours: Annotated[str, Field(default=None, description="Specify the timeframe to search tickets for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many tickets should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page tickets should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many tickets action should return in total.")], workspace_id: Annotated[str, Field(default=None, description="Specify the ID of the workspace that should be used to list tickets. If nothing is provided, the action will list tickets only from the primary workspace. To list tickets from all workspaces provide \u201c0\u201d in the parameter.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_list_tickets(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_type: Annotated[list[str], Field(default=None, description="Specify ticket type to return.")], requester: Annotated[str, Field(default=None, description="Specify the requester email of tickets to return.")], include_stats: Annotated[bool, Field(default=None, description="If enabled, action will return additional stats on the tickets.")], search_for_last_x_hours: Annotated[str, Field(default=None, description="Specify the timeframe to search tickets for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many tickets should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page tickets should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many tickets action should return in total.")], workspace_id: Annotated[str, Field(default=None, description="Specify the ID of the workspace that should be used to list tickets. If nothing is provided, the action will list tickets only from the primary workspace. To list tickets from all workspaces provide \u201c0\u201d in the parameter.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Freshservice tickets base on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -118,15 +118,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_list_requesters(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], requester_email: Annotated[str, Field(default=None, description="Specify the email address to return requester records for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many requester records should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page requester records should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many requester records action should return in total.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_list_requesters(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], requester_email: Annotated[str, Field(default=None, description="Specify the email address to return requester records for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many requester records should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page requester records should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many requester records action should return in total.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List requesters registered in Freshservice based on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -200,15 +200,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_create_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="Specify subject field for created ticket.")], description: Annotated[str, Field(..., description="Specify description field for created ticket.")], requester_email: Annotated[str, Field(..., description="Specify requester email for created ticket.")], priority: Annotated[List[str], Field(..., description="Specify priority to assign to the ticket.")], agent_assign_to: Annotated[str, Field(default=None, description="Specify the agent email to assign the ticket to.")], group_assign_to: Annotated[str, Field(default=None, description="Specify the group name to assign the ticket to.")], urgency: Annotated[List[str], Field(default=None, description="Specify urgency to assign to the ticket.")], impact: Annotated[List[str], Field(default=None, description="Specify impact to assign to the ticket.")], tags: Annotated[str, Field(default=None, description="Specify tags to assign to the ticket. Parameter accepts multiple values as a comma separated string.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], file_attachments_to_add: Annotated[str, Field(default=None, description="Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_create_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], subject: Annotated[str, Field(..., description="Specify subject field for created ticket.")], description: Annotated[str, Field(..., description="Specify description field for created ticket.")], requester_email: Annotated[str, Field(..., description="Specify requester email for created ticket.")], priority: Annotated[list[str], Field(..., description="Specify priority to assign to the ticket.")], agent_assign_to: Annotated[str, Field(default=None, description="Specify the agent email to assign the ticket to.")], group_assign_to: Annotated[str, Field(default=None, description="Specify the group name to assign the ticket to.")], urgency: Annotated[list[str], Field(default=None, description="Specify urgency to assign to the ticket.")], impact: Annotated[list[str], Field(default=None, description="Specify impact to assign to the ticket.")], tags: Annotated[str, Field(default=None, description="Specify tags to assign to the ticket. Parameter accepts multiple values as a comma separated string.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], file_attachments_to_add: Annotated[str, Field(default=None, description="Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a Freshservice ticket. Note: as of now, Freshservice API supports only creation of tickets with the type "Incident" and the ticket's priority is dynamically calculated according to the "Urgency" and "Impact" values, same as in FreshService's UI. Additionally, if file attachments to add are provided, the total size of the attachments must not exceed 15MB.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -292,15 +292,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_add_a_ticket_reply(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], reply_text: Annotated[str, Field(..., description="Specify reply text to add to ticket.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_add_a_ticket_reply(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], reply_text: Annotated[str, Field(..., description="Specify reply text to add to ticket.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a reply to a Freshservice ticket. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -368,15 +368,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_deactivate_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], agent_id: Annotated[str, Field(..., description="Specify agent id to deactivate.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_deactivate_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], agent_id: Annotated[str, Field(..., description="Specify agent id to deactivate.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Deactivate Freshservice agent. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -443,15 +443,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_delete_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to delete a time entry for.")], time_entry_id: Annotated[str, Field(..., description="Specify time entry ID to delete.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_delete_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to delete a time entry for.")], time_entry_id: Annotated[str, Field(..., description="Specify time entry ID to delete.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Delete a time entry for a Freshservice ticket. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -519,15 +519,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_create_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], email: Annotated[str, Field(..., description="Specify the email of the agent to create.")], first_name: Annotated[str, Field(..., description="Specify the first name of the agent to create.")], roles: Annotated[str, Field(..., description="Specify roles to add to agent. Parameter accepts multiple values as a comma separated string. Example: {'role_id':17000023338,'assignment_scope': 'entire_helpdesk'}")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the agent to create.")], is_occasional: Annotated[bool, Field(default=None, description="If enabled, agent will be created as an occasional agent, otherwise full-time agent will be created.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, agent will be able to see all tickets from Associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the agent. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the agent.")], group_memberships: Annotated[str, Field(default=None, description="Specify group names agent should be a member of.")], job_title: Annotated[str, Field(default=None, description="Specify agent job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the agent. Action appends new custom fields to any existing for an agent. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_create_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], email: Annotated[str, Field(..., description="Specify the email of the agent to create.")], first_name: Annotated[str, Field(..., description="Specify the first name of the agent to create.")], roles: Annotated[str, Field(..., description="Specify roles to add to agent. Parameter accepts multiple values as a comma separated string. Example: {'role_id':17000023338,'assignment_scope': 'entire_helpdesk'}")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the agent to create.")], is_occasional: Annotated[bool, Field(default=None, description="If enabled, agent will be created as an occasional agent, otherwise full-time agent will be created.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, agent will be able to see all tickets from Associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the agent. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the agent.")], group_memberships: Annotated[str, Field(default=None, description="Specify group names agent should be a member of.")], job_title: Annotated[str, Field(default=None, description="Specify agent job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the agent. Action appends new custom fields to any existing for an agent. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new Freshservice Agent. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -612,15 +612,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_list_agents(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], agent_email: Annotated[str, Field(default=None, description="Specify the email address to return agent records for.")], agent_state: Annotated[List[str], Field(default=None, description="Specify agent states to return.")], include_not_active_agents: Annotated[bool, Field(default=None, description="If enabled, results will include not active agent records.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many agent records should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page agent records should be returned with Freshservice pagination")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many agent records action should return in total.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_list_agents(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], agent_email: Annotated[str, Field(default=None, description="Specify the email address to return agent records for.")], agent_state: Annotated[list[str], Field(default=None, description="Specify agent states to return.")], include_not_active_agents: Annotated[bool, Field(default=None, description="If enabled, results will include not active agent records.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many agent records should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page agent records should be returned with Freshservice pagination")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many agent records action should return in total.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Freshservice agents based on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -698,15 +698,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_list_ticket_time_entries(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return time entries for.")], agent_email: Annotated[str, Field(..., description="Specify agent email to list ticket time entries for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many ticket time entries should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page ticket time entries should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many ticket time entries action should return in total.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_list_ticket_time_entries(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return time entries for.")], agent_email: Annotated[str, Field(..., description="Specify agent email to list ticket time entries for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many ticket time entries should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page ticket time entries should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many ticket time entries action should return in total.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Freshservice tickets time entries based on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -780,15 +780,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_add_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to add a time entry for.")], agent_email: Annotated[str, Field(..., description="Specify agent email for whom to add a ticket time entry.")], time_spent: Annotated[str, Field(..., description="Specify time spent for ticket time entry. Format: {hh:mm}")], note: Annotated[str, Field(default=None, description="Specify a note to add to the ticket time entry.")], billable: Annotated[bool, Field(default=None, description="If enabled, ticket time entry will be marked as billable.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket time entry. Action appends new custom fields to any existing for ticket time entry. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_add_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to add a time entry for.")], agent_email: Annotated[str, Field(..., description="Specify agent email for whom to add a ticket time entry.")], time_spent: Annotated[str, Field(..., description="Specify time spent for ticket time entry. Format: {hh:mm}")], note: Annotated[str, Field(default=None, description="Specify a note to add to the ticket time entry.")], billable: Annotated[bool, Field(default=None, description="If enabled, ticket time entry will be marked as billable.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket time entry. Action appends new custom fields to any existing for ticket time entry. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a time entry to a Freshservice ticket. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -863,15 +863,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_list_ticket_conversations(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many ticket conversations should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page ticket conversations should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many ticket conversations action should return in total.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_list_ticket_conversations(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], rows_per_page: Annotated[str, Field(default=None, description="Specify how many ticket conversations should be returned per page for Freshservice pagination.")], start_at_page: Annotated[str, Field(default=None, description="Specify starting from which page ticket conversations should be returned with Freshservice pagination.")], max_rows_to_return: Annotated[str, Field(default=None, description="Specify how many ticket conversations action should return in total.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """List Freshservice ticket conversations based on the specified search criteria. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -944,15 +944,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_update_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to update a time entry for.")], time_entry_id: Annotated[str, Field(..., description="Specify time entry ID to update.")], agent_email: Annotated[str, Field(default=None, description="Specify agent email for whom to change a ticket time entry.")], note: Annotated[str, Field(default=None, description="Specify a note for the ticket time entry.")], time_spent: Annotated[str, Field(default=None, description="Specify time spent for ticket time entry. Format: {hh:mm}")], billable: Annotated[bool, Field(default=None, description="If enabled, ticket time entry will be marked as billable.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket time entry. Action appends new custom fields to any existing for ticket time entry. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_update_ticket_time_entry(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to update a time entry for.")], time_entry_id: Annotated[str, Field(..., description="Specify time entry ID to update.")], agent_email: Annotated[str, Field(default=None, description="Specify agent email for whom to change a ticket time entry.")], note: Annotated[str, Field(default=None, description="Specify a note for the ticket time entry.")], time_spent: Annotated[str, Field(default=None, description="Specify time spent for ticket time entry. Format: {hh:mm}")], billable: Annotated[bool, Field(default=None, description="If enabled, ticket time entry will be marked as billable.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket time entry. Action appends new custom fields to any existing for ticket time entry. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a time entry for a Freshservice ticket. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1030,15 +1030,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_update_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], agent_id: Annotated[str, Field(..., description="Specify agent id to update.")], email: Annotated[str, Field(default=None, description="Specify the email of the agent to update.")], first_name: Annotated[str, Field(default=None, description="Specify the first name of the agent to update.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the agent to update.")], is_occasional: Annotated[bool, Field(default=None, description="If enabled, agent will be updated as an occasional agent, otherwise it will be a full-time agent.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, agent will be able to see all tickets from Associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the agent. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the agent.")], group_memberships: Annotated[str, Field(default=None, description="Specify group names agent should be a member of.")], roles: Annotated[str, Field(default=None, description="Specify roles to add to agent. Parameter accepts multiple values as a comma separated string. Example: {'role_id':170000XXXXX,'assignment_scope': 'entire_helpdesk'}")], job_title: Annotated[str, Field(default=None, description="Specify agent job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the agent. Action appends new custom fields to any existing for an agent. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_update_agent(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], agent_id: Annotated[str, Field(..., description="Specify agent id to update.")], email: Annotated[str, Field(default=None, description="Specify the email of the agent to update.")], first_name: Annotated[str, Field(default=None, description="Specify the first name of the agent to update.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the agent to update.")], is_occasional: Annotated[bool, Field(default=None, description="If enabled, agent will be updated as an occasional agent, otherwise it will be a full-time agent.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, agent will be able to see all tickets from Associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the agent. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the agent.")], group_memberships: Annotated[str, Field(default=None, description="Specify group names agent should be a member of.")], roles: Annotated[str, Field(default=None, description="Specify roles to add to agent. Parameter accepts multiple values as a comma separated string. Example: {'role_id':170000XXXXX,'assignment_scope': 'entire_helpdesk'}")], job_title: Annotated[str, Field(default=None, description="Specify agent job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the agent. Action appends new custom fields to any existing for an agent. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update existing Freshservice Agent. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1127,15 +1127,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_ping(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Test connectivity to the Freshservice instance with parameters provided at the integration configuration page on the Marketplace tab.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1201,15 +1201,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_create_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], email: Annotated[str, Field(..., description="Specify the email of the requester to create.")], first_name: Annotated[str, Field(..., description="Specify the first name of the requester to create.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the requester to create.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, requester will be able to see all tickets from associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the requester. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the requester.")], job_title: Annotated[str, Field(default=None, description="Specify requester job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the requester. Action appends new custom fields to any existing for requester. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_create_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], email: Annotated[str, Field(..., description="Specify the email of the requester to create.")], first_name: Annotated[str, Field(..., description="Specify the first name of the requester to create.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the requester to create.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, requester will be able to see all tickets from associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the requester. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the requester.")], job_title: Annotated[str, Field(default=None, description="Specify requester job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the requester. Action appends new custom fields to any existing for requester. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Create a new Freshservice requester. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1289,15 +1289,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_deactivate_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], requester_id: Annotated[str, Field(..., description="Specify requester id to deactivate.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_deactivate_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], requester_id: Annotated[str, Field(..., description="Specify requester id to deactivate.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Deactivate Freshservice requester. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1364,15 +1364,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_update_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket id to update.")], status: Annotated[List[str], Field(default=None, description="Specify new status for the ticket.")], subject: Annotated[str, Field(default=None, description="Specify subject field to update.")], description: Annotated[str, Field(default=None, description="Specify description field to update.")], requester_email: Annotated[str, Field(default=None, description="Specify requester email to update.")], agent_assign_to: Annotated[str, Field(default=None, description="Specify the agent email to update.")], group_assign_to: Annotated[str, Field(default=None, description="Specify the group name to update.")], priority: Annotated[List[str], Field(default=None, description="Specify priority to update.")], urgency: Annotated[List[str], Field(default=None, description="Specify urgency to update.")], impact: Annotated[List[str], Field(default=None, description="Specify impact to update.")], tags: Annotated[str, Field(default=None, description="Specify tags to replace in the ticket. Parameter accepts multiple values as a comma separated string. Note that due to the Freshservice API limitations action replaces existing tags in the ticket, not appending new ones to existing.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], file_attachments_to_add: Annotated[str, Field(default=None, description="Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_update_ticket(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket id to update.")], status: Annotated[list[str], Field(default=None, description="Specify new status for the ticket.")], subject: Annotated[str, Field(default=None, description="Specify subject field to update.")], description: Annotated[str, Field(default=None, description="Specify description field to update.")], requester_email: Annotated[str, Field(default=None, description="Specify requester email to update.")], agent_assign_to: Annotated[str, Field(default=None, description="Specify the agent email to update.")], group_assign_to: Annotated[str, Field(default=None, description="Specify the group name to update.")], priority: Annotated[list[str], Field(default=None, description="Specify priority to update.")], urgency: Annotated[list[str], Field(default=None, description="Specify urgency to update.")], impact: Annotated[list[str], Field(default=None, description="Specify impact to update.")], tags: Annotated[str, Field(default=None, description="Specify tags to replace in the ticket. Parameter accepts multiple values as a comma separated string. Note that due to the Freshservice API limitations action replaces existing tags in the ticket, not appending new ones to existing.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the ticket. Action appends new custom fields to any existing for a ticket. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], file_attachments_to_add: Annotated[str, Field(default=None, description="Specify the full path for the file to be uploaded with the ticket. Parameter accepts multiple values as a comma separated string. The total size of the attachments must not exceed 15MB")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update a Freshservice ticket based on provided action input parameters. Note that if new tags for the ticket are provided, due to the Freshservice API limitations action replaces existing tags in the ticket, not appending new ones to existing. Additionally, if file attachments to add are provided, the total size of the attachments must not exceed 15MB
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1463,15 +1463,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_update_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], requester_id: Annotated[str, Field(..., description="Specify requester id to update.")], email: Annotated[str, Field(default=None, description="Specify the email of the requester to update.")], first_name: Annotated[str, Field(default=None, description="Specify the first name of the requester to update.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the requester to update.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, requester will be able to see all tickets from associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the requester. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the requester.")], job_title: Annotated[str, Field(default=None, description="Specify requester job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the requester. Action appends new custom fields to any existing for requester. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_update_requester(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], requester_id: Annotated[str, Field(..., description="Specify requester id to update.")], email: Annotated[str, Field(default=None, description="Specify the email of the requester to update.")], first_name: Annotated[str, Field(default=None, description="Specify the first name of the requester to update.")], last_name: Annotated[str, Field(default=None, description="Specify the last name of the requester to update.")], can_see_all_tickets_from_associated_departments: Annotated[bool, Field(default=None, description="If enabled, requester will be able to see all tickets from associated departments.")], departments: Annotated[str, Field(default=None, description="Specify department names associated with the requester. Parameter accepts multiple values as a comma separated string.")], location: Annotated[str, Field(default=None, description="Specify location name associated with the requester.")], job_title: Annotated[str, Field(default=None, description="Specify requester job title.")], custom_fields: Annotated[str, Field(default=None, description="Specify a JSON object that contains custom fields to add to the requester. Action appends new custom fields to any existing for requester. Example format: {\"key1\":\"value1\",\"key2\":\"value2\"}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Update existing Freshservice Requester. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter
@@ -1554,15 +1554,15 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def freshworks_freshservice_add_a_ticket_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[List[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], note_text: Annotated[str, Field(..., description="Specify note text to add to ticket.")], note_type: Annotated[List[str], Field(default=None, description="Specify the type of note action should add to the ticket.")], target_entities: Annotated[List[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def freshworks_freshservice_add_a_ticket_note(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], ticket_id: Annotated[str, Field(..., description="Specify ticket ID to return conversations for.")], note_text: Annotated[str, Field(..., description="Specify note text to add to ticket.")], note_type: Annotated[list[str], Field(default=None, description="Specify the type of note action should add to the ticket.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add a note to a Freshservice ticket. Note that action is not working on Siemplify entities.
 
         Returns:
             dict: A dictionary containing the result of the action execution.
         """
-        final_target_entities: Optional[List[TargetEntity]] = None
-        final_scope: Optional[str] = None
-        is_predefined_scope: Optional[bool] = None
+        final_target_entities: list[TargetEntity] | None = None
+        final_scope: str | None = None
+        is_predefined_scope: bool | None = None
     
         if target_entities:
             # Specific target entities provided, ignore scope parameter

@@ -15,7 +15,6 @@
 
 import json
 import logging
-from typing import Optional
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -26,9 +25,9 @@ logger = logging.getLogger('secops-mcp')
 @server.tool()
 async def get_threat_intel(
     query: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
 ) -> str:
     """Get answers to security questions using Chronicle's integrated Gemini model.
 

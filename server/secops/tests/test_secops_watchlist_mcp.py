@@ -15,7 +15,6 @@ To run these tests:
 """
 
 import uuid
-from typing import Dict
 
 import pytest
 
@@ -33,7 +32,7 @@ class TestChronicleWatchlistMCP:
 
     @pytest.mark.asyncio
     async def test_list_watchlists(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing all watchlists.
 
@@ -55,7 +54,7 @@ class TestChronicleWatchlistMCP:
 
     @pytest.mark.asyncio
     async def test_list_watchlists_as_list(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing all watchlists with as_list parameter.
 
@@ -79,7 +78,7 @@ class TestChronicleWatchlistMCP:
 
     @pytest.mark.asyncio
     async def test_get_watchlist(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test getting details of a watchlist.
 
@@ -120,7 +119,7 @@ class TestChronicleWatchlistMCP:
 
     @pytest.mark.asyncio
     async def test_create_update_delete_watchlist(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test the full lifecycle of a watchlist.
 

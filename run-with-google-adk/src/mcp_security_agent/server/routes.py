@@ -19,8 +19,9 @@ import asyncio
 import logging
 import threading
 from collections import OrderedDict
+from collections.abc import AsyncGenerator
 from pathlib import Path
-from typing import Dict, Any, Optional, AsyncGenerator
+from typing import Any
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel
@@ -37,10 +38,10 @@ router = APIRouter()
 
 
 class ChatRequest(BaseModel):
-    prompt: Optional[str] = None
-    message: Optional[str] = None
-    session_id: Optional[str] = None
-    user_id: Optional[str] = None
+    prompt: str | None = None
+    message: str | None = None
+    session_id: str | None = None
+    user_id: str | None = None
 
 
 class ChatResponse(BaseModel):
@@ -64,7 +65,7 @@ def get_root():
 
 
 @router.get("/healthz")
-def health_check() -> Dict[str, str]:
+def health_check() -> dict[str, str]:
     """Health check endpoint for Cloud Run and Kubernetes probes."""
     return {"status": "ok"}
 
@@ -76,13 +77,13 @@ def get_favicon():
 
 
 @router.get("/app_name")
-def get_app_name() -> Dict[str, str]:
+def get_app_name() -> dict[str, str]:
     """Returns the application display name for the Web UI navbar."""
     return {"app_name": "Google Security Agent"}
 
 
 @router.get("/get_session")
-def get_session(username: Optional[str] = Query(None, description="Username for session")) -> Dict[str, str]:
+def get_session(username: str | None = Query(None, description="Username for session")) -> dict[str, str]:
     """Generates a session ID and returns user context for chat sessions."""
     detected_user = discover_user_identity()
     user = username if (username and username.strip() and username != "secops_user") else detected_user
@@ -92,7 +93,7 @@ def get_session(username: Optional[str] = Query(None, description="Username for 
     }
 
 
-_settings: Optional[AgentSettings] = None
+_settings: AgentSettings | None = None
 _settings_lock = threading.Lock()
 
 
@@ -107,7 +108,7 @@ def get_settings() -> AgentSettings:
 
 
 @router.get("/info")
-def get_info() -> Dict[str, Any]:
+def get_info() -> dict[str, Any]:
     """Provides server runtime metadata, active user identity, and enabled MCP server status."""
     settings = get_settings()
     return {
@@ -137,8 +138,8 @@ class BoundedSessionService(InMemorySessionService):
         *,
         app_name: str,
         user_id: str,
-        state: Optional[Dict[str, Any]] = None,
-        session_id: Optional[str] = None,
+        state: dict[str, Any] | None = None,
+        session_id: str | None = None,
     ) -> Any:
         with self._lock:
             while len(self._session_order) >= self.max_sessions:
@@ -164,8 +165,8 @@ class BoundedSessionService(InMemorySessionService):
         app_name: str,
         user_id: str,
         session_id: str,
-        config: Optional[Any] = None,
-    ) -> Optional[Any]:
+        config: Any | None = None,
+    ) -> Any | None:
         with self._lock:
             return super()._get_session_impl(
                 app_name=app_name,
@@ -178,7 +179,7 @@ class BoundedSessionService(InMemorySessionService):
         self,
         *,
         app_name: str,
-        user_id: Optional[str] = None,
+        user_id: str | None = None,
     ) -> Any:
         with self._lock:
             return super()._list_sessions_impl(
@@ -223,9 +224,9 @@ class BoundedSessionService(InMemorySessionService):
                 self.sessions.pop(app_name, None)
 
 
-_runner: Optional[Runner] = None
+_runner: Runner | None = None
 _runner_lock = threading.Lock()
-_session_service: Optional[BoundedSessionService] = None
+_session_service: BoundedSessionService | None = None
 
 
 def get_session_service() -> BoundedSessionService:
@@ -238,7 +239,7 @@ def get_session_service() -> BoundedSessionService:
     return _session_service
 
 
-def get_runner() -> Optional[Runner]:
+def get_runner() -> Runner | None:
     """Returns or initializes the thread-safe ADK Runner instance for the security agent."""
     global _runner
     if _runner is None:
@@ -263,7 +264,7 @@ def get_runner() -> Optional[Runner]:
 async def sse_event_generator(
     message: str,
     session_id: str,
-    user_id: Optional[str] = None,
+    user_id: str | None = None,
 ) -> AsyncGenerator[str, None]:
     """Streams real ADK agent execution events over Server-Sent Events (SSE)."""
     uid = user_id or discover_user_identity()
@@ -352,8 +353,8 @@ async def sse_event_generator(
 @router.get("/chat")
 async def chat_sse_stream(
     message: str = Query(..., description="User prompt or security alert query"),
-    session_id: Optional[str] = Query(None, description="Session ID for conversation history"),
-    user_id: Optional[str] = Query(None, description="Active user ID"),
+    session_id: str | None = Query(None, description="Session ID for conversation history"),
+    user_id: str | None = Query(None, description="Active user ID"),
 ):
     """Server-Sent Events (SSE) streaming endpoint for web UI clients."""
     sess_id = session_id or str(uuid.uuid4())

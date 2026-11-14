@@ -15,7 +15,7 @@
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -28,10 +28,10 @@ async def create_rule_exclusion(
     display_name: str,
     refinement_type: str,
     query: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Create a new rule exclusion in Chronicle SIEM.
 
     Creates a rule exclusion to filter out false positives or exclude
@@ -130,10 +130,10 @@ async def create_rule_exclusion(
 @server.tool()
 async def get_rule_exclusion(
     exclusion_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Get detailed information about a specific rule exclusion.
 
     Retrieves complete configuration and details for a rule exclusion
@@ -217,12 +217,12 @@ async def get_rule_exclusion(
 
 @server.tool()
 async def list_rule_exclusions(
-    page_size: Optional[int] = None,
-    page_token: Optional[str] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    page_size: int | None = None,
+    page_token: str | None = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """List all rule exclusions in Chronicle SIEM.
 
     Retrieves a list of all rule exclusions configured in Chronicle
@@ -317,13 +317,13 @@ async def list_rule_exclusions(
 @server.tool()
 async def patch_rule_exclusion(
     exclusion_id: str,
-    display_name: Optional[str] = None,
-    query: Optional[str] = None,
-    update_mask: Optional[str] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    display_name: str | None = None,
+    query: str | None = None,
+    update_mask: str | None = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Update an existing rule exclusion in Chronicle SIEM.
 
     Updates exclusion properties including display name and query.
@@ -421,11 +421,11 @@ async def update_rule_exclusion_deployment(
     exclusion_id: str,
     enabled: bool,
     archived: bool,
-    detection_exclusion_application: Dict[str, Any],
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    detection_exclusion_application: dict[str, Any],
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Manage deployment settings for a rule exclusion.
 
     Updates exclusion deployment configuration including enable/disable
@@ -539,10 +539,10 @@ async def compute_rule_exclusion_activity(
     exclusion_id: str,
     start_time: datetime,
     end_time: datetime,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Calculate activity statistics for a rule exclusion.
 
     Computes statistics showing how many events were excluded by this

@@ -16,7 +16,7 @@
 import json
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 from secops_mcp.utils import parse_time_range
@@ -28,10 +28,10 @@ logger = logging.getLogger("secops-mcp")
 @server.tool()
 async def export_udm_search_csv(
     query: str,
-    fields: List[str],
+    fields: list[str],
     hours_back: int = 24,
-    start_time: Optional[str] = None,
-    end_time: Optional[str] = None,
+    start_time: str | None = None,
+    end_time: str | None = None,
     case_insensitive: bool = True,
     project_id: str = None,
     customer_id: str = None,
@@ -202,11 +202,11 @@ async def export_udm_search_csv(
 @server.tool()
 async def find_udm_field_values(
     query: str,
-    page_size: Optional[int] = None,
+    page_size: int | None = None,
     project_id: str = None,
     customer_id: str = None,
     region: str = None,
-) -> Dict[str, Any]:
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Find and autocomplete UDM field values in Chronicle SIEM.
 
     Searches for UDM field values that match a partial query string, providing

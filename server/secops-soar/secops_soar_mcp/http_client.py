@@ -15,7 +15,7 @@
 
 import json
 import ssl
-from typing import Any, Dict
+from typing import Any
 
 import aiohttp
 from logger_utils import get_logger
@@ -45,7 +45,7 @@ class HttpClient:
     async def get(
         self,
         endpoint: str,
-        params: Dict[str, Any] = None,
+        params: dict[str, Any] | None = None,
     ):
         """Makes a GET request to the specified endpoint.
 
@@ -76,8 +76,8 @@ class HttpClient:
     async def post(
         self,
         endpoint: str,
-        req: Dict[str, Any] = None,
-        params: Dict[str, Any] = None,
+        req: dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
     ):
         """Makes a POST request to the specified endpoint.
 
@@ -111,8 +111,8 @@ class HttpClient:
     async def patch(
         self,
         endpoint: str,
-        req: Dict[str, Any] = None,
-        params: Dict[str, Any] = None,
+        req: dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
     ):
         """Makes a PATCH request to the specified endpoint.
 

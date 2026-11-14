@@ -25,7 +25,7 @@ HUNTING_RULESET_RELATIONSHIPS = [
 
 
 @server.tool()
-async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-") -> typing.List[typing.Dict[str, typing.Any]]:
+async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str = "last_submission_date-") -> list[dict[str, typing.Any]]:
   """Search Indicators of Compromise (IOC) in the Google Threat Intelligence platform.
 
   You can search by for different IOC types using the `entity` modifier. Below, the different IOC types and the supported orders:
@@ -70,7 +70,7 @@ async def search_iocs(query: str, ctx: Context, limit: int = 10, order_by: str =
 
 
 @server.tool()
-async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Get a Hunting Ruleset object from Google Threat Intelligence.
 
   A Hunting Ruleset object describes a user's hunting ruleset. It may contain multiple
@@ -106,7 +106,7 @@ async def get_hunting_ruleset(ruleset_id: str, ctx: Context) -> typing.Dict[str,
 @server.tool()
 async def get_entities_related_to_a_hunting_ruleset(
     ruleset_id: str, relationship_name: str, ctx: Context, limit: int = 10
-) -> list[dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given Hunting Ruleset.
 
     The following table shows a summary of available relationships for Hunting ruleset objects.
@@ -120,7 +120,7 @@ async def get_entities_related_to_a_hunting_ruleset(
       relationship_name (required): Relationship name.
       limit: Limit the number of entities to retrieve. 10 by default.
     Returns:
-      List of objects related to the Hunting ruleset.
+      List of objects related to the Hunting ruleset, or an error dictionary.
   """
   if not relationship_name in HUNTING_RULESET_RELATIONSHIPS:
       return {

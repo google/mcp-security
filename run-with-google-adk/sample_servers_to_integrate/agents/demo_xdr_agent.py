@@ -16,16 +16,16 @@
 import os
 import logging
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any
 from mcp_security_agent.callbacks import bmc_trim_llm_request
 
 logger = logging.getLogger(__name__)
 
 
 def create_demo_xdr_agent(
-    model: Optional[str] = None,
-    client_id: Optional[str] = None,
-    client_secret: Optional[str] = None,
+    model: str | None = None,
+    client_id: str | None = None,
+    client_secret: str | None = None,
 ) -> Any:
     """Initializes and returns the demo XDR sub-agent.
 

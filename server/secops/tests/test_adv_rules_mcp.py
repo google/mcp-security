@@ -15,7 +15,6 @@ To run these tests:
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Dict
 
 import pytest
 
@@ -32,7 +31,7 @@ class TestAdvancedSecurityRulesMCP:
 
     @pytest.mark.asyncio
     async def test_retrohunt_end_to_end(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test complete retrohunt workflow: list rules, create, check.
 
@@ -138,7 +137,7 @@ class TestAdvancedSecurityRulesMCP:
 
     @pytest.mark.asyncio
     async def test_search_rule_alerts(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test searching rule alerts.
 
@@ -191,7 +190,7 @@ class TestAdvancedSecurityRulesMCP:
 
     @pytest.mark.asyncio
     async def test_search_rule_alerts_with_max_alerts(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test searching rule alerts with custom max_alerts limit.
 

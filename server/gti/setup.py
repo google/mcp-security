@@ -21,6 +21,7 @@ setup(
     name="gti-mcp",
     version="0.1.3",
     packages=setuptools.find_packages(),
+    python_requires=">=3.11",
     install_requires=[
         "mcp>=1.23.0,<2.0",
         "vt-py",

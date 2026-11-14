@@ -55,7 +55,7 @@ COLLECTION_TYPES = {
 
 
 @server.tool()
-async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typing.Any]:
+async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """At Google Threat Intelligence, threats are modeled as "collections". This tool retrieves them from the platform.
 
   They have different collections types like: 
@@ -86,7 +86,7 @@ async def get_collection_report(id: str, ctx: Context) -> typing.Dict[str, typin
 @server.tool()
 async def get_entities_related_to_a_collection(
     id: str, relationship_name: str, ctx: Context, limit: int = 10, descriptors_only: bool = True
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve entities related to the the given collection ID.
 
     The following table shows a summary of available relationships for collection objects.
@@ -118,7 +118,7 @@ async def get_entities_related_to_a_collection(
       limit (optional): Limit the number of collections to retrieve. 10 by default.
       descriptors_only (optional)): Bool. Default True. Must be False when the target object type is 'attack_techniques'.
     Returns:
-      List of objects related to the collection.
+      List of objects related to the collection, or an error dictionary.
   """
   if not relationship_name in COLLECTION_RELATIONSHIPS:
       return {
@@ -142,7 +142,7 @@ async def _search_threats_by_collection_type(
     ctx: Context,
     limit: int = 10,
     order_by: str = "relevance-",
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search a given threat type in the Google Threat Intelligence platform,
 
   Args:
@@ -177,10 +177,10 @@ async def _search_threats_by_collection_type(
 async def search_threats(
     ctx: Context,
     query: str,
-    collection_type: typing.Optional[str] = None,
+    collection_type: str | None = None,
     limit: int = 5,
     order_by: str = "relevance-",
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search threats in the Google Threat Intelligence platform.
 
   Threats are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -239,7 +239,7 @@ async def search_threats(
 @server.tool()
 async def search_campaigns(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search threat campaigns in the Google Threat Intelligence platform.
 
   Campaigns are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -262,7 +262,7 @@ async def search_campaigns(
 @server.tool()
 async def search_threat_actors(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search threat actors in the Google Threat Intelligence platform.
 
   Threat actors are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -285,7 +285,7 @@ async def search_threat_actors(
 @server.tool()
 async def search_malware_families(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search malware families in the Google Threat Intelligence platform.
 
   Malware families are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -308,7 +308,7 @@ async def search_malware_families(
 @server.tool()
 async def search_software_toolkits(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search software toolkits (or just tools) in the Google Threat Intelligence platform.
 
   Software toolkits are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -331,7 +331,7 @@ async def search_software_toolkits(
 @server.tool()
 async def search_threat_reports(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search threat reports in the Google Threat Intelligence platform.
 
   Google Threat Intelligence provides continuously updated reports and analysis of threat actors, campaigns, vulnerabilities, malware, and tools
@@ -356,7 +356,7 @@ async def search_threat_reports(
 @server.tool()
 async def search_vulnerabilities(
     query: str, ctx: Context, limit: int = 10, order_by: str = "relevance-"
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Search vulnerabilities (CVEs) in the Google Threat Intelligence platform.
 
   Vulnerabilities are modeled as collections. Once you get collections from this tool, you can use `get_collection_report` to fetch the full reports and their relationships.
@@ -402,7 +402,7 @@ async def get_collection_timeline_events(id: str, ctx: Context):
 
 
 @server.tool()
-async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
+async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Retrieves the Mitre tactics and techniques associated with a threat.
 
   Args:
@@ -420,14 +420,24 @@ async def get_collection_mitre_tree(id: str, ctx: Context) -> typing.Dict:
   return utils.sanitize_response(data.get("data", {}))
 
 
+def _api_error(data: typing.Any) -> dict[str, str]:
+  """Builds an error dict from a GTI response that has no `data` object."""
+  error_info = data.get("error") if isinstance(data, dict) else None
+  if isinstance(error_info, dict):
+    detail = error_info.get("message") or error_info.get("code")
+  else:
+    detail = None
+  return {"error": f"API Error: {detail or 'Unknown error'}"}
+
+
 @server.tool()
 async def create_collection(
     name: str,
     description: str,
-    iocs: typing.List[str],
+    iocs: list[str],
     ctx: Context,
     private: bool = True,
-) -> typing.Dict[str, typing.Any]:
+) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Creates a new collection in Google Threat Intelligence.
       Ask for the collection's privacy (public or private) if the user doesn't specify.
 
@@ -452,6 +462,8 @@ async def create_collection(
     
     res = await client.post_async("/collections", json_data=collection_data)
     data = await res.json_async()
+  if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+    return _api_error(data)
   return utils.sanitize_response(data["data"])
 
 
@@ -459,8 +471,8 @@ async def create_collection(
 async def update_collection_attributes(
     id: str,
     ctx: Context,
-    attributes: typing.Dict[str, typing.Any],
-) -> typing.Dict[str, typing.Any]:
+    attributes: dict[str, typing.Any],
+) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Allows updating a collection's attributes (such as name or description)
   Args:
     id (required): The ID of the collection to update.
@@ -480,6 +492,8 @@ async def update_collection_attributes(
         f"/collections/{id}", json_data=collection_data
     )
     data = await res.json_async()
+  if not isinstance(data, dict) or not isinstance(data.get("data"), dict):
+    return _api_error(data)
   return utils.sanitize_response(data["data"])
 
 
@@ -488,7 +502,7 @@ async def update_iocs_in_collection(
     id: str,
     ctx: Context,
     relationship: str,
-    iocs: typing.List[str],
+    iocs: list[str],
     operation: str,
 ) -> str:
   """Updates (add or remove) Indicators of Compromise (IOCs) to a collection.
@@ -545,7 +559,7 @@ async def get_collection_feature_matches(
     entity_type_plural: str,
     ctx: Context,
     descriptors_only: bool=True,
-) -> typing.List[typing.Dict[str, typing.Any]]:
+) -> list[dict[str, typing.Any]]:
   """Retrieves Indicators of Compromise (IOCs) from a collection that match a specific feature.
 
   This tool allows pivoting from a commonality to the specific IOCs within a collection that exhibit that feature.
@@ -660,7 +674,7 @@ async def get_collections_commonalities(collection_id: str, ctx: Context) -> str
   return utils.parse_collection_commonalities(sanitized_data)
 
 
-async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> dict[str, typing.Any]:
   """Fetches details for a single YARA ruleset and formats the output."""
 
   ruleset_id = rule.get("value",{}).get("ruleset_id", None)
@@ -687,7 +701,7 @@ async def _get_yara_rule_details(ctx: Context, rule: dict, rule_type: str) -> ty
     logging.exception("Error fetching YARA ruleset %s: %s", ruleset_id, e)
     return {"error": f"Error fetching YARA ruleset {ruleset_id}: {e}"}
 
-async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> typing.Dict[str, typing.Any]:
+async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> dict[str, typing.Any]:
   """Fetches details for a single Sigma ruleset and formats the output."""
 
   ruleset_id = rule.get("value",{}).get("id", None)
@@ -715,7 +729,7 @@ async def _get_sigma_rule_details(ctx: Context, rule: dict, rule_type: str) -> t
     return {"error": f"Error fetching Sigma ruleset {ruleset_id}: {e}"}
 
 @server.tool()
-async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: typing.Optional[typing.List[str]] = None) -> typing.Union[typing.List[typing.Dict[str, typing.Any]], typing.Dict[str, str]]:
+async def get_collection_rules(collection_id: str, ctx: Context, top_n: int = 4, rule_types: list[str] | None = None) -> list[dict[str, typing.Any]] | dict[str, str]:
   """Retrieve top N community rules and all curated hunting rules for a specific collection.
 
   Note:

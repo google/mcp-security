@@ -46,6 +46,7 @@ from secops_mcp.tools.search import search_udm
 from secops_mcp.tools.udm_search import export_udm_search_csv
 from secops_mcp.tools.security_events import search_security_events
 from secops_mcp.tools.security_rules import get_rule_detections, test_rule as secops_test_rule
+from secops_mcp.tools.stats import get_stats
 
 @pytest.fixture
 def mock_chronicle_client():
@@ -54,6 +55,14 @@ def mock_chronicle_client():
     client.search_udm.return_value = {"total_events": 0, "events": []}
     client.fetch_udm_search_csv.return_value = {"csv": {"row": []}}
     client.translate_nl_to_udm.return_value = "metadata.event_type = 'USER_LOGIN'"
+    client.get_stats.return_value = {
+        "columns": ["metadata.event_type", "event_count"],
+        "rows": [
+            {"metadata.event_type": "USER_LOGIN", "event_count": 150},
+            {"metadata.event_type": "NETWORK_CONNECTION", "event_count": 42},
+        ],
+        "total_rows": 2,
+    }
     return client
 
 @pytest.fixture
@@ -61,7 +70,8 @@ def mock_get_client(mock_chronicle_client):
     with patch('secops_mcp.tools.search.get_chronicle_client', return_value=mock_chronicle_client) as m1, \
          patch('secops_mcp.tools.udm_search.get_chronicle_client', return_value=mock_chronicle_client) as m2, \
          patch('secops_mcp.tools.security_events.get_chronicle_client', return_value=mock_chronicle_client) as m3, \
-         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client):
+         patch('secops_mcp.tools.security_rules.get_chronicle_client', return_value=mock_chronicle_client), \
+         patch('secops_mcp.tools.stats.get_chronicle_client', return_value=mock_chronicle_client) as m4:
         yield mock_chronicle_client
 
 
@@ -287,7 +297,7 @@ async def test_start_after_end(mock_get_client):
 async def test_export_csv_invalid_date(mock_get_client):
     """Test that export_udm_search_csv returns error string on invalid date."""
     invalid_date = "yesterday"
-    
+
     result = await export_udm_search_csv(
         query="test",
         fields=["test"],
@@ -295,7 +305,7 @@ async def test_export_csv_invalid_date(mock_get_client):
         project_id="test",
         customer_id="test"
     )
-    
+
     assert isinstance(result, str)
     assert "Error parsing date format" in result
     assert "yesterday" in result
@@ -339,3 +349,123 @@ async def test_test_rule_buffers_end_time_to_start_of_hour(mock_get_client):
     assert "Total Detections: 1" in result
     assert "Rule successfully detected 1 event(s)" in result
 
+
+# ---------------------------------------------------------------------------
+# Stats tool tests
+# ---------------------------------------------------------------------------
+
+# YARA-L 2.0 match:/outcome: queries used across get_stats unit tests.
+_STATS_BY_EVENT_TYPE = """\
+metadata.event_type != "EVENTTYPE_UNSPECIFIED"
+match:
+  metadata.event_type
+outcome:
+  $event_count = count(metadata.id)
+"""
+
+_STATS_BY_PRINCIPAL_IP = """\
+principal.ip != ""
+match:
+  principal.ip
+outcome:
+  $user_count_by_ip = count_distinct(principal.user.userid)
+order:
+  $user_count_by_ip desc
+limit:
+  20
+"""
+
+
+@pytest.mark.asyncio
+async def test_get_stats_returns_structured_result(mock_get_client):
+    """Stats results contain typed columns, rows, and total_rows."""
+    result = await get_stats(
+        query=_STATS_BY_EVENT_TYPE,
+        hours_back=24,
+        project_id="test",
+        customer_id="test",
+    )
+
+    assert "error" not in result, f"Unexpected error: {result.get('error')}"
+    assert result["total_rows"] == 2
+    # Chronicle :udmSearch strips the leading $ from outcome variable names.
+    assert result["columns"] == ["metadata.event_type", "event_count"]
+    assert len(result["rows"]) == 2
+    # Verify row values are typed correctly (int, not string)
+    login_row = next(r for r in result["rows"] if r["metadata.event_type"] == "USER_LOGIN")
+    assert login_row["event_count"] == 150
+
+
+@pytest.mark.asyncio
+async def test_get_stats_passes_correct_time_range(mock_get_client):
+    """Explicit ISO start/end times are parsed and forwarded as datetime objects."""
+    result = await get_stats(
+        query=_STATS_BY_EVENT_TYPE,
+        start_time="2024-03-01T00:00:00Z",
+        end_time="2024-03-02T00:00:00Z",
+        project_id="test",
+        customer_id="test",
+    )
+
+    assert "error" not in result
+    call_args = mock_get_client.get_stats.call_args
+    _, kwargs = call_args
+    assert isinstance(kwargs["start_time"], datetime)
+    assert kwargs["start_time"].year == 2024
+    assert kwargs["start_time"].month == 3
+    assert kwargs["start_time"].day == 1
+    assert isinstance(kwargs["end_time"], datetime)
+    assert kwargs["end_time"].day == 2
+    assert "max_events" not in kwargs
+    assert "case_insensitive" not in kwargs
+
+
+@pytest.mark.asyncio
+async def test_get_stats_passes_max_values_param(mock_get_client):
+    """max_values is forwarded to the underlying chronicle client."""
+    await get_stats(
+        query=_STATS_BY_PRINCIPAL_IP,
+        max_values=100,
+        project_id="test",
+        customer_id="test",
+    )
+
+    call_kwargs = mock_get_client.get_stats.call_args[1]
+    assert call_kwargs["max_values"] == 100
+
+
+@pytest.mark.asyncio
+async def test_get_stats_invalid_date_returns_error(mock_get_client):
+    """Invalid ISO date returns error dict — not an exception."""
+    result = await get_stats(
+        query=_STATS_BY_EVENT_TYPE,
+        start_time="not-a-date",
+        project_id="test",
+        customer_id="test",
+    )
+
+    assert "error" in result
+    assert "Error parsing date format" in result["error"]
+    assert result["columns"] == []
+    assert result["rows"] == []
+    assert result["total_rows"] == 0
+    # Chronicle client must NOT have been called on a bad date
+    mock_get_client.get_stats.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_get_stats_api_error_returns_error_dict(mock_get_client):
+    """A runtime exception from the Chronicle client surfaces as an error dict."""
+    mock_get_client.get_stats.side_effect = Exception("Chronicle API unavailable")
+
+    result = await get_stats(
+        query=_STATS_BY_EVENT_TYPE,
+        project_id="test",
+        customer_id="test",
+    )
+
+    assert "error" in result
+    assert "Chronicle API unavailable" in result["error"]
+    assert result["columns"] == []
+    assert result["rows"] == []
+    assert result["total_rows"] == 0

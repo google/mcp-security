@@ -1,13 +1,12 @@
 """Utility functions for SecOps MCP."""
 
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Tuple
 
 def parse_time_range(
-    start_time: Optional[str], 
-    end_time: Optional[str], 
+    start_time: str | None,
+    end_time: str | None,
     hours_back: int
-) -> Tuple[datetime, datetime]:
+) -> tuple[datetime, datetime]:
     """Parses ISO strings or defaults to hours_back.
     
     Args:

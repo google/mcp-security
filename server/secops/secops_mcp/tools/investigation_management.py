@@ -14,7 +14,7 @@
 """Security Operations MCP tools for investigation management."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict  # noqa: UP035 - Dict kept for FastMCP tool return annotations
 
 from secops_mcp.server import get_chronicle_client, server
 
@@ -25,11 +25,11 @@ logger = logging.getLogger("secops-mcp")
 @server.tool()
 async def list_investigations(
     page_size: int = 50,
-    page_token: Optional[str] = None,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    page_token: str | None = None,
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """List all investigations in Chronicle instance.
 
     Retrieves a paginated list of all investigations with their status,
@@ -97,10 +97,10 @@ async def list_investigations(
 @server.tool()
 async def get_investigation(
     investigation_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Retrieve specific investigation by ID.
 
     Gets detailed information for a specific investigation including status,
@@ -182,10 +182,10 @@ async def get_investigation(
 @server.tool()
 async def trigger_investigation(
     alert_id: str,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Create new investigation for a specific alert.
 
     Triggers automated investigation analysis for a given alert. Returns
@@ -276,13 +276,13 @@ async def trigger_investigation(
 @server.tool()
 async def fetch_associated_investigations(
     detection_type: str,
-    alert_ids: Optional[List[str]] = None,
-    case_ids: Optional[List[str]] = None,
+    alert_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
     association_limit_per_detection: int = 5,
-    project_id: Optional[str] = None,
-    customer_id: Optional[str] = None,
-    region: Optional[str] = None,
-) -> Dict[str, Any]:
+    project_id: str | None = None,
+    customer_id: str | None = None,
+    region: str | None = None,
+) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Retrieve investigations associated with alerts or cases.
 
     Fetches investigations linked to specific alerts or cases. Supports

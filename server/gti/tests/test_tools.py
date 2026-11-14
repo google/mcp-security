@@ -15,6 +15,7 @@ import json
 import mcp
 import pytest
 import asyncio
+import vt
 from unittest.mock import patch, MagicMock, AsyncMock
 
 from gti_mcp.server import server
@@ -24,6 +25,22 @@ from gti_mcp.tools import collections
 from mcp.shared.memory import (
     create_connected_server_and_client_session as client_session,
 )
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://theevil.com/",
+        "https://example.com/?a=1>",
+        "https://bit.ly/3x~?",
+        "https://example.com/path?q=\u00fc\u00f1\u00ee",
+    ],
+)
+def test_url_to_base64_matches_vt_url_id(url):
+    """URL ids must use the URL-safe alphabet that vt-py's `url_id` uses."""
+    url_id = tools.url_to_base64(url)
+    assert url_id == vt.url_id(url)
+    assert "/" not in url_id and "+" not in url_id and "=" not in url_id
 
 
 @pytest.mark.asyncio(loop_scope="session")
@@ -186,6 +203,24 @@ async def test_server_connection():
             },
         ),
         (
+            "get_url_report",
+            {"url": "https://example.com/?a=1>"},
+            # URL-safe id: standard base64 would put a "/" in the path.
+            "/api/v3/urls/aHR0cHM6Ly9leGFtcGxlLmNvbS8_YT0xPg",
+            {
+                "data": {
+                    "id": "url-id",
+                    "type": "url",
+                    "attributes": {"foo": "foo", "bar": "bar"},
+                }
+            },
+            {
+                "id": "url-id",
+                "type": "url",
+                "attributes": {"foo": "foo", "bar": "bar"},
+            },
+        ),
+        (
             "get_collection_report",
             {"id": "collection_id"},
             "/api/v3/collections/collection_id",
@@ -303,6 +338,16 @@ async def test_get_reports(
             "get_entities_related_to_an_url",
             {"url": "http://theevil.com/", "relationship_name": "associations", "descriptors_only": "True"},
             "/api/v3/urls/aHR0cDovL3RoZWV2aWwuY29tLw/relationship/associations",
+            {
+                "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
+            },
+            {"type": "object", "id": "obj-id", "attributes": {"foo": "foo"}},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "https://bit.ly/3x~?", "relationship_name": "associations", "descriptors_only": "True"},
+            # URL-safe id: standard base64 would encode this URL with a "+".
+            "/api/v3/urls/aHR0cHM6Ly9iaXQubHkvM3h-Pw/relationship/associations",
             {
                 "data": [{"type": "object", "id": "obj-id", "attributes": {"foo": "foo", "bar": ""}}],
             },
@@ -1504,6 +1549,42 @@ async def test_none_default_params_accept_null():
 
 
 @pytest.mark.asyncio(loop_scope="session")
+async def test_dict_returning_tools_keep_wrapped_output_schema():
+    """Tools returning `typing.Dict` keep the {"result": ...} outputSchema.
+
+    FastMCP builds an unwrapped schema only for built-in `dict[...]` (and
+    none at all for bare `dict`), so these return annotations stay
+    `typing.Dict` with `# noqa: UP006`. Rewriting them would change
+    outputSchema and structuredContent for clients.
+    """
+    expected = {
+        "create_collection",
+        "get_collection_mitre_tree",
+        "get_collection_report",
+        "get_domain_report",
+        "get_file_behavior_report",
+        "get_file_behavior_summary",
+        "get_file_report",
+        "get_hunting_ruleset",
+        "get_ip_address_report",
+        "get_threat_profile",
+        "get_url_report",
+        "update_collection_attributes",
+    }
+
+    async with client_session(server._mcp_server) as client:
+        tools_result = await client.list_tools()
+
+    schemas = {tool.name: tool.outputSchema for tool in tools_result.tools}
+    assert expected <= schemas.keys()
+    for name in sorted(expected):
+        schema = schemas[name]
+        assert schema is not None, name
+        assert schema["required"] == ["result"], name
+        assert schema["properties"]["result"]["type"] == "object", name
+
+
+@pytest.mark.asyncio(loop_scope="session")
 async def test_search_threats_accepts_null_collection_type():
     """An explicit null `collection_type` behaves like omitting it."""
 
@@ -1517,3 +1598,117 @@ async def test_search_threats_accepts_null_collection_type():
 
     assert not result.isError, result.content[0].text
     mock_iterator.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "tool_name, arguments",
+    [
+        (
+            "get_entities_related_to_a_domain",
+            {"domain": "theevil.com", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_ip_address",
+            {"ip_address": "8.8.8.8", "descriptors_only": True},
+        ),
+        (
+            "get_entities_related_to_an_url",
+            {"url": "http://theevil.com/", "descriptors_only": True},
+        ),
+        ("get_entities_related_to_a_collection", {"id": "collection_1"}),
+        ("get_entities_related_to_a_hunting_ruleset", {"ruleset_id": "1234"}),
+    ],
+)
+async def test_get_entities_related_invalid_relationship_returns_error(
+    tool_name, arguments
+):
+    """An unknown relationship_name comes back as an error dict, not a ToolError.
+
+    The tools return the error dict before any API call. With a list-only
+    return annotation, FastMCP's output validation rejects that dict.
+    """
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            tool_name,
+            arguments={**arguments, "relationship_name": "not_a_relationship"},
+        )
+        assert not result.isError
+        assert result.structuredContent is not None
+        payload = result.structuredContent["result"]
+        assert isinstance(payload, dict)
+        assert "Relationship not_a_relationship does not exist" in payload["error"]
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    "status, api_response, expected_error",
+    [
+        (
+            403,
+            {"error": {"code": "ForbiddenError", "message": "Not allowed"}},
+            "API Error: Not allowed",
+        ),
+        (400, {"error": "not a dict"}, "API Error: Unknown error"),
+        (200, {"data": None}, "API Error: Unknown error"),
+    ],
+)
+async def test_create_collection_api_error_returns_error(
+    make_httpserver_ipv4, status, api_response, expected_error
+):
+    """A GTI error response comes back as an error dict, not KeyError: 'data'."""
+    name = f"error collection {status} {expected_error}"
+    make_httpserver_ipv4.expect_oneshot_request(
+        "/api/v3/collections",
+        method="POST",
+        json={
+            "data": {
+                "attributes": {"name": name, "description": "d", "private": True},
+                "type": "collection",
+                "raw_items": "evil-domain.com",
+            }
+        },
+    ).respond_with_json(api_response, status=status)
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "create_collection",
+            arguments={"name": name, "description": "d", "iocs": ["evil-domain.com"]},
+        )
+        assert not result.isError, result.content[0].text
+        assert result.structuredContent["result"] == {"error": expected_error}
+
+
+@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.parametrize(
+    "status, api_response, expected_error",
+    [
+        (
+            404,
+            {"error": {"code": "NotFoundError", "message": "Collection not found"}},
+            "API Error: Collection not found",
+        ),
+        (
+            404,
+            {"error": {"code": "NotFoundError"}},
+            "API Error: NotFoundError",
+        ),
+        (200, {"data": None}, "API Error: Unknown error"),
+    ],
+)
+async def test_update_collection_attributes_api_error_returns_error(
+    make_httpserver_ipv4, status, api_response, expected_error
+):
+    """A GTI error response comes back as an error dict, not KeyError: 'data'."""
+    collection_id = f"missing_collection_{status}"
+    make_httpserver_ipv4.expect_oneshot_request(
+        f"/api/v3/collections/{collection_id}", method="PATCH"
+    ).respond_with_json(api_response, status=status)
+
+    async with client_session(server._mcp_server) as client:
+        result = await client.call_tool(
+            "update_collection_attributes",
+            arguments={"id": collection_id, "attributes": {"name": "new"}},
+        )
+        assert not result.isError, result.content[0].text
+        assert result.structuredContent["result"] == {"error": expected_error}

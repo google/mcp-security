@@ -15,7 +15,6 @@ To run these tests:
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Dict
 
 import pytest
 
@@ -36,7 +35,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rules(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing curated rules.
 
@@ -60,7 +59,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rules_as_list(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing curated rules with as_list parameter.
 
@@ -80,7 +79,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_get_curated_rule(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test retrieving a specific curated rule.
 
@@ -112,7 +111,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_get_curated_rule_by_name(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test finding a curated rule by display name.
 
@@ -145,7 +144,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_search_curated_detections(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test searching detections from curated rules.
 
@@ -186,7 +185,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rule_sets(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing curated rule sets.
 
@@ -210,7 +209,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rule_sets_as_list(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing curated rule sets with as_list parameter.
 
@@ -230,7 +229,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_get_curated_rule_set(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test retrieving a specific curated rule set.
 
@@ -264,7 +263,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rule_set_deployments(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing curated rule set deployments.
 
@@ -288,7 +287,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_list_curated_rule_set_deployments_as_list(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test listing deployments with as_list parameter.
 
@@ -308,7 +307,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_update_curated_rule_set_deployment(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test updating curated rule set deployment configuration.
 
@@ -422,7 +421,7 @@ class TestCuratedRulesManagement:
 
     @pytest.mark.asyncio
     async def test_update_curated_rule_set_deployment_invalid_precision(
-        self, chronicle_config: Dict[str, str]
+        self, chronicle_config: dict[str, str]
     ) -> None:
         """Test update with invalid precision value.
 
