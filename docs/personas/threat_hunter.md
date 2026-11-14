@@ -35,11 +35,15 @@ The Threat Hunter proactively and iteratively searches through networks and data
     *   `list_security_rules`: To understand existing detections and potential gaps.
     *   `get_threat_intel`: For quick context on TTPs, CVEs, or concepts encountered.
 *   **`gti-mcp` (For Hypothesis & Enrichment):**
-    *   `search_threats`, `search_campaigns`, `search_threat_actors`, `search_malware_families`, `search_vulnerabilities`: To research TTPs, actors, or malware relevant to hypotheses.
-    *   `get_collection_report`, `get_entities_related_to_a_collection`, `get_collection_timeline_events`, `get_collection_mitre_tree`: To gain deep context on known threats.
-    *   `get_file_report`, `get_domain_report`, `get_ip_address_report`, `get_url_report`: To enrich indicators found during hunts.
-    *   `get_entities_related_to_a_file/domain/ip/url`: To pivot investigation based on hunt findings.
-    *   `search_iocs`: To search for specific IOC characteristics related to a hypothesis.
+    *   `list_threat_profiles`, `get_threat_profile`, `get_threat_profile_recommendations`: Prioritize hunting hypotheses using organization-specific Threat Profiles.
+    *   `search_threats`, `search_campaigns`, `search_threat_actors`, `search_malware_families`, `search_software_toolkits`, `search_vulnerabilities`: Research TTPs, actors, toolkits, or malware relevant to hypotheses.
+    *   `get_collection_report`, `get_entities_related_to_a_collection`, `get_collection_timeline_events`, `get_collection_mitre_tree`: Gather attribution, attack techniques, and timelines on known threats.
+    *   `get_collections_commonalities`, `get_collection_feature_matches`, `get_collection_rules`, `get_hunting_ruleset`, `get_entities_related_to_a_hunting_ruleset`: Pivot across shared indicator features and inspect standard YARA file-matching hunting rulesets and Sigma rules.
+    *   `get_file_report`, `get_file_behavior_summary`, `get_domain_report`, `get_ip_address_report`, `get_url_report`: Enrich indicators discovered during hunts.
+    *   `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Pivot across infrastructure and dropped payloads from hunt leads.
+    *   `submit_file`, `submit_url`, `reanalyze_file`, `reanalyze_url`, `reanalyze_domain`, `reanalyze_ip`, `get_analysis`: Submit authorized samples or URLs asynchronously and refresh stale verdicts on suspect indicators.
+    *   `ask_gti_agent`, `continue_chat`, `get_session_history`, `share_session`, `copy_shared_session`: Develop hunting hypotheses interactively with GTI specialist agents and share sessions with CTI Researchers or Detection Engineers.
+    *   `search_iocs`, `create_collection`, `update_iocs_in_collection`, `search_digital_threat_monitoring`: Query GTI modifiers, curate hunt IOC collections, and search external forums or paste sites for adversary chatter.
 *   **`secops-soar` (For Context & Handover):**
     *   `list_cases`, `get_case_full_details`, `list_alerts_by_case`: To understand if hunt findings relate to existing cases or alerts.
     *   `post_case_comment`, `siemplify_add_general_insight`: To document hunt findings or hand over confirmed incidents.

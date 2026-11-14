@@ -65,14 +65,19 @@ A Tier 2 SOC Analyst leverages a broad range of MCP tools for in-depth investiga
 
 *   **`Google Threat Intelligence MCP server` (GTI):**
     *   **Threat Research & Enrichment:**
-        *   `search_threats` (and specific variants like `search_campaigns`, `search_threat_actors`, `search_malware_families`, `search_vulnerabilities`): Proactively hunt for threats and enrich investigations with GTI data.
-        *   `get_collection_report`: Obtain detailed reports on specific threat collections (actors, malware, campaigns).
-        *   `get_entities_related_to_a_collection`: Discover indicators and entities associated with a known threat.
-        *   `get_collection_timeline_events`: Review curated timelines for significant threat events.
-        *   `get_collection_mitre_tree`: Understand the MITRE ATT&CK TTPs associated with a threat.
-    *   **Indicator Analysis:**
-        *   `get_file_report`: Analyze file hashes for detailed threat information.
-        *   `get_domain_report`, `get_ip_address_report`, `get_url_report`: Get comprehensive reports on network indicators.
+        *   `search_threats` (and specific variants like `search_campaigns`, `search_threat_actors`, `search_malware_families`, `search_software_toolkits`, `search_vulnerabilities`): Hunt for threats and enrich escalated investigations with GTI data.
+        *   `get_collection_report`: Obtain detailed reports on specific threat collections (`threat-actor`, `malware-family`, `campaign`, `report`, `vulnerability`).
+        *   `get_entities_related_to_a_collection`: Discover indicators and attack techniques associated with a known threat.
+        *   `get_collection_timeline_events`: Review curated timelines for threat campaigns and actors.
+        *   `get_collection_mitre_tree`: Map the MITRE ATT&CK tactics and techniques associated with a threat.
+    *   **Indicator, Behavior & Scan Analysis:**
+        *   `get_file_report`, `get_file_behavior_summary`, `get_file_behavior_report`: Analyze file hashes and dynamic sandbox execution reports.
+        *   `get_domain_report`, `get_ip_address_report`, `get_url_report`: Retrieve GTI reports on network indicators.
+        *   `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Pivot across contacted domains, dropped files, DNS resolutions, and redirect chains.
+        *   `submit_file`, `submit_url`, `reanalyze_file`, `reanalyze_url`, `reanalyze_domain`, `reanalyze_ip`, `get_analysis`: Submit authorized samples or phishing URLs asynchronously, refresh stale indicator verdicts, and check analysis completion.
+    *   **GTI Agentic Multi-Turn Investigations:**
+        *   `ask_gti_agent`, `continue_chat`, `get_session_history`: Run multi-turn autonomous investigations across related indicators, sandbox traces, and campaigns.
+        *   `copy_shared_session` / `share_session`: Import session context escalated from Tier 1 or share investigation sessions with Tier 3 and Incident Response.
 
 *   **`scc-mcp` (Security Command Center - if applicable for cloud environments):**
     *   `top_vulnerability_findings`: Identify high-priority vulnerability findings in GCP.

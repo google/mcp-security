@@ -32,7 +32,8 @@ Each component provides different capabilities:
 - [**Remote MCP Server**](remote_server.md) - Fully managed, enterprise-ready MCP server for Google SecOps (Recommended)
 - [**Autonomous SOC Agent (Google ADK v2)**](../run-with-google-adk/README.md) - Prebuilt autonomous security operations agent with CLI REPL, FastAPI server, and native MCP multi-transport
 
-- [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, and threat actors
+- [Google Threat Intelligence (GTI) Server](servers/gti_mcp.md) - Access threat intelligence about IoCs, malware, threat actors, scans, and GTI Agentic sessions
+  - [GTI Workflows](gti_workflows/index.md) - Task guides for non-blocking scanning, GTI Agentic sessions, and collection hunting
 - [Security Command Center (SCC) Server](servers/scc_mcp.md) - Manage cloud security posture and vulnerabilities
 - [Chronicle Security Operations (SecOps) Server](servers/secops_mcp.md) - Search and analyze security events and alerts
 - [SecOps SOAR Server](servers/secops_soar_mcp.md) - Manage security cases and automate response actions

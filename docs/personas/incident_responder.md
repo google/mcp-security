@@ -40,9 +40,12 @@ The Incident Responder (IR) is responsible for managing the response to cybersec
     *   `search_security_events`: To trace attacker activity, confirm containment/eradication.
     *   `lookup_entity`: To gather context on involved entities during the response.
     *   `get_security_alerts`: To monitor for related or subsequent alerts.
-*   **`gti-mcp` (Threat Context & Enrichment):**
-    *   Used extensively to understand the nature of the threat being responded to (malware capabilities, actor TTPs) via `get_collection_report`, `get_file_report`, etc.
-    *   `get_entities_related_to...`: To identify related malicious infrastructure to block or monitor.
+*   **`gti-mcp` (Threat Context, Detonation & Enrichment):**
+    *   `get_collection_report`, `get_collection_mitre_tree`, `get_collection_timeline_events`, `get_file_report`, `get_file_behavior_summary`: Understand adversary TTPs and malware capabilities during active response.
+    *   `get_entities_related_to_a_collection`, `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Identify related infrastructure and dropped payloads to block or sweep across hosts.
+    *   `submit_file`, `submit_url`, `reanalyze_file`, `reanalyze_url`, `reanalyze_domain`, `reanalyze_ip`, `get_analysis`: Submit authorized incident artifacts or phishing links without blocking containment steps, and refresh stale verdicts on suspect infrastructure.
+    *   `ask_gti_agent`, `continue_chat`, `get_session_history`, `share_session`, `copy_shared_session`: Run stateful multi-turn threat assessments and hand off session context across incident response shifts.
+    *   `create_collection`, `update_iocs_in_collection`, `search_digital_threat_monitoring`: Track confirmed incident IOCs in private GTI collections and check Digital Threat Monitoring for leaked credentials or extortion posts.
 *   **`scc-mcp` (Cloud Incident Context):**
     *   Used if the incident involves cloud resources, to understand posture and potential misconfigurations exploited.
 *   **(Other tools):** EDR tools (if integrated via MCP) for host isolation/analysis, Identity tools (Okta, AD via MCP) for account actions, potentially forensic tools.

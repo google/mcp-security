@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title">
+  <title id="title">GTI Agentic session lifecycle across two analysts</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <text x="240" y="28" text-anchor="middle" font-size="14" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Analyst A (session owner)</text>
+  <text x="730" y="28" text-anchor="middle" font-size="14" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" fill="currentColor">Analyst B (recipient)</text>
+  <polyline points="480,10 480,630" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6" stroke-dasharray="4 4"/>
+  <polyline points="20,40 940,40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+  <rect x="90" y="60" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="240.0" y="82.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">ask_gti_agent(message)</text>
+  <text x="240.0" y="98.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">returns session_id + response</text>
+  <polyline points="240,112 240,148" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="90" y="148" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="240.0" y="170.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">continue_chat(session_id, message)</text>
+  <text x="240.0" y="186.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">repeat for each follow-up pivot</text>
+  <polyline points="390,174 430,174 430,130 390,130" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="436" y="158" text-anchor="start" font-size="12" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">x N</text>
+  <polyline points="240,200 240,236" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="70" y="236" width="340" height="68" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="240.0" y="258.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">get_session_history(session_id)</text>
+  <text x="240.0" y="274.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">default: USER_MESSAGE + AGENT_FINAL_RESPONSE</text>
+  <text x="240.0" y="290.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">include_intermediate_events=True for traces</text>
+  <polyline points="240,304 240,340" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="90" y="340" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="240.0" y="362.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">share_session(session_id)</text>
+  <text x="240.0" y="378.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">returns share_token</text>
+  <polyline points="390,366 580,366" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="398" y="352" text-anchor="start" font-size="11" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">share_token via</text>
+  <text x="398" y="386" text-anchor="start" font-size="11" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">SOAR case comment</text>
+  <rect x="580" y="340" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="730.0" y="362.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">copy_shared_session(share_token)</text>
+  <text x="730.0" y="378.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">returns a new session_id</text>
+  <polyline points="730,392 730,428" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="580" y="428" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="730.0" y="450.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">continue_chat(new_session_id, message)</text>
+  <text x="730.0" y="466.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">does not modify Analyst A's session</text>
+  <polyline points="240,392 240,428" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="90" y="428" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="240.0" y="450.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">list_sessions(limit=5)</text>
+  <text x="240.0" y="466.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">paginate with cursor</text>
+  <polyline points="240,480 240,516" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="90" y="516" width="300" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="240.0" y="538.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">delete_session(session_id)</text>
+  <text x="240.0" y="554.0" text-anchor="middle" font-size="12" font-family="SFMono-Regular, Menlo, Consolas, monospace" fill="currentColor">cleanup of finished sessions</text>
+  <text x="480" y="610" text-anchor="middle" font-size="12" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-style="italic" fill="currentColor">Each session_id is owned by the API key that created or copied it.</text>
+</svg>

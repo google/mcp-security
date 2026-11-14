@@ -1,21 +1,25 @@
 # Google Threat Intelligence (GTI) MCP Server
 
-This server provides tools for interacting with the Google Threat Intelligence (VirusTotal) API.
+`gti-mcp` exposes 50 Model Context Protocol (MCP) tools for Google Threat Intelligence and VirusTotal v3 APIs, covering threat collections, indicator reports, sandbox behaviors, hunting rulesets, Digital Threat Monitoring (DTM), Threat Profiles, non-blocking scans and reanalysis, and stateful GTI Agentic sessions.
+
+For task-oriented procedures, see [Google Threat Intelligence workflows](../gti_workflows/index.md).
 
 ## Configuration
 
-To use this server, you need a VirusTotal API key:
+To run `gti-mcp`, obtain a VirusTotal or Google Threat Intelligence API key:
 
-1. Register for a VirusTotal account at [virustotal.com](https://www.virustotal.com)
-2. Navigate to your profile and obtain your API key
-3. Add the API key to your MCP server configuration using environment variables
+1. Sign in to [virustotal.com](https://www.virustotal.com).
+2. Open your profile menu and copy your API key.
+3. Supply `VT_APIKEY` to your MCP client configuration.
 
-### MCP Server Configuration
+### Local MCP Server Configuration
 
-Add the following configuration to your MCP client's settings file:
+Add `gti` to your MCP client settings file:
 
 ```json
-"gti": {
+{
+  "mcpServers": {
+    "gti": {
       "command": "uv",
       "args": [
         "--directory",
@@ -27,16 +31,18 @@ Add the following configuration to your MCP client's settings file:
         "VT_APIKEY": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       }
     }
+  }
+}
 ```
 
 #### `--env-file`
 
-Recommended: use the `--env-file` option in `uv` to move your secrets to an `.env` file for environment variables. You can create this file or use system environment variables as described below.
-
-Your revised config would then be:
+To keep credentials out of your MCP client settings JSON, pass `--env-file` to `uv`:
 
 ```json
-      ...
+{
+  "mcpServers": {
+    "gti": {
       "command": "uv",
       "args": [
         "--directory",
@@ -46,159 +52,203 @@ Your revised config would then be:
         "/path/to/the/repo/.env",
         "server.py"
       ],
-      "env": {},
-      ...
+      "env": {}
+    }
+  }
+}
 ```
 
-Example .env file:
-```
+Example `.env` file:
+
+```text
 VT_APIKEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 ```
 
-### Environment Variable Setup
+### Hosted GTI Agentic Remote MCP Endpoint
 
-Set up the `VT_APIKEY` environment variable in your system:
+If your client only needs the seven stateful GTI Agentic session tools (`ask_gti_agent`, `continue_chat`, `list_sessions`, `get_session_history`, `delete_session`, `share_session`, `copy_shared_session`) and your API key has GTI Enterprise, GTI Enterprise+, or PoC Agentic entitlement, you can connect directly over Streamable HTTP without running Python locally:
 
-**For macOS/Linux:**
-```bash
-export VT_APIKEY="your-vt-api-key"
+```json
+{
+  "mcpServers": {
+    "gti-agentic-hosted": {
+      "url": "https://www.virustotal.com/api/v3/agentspace/mcp/",
+      "headers": {
+        "x-apikey": "${VT_APIKEY}"
+      }
+    }
+  }
+}
 ```
 
-**For Windows PowerShell:**
+Use the local `gti` server configuration above whenever you want all 50 GTI tools in one server.
+
+### Environment Variable Setup
+
+Set `VT_APIKEY` in your shell environment:
+
+**macOS and Linux:**
+
+```bash
+VT_APIKEY="your-vt-api-key"
+export VT_APIKEY
+```
+
+**Windows PowerShell:**
+
 ```powershell
 $Env:VT_APIKEY = "your-vt-api-key"
 ```
 
-For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
+For proxy variables (`HTTP_PROXY`, `HTTPS_PROXY`, `SSL_CERT_FILE`) and client setup details, see the [usage guide](../usage_guide.md).
 
 ## Tools
 
-### Collections (Threats)
+### Collections and Threats (17 tools)
 
-Threats like actors, malware, campaigns, reports, and vulnerabilities are modeled as "collections" in GTI.
+Google Threat Intelligence models threat actors, malware families, campaigns, software toolkits, reports, vulnerabilities, and custom indicator sets as collections.
 
-- **`get_collection_report(id)`**: Retrieves a specific collection report by its ID (e.g., `report--<hash>`, `threat-actor--<hash>`).
-- **`get_entities_related_to_a_collection(id, relationship_name, limit=10)`**: Gets related entities (domains, files, IPs, URLs, other collections) for a given collection ID. Valid values for `relationship_name` include:
-  - `related_reference`: Related references or documents
-  - `execution_parents`: Parent processes/files
-  - `dropped_files`: Files dropped by malware
-  - `contacted_domains`: Domains contacted by a threat
-  - `contacted_urls`: URLs accessed by a threat
-  - `contacted_ips`: IP addresses contacted by a threat
-  - `embedded_collections`: Other collections embedded within this one
-- **`search_threats(query, limit=5, order_by="relevance-")`**: Performs a general search for threats (collections) using GTI query syntax. Supports filtering by `collection_type:"<type>"` within the query.
-- **`search_campaigns(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `campaign`.
-- **`search_threat_actors(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `threat-actor`.
-- **`search_malware_families(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `malware-family`.
-- **`search_software_toolkits(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `software-toolkit`.
-- **`search_threat_reports(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `report`.
-- **`search_vulnerabilities(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `vulnerability`.
-- **`get_collection_timeline_events(id)`**: Retrieves curated timeline events for a collection (especially useful for campaigns and threat actors).
+- **`get_collection_report(id)`**: Retrieves a collection object by ID (such as `report--<id>`, `threat-actor--<id>`, `malware-family--<id>`, `campaign--<id>`, `vulnerability--<id>`, or `collection--<id>`) with `associations` included.
+- **`get_entities_related_to_a_collection(id, relationship_name, limit=10, descriptors_only=True)`**: Retrieves entities linked to collection `id`. Set `descriptors_only=False` when `relationship_name` is `"attack_techniques"`. Supported `relationship_name` values:
+  - `associations`: Associated threat collections across types
+  - `attack_techniques`: MITRE ATT&CK technique objects (`descriptors_only` must be `False`)
+  - `domains`: Associated domains
+  - `files`: Associated file hashes
+  - `ip_addresses`: Associated IPv4 and IPv6 addresses
+  - `urls`: Associated URLs
+  - `threat_actors`: Related threat actor collections
+  - `malware_families`: Related malware family collections
+  - `software_toolkits`: Related toolkit collections
+  - `campaigns`: Related campaign collections
+  - `vulnerabilities`: Related vulnerability collections
+  - `reports`: Related threat intelligence reports
+  - `suspected_threat_actors`: Suspected threat actor collections
+  - `hunting_rulesets`: GTI standard YARA hunting rulesets linked to the collection
+- **`search_threats(query, collection_type=None, limit=5, order_by="relevance-")`**: Searches threat collections using GTI filter syntax. Optional `collection_type` accepts `"threat-actor"`, `"malware-family"`, `"campaign"`, `"report"`, `"software-toolkit"`, `"vulnerability"`, or `"collection"`. `order_by` supports `"relevance-"`, `"relevance+"`, `"creation_date-"`, and `"creation_date+"`.
+- **`search_campaigns(query, limit=10, order_by="relevance-")`**: Searches collections with `collection_type:campaign`.
+- **`search_threat_actors(query, limit=10, order_by="relevance-")`**: Searches collections with `collection_type:threat-actor`.
+- **`search_malware_families(query, limit=10, order_by="relevance-")`**: Searches collections with `collection_type:malware-family`.
+- **`search_software_toolkits(query, limit=10, order_by="relevance-")`**: Searches collections with `collection_type:software-toolkit`.
+- **`search_threat_reports(query, limit=10, order_by="relevance-")`**: Searches collections with `collection_type:report`.
+- **`search_vulnerabilities(query, limit=10, order_by="relevance-")`**: Searches CVE and vulnerability collections with `collection_type:vulnerability`.
+- **`get_collection_timeline_events(id)`**: Retrieves analyst-curated timeline events for collection `id`.
+- **`get_collection_mitre_tree(id)`**: Retrieves MITRE ATT&CK tactics and techniques mapped to collection `id`.
+- **`create_collection(name, description, iocs, private=True)`**: Creates a custom IOC collection from a non-empty list of domains, file hashes, IP addresses, or URLs. Defaults to `private=True`.
+- **`update_collection_attributes(id, attributes)`**: Updates mutable collection fields on `id` (`name`, `description`, `private`, `tags`, `alt_names`).
+- **`update_iocs_in_collection(id, relationship, iocs, operation)`**: Adds or removes indicators on collection `id`. `relationship` must be `"domains"`, `"files"`, `"ip_addresses"`, or `"urls"`. `operation` must be `"add"` or `"remove"`.
+- **`get_collection_feature_matches(collection_id, feature_type, feature_id, entity_type, search_space, entity_type_plural, descriptors_only=True)`**: Pivots from a shared feature (`feature_type` and `feature_id`, such as `imphash` or `favicon_dhash`) to matching indicators. `search_space` accepts `"collection"` (within `collection_id` only) or `"corpus"` (across the VirusTotal dataset).
+- **`get_collections_commonalities(collection_id)`**: Computes shared attributes and relationships across indicators in `collection_id` and returns a formatted markdown summary.
+- **`get_collection_rules(collection_id, top_n=4, rule_types=None)`**: Retrieves curated standard YARA hunting rules and the top `top_n` crowdsourced detection rules matching files in `collection_id`. Optional `rule_types` filters on `"crowdsourced_ids"`, `"crowdsourced_sigma"`, `"crowdsourced_yara"`, and `"curated_yara_rule"`. Note that YARA rules returned here are standard YARA rules for file and payload pattern matching, not Chronicle SIEM YARA-L 2.0 event rules.
 
-### Files
+### Files and Digital Threat Monitoring (6 tools)
 
-- **`get_file_report(hash)`**: Retrieves a comprehensive analysis report for a file based on its MD5, SHA1, or SHA256 hash.
-- **`get_entities_related_to_a_file(hash, relationship_name, limit=10)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash. Valid values for `relationship_name` include:
-  - `contacted_domains`: Domains contacted by the file
-  - `contacted_ips`: IP addresses contacted by the file
-  - `contacted_urls`: URLs accessed by the file
-  - `execution_parents`: Parent processes
-  - `embedded_domains`: Domains embedded in the file
-  - `execution_children`: Child processes spawned by this file
-  - `behaviors`: Sandbox behavior reports
-- **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a specific sandbox behavior report for a file, identified by `{file_hash}_{sandbox_name}`.
-- **`get_file_behavior_summary(hash)`**: Retrieves a summary of all sandbox behavior reports for a file hash.
+- **`get_file_report(hash)`**: Retrieves the file report for an MD5, SHA-1, or SHA-256 `hash`, including key network and association relationships while omitting raw per-engine `last_analysis_results`.
+- **`get_entities_related_to_a_file(hash, relationship_name, descriptors_only, limit=10)`**: Retrieves entities related to file `hash`. `descriptors_only` is required and must be `True` when the target object type is `file`, `domain`, `url`, `ip_address`, or `collection`. Common `relationship_name` values include `behaviours`, `contacted_domains`, `contacted_ips`, `contacted_urls`, `dropped_files`, `embedded_domains`, `embedded_ips`, `embedded_urls`, `execution_parents`, `itw_domains`, `itw_ips`, `itw_urls`, `malware_families`, `related_threat_actors`, `reports`, `similar_files`, and `vulnerabilities` (47 supported relationships in `FILE_RELATIONSHIPS`).
+- **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a single sandbox execution report identified by `{file_hash}_{sandbox_name}`.
+- **`get_file_behavior_summary(hash)`**: Retrieves the aggregated sandbox behavior summary across all sandbox runs for `hash`.
+- **`analyse_file(file_path)`**: Uploads a local file to VirusTotal (shared with the public VirusTotal community corpus) and blocks until analysis finishes. Prefer non-blocking `submit_file` plus `get_analysis` to avoid client tool-call timeouts.
+- **`search_digital_threat_monitoring(query, size=10, since=None, until=None, page=None, truncate=None, sanitize=True)`**: Searches Digital Threat Monitoring (DTM) documents from surface, deep, and dark web sources using Lucene syntax (`__type`, `label_threat`, `AND`, `OR`, `NOT`). `size` accepts `0` to `25`. `since` and `until` take RFC3339 UTC timestamps ending in `Z`. Pass the returned `page` token with identical parameters to paginate.
 
-### Intelligence Search
+### Intelligence Search and Hunting Rulesets (3 tools)
 
-- **`search_iocs(query, limit=10, order_by="last_submission_date-")`**: Searches for Indicators of Compromise (files, URLs, domains, IPs) using advanced GTI query syntax. Supports entity-specific modifiers and ordering.
+- **`search_iocs(query, limit=10, order_by="last_submission_date-")`**: Searches files, URLs, domains, and IP addresses via `/intelligence/search` using GTI modifiers (such as `entity:file`, `entity:url`, `entity:domain`, or `entity:ip`).
+- **`get_hunting_ruleset(ruleset_id)`**: Retrieves a GTI Livehunt ruleset object, including standard YARA `rules` text, `rule_names`, `number_of_rules`, and `tags`.
+- **`get_entities_related_to_a_hunting_ruleset(ruleset_id, relationship_name, limit=10)`**: Retrieves objects related to `ruleset_id`. Supported `relationship_name`: `"hunting_notification_files"`.
 
-### Network Locations (Domains & IPs)
+### Network Locations: Domains and IP Addresses (4 tools)
 
-- **`get_domain_report(domain)`**: Retrieves a comprehensive analysis report for a domain.
-- **`get_entities_related_to_a_domain(domain, relationship_name, limit=10)`**: Gets related entities (files, resolutions, subdomains, URLs, etc.) for a given domain. Valid values for `relationship_name` include:
-  - `communicating_files`: Files that communicate with this domain
-  - `referrer_files`: Files that refer to this domain
-  - `resolutions`: DNS resolutions for this domain
-  - `siblings`: Sibling domains
-  - `subdomains`: Subdomains of this domain
-  - `urls`: URLs associated with this domain
-- **`get_ip_address_report(ip_address)`**: Retrieves a comprehensive analysis report for an IPv4 or IPv6 address.
-- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, limit=10)`**: Gets related entities (files, resolutions, URLs, etc.) for a given IP address. Valid values for `relationship_name` include:
-  - `communicating_files`: Files that communicate with this IP
-  - `downloaded_files`: Files downloaded from this IP
-  - `referrer_files`: Files that refer to this IP
-  - `resolutions`: DNS resolutions for this IP
-  - `urls`: URLs associated with this IP
+- **`get_domain_report(domain)`**: Retrieves the GTI domain analysis report and `associations` for `domain`.
+- **`get_entities_related_to_a_domain(domain, relationship_name, descriptors_only, limit=10)`**: Retrieves entities related to `domain`. `descriptors_only` is required (`True` when the target type is `file`, `domain`, `url`, `ip_address`, or `collection`). Common `relationship_name` values include `associations`, `communicating_files`, `downloaded_files`, `historical_ssl_certificates`, `historical_whois`, `malware_families`, `referrer_files`, `related_threat_actors`, `resolutions`, `siblings`, `subdomains`, and `urls` (32 supported relationships in `DOMAIN_RELATIONSHIPS`).
+- **`get_ip_address_report(ip_address)`**: Retrieves the GTI IPv4 or IPv6 analysis report and `associations` for `ip_address`.
+- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, descriptors_only, limit=10)`**: Retrieves entities related to `ip_address`. `descriptors_only` is required (`True` when the target type is `file`, `domain`, `url`, `ip_address`, or `collection`). Common `relationship_name` values include `associations`, `communicating_files`, `downloaded_files`, `historical_ssl_certificates`, `historical_whois`, `malware_families`, `referrer_files`, `related_threat_actors`, `resolutions`, and `urls` (23 supported relationships in `IP_RELATIONSHIPS`).
 
-### URLs
+### URLs (2 tools)
 
-- **`get_url_report(url)`**: Retrieves a comprehensive analysis report for a URL.
-- **`get_entities_related_to_an_url(url, relationship_name, limit=10)`**: Gets related entities (files, domains, IPs, redirects, etc.) for a given URL. Valid values for `relationship_name` include:
-  - `downloaded_files`: Files downloaded from this URL
-  - `communicating_files`: Files that communicate with this URL
-  - `redirecting_urls`: URLs that redirect to this URL
-  - `redirected_urls`: URLs that this URL redirects to
+- **`get_url_report(url)`**: Encodes `url` as unpadded base64 and retrieves its GTI URL analysis report and `associations`.
+- **`get_entities_related_to_an_url(url, relationship_name, descriptors_only, limit=10)`**: Retrieves entities related to `url`. `descriptors_only` is required (`True` when the target type is `file`, `domain`, `url`, `ip_address`, or `collection`). Common `relationship_name` values include `associations`, `communicating_files`, `contacted_domains`, `contacted_ips`, `downloaded_files`, `embedded_js_files`, `last_serving_ip_address`, `network_location`, `redirecting_urls`, `redirects_to`, `referrer_files`, and `related_threat_actors` (32 supported relationships in `URL_RELATIONSHIPS`).
 
-## Query Syntax Examples
+### Threat Profiles (4 tools)
 
-GTI tools that accept a query parameter use specific syntax:
+- **`list_threat_profiles(limit=10)`**: Lists organization Threat Profiles configured in Google Threat Intelligence.
+- **`get_threat_profile(profile_id)`**: Retrieves a Threat Profile object, including configured `interests` (target industries, target regions, source regions, malware roles, and actor motivations).
+- **`get_threat_profile_recommendations(profile_id, limit=10)`**: Lists threat collection descriptors linked to `profile_id` via ML recommendations (`SOURCE_RECOMMENDATION`) or manual follows (`SOURCE_DIRECT_FOLLOW`).
+- **`get_threat_profile_associations_timeline(profile_id, limit=10)`**: Retrieves the chronological associations timeline for `profile_id`.
 
-1. **Basic text search:**
-   ```
+### Scanning, Reanalysis, and Analysis Status (7 tools)
+
+- **`submit_file(file_path)`**: Uploads a local file to VirusTotal using only `os.path.basename(file_path)` in the upload metadata and returns the queued analysis descriptor (`id` and `type`) immediately without blocking. Standard VirusTotal file uploads are shared with the security community; confirm authorization before uploading local files.
+- **`reanalyze_file(hash)`**: Requests a fresh reanalysis of an existing file in VirusTotal by MD5, SHA-1, or SHA-256 `hash` and returns the queued analysis descriptor.
+- **`submit_url(url)`**: Submits `url` for live scanning and returns the queued analysis descriptor (`id` and `type`).
+- **`reanalyze_url(url)`**: Requests a fresh reanalysis of an existing `url` and returns the queued analysis descriptor.
+- **`reanalyze_domain(domain)`**: Triggers a fresh reanalysis and reputation refresh for `domain`.
+- **`reanalyze_ip(ip_address)`**: Triggers a fresh reanalysis and reputation refresh for an IPv4 or IPv6 `ip_address`.
+- **`get_analysis(analysis_id, include_engine_results=False)`**: Retrieves `status` (`queued`, `in-progress`, or `completed`), summary `stats`, `date`, and `meta` (`file_info` or `url_info`) for `analysis_id`. Per-engine scanner entries (`attributes.results`) are omitted unless `include_engine_results=True`.
+
+### GTI Agentic Investigation Sessions (7 tools)
+
+These tools interact with `/api/v3/agentspace/sessions` and require a `VT_APIKEY` with GTI Enterprise, GTI Enterprise+, or active PoC Agentic entitlement.
+
+- **`ask_gti_agent(message)`**: Starts a new multi-step investigation session with GTI specialist agents and returns `session_id`, `title`, synthesized markdown `response`, and optional `citations`, `widgets`, and `agent_id`.
+- **`continue_chat(session_id, message)`**: Sends a follow-up prompt to `session_id` while preserving prior turn context.
+- **`list_sessions(limit=5, order=None, filter=None, cursor=None)`**: Lists GTI Agentic sessions for the authenticated user with optional `cursor` pagination.
+- **`get_session_history(session_id, include_intermediate_events=False)`**: Retrieves session conversation turns (`USER_MESSAGE` and `AGENT_FINAL_RESPONSE` by default; set `include_intermediate_events=True` to include `AGENT_THOUGHT`, `FUNCTION_CALL`, and `FUNCTION_RESPONSE` trace events).
+- **`delete_session(session_id)`**: Deletes a GTI Agentic session and returns `{"deleted": True, "session_id": ...}`.
+- **`share_session(session_id)`**: Generates a `share_token` so another user can clone `session_id`.
+- **`copy_shared_session(share_token)`**: Clones a shared session from `share_token` into the caller's workspace and returns the new `session_id` and latest turn summary.
+
+## Query Syntax Reference
+
+Tools that accept a GTI `query` string (`search_threats` and `search_iocs`) use entity and collection search modifiers:
+
+1. **Keyword search (`search_threats`):**
+
+   ```text
    ransomware
    ```
 
-2. **Type-specific filtering:**
-   ```
-   collection_type:"malware-family" AND name:emotet
-   ```
+2. **Collection type filter (`search_threats`):**
 
-3. **Date-based filtering:**
-   ```
-   collection_type:"threat-actor" AND last_modification_date:[2023-01-01 TO 2023-06-30]
+   ```text
+   collection_type:"malware-family" name:emotet
    ```
 
-4. **Combined filters:**
-   ```
-   collection_type:"campaign" AND targets:"financial" AND NOT name:emotet
-   ```
+3. **Targeted campaign filter (`search_threats`):**
 
-5. **IOC search with specific attributes:**
-   ```
-   type:ip country:RU reputation:>7
+   ```text
+   collection_type:"campaign" targeted_industries:"financial"
    ```
 
-For additional query syntax modifiers and search capabilities, refer to the VirusTotal documentation:
-- File search modifiers: https://docs.virustotal.com/docs/file-search-modifiers
-- Domain search modifiers: https://docs.virustotal.com/docs/domain-search-modifiers
-- IP address search modifiers: https://docs.virustotal.com/docs/ip-address-search-modifiers
-- URL search modifiers: https://docs.virustotal.com/docs/url-search-modifiers
+4. **File IOC search (`search_iocs`):**
 
-## Usage Examples
+   ```text
+   entity:file p:20+ tag:peexe size:500kb-
+   ```
 
-### Example 1: Investigating a suspicious file
+5. **IP IOC search (`search_iocs`):**
 
-```
-1. Get the file hash (MD5, SHA1, or SHA256)
-2. Use get_file_report(hash) to retrieve analysis details
-3. If malicious, use get_entities_related_to_a_file(hash, "contacted_domains") to see network connections
-4. Check get_file_behavior_summary(hash) for sandbox behavior details
-```
+   ```text
+   entity:ip country:RU p:5+
+   ```
 
-### Example 2: Researching a threat actor
+Modifier reference documentation:
 
-```
-1. Use search_threat_actors("APT28") to find the threat actor
-2. Get the full report with get_collection_report(id) using the returned ID
-3. View timeline events with get_collection_timeline_events(id)
-4. Explore related malware with get_entities_related_to_a_collection(id, "embedded_collections")
-```
+- File search modifiers: https://gtidocs.virustotal.com/docs/file-search-modifiers
+- URL search modifiers: https://gtidocs.virustotal.com/docs/url-search-modifiers
+- Domain search modifiers: https://gtidocs.virustotal.com/docs/domain-search-modifiers
+- IP address search modifiers: https://gtidocs.virustotal.com/docs/ip-address-search-modifiers
 
-### Example 3: Domain investigation
+## Workflow Guides
 
-```
-1. Use get_domain_report("suspicious-domain.com") to get basic information
-2. Check for malware using get_entities_related_to_a_domain("suspicious-domain.com", "communicating_files")
-3. Look for related subdomains with get_entities_related_to_a_domain("suspicious-domain.com", "subdomains")
+For end-to-end step sequences, expected outputs, and operational guardrails, see the dedicated workflow pages:
+
+- [Google Threat Intelligence workflows overview](../gti_workflows/index.md)
+- [Scan and reanalyze files, URLs, domains, and IP addresses](../gti_workflows/scanning_and_reanalysis.md)
+- [Run multi-turn investigations with GTI Agentic](../gti_workflows/agentic_investigations.md)
+- [Curate threat collections, hunting rules, and Digital Threat Monitoring](../gti_workflows/collections_and_hunting.md)
+
+```{toctree}
+:hidden:
+:maxdepth: 2
+
+../gti_workflows/index
 ```

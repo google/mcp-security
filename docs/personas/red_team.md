@@ -32,8 +32,9 @@ The Red Team Member simulates adversarial attacks against the organization's sys
 
 Red Team members typically operate *against* the environment monitored by the Blue Team and thus interact differently with MCP tools. Their usage might be indirect or focused on understanding the defensive landscape:
 
-*   **`gti-mcp` (Intelligence Gathering):**
-    *   Used extensively to research target environments, potential vulnerabilities (`search_vulnerabilities`), threat actor TTPs (`search_threat_actors`, `get_collection_report`, `get_collection_mitre_tree`) to emulate.
+*   **`gti-mcp` (Adversary Emulation Research):**
+    *   Researching target-relevant threat actors, toolkits, and CVEs (`search_threat_actors`, `search_software_toolkits`, `search_vulnerabilities`, `get_collection_report`, `get_collection_timeline_events`, `get_collection_mitre_tree`) to build realistic adversary emulation plans.
+    *   Using `ask_gti_agent` and `continue_chat` to synthesize documented TTP chains and execution behaviors for specific threat groups during exercise planning.
 *   **`secops-mcp` (Understanding Defenses - Reconnaissance):**
     *   *Indirectly:* Understanding what `list_security_rules` might exist helps plan evasion. Analyzing `get_security_alerts` (if accessible during Purple Team exercises) shows what activities are detected.
     *   `search_security_events`: During Purple Team exercises, may query SIEM to see if their actions were logged, even if not alerted upon.
