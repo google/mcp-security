@@ -47,7 +47,7 @@ def info():
     console.print(f"SecOps SIEM MCP: {_status(settings.load_secops_mcp, settings.secops_mcp_url)}")
     console.print(f"SCC MCP: {_status(settings.load_scc_mcp, settings.scc_mcp_url)}")
     console.print(f"GTI MCP: {_status(settings.load_gti_mcp, settings.gti_mcp_url)}")
-    console.print(f"SecOps SOAR MCP: {_status(settings.load_secops_soar_mcp, settings.secops_soar_mcp_url)}")
+    console.print(f"SecOps SOAR MCP: {_status(settings.load_secops_soar_mcp, None)}")
 
 
 

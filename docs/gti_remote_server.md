@@ -285,7 +285,7 @@ gti_agentic_toolset = McpToolset(
 )
 ```
 
-If you use the reference agent in [`run-with-google-adk`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md), you can set `GTI_MCP_URL=https://www.virustotal.com/api/v3/agentspace/mcp/` alongside `VT_APIKEY` and `MINIMAL_LOGGING=Y` directly in `.env` (`MINIMAL_LOGGING=Y` clamps `google_adk` and `httpx` loggers to `WARNING`, clears `ADK_EXPERIMENTAL_TELEMETRY`, and suppresses streamed tool arguments). In custom ADK agents outside `run-with-google-adk`, keep `google_adk` and `httpx` loggers above `DEBUG` and leave `ADK_EXPERIMENTAL_TELEMETRY` unset, because ADK's built-in HTTP header redactor masks `x-api-key` rather than `x-apikey`.
+If you use the reference agent in [`run-with-google-adk`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md), you can set `GTI_MCP_URL=https://www.virustotal.com/api/v3/agentspace/mcp/` alongside `VT_APIKEY` and `MINIMAL_LOGGING=Y` directly in `.env` (`MINIMAL_LOGGING=Y` clamps `google_adk`, `google.adk`, `httpx`, and `httpcore` loggers to `WARNING`, clears `ADK_EXPERIMENTAL_TELEMETRY`, sets `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, and suppresses streamed tool arguments). In custom ADK agents outside `run-with-google-adk`, keep `google_adk` and `httpx` loggers above `DEBUG`, set `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, and leave `ADK_EXPERIMENTAL_TELEMETRY` unset, because ADK's built-in HTTP header redactor masks `x-api-key` rather than `x-apikey`.
 
 ## Available tools
 

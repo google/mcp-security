@@ -106,6 +106,7 @@ def test_tool_auto_detection_from_remote_mcp_urls():
         {
             "GTI_MCP_URL": "https://www.virustotal.com/api/v3/agentspace/mcp/",
             "SECOPS_MCP_URL": "https://chronicle.us.rep.googleapis.com/mcp",
+            "SCC_MCP_URL": "https://securitycenter.googleapis.com/mcp/investigate",
             "SECOPS_SOAR_MCP_URL": "https://example.com/soar/mcp",
         },
         clear=True,
@@ -113,19 +114,18 @@ def test_tool_auto_detection_from_remote_mcp_urls():
         settings = AgentSettings(_env_file=None)
         assert settings.load_gti_mcp is True
         assert settings.load_secops_mcp is True
-        assert settings.load_secops_soar_mcp is True
+        assert settings.load_scc_mcp is True
+        assert settings.load_secops_soar_mcp is False
 
 
 def test_minimal_logging_clamps_adk_loggers_and_unsets_experimental_telemetry():
     import logging
 
-    adk_logger = logging.getLogger("google_adk")
-    httpx_logger = logging.getLogger("httpx")
-    orig_adk = adk_logger.level
-    orig_httpx = httpx_logger.level
+    logger_names = ("google_adk", "google.adk", "httpx", "httpcore")
+    orig_levels = {name: logging.getLogger(name).level for name in logger_names}
     try:
-        adk_logger.setLevel(logging.DEBUG)
-        httpx_logger.setLevel(logging.DEBUG)
+        for name in logger_names:
+            logging.getLogger(name).setLevel(logging.DEBUG)
         with patch.dict(
             os.environ,
             {
@@ -136,12 +136,13 @@ def test_minimal_logging_clamps_adk_loggers_and_unsets_experimental_telemetry():
         ):
             settings = AgentSettings(_env_file=None)
             assert settings.minimal_logging is True
-            assert adk_logger.level >= logging.WARNING
-            assert httpx_logger.level >= logging.WARNING
+            for name in logger_names:
+                assert logging.getLogger(name).level >= logging.WARNING
             assert "ADK_EXPERIMENTAL_TELEMETRY" not in os.environ
+            assert os.environ.get("ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS") == "false"
     finally:
-        adk_logger.setLevel(orig_adk)
-        httpx_logger.setLevel(orig_httpx)
+        for name, level in orig_levels.items():
+            logging.getLogger(name).setLevel(level)
 
 
 def test_tool_explicit_override_overrules_remote_mcp_urls():

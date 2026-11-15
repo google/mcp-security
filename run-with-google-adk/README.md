@@ -167,11 +167,12 @@ MINIMAL_LOGGING=N
 | `GOOGLE_GENAI_USE_VERTEXAI`| `False` | Set `True` to route LLM requests through Vertex AI (uses ADC). Set `False` to use Gemini API (requires `GOOGLE_API_KEY`). |
 | `GOOGLE_API_KEY` | None | Gemini API Key (required when `GOOGLE_GENAI_USE_VERTEXAI=False`). |
 | `GOOGLE_MODEL` | `gemini-2.5-flash` | Gemini model name (e.g. `gemini-2.5-flash`, `gemini-2.5-pro`). |
-| `LOAD_SCC_MCP` | `False` | Enables Security Command Center MCP (`server/scc`). Uses ADC. |
-| `LOAD_SECOPS_MCP` | Auto | Enables Chronicle SIEM MCP. Auto-enables if `CHRONICLE_PROJECT_ID` and `CHRONICLE_CUSTOMER_ID` are set, or if `SECOPS_MCP_URL` is set. |
+| `LOAD_SCC_MCP` | Auto | Enables Security Command Center MCP (`server/scc` or remote `SCC_MCP_URL`). Auto-enables if `SCC_MCP_URL` is set; set `LOAD_SCC_MCP=Y` for the local `stdio` server. Uses ADC. |
+| `LOAD_SECOPS_MCP` | Auto | Enables Google SecOps MCP (unified SIEM & SOAR on `SECOPS_MCP_URL`, or local `server/secops`). Auto-enables if `CHRONICLE_PROJECT_ID` and `CHRONICLE_CUSTOMER_ID` are set, or if `SECOPS_MCP_URL` is set. |
 | `LOAD_GTI_MCP` | Auto | Enables Google Threat Intelligence MCP. Auto-enables if `VT_APIKEY` or `GTI_MCP_URL` is set. |
-| `LOAD_SECOPS_SOAR_MCP` | Auto | Enables SecOps SOAR MCP. Auto-enables if `SOAR_URL` and `SOAR_APP_KEY` are set. |
+| `LOAD_SECOPS_SOAR_MCP` | Auto | Enables standalone local SecOps SOAR MCP (`server/secops-soar`). Auto-enables if `SOAR_URL` and `SOAR_APP_KEY` are set (unified Google SecOps tenants expose remote SOAR tools via `SECOPS_MCP_URL`). |
 | `SECOPS_MCP_URL` | None | Remote Google SecOps Streamable HTTP MCP URL (e.g. `https://chronicle.us.rep.googleapis.com/mcp` or regional `https://<region>-chronicle.googleapis.com/mcp`). Uses ADC and replaces the local `stdio` subprocess. |
+| `SCC_MCP_URL` | None | Remote Security Command Center Streamable HTTP MCP URL (e.g. `https://securitycenter.googleapis.com/mcp/investigate`). Uses ADC and replaces the local `stdio` subprocess. |
 | `GTI_MCP_URL` | None | Remote GTI Agentic Streamable HTTP MCP URL (e.g. `https://www.virustotal.com/api/v3/agentspace/mcp/`). Sends `VT_APIKEY` via `x-apikey` and replaces the local `stdio` subprocess. |
 | `CHRONICLE_PROJECT_ID` | None | GCP project ID hosting Chronicle SIEM (also sent as `x-goog-user-project` when `SECOPS_MCP_URL` is set). |
 | `CHRONICLE_CUSTOMER_ID` | None | Chronicle Customer ID (UUID). |
@@ -321,15 +322,15 @@ CHRONICLE_REGION=us
 MINIMAL_LOGGING=Y
 ```
 
-When `GTI_MCP_URL` is configured, `build_mcp_toolsets(settings)` normalizes the trailing `/` on `/api/v3/agentspace/mcp/`, attaches `x-apikey` on `/api/v3/agentspace/mcp/` (or `Authorization: Bearer vtai_...` on `https://ai.virustotal.com/mcp`), and enforces a minimum 300-second timeout for multi-step server-side investigations. When `SECOPS_MCP_URL` (or `SCC_MCP_URL`) is configured, `build_mcp_toolsets(settings)` validates that the endpoint is a Google-managed `https://*.googleapis.com` origin and injects an origin-pinned `httpx.Auth` client factory wrapping `create_mcp_http_client` so Google Cloud ADC credentials (`SECOPS_SA_PATH` or default ADC, with optional `SECOPS_IMPERSONATE_SERVICE_ACCOUNT`) and `x-goog-user-project` attach on every tool-discovery (`adk web`, `adk graph`, `get_tools()`) and tool-execution request and refresh expired OAuth bearer tokens on a single pooled MCP session.
+When `GTI_MCP_URL` is configured, `build_mcp_toolsets(settings)` normalizes the trailing `/` on `/api/v3/agentspace/mcp/`, attaches `x-apikey` on `/api/v3/agentspace/mcp/` (and accepts `vtai_...` Agent Tokens via `x-apikey` when targeting `https://ai.virustotal.com/mcp`), disables HTTP redirects so static API keys cannot follow cross-origin or `http://` redirects, and enforces a minimum 300-second timeout for multi-step server-side investigations. When `SECOPS_MCP_URL` (or `SCC_MCP_URL`) is configured, `build_mcp_toolsets(settings)` validates that the endpoint is a Google-managed `https://*.googleapis.com` origin and injects an origin-pinned `httpx.Auth` client factory wrapping `create_mcp_http_client` so Google Cloud ADC credentials (`SECOPS_SA_PATH` or default ADC, with optional `SECOPS_IMPERSONATE_SERVICE_ACCOUNT`) and `x-goog-user-project` attach on every tool-discovery (`adk web`, `adk graph`, `get_tools()`) and tool-execution request and refresh expired OAuth bearer tokens on a single pooled MCP session.
 
 #### 2. Programmatic `McpToolset` Construction
 
 For custom ADK agents, or when running remote `gti-agentic` side by side with the local `stdio` `gti-mcp` server in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py), construct `McpToolset` with `StreamableHTTPConnectionParams` directly:
 
 - Read `api_key = settings.vt_apikey or os.environ["VT_APIKEY"]` so keys configured in `.env` do not raise `KeyError`.
-- Pass `tool_name_prefix="gti_agentic_"` when keeping both remote `gti-agentic` and local `stdio` `gti-mcp` enabled side by side, or set `LOAD_GTI_MCP=N` if replacing the built-in local `stdio` toolset manually without setting `GTI_MCP_URL`.
-- Set `MINIMAL_LOGGING=Y` in production (`bootstrap_environment()` clamps `google_adk`, `httpx`, and `httpcore` loggers to `WARNING`, unsets `ADK_EXPERIMENTAL_TELEMETRY`, and suppresses raw `function_call.args` dumps in SSE events) so ADK HTTP tracing never logs `x-apikey`.
+- Pass `tool_name_prefix="gti_agentic_"` when keeping both remote `gti-agentic` and local `stdio` `gti-mcp` enabled side by side (leave `GTI_MCP_URL` unset in `.env` so `build_mcp_toolsets(settings)` loads local `stdio` `gti-mcp` rather than registering the remote endpoint twice), or set `LOAD_GTI_MCP=N` if replacing the built-in local `stdio` toolset manually.
+- Set `MINIMAL_LOGGING=Y` in production (`bootstrap_environment()` clamps `google_adk`, `google.adk`, `httpx`, and `httpcore` loggers to `WARNING`, unsets `ADK_EXPERIMENTAL_TELEMETRY`, sets `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false`, and omits `function_call.args` dumps in SSE `tool_call` events). Avoid re-enabling `google_adk` `DEBUG` logging while `MINIMAL_LOGGING=N`, because ADK's built-in `_redact_headers` masks `x-api-key` rather than `x-apikey`.
 
 ```python
 import os
@@ -378,7 +379,7 @@ Run the hermetic test suite:
 uv run --extra test pytest tests/
 ```
 
-All 52 unit and loopback HTTP tests run hermetically using local loopback MCP endpoints, mocked MCP connection parameters, and simulated LLM responses.
+All 54 unit and loopback HTTP tests run hermetically using local loopback MCP endpoints, mocked MCP connection parameters, and simulated LLM responses.
 
 
 

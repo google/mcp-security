@@ -319,3 +319,49 @@ def test_bounded_session_service_thread_safe_lookups():
 
     asyncio.run(run_test())
 
+
+def test_chat_sse_minimal_logging_suppresses_tool_call_args():
+    import os
+    from unittest.mock import patch
+    from mcp_security_agent.config import AgentSettings
+
+    class ToolCallMockRunner:
+        async def run_async(self, *args, **kwargs):
+            from google.adk.events import Event
+            from google.genai import types
+
+            yield Event(
+                author="SecurityOperationsAgent",
+                content=types.Content(
+                    role="model",
+                    parts=[
+                        types.Part(
+                            function_call=types.FunctionCall(
+                                name="ask_gti_agent",
+                                args={"message": "sensitive-canary-ioc-98765"},
+                            )
+                        )
+                    ],
+                ),
+            )
+
+    with patch.dict(os.environ, {}, clear=True):
+        verbose_settings = AgentSettings(_env_file=None, MINIMAL_LOGGING="N")
+        minimal_settings = AgentSettings(_env_file=None, MINIMAL_LOGGING="Y")
+
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=ToolCallMockRunner()), \
+         patch("mcp_security_agent.server.routes.get_settings", return_value=verbose_settings):
+        client = TestClient(create_app())
+        resp_verbose = client.get("/chat", params={"message": "investigate", "session_id": "s1"})
+        assert resp_verbose.status_code == 200
+        assert "ask_gti_agent" in resp_verbose.text
+        assert "sensitive-canary-ioc-98765" in resp_verbose.text
+
+    with patch("mcp_security_agent.server.routes.get_runner", return_value=ToolCallMockRunner()), \
+         patch("mcp_security_agent.server.routes.get_settings", return_value=minimal_settings):
+        client = TestClient(create_app())
+        resp_minimal = client.get("/chat", params={"message": "investigate", "session_id": "s2"})
+        assert resp_minimal.status_code == 200
+        assert "ask_gti_agent" in resp_minimal.text
+        assert "sensitive-canary-ioc-98765" not in resp_minimal.text
+

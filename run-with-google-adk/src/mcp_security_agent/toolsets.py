@@ -27,7 +27,7 @@ from mcp_security_agent.config import AgentSettings
 logger = logging.getLogger(__name__)
 
 _LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
-_VT_APIKEY_HOSTS = frozenset({"www.virustotal.com", "virustotal.com", "ai.virustotal.com"})
+_VT_APIKEY_HOSTS = frozenset({"www.virustotal.com", "ai.virustotal.com"})
 
 
 def _sanitize_url_for_log(raw_url: str) -> str:
@@ -41,6 +41,12 @@ def _sanitize_url_for_log(raw_url: str) -> str:
     return f"{parsed.scheme}://{host}{port}{path}"
 
 
+def _normalized_origin(url: str | httpx.URL) -> tuple[str, str, int | None]:
+    """Returns a normalized (scheme, host, port) origin tuple using httpx port rules."""
+    hx = httpx.URL(url) if isinstance(url, str) else url
+    return (hx.scheme.lower(), (hx.host or "").lower(), hx.port)
+
+
 def _is_google_api_host(hostname: str) -> bool:
     return hostname == "googleapis.com" or hostname.endswith(".googleapis.com")
 
@@ -51,12 +57,20 @@ def _validate_remote_mcp_url(
     *,
     require_google_api_host: bool = False,
 ) -> tuple[str, urllib.parse.ParseResult, bool]:
-    """Validates scheme and hostname boundaries on a configured remote MCP URL."""
+    """Validates scheme, userinfo, and hostname boundaries on a configured remote MCP URL."""
     cleaned = raw_url.strip()
     parsed = urllib.parse.urlparse(cleaned)
     hostname = (parsed.hostname or "").lower()
     if not hostname:
-        raise ValueError(f"{setting_name} is missing a valid hostname: {_sanitize_url_for_log(cleaned)}")
+        raise ValueError(
+            f"{setting_name} is missing a valid hostname: {_sanitize_url_for_log(cleaned)}"
+        )
+
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError(
+            f"{setting_name} must not embed userinfo credentials in the URL: "
+            f"{_sanitize_url_for_log(cleaned)}"
+        )
 
     is_loopback = hostname in _LOOPBACK_HOSTS
     if parsed.scheme != "https" and not (parsed.scheme == "http" and is_loopback):
@@ -94,64 +108,84 @@ class _GoogleCloudMcpAuth(httpx.Auth):
         self._creds: Any = None
         self._lock = threading.Lock()
 
-    def _get_fresh_token_sync(self) -> str:
+    def _get_auth_headers_sync(self, *, force_refresh: bool = False) -> tuple[str, str | None]:
         import google.auth
         from google.auth.transport.requests import Request
 
         with self._lock:
-            if self._creds is None:
+            creds = self._creds
+            if creds is None:
                 if self._sa_path:
-                    self._creds, _ = google.auth.load_credentials_from_file(
+                    loaded_creds, _ = google.auth.load_credentials_from_file(
                         self._sa_path,
                         scopes=self._scopes,
                     )
                 else:
-                    self._creds, _ = google.auth.default(scopes=self._scopes)
+                    loaded_creds, _ = google.auth.default(scopes=self._scopes)
 
                 if self._impersonate_sa:
                     from google.auth import impersonated_credentials
 
-                    self._creds = impersonated_credentials.Credentials(
-                        source_credentials=self._creds,
+                    loaded_creds = impersonated_credentials.Credentials(
+                        source_credentials=loaded_creds,
                         target_principal=self._impersonate_sa,
                         target_scopes=self._scopes,
                     )
 
-            if not self._creds.valid or self._creds.expired or not self._creds.token:
-                self._creds.refresh(Request())
+                creds = loaded_creds
+                self._creds = creds
 
-            return str(self._creds.token)
+            if force_refresh or not creds.valid or creds.expired or not creds.token:
+                creds.refresh(Request())
+
+            adc_quota = getattr(creds, "quota_project_id", None)
+            quota_project = self._quota_project or (
+                adc_quota.strip() if isinstance(adc_quota, str) and adc_quota.strip() else None
+            )
+            return str(creds.token), quota_project
 
     async def async_auth_flow(
         self, request: httpx.Request
     ) -> AsyncGenerator[httpx.Request, httpx.Response]:
-        req_origin = (
-            request.url.scheme,
-            (request.url.host or "").lower(),
-            request.url.port,
-        )
-        if req_origin == self._target_origin:
-            token = await asyncio.to_thread(self._get_fresh_token_sync)
+        if _normalized_origin(request.url) != self._target_origin:
+            yield request
+            return
+
+        token, quota_project = await asyncio.to_thread(self._get_auth_headers_sync)
+        request.headers["Authorization"] = f"Bearer {token}"
+        if quota_project:
+            request.headers["x-goog-user-project"] = quota_project
+
+        response = yield request
+        if response.status_code == 401:
+            token, quota_project = await asyncio.to_thread(
+                self._get_auth_headers_sync,
+                force_refresh=True,
+            )
             request.headers["Authorization"] = f"Bearer {token}"
-            if self._quota_project:
-                request.headers["x-goog-user-project"] = self._quota_project
-        yield request
+            if quota_project:
+                request.headers["x-goog-user-project"] = quota_project
+            yield request
 
 
-def _build_google_cloud_client_factory(
-    google_auth: _GoogleCloudMcpAuth,
+def _build_mcp_http_client_factory(
     create_client_fn: Any,
+    default_auth: httpx.Auth | None = None,
 ) -> Any:
+    """Wraps create_mcp_http_client with optional auth and follow_redirects=False."""
+
     def _factory(
         headers: dict[str, str] | None = None,
         timeout: httpx.Timeout | None = None,
         auth: httpx.Auth | None = None,
     ) -> httpx.AsyncClient:
-        return create_client_fn(
+        client = create_client_fn(
             headers=headers,
             timeout=timeout,
-            auth=auth or google_auth,
+            auth=auth or default_auth,
         )
+        client.follow_redirects = False
+        return client
 
     return _factory
 
@@ -192,6 +226,19 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
         logger.warning("google.adk.tools.mcp_tool not available; returning empty toolsets.")
         return toolsets
 
+    def _clean_str(val: str | None) -> str | None:
+        return val.strip() if (val and val.strip()) else None
+
+    gcp_project = (
+        _clean_str(settings.google_cloud_project)
+        or _clean_str(os.environ.get("GOOGLE_CLOUD_PROJECT"))
+        or _clean_str(os.environ.get("GCP_PROJECT_ID"))
+        or _clean_str(settings.chronicle_project_id)
+    )
+    chronicle_project = _clean_str(settings.chronicle_project_id) or gcp_project
+    sa_path = _clean_str(settings.secops_sa_path)
+    impersonate_sa = _clean_str(settings.secops_impersonate_service_account)
+
     def _build_stdio_env() -> dict[str, str]:
         """Constructs environment dictionary for Stdio subprocesses with credential and project isolation."""
         env = dict(os.environ)
@@ -201,24 +248,15 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
             if "CLOUDSDK_CONFIG" not in env:
                 env["CLOUDSDK_CONFIG"] = str(Path(settings.google_application_credentials).parent)
 
-        if settings.secops_sa_path:
-            env["SECOPS_SA_PATH"] = settings.secops_sa_path
-        if settings.secops_impersonate_service_account:
-            env["SECOPS_IMPERSONATE_SERVICE_ACCOUNT"] = settings.secops_impersonate_service_account
+        if sa_path:
+            env["SECOPS_SA_PATH"] = sa_path
+        if impersonate_sa:
+            env["SECOPS_IMPERSONATE_SERVICE_ACCOUNT"] = impersonate_sa
 
-        gcp_project = (
-            settings.google_cloud_project
-            or os.environ.get("GOOGLE_CLOUD_PROJECT")
-            or os.environ.get("GCP_PROJECT_ID")
-            or settings.chronicle_project_id
-        )
         if gcp_project:
             env["GOOGLE_CLOUD_PROJECT"] = gcp_project
-
-        chronicle_project = settings.chronicle_project_id or gcp_project
         if chronicle_project:
             env["CHRONICLE_PROJECT_ID"] = chronicle_project
-
         if settings.chronicle_customer_id:
             env["CHRONICLE_CUSTOMER_ID"] = settings.chronicle_customer_id
         if settings.chronicle_region:
@@ -239,7 +277,9 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
 
     stdio_env = _build_stdio_env()
 
-    def _get_stdio_cmd_args(server_path: Path, script_relpath: str) -> tuple[str, list[str], dict[str, str]]:
+    def _get_stdio_cmd_args(
+        server_path: Path, script_relpath: str
+    ) -> tuple[str, list[str], dict[str, str]]:
         import shutil
         import sys
 
@@ -257,118 +297,75 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
         script_full = str(server_path / script_relpath)
         return sys.executable, [script_full], env
 
-    sa_path = settings.secops_sa_path.strip() if settings.secops_sa_path else None
-    impersonate_sa = (
-        settings.secops_impersonate_service_account.strip()
-        if settings.secops_impersonate_service_account
-        else None
-    )
+    def _append_stdio_toolset(label: str, subdir: str, script_relpath: str) -> None:
+        target_dir = server_dir / subdir
+        logger.info("Configuring %s via Stdio subprocess at %s", label, target_dir)
+        cmd, args, env = _get_stdio_cmd_args(target_dir, script_relpath)
+        conn = StdioConnectionParams(
+            server_params=StdioServerParameters(
+                command=cmd,
+                args=args,
+                env=env,
+            ),
+            timeout=settings.stdio_timeout_seconds,
+        )
+        toolsets.append(McpToolset(connection_params=conn))
 
-    # 1. Google SecOps SIEM MCP
+    def _append_google_cloud_remote_toolset(
+        label: str,
+        raw_url: str,
+        setting_name: str,
+        quota_project: str | None,
+    ) -> None:
+        validated_url, _, _ = _validate_remote_mcp_url(
+            raw_url,
+            setting_name,
+            require_google_api_host=True,
+        )
+        logger.info("Configuring %s via Remote URL: %s", label, _sanitize_url_for_log(validated_url))
+        gcp_auth = _GoogleCloudMcpAuth(
+            target_origin=_normalized_origin(validated_url),
+            quota_project=quota_project,
+            sa_path=sa_path,
+            impersonate_sa=impersonate_sa,
+        )
+        conn = StreamableHTTPConnectionParams(
+            url=validated_url,
+            timeout=max(settings.stdio_timeout_seconds, 60.0),
+            sse_read_timeout=max(settings.stdio_timeout_seconds, 300.0),
+            httpx_client_factory=_build_mcp_http_client_factory(create_mcp_http_client, gcp_auth),
+        )
+        toolsets.append(McpToolset(connection_params=conn))
+
+    # 1. Google SecOps MCP (Unified SIEM & SOAR on SECOPS_MCP_URL, or local secops stdio)
     if settings.load_secops_mcp:
-        if settings.secops_mcp_url and settings.secops_mcp_url.strip():
-            secops_url, parsed_secops, _ = _validate_remote_mcp_url(
-                settings.secops_mcp_url,
+        if _clean_str(settings.secops_mcp_url):
+            _append_google_cloud_remote_toolset(
+                "SecOps SIEM MCP",
+                str(settings.secops_mcp_url),
                 "SECOPS_MCP_URL",
-                require_google_api_host=True,
+                chronicle_project,
             )
-            logger.info(
-                "Configuring SecOps SIEM MCP via Remote URL: %s",
-                _sanitize_url_for_log(secops_url),
-            )
-            quota_project = (
-                (settings.chronicle_project_id.strip() if settings.chronicle_project_id else "")
-                or (settings.google_cloud_project.strip() if settings.google_cloud_project else "")
-            ) or None
-            secops_auth = _GoogleCloudMcpAuth(
-                target_origin=(
-                    parsed_secops.scheme,
-                    (parsed_secops.hostname or "").lower(),
-                    parsed_secops.port,
-                ),
-                quota_project=quota_project,
-                sa_path=sa_path or None,
-                impersonate_sa=impersonate_sa or None,
-            )
-            conn = StreamableHTTPConnectionParams(
-                url=secops_url,
-                timeout=max(settings.stdio_timeout_seconds, 60.0),
-                sse_read_timeout=max(settings.stdio_timeout_seconds, 300.0),
-                httpx_client_factory=_build_google_cloud_client_factory(
-                    secops_auth,
-                    create_mcp_http_client,
-                ),
-            )
-            toolsets.append(McpToolset(connection_params=conn))
         else:
-            secops_dir = server_dir / "secops"
-            logger.info("Configuring SecOps SIEM MCP via Stdio subprocess at %s", secops_dir)
-            cmd, args, env = _get_stdio_cmd_args(secops_dir, "secops_mcp/server.py")
-            conn = StdioConnectionParams(
-                server_params=StdioServerParameters(
-                    command=cmd,
-                    args=args,
-                    env=env,
-                ),
-                timeout=settings.stdio_timeout_seconds,
-            )
-            toolsets.append(McpToolset(connection_params=conn))
+            _append_stdio_toolset("SecOps SIEM MCP", "secops", "secops_mcp/server.py")
 
     # 2. Security Command Center (SCC) MCP
     if settings.load_scc_mcp:
-        if settings.scc_mcp_url and settings.scc_mcp_url.strip():
-            scc_url, parsed_scc, _ = _validate_remote_mcp_url(
-                settings.scc_mcp_url,
+        if _clean_str(settings.scc_mcp_url):
+            _append_google_cloud_remote_toolset(
+                "SCC MCP",
+                str(settings.scc_mcp_url),
                 "SCC_MCP_URL",
-                require_google_api_host=True,
+                gcp_project,
             )
-            logger.info(
-                "Configuring SCC MCP via Remote URL: %s",
-                _sanitize_url_for_log(scc_url),
-            )
-            scc_project = (
-                (settings.google_cloud_project.strip() if settings.google_cloud_project else "")
-                or (settings.chronicle_project_id.strip() if settings.chronicle_project_id else "")
-            ) or None
-            scc_auth = _GoogleCloudMcpAuth(
-                target_origin=(
-                    parsed_scc.scheme,
-                    (parsed_scc.hostname or "").lower(),
-                    parsed_scc.port,
-                ),
-                quota_project=scc_project,
-                sa_path=sa_path or None,
-                impersonate_sa=impersonate_sa or None,
-            )
-            conn = StreamableHTTPConnectionParams(
-                url=scc_url,
-                timeout=max(settings.stdio_timeout_seconds, 60.0),
-                sse_read_timeout=max(settings.stdio_timeout_seconds, 300.0),
-                httpx_client_factory=_build_google_cloud_client_factory(
-                    scc_auth,
-                    create_mcp_http_client,
-                ),
-            )
-            toolsets.append(McpToolset(connection_params=conn))
         else:
-            scc_dir = server_dir / "scc"
-            logger.info("Configuring SCC MCP via Stdio subprocess at %s", scc_dir)
-            cmd, args, env = _get_stdio_cmd_args(scc_dir, "scc_mcp.py")
-            conn = StdioConnectionParams(
-                server_params=StdioServerParameters(
-                    command=cmd,
-                    args=args,
-                    env=env,
-                ),
-                timeout=settings.stdio_timeout_seconds,
-            )
-            toolsets.append(McpToolset(connection_params=conn))
+            _append_stdio_toolset("SCC MCP", "scc", "scc_mcp.py")
 
     # 3. Google Threat Intelligence (GTI) MCP
     if settings.load_gti_mcp:
-        if settings.gti_mcp_url and settings.gti_mcp_url.strip():
+        if _clean_str(settings.gti_mcp_url):
             gti_url, parsed_gti, is_loopback = _validate_remote_mcp_url(
-                settings.gti_mcp_url,
+                str(settings.gti_mcp_url),
                 "GTI_MCP_URL",
             )
             if gti_url.rstrip("/").endswith("/api/v3/agentspace/mcp") and not gti_url.endswith("/"):
@@ -381,7 +378,7 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
             )
             gti_host = (parsed_gti.hostname or "").lower()
             gti_headers: dict[str, str] = {}
-            vt_key = settings.vt_apikey.strip() if settings.vt_apikey else ""
+            vt_key = _clean_str(settings.vt_apikey) or ""
             if vt_key:
                 if gti_host == "ai.virustotal.com" and not vt_key.startswith("vtai_"):
                     logger.warning(
@@ -408,51 +405,21 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
                 headers=gti_headers or None,
                 timeout=gti_timeout,
                 sse_read_timeout=gti_timeout,
+                httpx_client_factory=_build_mcp_http_client_factory(create_mcp_http_client),
             )
             toolsets.append(McpToolset(connection_params=conn))
         else:
-            gti_dir = server_dir / "gti"
-            logger.info("Configuring GTI MCP via Stdio subprocess at %s", gti_dir)
-            cmd, args, env = _get_stdio_cmd_args(gti_dir, "gti_mcp/server.py")
-            conn = StdioConnectionParams(
-                server_params=StdioServerParameters(
-                    command=cmd,
-                    args=args,
-                    env=env,
-                ),
-                timeout=settings.stdio_timeout_seconds,
-            )
-            toolsets.append(McpToolset(connection_params=conn))
+            _append_stdio_toolset("GTI MCP", "gti", "gti_mcp/server.py")
 
-    # 4. SecOps SOAR MCP
+    # 4. SecOps SOAR MCP (local standalone Siemplify SOAR stdio; unified remote SOAR uses SECOPS_MCP_URL)
+    if _clean_str(settings.secops_soar_mcp_url):
+        logger.warning(
+            "SECOPS_SOAR_MCP_URL (%s) is ignored because Google SecOps exposes remote SOAR "
+            "tools on SECOPS_MCP_URL; configure SECOPS_MCP_URL for unified remote SOAR or "
+            "SOAR_URL + SOAR_APP_KEY for standalone local SOAR.",
+            _sanitize_url_for_log(str(settings.secops_soar_mcp_url)),
+        )
     if settings.load_secops_soar_mcp:
-        if settings.secops_soar_mcp_url and settings.secops_soar_mcp_url.strip():
-            soar_mcp_url, _, _ = _validate_remote_mcp_url(
-                settings.secops_soar_mcp_url,
-                "SECOPS_SOAR_MCP_URL",
-            )
-            logger.info(
-                "Configuring SecOps SOAR MCP via Remote URL: %s",
-                _sanitize_url_for_log(soar_mcp_url),
-            )
-            conn = StreamableHTTPConnectionParams(
-                url=soar_mcp_url,
-                timeout=max(settings.stdio_timeout_seconds, 60.0),
-                sse_read_timeout=max(settings.stdio_timeout_seconds, 300.0),
-            )
-            toolsets.append(McpToolset(connection_params=conn))
-        else:
-            soar_dir = server_dir / "secops-soar"
-            logger.info("Configuring SecOps SOAR MCP via Stdio subprocess at %s", soar_dir)
-            cmd, args, env = _get_stdio_cmd_args(soar_dir, "secops_soar_mcp/server.py")
-            conn = StdioConnectionParams(
-                server_params=StdioServerParameters(
-                    command=cmd,
-                    args=args,
-                    env=env,
-                ),
-                timeout=settings.stdio_timeout_seconds,
-            )
-            toolsets.append(McpToolset(connection_params=conn))
+        _append_stdio_toolset("SecOps SOAR MCP", "secops-soar", "secops_soar_mcp/server.py")
 
     return toolsets

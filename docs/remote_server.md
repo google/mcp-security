@@ -12,7 +12,7 @@ The remote server uses [Application Default Credentials (ADC)](https://docs.clou
 
 1.  **Set up ADC**: Follow the guide to [Set up Application Default Credentials](https://docs.cloud.google.com/docs/authentication/provide-credentials-adc).
 2.  **Authenticate**: Detailed instructions are in [Authenticate to Google and Google Cloud MCP servers](https://docs.cloud.google.com/mcp/authenticate-mcp).
-3.  **Roles**: The caller requires the `roles/mcp.toolUser` role. Administrators adding this role need `roles/serviceusage.serviceUsageAdmin`.
+3.  **Roles**: The caller requires the `roles/mcp.toolUser` and `roles/serviceusage.serviceUsageConsumer` roles on the billing/quota project, plus an appropriate Chronicle data role (such as `roles/chronicle.viewer`, `roles/chronicle.editor`, or `roles/chronicle.soarAdmin` when calling SOAR tools). Administrators granting MCP access need `roles/serviceusage.serviceUsageAdmin`.
 
 For production, see [Agent identity](https://docs.cloud.google.com/mcp/authenticate-mcp#agent-identity) recommendations in [Manage MCP servers](https://docs.cloud.google.com/mcp/manage-mcp-servers).
 
@@ -57,7 +57,7 @@ Protect the endpoint itself using DDoS protection and WAF capabilities (IP allow
 
 ### IAM
 Access is managed via standard Google Cloud IAM.
-*   Identity requires: `roles/mcp.toolUser`
+*   Identity requires: `roles/mcp.toolUser`, `roles/serviceusage.serviceUsageConsumer`, and a Chronicle data role (such as `roles/chronicle.viewer`)
 *   The server respects existing granular entitlements assigned to the identity via the Chronicle REST API.
 *   [MCP Access Control](https://docs.cloud.google.com/mcp/access-control)
 
@@ -155,7 +155,6 @@ Example Python configuration using `google-adk`. Use the `cloud-platform` OAuth 
 ```python
 import asyncio
 import threading
-import urllib.parse
 import google.auth
 from google.auth.transport.requests import Request
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
@@ -167,42 +166,60 @@ SECOPS_MCP_URL = "https://chronicle.us.rep.googleapis.com/mcp"
 SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
 
 
+def _origin(url: str | httpx.URL) -> tuple[str, str, int | None]:
+    hx = httpx.URL(url) if isinstance(url, str) else url
+    return (hx.scheme.lower(), (hx.host or "").lower(), hx.port)
+
+
 class SecOpsGoogleAuth(httpx.Auth):
-    def __init__(self, target_url: str, quota_project: str) -> None:
-        parsed = urllib.parse.urlparse(target_url)
-        self._origin = (parsed.scheme, (parsed.hostname or "").lower(), parsed.port)
+    def __init__(self, target_url: str, quota_project: str | None = None) -> None:
+        self._origin = _origin(target_url)
         self._quota_project = quota_project
         self._creds = None
         self._lock = threading.Lock()
 
-    def _get_token_sync(self) -> str:
+    def _get_auth_sync(self, *, force_refresh: bool = False) -> tuple[str, str | None]:
         with self._lock:
             if self._creds is None:
                 self._creds, _ = google.auth.default(scopes=SCOPES)
-            if not self._creds.valid or self._creds.expired or not self._creds.token:
+            if force_refresh or not self._creds.valid or self._creds.expired or not self._creds.token:
                 self._creds.refresh(Request())
-            return str(self._creds.token)
+            quota = self._quota_project or getattr(self._creds, "quota_project_id", None)
+            return str(self._creds.token), quota
 
     async def async_auth_flow(self, request: httpx.Request):
-        if (request.url.scheme, (request.url.host or "").lower(), request.url.port) == self._origin:
-            token = await asyncio.to_thread(self._get_token_sync)
+        if _origin(request.url) != self._origin:
+            yield request
+            return
+        token, quota = await asyncio.to_thread(self._get_auth_sync)
+        request.headers["Authorization"] = f"Bearer {token}"
+        if quota:
+            request.headers["x-goog-user-project"] = quota
+        response = yield request
+        if response.status_code == 401:
+            token, quota = await asyncio.to_thread(self._get_auth_sync, force_refresh=True)
             request.headers["Authorization"] = f"Bearer {token}"
-            request.headers["x-goog-user-project"] = self._quota_project
-        yield request
+            if quota:
+                request.headers["x-goog-user-project"] = quota
+            yield request
 
 
-secops_auth = SecOpsGoogleAuth(SECOPS_MCP_URL, PROJECT_ID)
+def _secops_client_factory(headers=None, timeout=None, auth=None) -> httpx.AsyncClient:
+    client = create_mcp_http_client(
+        headers=headers,
+        timeout=timeout,
+        auth=auth or SecOpsGoogleAuth(SECOPS_MCP_URL, PROJECT_ID),
+    )
+    client.follow_redirects = False
+    return client
+
 
 toolset = McpToolset(
     connection_params=StreamableHTTPConnectionParams(
         url=SECOPS_MCP_URL,
         timeout=60.0,
         sse_read_timeout=300.0,
-        httpx_client_factory=lambda headers=None, timeout=None, auth=None: create_mcp_http_client(
-            headers=headers,
-            timeout=timeout,
-            auth=auth or secops_auth,
-        ),
+        httpx_client_factory=_secops_client_factory,
     ),
 )
 ```

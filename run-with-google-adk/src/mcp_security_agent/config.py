@@ -153,7 +153,7 @@ class AgentSettings(BaseSettings):
 
     # MCP Server Enablement Flags (Optional; auto-detected from credentials if None)
     load_secops_mcp: bool | None = Field(default=None, alias="LOAD_SECOPS_MCP")
-    load_scc_mcp: bool = Field(default=False, alias="LOAD_SCC_MCP")
+    load_scc_mcp: bool | None = Field(default=None, alias="LOAD_SCC_MCP")
     load_gti_mcp: bool | None = Field(default=None, alias="LOAD_GTI_MCP")
     load_secops_soar_mcp: bool | None = Field(default=None, alias="LOAD_SECOPS_SOAR_MCP")
 
@@ -180,10 +180,12 @@ class AgentSettings(BaseSettings):
         if self.load_gti_mcp is None:
             self.load_gti_mcp = _is_configured(self.vt_apikey) or _is_configured(self.gti_mcp_url)
 
+        if self.load_scc_mcp is None:
+            self.load_scc_mcp = _is_configured(self.scc_mcp_url)
+
         if self.load_secops_soar_mcp is None:
             self.load_secops_soar_mcp = (
-                (_is_configured(self.soar_url) and _is_configured(self.soar_app_key))
-                or _is_configured(self.secops_soar_mcp_url)
+                _is_configured(self.soar_url) and _is_configured(self.soar_app_key)
             )
 
         if self.load_secops_mcp is None:
@@ -228,6 +230,7 @@ class AgentSettings(BaseSettings):
                     target_logger.setLevel(logging.WARNING)
             if os.environ.get("ADK_EXPERIMENTAL_TELEMETRY", "").strip():
                 os.environ.pop("ADK_EXPERIMENTAL_TELEMETRY", None)
+            os.environ["ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS"] = "false"
 
     
     # Chronicle SIEM Params
@@ -246,7 +249,7 @@ class AgentSettings(BaseSettings):
     default_prompt: str | None = Field(default=None, alias="DEFAULT_PROMPT")
 
     @field_validator(
-        "load_secops_mcp", "load_gti_mcp", "load_secops_soar_mcp",
+        "load_secops_mcp", "load_scc_mcp", "load_gti_mcp", "load_secops_soar_mcp",
         mode="before"
     )
     @classmethod
@@ -261,7 +264,7 @@ class AgentSettings(BaseSettings):
         return bool(value)
 
     @field_validator(
-        "load_scc_mcp", "use_vertex_ai", "minimal_logging",
+        "use_vertex_ai", "minimal_logging",
         mode="before"
     )
     @classmethod
