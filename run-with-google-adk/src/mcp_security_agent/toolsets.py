@@ -15,6 +15,7 @@
 
 import logging
 from pathlib import Path
+import threading
 from typing import Any
 from mcp_security_agent.config import AgentSettings
 
@@ -42,6 +43,7 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
             McpToolset,
             StdioConnectionParams,
             StdioServerParameters,
+            StreamableHTTPConnectionParams,
         )
     except ImportError:
         logger.warning("google.adk.tools.mcp_tool not available; using mock/fallback toolset representation.")
@@ -125,8 +127,68 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
 
     # 1. Google SecOps SIEM MCP
     if settings.load_secops_mcp:
-        if settings.secops_mcp_url:
-            logger.info("Configuring SecOps SIEM MCP via Remote URL: %s", settings.secops_mcp_url)
+        secops_url = settings.secops_mcp_url.strip() if settings.secops_mcp_url else ""
+        if secops_url:
+            logger.info("Configuring SecOps SIEM MCP via Remote URL: %s", secops_url)
+            quota_project = (
+                (settings.chronicle_project_id.strip() if settings.chronicle_project_id else "")
+                or (settings.google_cloud_project.strip() if settings.google_cloud_project else "")
+            ) or None
+            scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+            cached_creds: Any = None
+            creds_lock = threading.Lock()
+
+            def _secops_header_provider(_readonly_context: Any = None) -> dict[str, str]:
+                import google.auth
+                from google.auth.transport.requests import Request
+
+                nonlocal cached_creds
+                with creds_lock:
+                    if cached_creds is None:
+                        sa_path = settings.secops_sa_path.strip() if settings.secops_sa_path else ""
+                        if sa_path:
+                            cached_creds, _ = google.auth.load_credentials_from_file(
+                                sa_path,
+                                scopes=scopes,
+                            )
+                        else:
+                            cached_creds, _ = google.auth.default(scopes=scopes)
+
+                        impersonate_sa = (
+                            settings.secops_impersonate_service_account.strip()
+                            if settings.secops_impersonate_service_account
+                            else ""
+                        )
+                        if impersonate_sa:
+                            from google.auth import impersonated_credentials
+
+                            cached_creds = impersonated_credentials.Credentials(
+                                source_credentials=cached_creds,
+                                target_principal=impersonate_sa,
+                                target_scopes=scopes,
+                            )
+
+                    if not cached_creds.valid or cached_creds.expired or not cached_creds.token:
+                        cached_creds.refresh(Request())
+
+                    token = cached_creds.token
+
+                return {
+                    "Authorization": f"Bearer {token}",
+                    **({"x-goog-user-project": quota_project} if quota_project else {}),
+                }
+
+            conn = StreamableHTTPConnectionParams(
+                url=secops_url,
+                timeout=max(settings.stdio_timeout_seconds, 60.0),
+                sse_read_timeout=max(settings.stdio_timeout_seconds, 300.0),
+            )
+            toolsets.append(
+                McpToolset(
+                    connection_params=conn,
+                    header_provider=_secops_header_provider,
+                )
+            )
         else:
             secops_dir = server_dir / "secops"
             logger.info("Configuring SecOps SIEM MCP via Stdio subprocess at %s", secops_dir)
@@ -161,8 +223,22 @@ def build_mcp_toolsets(settings: AgentSettings) -> list[Any]:
 
     # 3. Google Threat Intelligence (GTI) MCP
     if settings.load_gti_mcp:
-        if settings.gti_mcp_url:
-            logger.info("Configuring GTI MCP via Remote URL: %s", settings.gti_mcp_url)
+        gti_url = settings.gti_mcp_url.strip() if settings.gti_mcp_url else ""
+        if gti_url:
+            if gti_url.rstrip("/").endswith("/api/v3/agentspace/mcp") and not gti_url.endswith("/"):
+                gti_url = f"{gti_url}/"
+            logger.info("Configuring GTI MCP via Remote URL: %s", gti_url)
+            gti_headers: dict[str, str] = {}
+            if settings.vt_apikey and settings.vt_apikey.strip():
+                gti_headers["x-apikey"] = settings.vt_apikey.strip()
+            gti_timeout = max(settings.stdio_timeout_seconds, 300.0)
+            conn = StreamableHTTPConnectionParams(
+                url=gti_url,
+                headers=gti_headers,
+                timeout=gti_timeout,
+                sse_read_timeout=gti_timeout,
+            )
+            toolsets.append(McpToolset(connection_params=conn))
         else:
             gti_dir = server_dir / "gti"
             logger.info("Configuring GTI MCP via Stdio subprocess at %s", gti_dir)

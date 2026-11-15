@@ -12,11 +12,12 @@ When executing a skill, the agent should first check which tools are available i
 | :--- | :--- | :--- | :--- | :--- |
 | **Case Management** | List Cases | `list_cases` | `list_cases` | |
 | | Get Case Details | `get_case` | `get_case_full_details` | Local `get_case_full_details` aggregates alerts/comments. Remote `get_case` fetches the case object; use `expand='tasks,tags,products'` or call `list_case_alerts`/`list_case_comments` for full context. |
+| | Create Case | *(No direct equivalent)* | `create_case` | Remote server has no manual case creation tool (cases originate from alert ingestion); local `create_case` creates a manual SOAR case. |
 | | Comment on Case | `create_case_comment` | `post_case_comment` | |
-| | Update Case | `update_case` | `change_case_priority` | Remote tool is general (priority, status, assignee). Local tool is specific to priority. |
+| | Update Case | `update_case` | `change_case_priority` | Remote `update_case` updates `assignee`, `stage`, `priority`, `display_name`, `description`, and `tags` via `update_mask` for supplied fields. Local tool `change_case_priority` is specific to priority (`update_case_description` updates description). |
 | | Close Case | `execute_bulk_close_case` | `close_case` | Remote uses bulk endpoint; local closes a single case. |
-| | Assign Case | *(No direct equivalent)* | `assign_case` | Local tool assigns a user to a case. |
-| | Change Case Stage | *(No direct equivalent)* | `change_case_stage` | Local tool updates the workflow stage of a case. |
+| | Assign Case | `update_case` | `assign_case` | Remote `update_case` updates `assignee` (along with `stage`, `priority`, and `tags` via `update_mask`); local `assign_case` assigns a user to a case. |
+| | Change Case Stage | `update_case` | `change_case_stage` | Remote `update_case` updates `stage` (along with `assignee`, `priority`, and `tags` via `update_mask`); local `change_case_stage` updates the workflow stage of a case. |
 | | Add Case Tag | *(No direct equivalent)* | `add_case_tag` | Local tool adds a tag to a case. |
 | | Remove Case Tag | *(No direct equivalent)* | `remove_case_tag` | Local tool removes a tag from a case. |
 | **Alerts (SOAR)** | List Alerts for Case | `list_case_alerts` | `list_alerts_by_case` | |
@@ -27,18 +28,20 @@ When executing a skill, the agent should first check which tools are available i
 | | Get Entity Details | *(No direct equivalent)* | `get_entity_details` | |
 | **SIEM / UDM** | UDM Search (Query) | `udm_search` | `search_udm` | |
 | | UDM Search (Nat. Lang.) | `translate_udm_query` -> `udm_search` | `search_security_events` | **Critical:** Remote requires 2 steps (Translate then Search). Local does both in one call. |
+| | Raw Log Search | `search_raw_logs` | *(No direct equivalent)* | Searches unparsed raw log bytes in Chronicle SIEM. |
+| | UDM Stats / Aggregation | *(No direct equivalent)* | `get_stats` | Local `get_stats` runs Chronicle YARA-L 2.0 `match:`/`outcome:` statistical aggregation queries over UDM events. |
 | | Entity Summary | `summarize_entity` | `lookup_entity` | Both provide a summary of entity activity in SIEM. |
 | | IoC Matching | `get_ioc_match` | `get_ioc_matches` | |
 | | Export Results | *(No direct equivalent)* | `export_udm_search_csv` | |
-| **Alerts (SIEM)** | List SIEM Alerts | `list_security_alerts` | `list_security_alerts` | Lists alerts directly from SIEM (not SOAR cases). |
-| | Get SIEM Alert | `get_security_alert` | `get_security_alert` | |
-| | Update SIEM Alert | `update_security_alert` | `update_security_alert` | |
-| **Rules** | List Rules | `list_rules` | `list_rules` | |
-| | Get Rule | `get_rule` | `get_rule` | |
-| | Create Rule | `create_rule` | `create_rule` | |
-| | Update Rule | *(No direct equivalent)* | `update_rule` | Local tool updates rule text in place via `PATCH /v1/{instance}/rules/{rule_id}?update_mask=text`. |
-| | Validate Rule | `validate_rule` | `validate_rule` | |
-| | Test/Run Rule | `list_rule_detections` | `list_rule_detections` | Use to see historical detections. |
+| **Alerts (SIEM)** | List SIEM Alerts | `list_security_alerts` | `get_security_alerts` | Lists alerts directly from SIEM (not SOAR cases). |
+| | Get SIEM Alert | `get_security_alert` | `get_security_alert_by_id` | |
+| | Update SIEM Alert | `update_security_alert` | `do_update_security_alert` | |
+| **Rules** | List Rules | `list_rules` | `list_security_rules`, `search_security_rules` | Lists or regex-searches Chronicle YARA-L 2.0 SIEM UDM event detection rules. |
+| | Get Rule | `get_rule` | `get_detection_rule` | |
+| | Create Rule | `create_rule` | `create_rule` | Creates a Chronicle YARA-L 2.0 SIEM UDM event detection rule. |
+| | Update Rule | *(No direct equivalent)* | `update_rule` | Local tool updates YARA-L 2.0 rule text in place via `PATCH /v1/{instance}/rules/{rule_id}?update_mask=text`. |
+| | Validate Rule | `validate_rule` | `validate_rule` | Validates Chronicle YARA-L 2.0 rule syntax against the UDM schema. |
+| | Test/Run Rule | `list_rule_detections` | `get_rule_detections`, `test_rule` | `list_rule_detections` / `get_rule_detections` list historical detections; local `test_rule` retrotests YARA-L 2.0 rule text against historical UDM events. |
 
 ## Threat Intelligence Mapping (GTI & VirusTotal)
 
@@ -47,8 +50,10 @@ When enriching Indicators of Compromise (IoCs) or pivoting on Google Threat Inte
 | Capability | Remote GTI Agentic (`gti-agentic`) | VirusTotal AI Hosted (`virustotal`) | Local `gti-mcp` (`gti`) | Notes |
 | :--- | :--- | :--- | :--- | :--- |
 | Multi-turn threat, actor, or malware investigation | `ask_gti_agent` -> `continue_chat` | *(Not exposed)* | *(Use discrete entity and relationship tools)* | `ask_gti_agent` returns synthesized Markdown plus `session_id` for follow-up `continue_chat` calls (set client timeout >= 300 seconds). |
-| Session history and analyst handoff | `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, `delete_session` | *(Not exposed)* | *(Not exposed)* | Shares stateful investigation context across SOC tiers; open [PR #333](https://github.com/google/mcp-security/pull/333) adds local Python session wrappers for `/api/v3/agentspace/sessions`. |
-| File hash report | `ask_gti_agent` | `get_file_report` | `get_file_report`, `get_file_behavior_summary` | `virustotal` (`https://ai.virustotal.com/mcp`) authenticates via browser OAuth 2.1 with no static API key. |
+| Session history and analyst handoff | `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, `delete_session` | *(Not exposed)* | *(Not exposed)* | Shares stateful investigation context across SOC tiers via bearer share tokens without re-running prior turns. |
+| File hash report | `ask_gti_agent` | `get_file_report` | `get_file_report`, `get_file_behavior_summary` | `virustotal` (`https://ai.virustotal.com/mcp`) authenticates via browser OAuth 2.1 or a VTAI Agent Token (`vtai_...`, standalone VTAI account). |
 | Domain, IP, or URL report | `ask_gti_agent` | `get_domain_report`, `get_ip_report`, `get_url_report` | `get_domain_report`, `get_ip_address_report`, `get_url_report` | Note tool naming: `get_ip_report` (`virustotal`) vs. `get_ip_address_report` (`gti-mcp`). |
+| File, URL, or network submission & receipt recovery | `ask_gti_agent` | `submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`, `get_submission`, `get_analysis` | `analyse_file` | Agentic sessions use Private Scanning; `virustotal` submissions and local `analyse_file` share uploaded files and submitted URLs publicly with the VirusTotal community. |
+| Indicator relationship & IoC search | `ask_gti_agent` | *(Not exposed)* | `search_iocs`, `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url` | Local `get_entities_related_to_*` indicator pivot tools require `descriptors_only=True` when targeting `file`, `domain`, `url`, `ip_address`, or `collection` objects. |
 | Collection, campaign, or actor IoC pivot | `ask_gti_agent` | *(Not exposed)* | `get_collection_report`, `get_entities_related_to_a_collection`, `search_threats` | Extract campaign IoCs via `gti-agentic` or local `gti-mcp` before running `get_ioc_match` and `udm_search` in Google SecOps. |
 | Standard YARA ruleset and DTM lookups | `ask_gti_agent` | *(Not exposed)* | `get_hunting_ruleset`, `search_digital_threat_monitoring`, `list_threat_profiles` | Standard YARA matches file payloads; use Chronicle `validate_rule` and `create_rule` above for YARA-L 2.0 SIEM UDM event detection rules. |

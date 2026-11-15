@@ -33,7 +33,7 @@ BACKDROP_FILL = "#0f172a"
 BACKDROP_STROKE = "#334155"
 CARD_FILL = "#1e293b"
 REMOTE_BORDER = "#94a3b8"
-LOCAL_BORDER = "#64748b"
+LOCAL_BORDER = "#94a3b8"
 PRIMARY_TEXT = "#f8fafc"
 SECONDARY_TEXT = "#e2e8f0"
 CAPTION_AND_LINE = "#cbd5e1"
@@ -118,7 +118,7 @@ class Canvas:
 
 def render_remote_vs_local():
   c = Canvas(
-      840,
+      880,
       464,
       "Comparison of Remote GTI Agentic MCP, VirusTotal AI Hosted MCP, and local gti-mcp",
   )
@@ -126,7 +126,7 @@ def render_remote_vs_local():
   c.box(
       18,
       169,
-      196,
+      216,
       110,
       [
           "MCP client",
@@ -139,9 +139,9 @@ def render_remote_vs_local():
 
   # Lane 1: Remote GTI Agentic MCP
   c.box(
-      256,
+      276,
       24,
-      328,
+      340,
       108,
       [
           "Remote GTI Agentic MCP (gti-agentic)",
@@ -150,11 +150,11 @@ def render_remote_vs_local():
           "7 specialist-agent session tools",
       ],
   )
-  c.arrow([(214, 196), (256, 78)])
+  c.arrow([(234, 196), (276, 78)])
   c.box(
-      620,
+      652,
       24,
-      202,
+      210,
       108,
       [
           "GTI Agentic platform",
@@ -164,42 +164,42 @@ def render_remote_vs_local():
       ],
       mono=False,
   )
-  c.arrow([(584, 78), (620, 78)])
+  c.arrow([(616, 78), (652, 78)])
 
   # Lane 2: VirusTotal AI Hosted MCP
   c.box(
-      256,
+      276,
       170,
-      328,
+      340,
       108,
       [
           "VirusTotal AI Hosted MCP (virustotal)",
           "ai.virustotal.com/mcp",
-          "Streamable HTTP + Browser OAuth 2.1",
-          "Direct IP, file, domain, URL reports",
+          "Streamable HTTP + OAuth 2.1 / VTAI token",
+          "11 direct report and scan tools",
       ],
   )
-  c.arrow([(214, 224), (256, 224)])
+  c.arrow([(234, 224), (276, 224)])
   c.box(
-      620,
+      652,
       170,
-      202,
+      210,
       108,
       [
           "VirusTotal AI service",
-          "OAuth sign-in (no API key)",
-          "Lookup and scan tools",
+          "VTAI account (unlinked)",
+          "Reports, scans, receipts",
           "Published free-tier quota",
       ],
       mono=False,
   )
-  c.arrow([(584, 224), (620, 224)])
+  c.arrow([(616, 224), (652, 224)])
 
   # Lane 3: Local open-source gti-mcp
   c.box(
-      256,
+      276,
       316,
-      328,
+      340,
       108,
       [
           "Local GTI MCP server (gti)",
@@ -209,11 +209,11 @@ def render_remote_vs_local():
       ],
       dashed=True,
   )
-  c.arrow([(214, 252), (256, 370)], dashed=True)
+  c.arrow([(234, 252), (276, 370)], dashed=True)
   c.box(
-      620,
+      652,
       316,
-      202,
+      210,
       108,
       [
           "GTI / VirusTotal API v3",
@@ -223,10 +223,10 @@ def render_remote_vs_local():
       ],
       mono=False,
   )
-  c.arrow([(584, 370), (620, 370)], dashed=True)
+  c.arrow([(616, 370), (652, 370)], dashed=True)
 
   c.label(
-      420,
+      440,
       448,
       "Register one endpoint or run multiple servers side by side under distinct server keys.",
       size=12,

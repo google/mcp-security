@@ -141,9 +141,13 @@ SECOPS_IMPERSONATE_SERVICE_ACCOUNT=
 CHRONICLE_PROJECT_ID=
 CHRONICLE_CUSTOMER_ID=
 CHRONICLE_REGION=us
+# Optional: Remote Streamable HTTP MCP endpoint (e.g. https://chronicle.us.rep.googleapis.com/mcp)
+# SECOPS_MCP_URL=
 
 # Google Threat Intelligence (GTI / VirusTotal) - Populating enables GTI MCP
 VT_APIKEY=
+# Optional: Remote GTI Agentic Streamable HTTP MCP endpoint (e.g. https://www.virustotal.com/api/v3/agentspace/mcp/)
+# GTI_MCP_URL=
 
 # SecOps SOAR Settings - Populating enables SOAR MCP
 SOAR_URL=
@@ -164,17 +168,19 @@ MINIMAL_LOGGING=N
 | `GOOGLE_API_KEY` | None | Gemini API Key (required when `GOOGLE_GENAI_USE_VERTEXAI=False`). |
 | `GOOGLE_MODEL` | `gemini-2.5-flash` | Gemini model name (e.g. `gemini-2.5-flash`, `gemini-2.5-pro`). |
 | `LOAD_SCC_MCP` | `False` | Enables Security Command Center MCP (`server/scc`). Uses ADC. |
-| `LOAD_SECOPS_MCP` | Auto | Enables Chronicle SIEM MCP. Auto-enables if `CHRONICLE_PROJECT_ID` and `CUSTOMER_ID` are set. |
-| `LOAD_GTI_MCP` | Auto | Enables Google Threat Intelligence MCP. Auto-enables if `VT_APIKEY` is set. |
+| `LOAD_SECOPS_MCP` | Auto | Enables Chronicle SIEM MCP. Auto-enables if `CHRONICLE_PROJECT_ID` and `CHRONICLE_CUSTOMER_ID` are set, or if `SECOPS_MCP_URL` is set. |
+| `LOAD_GTI_MCP` | Auto | Enables Google Threat Intelligence MCP. Auto-enables if `VT_APIKEY` or `GTI_MCP_URL` is set. |
 | `LOAD_SECOPS_SOAR_MCP` | Auto | Enables SecOps SOAR MCP. Auto-enables if `SOAR_URL` and `SOAR_APP_KEY` are set. |
-| `CHRONICLE_PROJECT_ID` | None | GCP project ID hosting Chronicle SIEM. |
+| `SECOPS_MCP_URL` | None | Remote Google SecOps Streamable HTTP MCP URL (e.g. `https://chronicle.us.rep.googleapis.com/mcp` or regional `https://<region>-chronicle.googleapis.com/mcp`). Uses ADC and replaces the local `stdio` subprocess. |
+| `GTI_MCP_URL` | None | Remote GTI Agentic Streamable HTTP MCP URL (e.g. `https://www.virustotal.com/api/v3/agentspace/mcp/`). Sends `VT_APIKEY` via `x-apikey` and replaces the local `stdio` subprocess. |
+| `CHRONICLE_PROJECT_ID` | None | GCP project ID hosting Chronicle SIEM (also sent as `x-goog-user-project` when `SECOPS_MCP_URL` is set). |
 | `CHRONICLE_CUSTOMER_ID` | None | Chronicle Customer ID (UUID). |
 | `CHRONICLE_REGION` | `us` | Chronicle regional gateway (`us`, `europe`, `asia`). |
 | `VT_APIKEY` | None | VirusTotal / GTI API Key (presence auto-activates GTI tools). |
 | `SOAR_URL` | None | Instance URL for SecOps SOAR (presence auto-activates SOAR tools). |
 | `SOAR_APP_KEY` | None | API Key for SecOps SOAR. |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Auto-detected | Path to service account key file or local `.gcloud/application_default_credentials.json`. |
-| `STDIO_PARAM_TIMEOUT` | `60.0` | Timeout in seconds for MCP subprocess initialization and tool execution. |
+| `STDIO_PARAM_TIMEOUT` | `60.0` | Timeout in seconds for MCP subprocess initialization and tool execution (remote Streamable HTTP toolsets enforce a 300s SSE read floor and 300s GTI Agentic request floor). |
 | `MINIMAL_LOGGING` | `False` | Reduces logging verbosity to suppress sensitive query content in production. |
 
 ---
@@ -287,30 +293,59 @@ Sample reference interfaces:
 
 ### Connecting Remote Streamable HTTP MCP Servers (Google SecOps & GTI Agentic)
 
-Instead of spawning local `stdio` MCP subprocesses, you can attach managed remote Streamable HTTP MCP endpoints to `toolsets` and pass them into `LlmAgent(tools=toolsets, ...)` in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py) with `McpToolset` and `StreamableHTTPConnectionParams`:
+Instead of spawning local `stdio` MCP subprocesses, you can connect the ADK agent directly to Google-managed remote Streamable HTTP MCP endpoints:
 
-- **Google SecOps Remote MCP (`chronicle.us.rep.googleapis.com/mcp`):** Uses Google Cloud Application Default Credentials (ADC); see [`docs/remote_server.md`](../docs/remote_server.md).
+- **Google SecOps Remote MCP (`chronicle.us.rep.googleapis.com/mcp` or regional `<region>-chronicle.googleapis.com/mcp`):** Uses Google Cloud Application Default Credentials (ADC) and an `x-goog-user-project` quota header; see [`docs/remote_server.md`](../docs/remote_server.md).
 - **Google Threat Intelligence Agentic MCP (`www.virustotal.com/api/v3/agentspace/mcp/`):** Uses stateless Streamable HTTP with an `x-apikey` header (keep the trailing `/` and omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`); see [`docs/gti_remote_server.md`](../docs/gti_remote_server.md).
 
-> **Note:** Setting `GTI_MCP_URL` or `SECOPS_MCP_URL` in `.env` or `AgentSettings` currently hits a placeholder branch in [`src/mcp_security_agent/toolsets.py`](./src/mcp_security_agent/toolsets.py) that logs the URL without constructing a `StreamableHTTPConnectionParams` toolset. Append remote Streamable HTTP endpoints explicitly to `toolsets` in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py) as shown below.
+#### 1. Declarative `.env` Configuration (Recommended)
+
+Set `GTI_MCP_URL` (with `VT_APIKEY`) or `SECOPS_MCP_URL` (with `CHRONICLE_PROJECT_ID`, using `https://chronicle.us.rep.googleapis.com/mcp` for US tenants or regional `https://<region>-chronicle.googleapis.com/mcp` endpoints for non-US tenants) in `.env`. `build_mcp_toolsets(settings)` in [`src/mcp_security_agent/toolsets.py`](./src/mcp_security_agent/toolsets.py) automatically wires those servers over `StreamableHTTPConnectionParams` instead of spawning local `stdio` subprocesses:
+
+```properties
+# Remote Google Threat Intelligence Agentic MCP (replaces local gti-mcp stdio subprocess)
+GTI_MCP_URL=https://www.virustotal.com/api/v3/agentspace/mcp/
+VT_APIKEY=your_gti_api_key
+
+# Remote Google SecOps MCP (replaces local secops-mcp stdio subprocess;
+# for non-US tenants, use https://<region>-chronicle.googleapis.com/mcp)
+SECOPS_MCP_URL=https://chronicle.us.rep.googleapis.com/mcp
+CHRONICLE_PROJECT_ID=your-chronicle-gcp-project-id
+CHRONICLE_CUSTOMER_ID=a1b2c3d4-e5f6-4321-abcd-ef1234567890
+CHRONICLE_REGION=us
+
+# Suppress verbose payload logging in production
+MINIMAL_LOGGING=Y
+```
+
+When `GTI_MCP_URL` is configured, `build_mcp_toolsets(settings)` normalizes the trailing `/` on `/api/v3/agentspace/mcp/`, attaches `x-apikey`, and enforces a minimum 300-second timeout for multi-step server-side investigations. When `SECOPS_MCP_URL` is configured, `build_mcp_toolsets(settings)` attaches a `header_provider` that caches Google Cloud ADC credentials (`SECOPS_SA_PATH` or default ADC, with optional `SECOPS_IMPERSONATE_SERVICE_ACCOUNT`) and refreshes expired OAuth bearer tokens automatically.
+
+#### 2. Programmatic `McpToolset` Construction
+
+For custom ADK agents, or when running remote `gti-agentic` side by side with the local `stdio` `gti-mcp` server in [`src/mcp_security_agent/agent.py`](./src/mcp_security_agent/agent.py), construct `McpToolset` with `StreamableHTTPConnectionParams` directly:
+
+- Read `api_key = settings.vt_apikey or os.environ["VT_APIKEY"]` so keys configured in `.env` do not raise `KeyError`.
+- Pass `tool_name_prefix="gti_agentic_"` when keeping both remote `gti-agentic` and local `stdio` `gti-mcp` enabled side by side, or set `LOAD_GTI_MCP=N` if replacing the built-in local `stdio` toolset manually without setting `GTI_MCP_URL`.
+- Set `MINIMAL_LOGGING=Y` in production and avoid enabling ADK HTTP `DEBUG` logging or `ADK_EXPERIMENTAL_TELEMETRY`, because ADK's built-in header redactor masks `x-api-key` rather than `x-apikey`.
 
 ```python
 import os
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
 
-VT_APIKEY = os.environ["VT_APIKEY"]
 GTI_AGENTIC_MCP_URL = "https://www.virustotal.com/api/v3/agentspace/mcp/"
+api_key = settings.vt_apikey or os.environ["VT_APIKEY"]
 
 gti_agentic_toolset = McpToolset(
     connection_params=StreamableHTTPConnectionParams(
         url=GTI_AGENTIC_MCP_URL,
         headers={
-            "x-apikey": VT_APIKEY,
+            "x-apikey": api_key,
         },
         timeout=300.0,
         sse_read_timeout=300.0,
     ),
+    tool_name_prefix="gti_agentic_",
 )
 
 toolsets = build_mcp_toolsets(settings)
@@ -335,7 +370,7 @@ Run the hermetic test suite:
 uv run --extra test pytest tests/
 ```
 
-All 37 unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
+All unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
 
 
 

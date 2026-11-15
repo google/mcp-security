@@ -100,6 +100,39 @@ def test_tool_explicit_override_overrules_credentials():
         assert settings.load_secops_mcp is False
 
 
+def test_tool_auto_detection_from_remote_mcp_urls():
+    with patch.dict(
+        os.environ,
+        {
+            "GTI_MCP_URL": "https://www.virustotal.com/api/v3/agentspace/mcp/",
+            "SECOPS_MCP_URL": "https://chronicle.us.rep.googleapis.com/mcp",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.load_gti_mcp is True
+        assert settings.load_secops_mcp is True
+        assert settings.load_secops_soar_mcp is False
+
+
+def test_tool_explicit_override_overrules_remote_mcp_urls():
+    with patch.dict(
+        os.environ,
+        {
+            "GTI_MCP_URL": "https://www.virustotal.com/api/v3/agentspace/mcp/",
+            "VT_APIKEY": "valid_virustotal_api_key_12345",
+            "LOAD_GTI_MCP": "N",
+            "SECOPS_MCP_URL": "https://chronicle.us.rep.googleapis.com/mcp",
+            "CHRONICLE_PROJECT_ID": "my-chronicle-project",
+            "LOAD_SECOPS_MCP": "N",
+        },
+        clear=True,
+    ):
+        settings = AgentSettings(_env_file=None)
+        assert settings.load_gti_mcp is False
+        assert settings.load_secops_mcp is False
+
+
 def test_bootstrap_environment_with_api_key_preserves_gemini_api():
     with patch.dict(os.environ, {"GOOGLE_API_KEY": "AIzaSyTestKey123", "GOOGLE_CLOUD_PROJECT": "my-gcp-proj"}, clear=True):
         settings = AgentSettings(_env_file=None)

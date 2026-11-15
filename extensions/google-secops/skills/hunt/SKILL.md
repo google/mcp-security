@@ -1,6 +1,6 @@
 ---
 name: secops-hunt
-description: Expert guidance for proactive threat hunting. Use this when the user asks to "hunt" for threads, IOCs, or specific TTPs.
+description: Expert guidance for proactive threat hunting. Use this when the user asks to "hunt" for threats, IOCs, or specific TTPs.
 slash_command: /security:hunt
 category: security_operations
 personas:
@@ -32,7 +32,7 @@ Select the most appropriate procedure from the options below.
 2.  **IOC Gathering**:
     *   **Check Connected GTI MCP Tools**: Per `extensions/google-secops/TOOL_MAPPING.md`, check whether a Google Threat Intelligence MCP server is connected:
         *   **Remote GTI Agentic MCP (`gti-agentic`)**: Call `ask_gti_agent` to retrieve associated files, domains, IPs, and URLs for `${GTI_COLLECTION_ID}`.
-        *   **Local GTI MCP (`gti-mcp`)**: Call `get_collection_report` and `get_entities_related_to_a_collection` (`dropped_files`, `contacted_domains`, `contacted_ips`, `contacted_urls`) for `${GTI_COLLECTION_ID}`.
+        *   **Local GTI MCP (`gti-mcp`)**: Call `get_collection_report` and `get_entities_related_to_a_collection` (`files`, `domains`, `ip_addresses`, `urls`) for `${GTI_COLLECTION_ID}`.
     *   **Fallback**: Ask the user to supply the IoC list (files, domains, IPs, URLs) only when no GTI MCP server is connected.
 3.  **Initial Scan**:
     *   **Action**: Check for recent hits against these indicators.
@@ -40,18 +40,19 @@ Select the most appropriate procedure from the options below.
     *   **Local**: `get_ioc_matches`.
 4.  **Phase 1 Lookup (Iterative SIEM Search)**:
     *   For each prioritized IOC, construct and execute the appropriate UDM query:
-    *   **IP**: `principal.ip = "IOC" OR target.ip = "IOC" OR network.ip = "IOC"`
+    *   **IP**: `principal.ip = "IOC" OR target.ip = "IOC" OR src.ip = "IOC"`
     *   **Domain**: `principal.hostname = "IOC" OR target.hostname = "IOC" OR network.dns.questions.name = "IOC"`
     *   **Hash**: `target.file.sha256 = "IOC" OR target.file.md5 = "IOC" OR target.file.sha1 = "IOC"`
     *   **URL**: `target.url = "IOC"`
-    *   **Tool**: `udm_search` (Remote/Local).
+    *   **Remote**: `udm_search`. **Local**: `search_udm`.
 5.  **Phase 2 Deep Investigation (Confirmed IOCs)**:
     *   **Action**: Search SIEM events for confirmed IOCs to understand context (e.g. process execution, network connections).
     *   **Action**: Check for related cases (`list_cases`).
 6.  **Synthesis**: Synthesize all findings.
 7.  **Output**: Ask user to Create Case, Update Case, or Generate Report.
     *   If **Report**: Generate a markdown report file using `write_file`.
-    *   If **Case**: Post a comment to SOAR.
+    *   If **Create Case**: Create a new SOAR case via local `create_case` (while Remote OneMCP updates or comments on existing cases via `update_case` / `create_case_comment`; create via the SOAR UI if only Remote is connected).
+    *   If **Update Case**: Update or comment on an existing SOAR case via `update_case` / `create_case_comment` (Remote) or `change_case_priority` / `post_case_comment` (Local).
 
 ### Guided TTP Hunt (Example: Credential Access)
 
@@ -66,8 +67,8 @@ Select the most appropriate procedure from the options below.
 
 1.  **Research**: Review MITRE ATT&CK techniques or ask user for TTP details.
 2.  **Hunt Loop**:
-    *   **Develop Queries**: Formulate UDM queries for `udm_search` (e.g., specific process names, command lines).
-    *   **Execute**: Run the searches using `udm_search`.
+    *   **Develop Queries**: Formulate UDM queries (e.g., specific process names, command lines).
+    *   **Execute**: Run the searches using `udm_search` (Remote) or `search_udm` (Local).
     *   **Analyze**: Review for anomalies. Does this match the hypothesis? Is it noise?
     *   **Refine**: If too noisy, add filters. If no results, broaden query.
     *   **Repeat**: Iterate until exhausted or leads found.

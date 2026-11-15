@@ -68,7 +68,7 @@ You will be prompted for two environment variables for the MCP configuration:
 
 ### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".
-*   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/antigravity/mcp_config.json`).
+*   **Function**: checks for Google Cloud authentication and environment variables, then merges the correct `remote-secops-investigate` and `remote-secops-admin` configuration into your Antigravity settings (`~/.gemini/config/mcp_config.json`, or `~/.gemini/antigravity/mcp_config.json` on older IDE builds).
 
 ### 3. Alert Triage (`secops-triage`)
 *   **Trigger**: "Triage alert [ID]", "Analyze case [ID]".

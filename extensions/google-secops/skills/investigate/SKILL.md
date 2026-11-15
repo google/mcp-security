@@ -98,11 +98,12 @@ Select the procedure best suited for the investigation type.
 
 ## Common Procedures
 
-### Enrich IOC (SIEM Prevalence)
+### Enrich IOC
 **Steps**:
 1.  **SIEM Summary**: `summarize_entity` (Remote) or `lookup_entity` (Local).
 2.  **IOC Match**: `get_ioc_match` (Remote) or `get_ioc_matches` (Local).
-3.  Return combined findings.
+3.  **External Threat Intelligence (Optional, When Connected)**: Per `extensions/google-secops/TOOL_MAPPING.md`, if a GTI or VirusTotal MCP server is connected, enrich external hashes, domains, IPs, or URLs via `ask_gti_agent` (`gti-agentic`), `get_file_report` / `get_domain_report` / `get_ip_report` / `get_url_report` (`virustotal`), or `get_file_report` / `get_domain_report` / `get_ip_address_report` / `get_url_report` (local `gti-mcp`).
+4.  Return combined findings.
 
 ### Find Relevant SOAR Case
 **Steps**:

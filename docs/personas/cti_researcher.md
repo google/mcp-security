@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Cyber Threat Intelligence (CTI) Researcher focuses on the proactive discovery, analysis, and dissemination of intelligence regarding cyber threats. They delve deep into threat actors, malware families, campaigns, vulnerabilities, and Tactics, Techniques, and Procedures (TTPs) to understand the evolving threat landscape. Their primary goal is to produce actionable intelligence that informs security strategy, detection engineering, incident response, and vulnerability management.
+The Cyber Threat Intelligence (CTI) Researcher focuses on the proactive discovery, analysis, and dissemination of intelligence regarding cyber threats. They analyze threat actors, malware families, campaigns, vulnerabilities, and Tactics, Techniques, and Procedures (TTPs) to understand the evolving threat landscape. Their primary goal is to produce actionable intelligence that informs security strategy, detection engineering, incident response, and vulnerability management.
 
 ## Responsibilities
 
@@ -33,7 +33,7 @@ The CTI Researcher primarily uses the **`Google Threat Intelligence MCP server` 
 
 *   **Remote MCP Server for Google Threat Intelligence (`gti-agentic`) and VirusTotal AI Hosted MCP (`virustotal`):** Zero-install remote endpoints documented in the [Remote MCP Server for Google Threat Intelligence guide](../gti_remote_server.md).
     *   **Multi-Turn Agentic Investigations (`gti-agentic` at `www.virustotal.com/api/v3/agentspace/mcp/`):** `ask_gti_agent` and `continue_chat` delegate multi-step threat actor, malware, campaign, and IoC pivots to server-side GTI specialist agents; `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`, and `delete_session` manage stateful research sessions and analyst handoffs.
-    *   **OAuth 2.1 Direct Indicator Reports (`virustotal` at `ai.virustotal.com/mcp`):** `get_file_report`, `get_domain_report`, `get_ip_report`, and `get_url_report` return direct VirusTotal indicator reports via browser OAuth 2.1 with no static API key.
+    *   **Indicator Reports, Submissions, and Scan Receipts (`virustotal` at `ai.virustotal.com/mcp`):** Exposes 11 hosted tools (`get_file_report`, `get_domain_report`, `get_ip_report`, `get_url_report`, `submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`, `get_submission`, and `get_analysis`) authenticated via browser OAuth 2.1 or a VTAI Agent Token without managing a static VirusTotal v3 API key.
 
 *   **`Google Threat Intelligence MCP server` (GTI):** This is the core local `stdio` toolset (`gti-mcp`) for CTI Researchers.
     *   **Threat Discovery & Research:**
@@ -59,7 +59,7 @@ The CTI Researcher primarily uses the **`Google Threat Intelligence MCP server` 
         *   `analyse_file`: Submit files for analysis.
         *   `search_iocs`: Search for specific IOC patterns or characteristics across different entity types.
     *   **Hunting & Organizational Context:**
-        *   `get_hunting_ruleset` / `get_entities_related_to_a_hunting_ruleset`: Work with Yara rulesets.
+        *   `get_hunting_ruleset` / `get_entities_related_to_a_hunting_ruleset`: Work with standard YARA file/payload hunting rulesets (distinct from Chronicle YARA-L 2.0 SIEM UDM event detection rules).
         *   `list_threat_profiles`, `get_threat_profile`, `get_threat_profile_recommendations`, `get_threat_profile_associations_timeline`: Understand and utilize organization-specific threat profiles and recommendations.
 
 *   **`secops-mcp` (Chronicle SIEM & Security Operations):**

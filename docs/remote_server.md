@@ -91,6 +91,8 @@ All administrative and access activities are recorded in Cloud Audit Logs.
 
 The remote server can be used with any MCP-compatible client. Since JSON configuration for MCP is not yet fully standardized across all clients, here are examples for common tools.
 
+The examples below connect to the US regional endpoint (`https://chronicle.us.rep.googleapis.com/mcp`). For non-US Google SecOps tenants, substitute your tenant's regional endpoint (`https://<region>-chronicle.googleapis.com/mcp` or `https://chronicle.<region>.rep.googleapis.com/mcp`, such as `eu` or `europe-west2`) so the URL matches your tenant `region`.
+
 ### Automated Setup
 
 For **Gemini CLI** and **Antigravity**, you can use the automated setup skills provided in the [Google SecOps Extension](./google_secops_extension.md):
@@ -148,31 +150,38 @@ curl --location 'https://chronicle.us.rep.googleapis.com/mcp' \
 
 ### Agent Development Kit (ADK)
 
-Example Python configuration using `google-adk`:
+Example Python configuration using `google-adk`. Use the `cloud-platform` OAuth scope so user credentials created with `gcloud auth application-default login` refresh cleanly without `invalid_scope` errors, omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`, and pass a `header_provider` callback so long-running agents refresh expired access tokens instead of failing with `HTTP 401` after 60 minutes:
 
 ```python
 import google.auth
 from google.auth.transport.requests import Request
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
 
-# 1. Setup scopes
-SCOPES = ["https://www.googleapis.com/auth/chronicle"]
+PROJECT_ID = "<YOUR_PROJECT_ID>"
+SECOPS_MCP_URL = "https://chronicle.us.rep.googleapis.com/mcp"
+SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
 
-def get_access_token():
-   creds, _ = google.auth.default(scopes=SCOPES)
-   auth_req = Request()
-   creds.refresh(auth_req)
-   return creds.token
+creds, _ = google.auth.default(scopes=SCOPES)
+auth_request = Request()
 
-# 2. Configure Toolset
+
+def build_secops_headers(readonly_context=None) -> dict[str, str]:
+    if not creds.valid or creds.expired:
+        creds.refresh(auth_request)
+    return {
+        "Authorization": f"Bearer {creds.token}",
+        "x-goog-user-project": PROJECT_ID,
+    }
+
+
 toolset = McpToolset(
-   connection_params=StreamableHTTPConnectionParams(
-       url="https://chronicle.us.rep.googleapis.com/mcp",
-       headers={
-           "Authorization": f"Bearer {get_access_token()}",
-           "x-goog-user-project": "<YOUR_PROJECT_ID>"
-       }
-   )
+    connection_params=StreamableHTTPConnectionParams(
+        url=SECOPS_MCP_URL,
+        headers=build_secops_headers(),
+        timeout=60.0,
+        sse_read_timeout=300.0,
+    ),
+    header_provider=build_secops_headers,
 )
 ```
 

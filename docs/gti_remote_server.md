@@ -6,21 +6,21 @@ When you call `ask_gti_agent` or `continue_chat`, server-side specialist threat 
 
 ## Choose between the GTI and VirusTotal MCP servers
 
-You can connect to a managed remote endpoint or run the open-source Python server locally, and you can register multiple servers side by side in one MCP client under distinct server keys such as `gti-agentic`, `virustotal`, and `gti`.
+You can connect to the managed GTI Agentic endpoint, use the hosted VirusTotal AI (VTAI) server, or run the open-source Python server locally, and you can register multiple servers side by side in one MCP client under distinct server keys such as `gti-agentic`, `virustotal`, and `gti`.
 
-![Architecture diagram comparing an MCP client connected to three options: Remote GTI Agentic MCP over stateless Streamable HTTP with an x-apikey header for 7 specialist-agent session tools, VirusTotal AI Hosted MCP at ai.virustotal.com/mcp over Streamable HTTP with browser OAuth 2.1 for 11 direct report and scan tools, and the local gti-mcp stdio Python server using VT_APIKEY for 35+ direct VirusTotal API v3 tools.](img/gti_remote/gti_remote_vs_local.svg)
+![Architecture diagram comparing an MCP client connected to three options: Remote GTI Agentic MCP over stateless Streamable HTTP with an x-apikey header for 7 specialist-agent session tools, VirusTotal AI Hosted MCP at ai.virustotal.com/mcp over Streamable HTTP with browser OAuth 2.1 or a VTAI Agent Token for 11 direct report and scan tools, and the local gti-mcp stdio Python server using VT_APIKEY for 35+ direct VirusTotal API v3 tools.](img/gti_remote/gti_remote_vs_local.svg)
 
 | Capability | Remote GTI Agentic (`gti-agentic`) | VirusTotal AI Hosted (`virustotal`) | Local `gti-mcp` (`gti`) |
 | :--- | :--- | :--- | :--- |
 | Endpoint or package | `www.virustotal.com/api/v3/agentspace/mcp/` (HTTPS) | `ai.virustotal.com/mcp` (HTTPS) | `uvx gti_mcp` (`gti-mcp` on PyPI) |
-| Transport | Stateless Streamable HTTP (`POST` and SSE, trailing `/` required) | Streamable HTTP | Local `stdio` Python process |
-| Authentication | `x-apikey` HTTP header (`VT_APIKEY`) | Browser OAuth 2.1 sign-in (no static API key) | `VT_APIKEY` environment variable |
-| Account requirement | Google Threat Intelligence Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC) license (no separate allowlist group required) | VirusTotal account via Google OAuth (free-tier quota: 60 queries per minute, 1,000 per UTC day; unknown-file uploads: 20 per minute, 500 per UTC day) | VirusTotal or Google Threat Intelligence API v3 key |
+| Transport | Stateless Streamable HTTP (`POST` and Server-Sent Events (SSE), trailing `/` required) | Streamable HTTP | Local `stdio` Python process |
+| Authentication | `x-apikey` HTTP header (`VT_APIKEY`) | Browser OAuth 2.1 sign-in or VTAI Agent Token (no VirusTotal API key) | `VT_APIKEY` environment variable |
+| Account requirement | Google Threat Intelligence Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC) license (no separate allowlist group required) | Standalone VTAI account via Google OAuth or Agent Token registration (does not link VirusTotal or GTI Enterprise privileges; free-tier quota: 60 queries per minute, 1,000 per UTC day; unknown-file uploads: 20 per minute, 500 per UTC day) | VirusTotal or Google Threat Intelligence API v3 key |
 | Tool catalog | 7 session tools (`ask_gti_agent`, `continue_chat`, `list_sessions`, `get_session_history`, `delete_session`, `share_session`, `copy_shared_session`) | 11 hosted tools (`get_file_report`, `get_url_report`, `get_domain_report`, `get_ip_report`, `submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`, `get_submission`, `get_analysis`) | 35+ direct API v3 tools across Threat Collections, MITRE ATT&CK trees, Digital Threat Monitoring (DTM), standard YARA rulesets, Threat Profiles, and Indicator of Compromise (IoC) relationship graphs |
 | Response format | Synthesized Markdown briefs, entity citations, and `session_id` | Structured indicator reports and scan receipts | Structured API v3 JSON objects and relationships |
-| Best fit | Zero-install multi-turn threat hunting, attribution briefs, malware triage, and analyst session handoffs | Quick zero-key indicator lookups and submissions in OAuth-capable clients | Deterministic collection edits, DTM queries, standard YARA file ruleset retrieval, Threat Profile lookups, and custom Python automation |
+| Best fit | Zero-install multi-turn threat hunting, attribution briefs, malware triage, and analyst session handoffs | Quick zero-key indicator lookups and submissions via OAuth 2.1 or VTAI Agent Token | Deterministic collection edits, DTM queries, standard YARA file ruleset retrieval, Threat Profile lookups, and custom Python automation |
 
-For local `gti-mcp` installation and tool reference, see the [Google Threat Intelligence MCP server guide](servers/gti_mcp.md). For OAuth 2.1 direct report lookups without a static API key, see the **Alternative: VirusTotal AI Hosted MCP** section below and the [VirusTotal AI MCP installation guide](https://ai.virustotal.com/install.md).
+For local `gti-mcp` installation and tool reference, see the [Google Threat Intelligence MCP server guide](servers/gti_mcp.md). For OAuth 2.1 or VTAI Agent Token direct report lookups without a VirusTotal API key, see the **Alternative: VirusTotal AI Hosted MCP** section below and the [VirusTotal AI MCP installation guide](https://ai.virustotal.com/install.md).
 
 ## Onboarding and requirements
 
@@ -49,15 +49,15 @@ Pay attention to three protocol behaviors when configuring MCP clients or custom
 
 ## Client configuration
 
-Prompt interactively for your API key in your shell so the secret never enters `~/.bash_history` or `~/.zsh_history` and remains available to clients that interpolate environment variables:
+Prompt interactively for your API key in `bash` or `zsh` so the secret never enters `~/.bash_history` or `~/.zsh_history` and remains available to clients that interpolate environment variables:
 
 ```bash
-read -rsp "GTI API Key: " VT_APIKEY && echo && export VT_APIKEY
+printf "GTI API Key: " >&2 && read -rs VT_APIKEY && echo >&2 && export VT_APIKEY
 ```
 
 ### Cursor
 
-Add `gti-agentic` to `~/.cursor/mcp.json` (user scope) or `.cursor/mcp.json` (workspace scope) using Cursor's `${env:VT_APIKEY}` interpolation syntax:
+Add `gti-agentic` to `~/.cursor/mcp.json` (user scope) or `.cursor/mcp.json` (workspace scope) using Cursor's `${env:VT_APIKEY}` interpolation syntax. Launch Cursor from a shell where `VT_APIKEY` is exported, and keep prompts focused if your Cursor build enforces a 60-second tool call deadline (recovering longer runs via `list_sessions` and `get_session_history`):
 
 ```json
 {
@@ -74,7 +74,7 @@ Add `gti-agentic` to `~/.cursor/mcp.json` (user scope) or `.cursor/mcp.json` (wo
 
 ### VS Code
 
-Configure `.vscode/mcp.json` with VS Code's native `inputs` and `servers` schema so VS Code prompts for your API key as a masked password input rather than storing it on disk:
+Configure `.vscode/mcp.json` with VS Code's native `inputs` and `servers` schema so VS Code prompts for your API key as a masked password input rather than storing it on disk. Keep prompts focused if client request timeouts cannot be overridden above 60 seconds, and call `list_sessions` and `get_session_history` to recover completed responses from longer runs:
 
 ```json
 {
@@ -172,7 +172,7 @@ claude mcp add --transport http gti-agentic "$ENDPOINT_URL" \
   --header 'x-apikey: ${VT_APIKEY}'
 ```
 
-You can also declare `gti-agentic` directly in `~/.claude.json` or a project `.mcp.json` file with `"type": "http"`:
+You can also declare `gti-agentic` directly in `~/.claude.json` or a project `.mcp.json` file with `"type": "http"`. When using `.mcp.json` or `~/.claude.json`, persist `"env": {"MCP_TOOL_TIMEOUT": "300000"}` in `~/.claude/settings.json` (or export `MCP_TOOL_TIMEOUT=300000` in your shell profile) so the 300-second timeout applies across sessions:
 
 ```json
 {
@@ -243,13 +243,13 @@ extensions:
 
 ### Verify connectivity with cURL
 
-Test your API key and entitlement from a terminal before launching an MCP client. Pass the header via `curl --config -` on standard input so `$VT_APIKEY` never appears in process arguments (`ps` or `/proc/<pid>/cmdline`):
+Test your API key and entitlement from a terminal before launching an MCP client. Pass `-i` to inspect response status and headers, and pass the API key via `curl --config -` on standard input so `$VT_APIKEY` never appears in process arguments (`ps` or `/proc/<pid>/cmdline`):
 
 ```bash
 ENDPOINT_URL="https://www.virustotal.com/api/v3/agentspace/mcp/"
 
 printf 'header = "x-apikey: %s"\n' "$VT_APIKEY" | \
-  curl --silent --show-error --config - -X POST "$ENDPOINT_URL" \
+  curl --silent --show-error -i --config - -X POST "$ENDPOINT_URL" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json, text/event-stream" \
     -d '{
@@ -260,7 +260,7 @@ printf 'header = "x-apikey: %s"\n' "$VT_APIKEY" | \
     }'
 ```
 
-An entitled Enterprise, Enterprise Plus, or active PoC key returns HTTP 200 with an `event: message` JSON-RPC response listing all 7 tools.
+An entitled Enterprise, Enterprise Plus, or active PoC key returns `HTTP/2 200` (with no `Mcp-Session-Id` header) and an `event: message` JSON-RPC body listing all 7 tools, rather than `401`, `403`, `307`, or `406`.
 
 ### Google Agent Development Kit in Python
 
@@ -284,6 +284,8 @@ gti_agentic_toolset = McpToolset(
     ),
 )
 ```
+
+If you use the reference agent in [`run-with-google-adk`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md), you can set `GTI_MCP_URL=https://www.virustotal.com/api/v3/agentspace/mcp/` alongside `VT_APIKEY` directly in `.env`. Avoid enabling ADK HTTP `DEBUG` logging or `ADK_EXPERIMENTAL_TELEMETRY` in production (set `MINIMAL_LOGGING=Y` in `run-with-google-adk`), because ADK's built-in header redactor masks `x-api-key` rather than `x-apikey`.
 
 ## Available tools
 
@@ -310,15 +312,17 @@ The remote server exposes 7 tools backed by the stateful [Google Threat Intellig
    - Turn 1 with `ask_gti_agent`: *"Triage the highest-detection samples associated with malware family RedLine submitted over the past 7 days."*
    - Turn 2 with `continue_chat`: *"Summarize recurring execution patterns from those samples, separating file and payload traits suited for standard YARA rules from host process telemetry suited for Chronicle YARA-L 2.0 UDM detection rules."*
 3. **Threat actor briefings and analyst handoffs.**
-   - Turn 1 with `ask_gti_agent`: *"Compile a threat brief on APT44 activity, targeted sectors, and exploited CVEs from the past 90 days."*
+   - Turn 1 with `ask_gti_agent`: *"Compile a threat brief on APT44 activity, targeted sectors, and exploited Common Vulnerabilities and Exposures (CVEs) from the past 90 days."*
    - Handoff with `share_session` and `copy_shared_session`: Generate a `share_token` from the active `session_id` and record it in your incident ticket so a teammate can clone the session into their own workspace and continue investigating independently.
 
-## Alternative: VirusTotal AI Hosted MCP (OAuth 2.1, direct report tools)
+## Alternative: VirusTotal AI Hosted MCP (OAuth 2.1 or VTAI Agent Token, direct report tools)
 
-If you do not have a Google Threat Intelligence Enterprise, Enterprise Plus, or active PoC license, prefer browser OAuth 2.1 over managing a static `VT_APIKEY`, or want direct single-indicator lookup tools (`get_ip_report`, `get_file_report`, `get_domain_report`, `get_url_report`) without installing Python locally, connect to the **VirusTotal AI Hosted MCP** server at `https://ai.virustotal.com/mcp`.
+If you do not have a Google Threat Intelligence Enterprise, Enterprise Plus, or active PoC license, prefer browser OAuth 2.1 or a dedicated agent token over managing a static `VT_APIKEY`, or want direct single-indicator lookup tools (`get_ip_report`, `get_file_report`, `get_domain_report`, `get_url_report`) without installing Python locally, connect to the **VirusTotal AI Hosted MCP** server at `https://ai.virustotal.com/mcp`. Signing in with Google or registering an agent token creates a standalone **VTAI account** and **does not link VirusTotal or GTI Enterprise privileges, quotas, or Private Scanning**.
 
-- **Authentication.** Browser sign-in with Google OAuth 2.1. Remove manual `Authorization` or `x-apikey` headers from the server entry when using OAuth. You can review or revoke active OAuth sessions at [VirusTotal OAuth connections](https://ai.virustotal.com/oauth/connections).
-- **Direct lookup and submission tools (11 hosted tools).** Exposes `get_file_report`, `get_url_report`, `get_domain_report`, `get_ip_report`, `submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`, `get_submission`, and `get_analysis`.
+- **Authentication modes on `https://ai.virustotal.com/mcp`.** Choose one mode per server entry:
+  1. **Browser OAuth 2.1.** Remove manual `Authorization` or `x-apikey` headers from the server entry so your MCP client manages OAuth credentials, and review or revoke active sessions at [VirusTotal OAuth connections](https://ai.virustotal.com/oauth/connections). OAuth exposes 3 separate permissions (`vt:reports:read`, `vt:submissions:write`, and `vt:network-analysis:write`): file write permission does not authorize URL submission or domain/IP reanalysis, and `get_submission` receipts belong only to the specific OAuth connection that submitted them.
+  2. **Protected VTAI Agent Token (`vtai_...`).** For headless agents or MCP clients without browser OAuth, register once via `POST https://ai.virustotal.com/api/v3/agents/register` into `~/.config/vt-mcp/token` (mode `0600`) and pass the token in either `x-apikey: <VTAI_AGENT_TOKEN>` or `Authorization: Bearer <VTAI_AGENT_TOKEN>`, never both; see [Connect another MCP client to VirusTotal](https://ai.virustotal.com/connect/mcp?client=other&format=markdown). Standard VirusTotal or GTI API v3 keys (`VT_APIKEY`) are **not** VTAI Agent Tokens and fail on `https://ai.virustotal.com/mcp` with `HTTP 403` (`{"detail": "Invalid Agent Token"}`).
+- **Direct lookup and submission tools (11 hosted tools).** Exposes `get_file_report`, `get_url_report`, `get_domain_report`, `get_ip_report`, `submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`, `get_submission`, and `get_analysis`. Over remote HTTP, `submit_file(sha256, content_base64)` accepts base64-encoded bytes (up to 24 MB decoded) rather than reading a local filesystem path.
 - **Rate limits and upload quotas.** Free-tier access allows 60 queries per minute and 1,000 queries per UTC day (cached and missing-report reads still consume query quota), with a separate unknown-file upload quota of 20 per minute and 500 per UTC day.
 - **Submission data-sharing and URL-lookup privacy.** Standard VirusTotal uploads and URL submissions (`submit_file`, `submit_attachment`, `submit_url`, `reanalyze_domain`, `reanalyze_ip`) share submitted content with the security community and are not confidential. Use report lookup tools (`get_file_report`, `get_domain_report`, `get_ip_report`, `get_url_report`) by default, and submit files or URLs only when you explicitly intend to share them publicly. Calling `get_url_report` discloses the complete URL, including query parameters and `#fragment` values, to VTAI and VirusTotal; prefer `get_domain_report` when URLs may contain tokens, session IDs, or personal data.
 
@@ -327,6 +331,10 @@ If you do not have a Google Threat Intelligence Enterprise, Enterprise Plus, or 
 - **Antigravity (`agy`).** Install the official partner plugin, start a new session, open `/mcp`, select the namespaced plugin server `virustotal_virustotal`, choose **Authenticate**, and paste any browser callback authorization code into the `/mcp` terminal dialog (never into chat):
   ```bash
   agy plugin install virustotal@antigravity-plugins-partners
+  ```
+- **Gemini CLI.** Install the official extension, then authenticate VirusTotal from `/mcp` in a Gemini CLI session:
+  ```bash
+  gemini extensions install https://github.com/VirusTotal/virustotal-mcp --ref main
   ```
 - **Claude Code.** Requires Claude Code 2.1.283+ and Node.js 22+. Install the official plugin from `VirusTotal/virustotal-mcp` (or run `claude mcp add --transport http virustotal https://ai.virustotal.com/mcp`), run `/reload-plugins` (or start a new session), and authenticate from `/mcp`:
   ```bash
@@ -369,7 +377,8 @@ For client compatibility matrices and quota details, see the [VirusTotal AI MCP 
 | :--- | :--- | :--- |
 | `HTTP 401`, `HTTP 307 Temporary Redirect`, or empty tool list when URL omits `/` | Omitting `/` returns `HTTP 401` when unauthenticated and a cross-scheme `HTTP 307` redirect (`Location: http://www.virustotal.com/api/v3/agentspace/mcp/`) when authenticated; clients strip `x-apikey` across the `https` to `http` downgrade and fail with `HTTP 401` | Set the URL to `https://www.virustotal.com/api/v3/agentspace/mcp/` with the trailing `/` rather than enabling cross-redirect header forwarding. |
 | `HTTP 406 Not Acceptable: Client must accept both application/json and text/event-stream` | Custom `Accept` header specifies only one media type | Send `Accept: application/json, text/event-stream`, or remove custom `Accept` overrides when using an MCP SDK transport. |
-| `HTTP 401` or `HTTP 403` authorization error | Missing `x-apikey` header, unexpanded `${VT_APIKEY}` placeholder, Gemini CLI redacting non-`GEMINI_CLI_*` `headers` variables (`$VT_APIKEY` to `""`), Goose missing `env_keys: [VT_APIKEY]`, or API key without active PoC / Enterprise entitlement | Export `GEMINI_CLI_VT_APIKEY="$VT_APIKEY"` for Gemini CLI, add `env_keys: [VT_APIKEY]` in `~/.config/goose/config.yaml` for Goose, confirm your key belongs to a Google Threat Intelligence Enterprise, Enterprise Plus, or active PoC license, or switch to `https://ai.virustotal.com/mcp` with OAuth 2.1 for free-tier report lookups. |
+| `HTTP 401` or `HTTP 403` authorization error on `www.virustotal.com/api/v3/agentspace/mcp/` | Missing `x-apikey` header, unexpanded `${VT_APIKEY}` placeholder, Gemini CLI redacting non-`GEMINI_CLI_*` `headers` variables (`$VT_APIKEY` to `""`), Goose missing `env_keys: [VT_APIKEY]`, or API key without active PoC / Enterprise entitlement | Export `GEMINI_CLI_VT_APIKEY="$VT_APIKEY"` for Gemini CLI, add `env_keys: [VT_APIKEY]` in `~/.config/goose/config.yaml` for Goose, confirm your key belongs to a Google Threat Intelligence Enterprise, Enterprise Plus, or active PoC license, or switch to `https://ai.virustotal.com/mcp` with OAuth 2.1 or a VTAI Agent Token for free-tier report lookups. |
+| `HTTP 403 {"detail": "Invalid Agent Token"}` or `X-VTAI-Error: unexpanded_credential` on `ai.virustotal.com/mcp` | Standard VirusTotal or GTI API v3 key (`VT_APIKEY`) passed to `ai.virustotal.com/mcp`, or an unexpanded `${...}` variable reference sent literally in `x-apikey` | Remove `x-apikey` and `Authorization` headers to use browser OAuth 2.1 on `https://ai.virustotal.com/mcp`, or register a dedicated `vtai_...` VTAI Agent Token (`~/.config/vt-mcp/token`) and map it with your client's documented environment-variable syntax (never send both `x-apikey` and `Authorization`). Use `VT_APIKEY` against `https://www.virustotal.com/api/v3/agentspace/mcp/` or local `gti-mcp` instead. |
 | Gemini CLI `/mcp` reports `Disconnected` | Gemini CLI treats bare `"url"` without `"type"` as legacy SSE | Configure `"type": "http"` with `"url"` in `~/.gemini/settings.json` (or `"httpUrl"` on older Gemini CLI builds). |
 | Request times out during `ask_gti_agent` or `continue_chat` | Client enforces a 30-second or 60-second request deadline (such as `mcp-remote`'s 60-second SDK timeout) | Raise the client timeout to 300 seconds (300000 milliseconds) and keep each `continue_chat` prompt focused on a single follow-up question. If a call times out after creating a session, call `list_sessions` and `get_session_history` to retrieve the finished response. |
 

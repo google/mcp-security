@@ -87,8 +87,8 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
 
 ## Common Procedures
 
-### Enrich IOC (SIEM Prevalence)
-**Capability**: Entity Summary / IoC Match
+### Enrich IOC
+**Capability**: Entity Summary / IoC Match / External Threat Intelligence
 **Steps**:
 1.  **SIEM Summary**:
     *   **Remote**: `summarize_entity`.
@@ -96,4 +96,6 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
 2.  **IOC Match**:
     *   **Remote**: `get_ioc_match`.
     *   **Local**: `get_ioc_matches`.
-3.  Return combined `${ENRICHMENT_ABSTRACT}`.
+3.  **External Threat Intelligence (Optional, When Connected)**:
+    *   Per `extensions/google-secops/TOOL_MAPPING.md`, if a GTI or VirusTotal MCP server is connected, enrich external hashes, domains, IPs, or URLs via `ask_gti_agent` (`gti-agentic`), `get_file_report` / `get_domain_report` / `get_ip_report` / `get_url_report` (`virustotal`), or `get_file_report` / `get_domain_report` / `get_ip_address_report` / `get_url_report` (local `gti-mcp`).
+4.  Return combined `${ENRICHMENT_ABSTRACT}`.

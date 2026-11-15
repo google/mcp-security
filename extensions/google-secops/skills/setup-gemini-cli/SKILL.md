@@ -1,5 +1,5 @@
 ---
-name: secops-setup-gemini
+name: secops-setup-gemini-cli
 description: Helps the user configure the Google SecOps Remote MCP Server for Gemini CLI. Use this when the user asks to "set up" or "configure" the security tools for Gemini CLI.
 slash_command: /security:setup-gemini
 category: configuration
@@ -34,12 +34,12 @@ You are an expert in configuring the Google SecOps Remote MCP Server for Gemini 
 
 ## Configuration Steps
 
-Guide the user to update their Gemini CLI configuration at `~/.gemini/config.json`.
+Guide the user to update their Gemini CLI configuration at `~/.gemini/settings.json`.
 
 Instruct the user to add the following under `mcpServers`:
 
 ```json
-"remote-mcp-secops": {
+"secops-hosted-mcp": {
   "httpUrl": "https://chronicle.us.rep.googleapis.com/mcp",
   "authProviderType": "google_credentials",
   "oauth": {
@@ -51,6 +51,8 @@ Instruct the user to add the following under `mcpServers`:
   }
 }
 ```
+
+If `REGION` is outside `us` (for example, `europe-west2` or `asia-southeast1`), set `httpUrl` to the regional endpoint `https://<region>-chronicle.googleapis.com/mcp` (or `https://us-chronicle.googleapis.com/mcp` for `us`).
 
 ## Verification
 
