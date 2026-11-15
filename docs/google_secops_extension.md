@@ -49,10 +49,10 @@ Verify skills are enabled from the Gemini CLI prompt:
 
 To install this extension in your Gemini CLI environment:
 
-1.  **Navigate** to the project root.
+1.  **Navigate** to the project root (where `gemini-extension.json` resides).
 2.  **Run**:
     ```bash
-    gemini extensions install ./extensions/google-secops
+    gemini extensions install .
     ```
 
 You will be prompted for two environment variables for the MCP configuration:
@@ -64,7 +64,7 @@ You will be prompted for two environment variables for the MCP configuration:
 
 ### 1. Setup Assistant (Gemini CLI) (`secops-setup-gemini-cli`)
 *   **Trigger**: "Help me set up the Gemini CLI", "Configure Gemini CLI for SecOps".
-*   **Function**: checks for `uv` and Google Cloud authentication, then guides you to add the correct `secops-hosted-mcp` configuration to your Gemini settings (`~/.gemini/settings.json`).
+*   **Function**: checks Google Cloud Application Default Credentials (ADC), then guides you to add or update the `remote-mcp-secops` configuration in your Gemini settings (`~/.gemini/settings.json`).
 
 ### 2. Setup Assistant (Antigravity) (`secops-setup-antigravity`)
 *   **Trigger**: "Help me set up Antigravity", "Configure Antigravity for SecOps".

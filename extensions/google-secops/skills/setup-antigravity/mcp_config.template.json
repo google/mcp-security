@@ -1,9 +1,9 @@
 {
     "mcpServers": {
         "remote-secops-investigate": {
-            "serverUrl": "{{ server_url | default('https://chronicle.us.rep.googleapis.com/mcp') }}",
+            "serverUrl": "{{ server_url }}",
+            "timeoutSeconds": 60,
             "headers": {
-                "Content-Type": "application/json",
                 "x-goog-user-project": "{{ project_id }}",
                 "Authorization": "Bearer {{ auth_token }}"
             },
@@ -41,9 +41,9 @@
             ]
         },
         "remote-secops-admin": {
-            "serverUrl": "{{ server_url | default('https://chronicle.us.rep.googleapis.com/mcp') }}",
+            "serverUrl": "{{ server_url }}",
+            "timeoutSeconds": 60,
             "headers": {
-                "Content-Type": "application/json",
                 "x-goog-user-project": "{{ project_id }}",
                 "Authorization": "Bearer {{ auth_token }}"
             },

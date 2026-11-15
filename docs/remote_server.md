@@ -33,7 +33,7 @@ See [Supported Products](https://docs.cloud.google.com/mcp/supported-products) a
 Remote MCP servers require specific environment context for every request. It is recommended to include these in a context file (e.g., `GEMINI.md` or system prompt) for your LLM:
 
 ```text
-When using the secops-hosted-mcp MCP Server, use these parameters for EVERY request:
+When using the remote-mcp-secops MCP Server, use these parameters for EVERY request:
 Customer ID: <UUIDv4 for your tenant>
 Region: <your-region>
 Project ID: <your-gcp-project-id>
@@ -91,7 +91,7 @@ All administrative and access activities are recorded in Cloud Audit Logs.
 
 The remote server can be used with any MCP-compatible client. Since JSON configuration for MCP is not yet fully standardized across all clients, here are examples for common tools.
 
-The examples below connect to the US regional endpoint (`https://chronicle.us.rep.googleapis.com/mcp`). For non-US Google SecOps tenants, substitute your tenant's regional endpoint (`https://<region>-chronicle.googleapis.com/mcp` or `https://chronicle.<region>.rep.googleapis.com/mcp`, such as `eu` or `europe-west2`) so the URL matches your tenant `region`.
+The examples below connect to the US multi-region endpoint (`https://chronicle.us.rep.googleapis.com/mcp`). For non-US Google SecOps tenants, substitute your tenant's regional endpoint (`https://<region>-chronicle.googleapis.com/mcp`, such as `https://europe-chronicle.googleapis.com/mcp` or `https://europe-west2-chronicle.googleapis.com/mcp`) so the URL matches your tenant `region`.
 
 ### Automated Setup
 
@@ -106,13 +106,13 @@ Using the `google_credentials` auth provider (native support):
 ```json
 {
  "mcpServers": {
-   "secops-hosted-mcp": {
+   "remote-mcp-secops": {
      "httpUrl": "https://chronicle.us.rep.googleapis.com/mcp",
      "authProviderType": "google_credentials",
      "oauth": {
        "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
      },
-     "timeout": 30000,
+     "timeout": 60000,
      "headers": {
        "x-goog-user-project": "<YOUR_PROJECT_ID>"
      }
@@ -150,38 +150,60 @@ curl --location 'https://chronicle.us.rep.googleapis.com/mcp' \
 
 ### Agent Development Kit (ADK)
 
-Example Python configuration using `google-adk`. Use the `cloud-platform` OAuth scope so user credentials created with `gcloud auth application-default login` refresh cleanly without `invalid_scope` errors, omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`, and pass a `header_provider` callback so long-running agents refresh expired access tokens instead of failing with `HTTP 401` after 60 minutes:
+Example Python configuration using `google-adk`. Use the `cloud-platform` OAuth scope so user credentials created with `gcloud auth application-default login` refresh cleanly without `invalid_scope` errors, omit custom `Accept` header overrides so the MCP SDK sends `Accept: application/json, text/event-stream`, and inject credentials via an `httpx.Auth` client factory (`create_mcp_http_client`) so both `adk web` discovery (`readonly_context=None`) and long-running tool calls refresh expired tokens off the event loop over a single pooled MCP session (or set `SECOPS_MCP_URL` in `run-with-google-adk/.env`):
 
 ```python
+import asyncio
+import threading
+import urllib.parse
 import google.auth
 from google.auth.transport.requests import Request
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+from google.adk.tools.mcp_tool.mcp_session_manager import create_mcp_http_client
+import httpx
 
 PROJECT_ID = "<YOUR_PROJECT_ID>"
 SECOPS_MCP_URL = "https://chronicle.us.rep.googleapis.com/mcp"
 SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
 
-creds, _ = google.auth.default(scopes=SCOPES)
-auth_request = Request()
+
+class SecOpsGoogleAuth(httpx.Auth):
+    def __init__(self, target_url: str, quota_project: str) -> None:
+        parsed = urllib.parse.urlparse(target_url)
+        self._origin = (parsed.scheme, (parsed.hostname or "").lower(), parsed.port)
+        self._quota_project = quota_project
+        self._creds = None
+        self._lock = threading.Lock()
+
+    def _get_token_sync(self) -> str:
+        with self._lock:
+            if self._creds is None:
+                self._creds, _ = google.auth.default(scopes=SCOPES)
+            if not self._creds.valid or self._creds.expired or not self._creds.token:
+                self._creds.refresh(Request())
+            return str(self._creds.token)
+
+    async def async_auth_flow(self, request: httpx.Request):
+        if (request.url.scheme, (request.url.host or "").lower(), request.url.port) == self._origin:
+            token = await asyncio.to_thread(self._get_token_sync)
+            request.headers["Authorization"] = f"Bearer {token}"
+            request.headers["x-goog-user-project"] = self._quota_project
+        yield request
 
 
-def build_secops_headers(readonly_context=None) -> dict[str, str]:
-    if not creds.valid or creds.expired:
-        creds.refresh(auth_request)
-    return {
-        "Authorization": f"Bearer {creds.token}",
-        "x-goog-user-project": PROJECT_ID,
-    }
-
+secops_auth = SecOpsGoogleAuth(SECOPS_MCP_URL, PROJECT_ID)
 
 toolset = McpToolset(
     connection_params=StreamableHTTPConnectionParams(
         url=SECOPS_MCP_URL,
-        headers=build_secops_headers(),
         timeout=60.0,
         sse_read_timeout=300.0,
+        httpx_client_factory=lambda headers=None, timeout=None, auth=None: create_mcp_http_client(
+            headers=headers,
+            timeout=timeout,
+            auth=auth or secops_auth,
+        ),
     ),
-    header_provider=build_secops_headers,
 )
 ```
 

@@ -14,10 +14,10 @@ When executing a skill, the agent should first check which tools are available i
 | | Get Case Details | `get_case` | `get_case_full_details` | Local `get_case_full_details` aggregates alerts/comments. Remote `get_case` fetches the case object; use `expand='tasks,tags,products'` or call `list_case_alerts`/`list_case_comments` for full context. |
 | | Create Case | *(No direct equivalent)* | `create_case` | Remote server has no manual case creation tool (cases originate from alert ingestion); local `create_case` creates a manual SOAR case. |
 | | Comment on Case | `create_case_comment` | `post_case_comment` | |
-| | Update Case | `update_case` | `change_case_priority` | Remote `update_case` updates `assignee`, `stage`, `priority`, `display_name`, `description`, and `tags` via `update_mask` for supplied fields. Local tool `change_case_priority` is specific to priority (`update_case_description` updates description). |
+| | Update Case | `update_case` | `change_case_priority` | Remote `update_case` updates optional `assignee`, `stage`, `priority`, `display_name`, `description`, `important`, `incident`, `environment`, and `move_environment` fields directly. Local tool `change_case_priority` is specific to priority (`update_case_description` updates description). |
 | | Close Case | `execute_bulk_close_case` | `close_case` | Remote uses bulk endpoint; local closes a single case. |
-| | Assign Case | `update_case` | `assign_case` | Remote `update_case` updates `assignee` (along with `stage`, `priority`, and `tags` via `update_mask`); local `assign_case` assigns a user to a case. |
-| | Change Case Stage | `update_case` | `change_case_stage` | Remote `update_case` updates `stage` (along with `assignee`, `priority`, and `tags` via `update_mask`); local `change_case_stage` updates the workflow stage of a case. |
+| | Assign Case | `update_case` | `assign_case` | Remote `update_case` sets `assignee`; local `assign_case` assigns a user to a case. |
+| | Change Case Stage | `update_case` | `change_case_stage` | Remote `update_case` sets `stage`; local `change_case_stage` updates the workflow stage of a case. |
 | | Add Case Tag | *(No direct equivalent)* | `add_case_tag` | Local tool adds a tag to a case. |
 | | Remove Case Tag | *(No direct equivalent)* | `remove_case_tag` | Local tool removes a tag from a case. |
 | **Alerts (SOAR)** | List Alerts for Case | `list_case_alerts` | `list_alerts_by_case` | |
@@ -28,8 +28,7 @@ When executing a skill, the agent should first check which tools are available i
 | | Get Entity Details | *(No direct equivalent)* | `get_entity_details` | |
 | **SIEM / UDM** | UDM Search (Query) | `udm_search` | `search_udm` | |
 | | UDM Search (Nat. Lang.) | `translate_udm_query` -> `udm_search` | `search_security_events` | **Critical:** Remote requires 2 steps (Translate then Search). Local does both in one call. |
-| | Raw Log Search | `search_raw_logs` | *(No direct equivalent)* | Searches unparsed raw log bytes in Chronicle SIEM. |
-| | UDM Stats / Aggregation | *(No direct equivalent)* | `get_stats` | Local `get_stats` runs Chronicle YARA-L 2.0 `match:`/`outcome:` statistical aggregation queries over UDM events. |
+| | UDM Stats / Aggregation | `udm_search` | `get_stats` | Remote `udm_search` executes Chronicle YARA-L 2.0 `match:`/`outcome:` statistical aggregation queries directly and returns aggregated columns in `stats.results` (with `events` empty); local `get_stats` wraps statistical queries separately. |
 | | Entity Summary | `summarize_entity` | `lookup_entity` | Both provide a summary of entity activity in SIEM. |
 | | IoC Matching | `get_ioc_match` | `get_ioc_matches` | |
 | | Export Results | *(No direct equivalent)* | `export_udm_search_csv` | |

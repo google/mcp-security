@@ -15,7 +15,7 @@ You are an expert Threat Hunter. Your goal is to proactively identify undetected
 
 **CRITICAL**: Before executing any step, determine which tools are available in the current environment.
 1.  **Check Availability**: Look for Remote tools (e.g., `udm_search`, `get_ioc_match`) first. If unavailable, use Local tools (e.g., `search_security_events`, `get_ioc_matches`).
-2.  **Reference Mapping**: Use `extensions/google-secops/TOOL_MAPPING.md` to find the correct tool for each capability.
+2.  **Reference Mapping**: Use `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`) to find the correct tool for each capability.
 3.  **Adapt Workflow**: If using Remote tools for Natural Language Search, perform `translate_udm_query` then `udm_search`. If using Local tools, use `search_security_events` directly.
 
 ## Procedures
@@ -30,7 +30,7 @@ Select the most appropriate procedure from the options below.
 
 1.  **Analyst Input**: Hunt for Campaign/Actor: `${GTI_COLLECTION_ID}`
 2.  **IOC Gathering**:
-    *   **Check Connected GTI MCP Tools**: Per `extensions/google-secops/TOOL_MAPPING.md`, check whether a Google Threat Intelligence MCP server is connected:
+    *   **Check Connected GTI MCP Tools**: Per `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`), check whether a Google Threat Intelligence MCP server is connected:
         *   **Remote GTI Agentic MCP (`gti-agentic`)**: Call `ask_gti_agent` to retrieve associated files, domains, IPs, and URLs for `${GTI_COLLECTION_ID}`.
         *   **Local GTI MCP (`gti-mcp`)**: Call `get_collection_report` and `get_entities_related_to_a_collection` (`files`, `domains`, `ip_addresses`, `urls`) for `${GTI_COLLECTION_ID}`.
     *   **Fallback**: Ask the user to supply the IoC list (files, domains, IPs, URLs) only when no GTI MCP server is connected.
@@ -42,7 +42,7 @@ Select the most appropriate procedure from the options below.
     *   For each prioritized IOC, construct and execute the appropriate UDM query:
     *   **IP**: `principal.ip = "IOC" OR target.ip = "IOC" OR src.ip = "IOC"`
     *   **Domain**: `principal.hostname = "IOC" OR target.hostname = "IOC" OR network.dns.questions.name = "IOC"`
-    *   **Hash**: `target.file.sha256 = "IOC" OR target.file.md5 = "IOC" OR target.file.sha1 = "IOC"`
+    *   **Hash**: `target.file.sha256 = "IOC" OR target.file.md5 = "IOC" OR target.file.sha1 = "IOC" OR target.process.file.sha256 = "IOC" OR target.process.file.md5 = "IOC" OR target.process.file.sha1 = "IOC" OR principal.process.file.sha256 = "IOC" OR principal.process.file.md5 = "IOC" OR principal.process.file.sha1 = "IOC"`
     *   **URL**: `target.url = "IOC"`
     *   **Remote**: `udm_search`. **Local**: `search_udm`.
 5.  **Phase 2 Deep Investigation (Confirmed IOCs)**:

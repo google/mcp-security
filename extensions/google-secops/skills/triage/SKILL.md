@@ -15,7 +15,7 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
 
 **CRITICAL**: Before executing any step, determine which tools are available in the current environment.
 1.  **Check Availability**: Look for Remote tools (e.g., `list_cases`, `udm_search`) first. If unavailable, use Local tools (e.g., `list_cases`, `search_security_events`).
-2.  **Reference Mapping**: Use `extensions/google-secops/TOOL_MAPPING.md` to find the correct tool for each capability.
+2.  **Reference Mapping**: Use `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`) to find the correct tool for each capability.
 3.  **Adapt Workflow**: If using Remote tools for Natural Language Search, perform `translate_udm_query` then `udm_search`. If using Local tools, use `search_security_events` directly.
 
 ## Alert Triage Protocol
@@ -97,5 +97,5 @@ You are a Tier 1 SOC Analyst expert. When asked to triage an alert, you strictly
     *   **Remote**: `get_ioc_match`.
     *   **Local**: `get_ioc_matches`.
 3.  **External Threat Intelligence (Optional, When Connected)**:
-    *   Per `extensions/google-secops/TOOL_MAPPING.md`, if a GTI or VirusTotal MCP server is connected, enrich external hashes, domains, IPs, or URLs via `ask_gti_agent` (`gti-agentic`), `get_file_report` / `get_domain_report` / `get_ip_report` / `get_url_report` (`virustotal`), or `get_file_report` / `get_domain_report` / `get_ip_address_report` / `get_url_report` (local `gti-mcp`).
+    *   Per `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`), if a GTI or VirusTotal MCP server is connected, enrich external hashes, domains, IPs, or URLs via `ask_gti_agent` (`gti-agentic`), `get_file_report` / `get_domain_report` / `get_ip_report` / `get_url_report` (`virustotal`), or `get_file_report` / `get_domain_report` / `get_ip_address_report` / `get_url_report` (local `gti-mcp`). Prefer `get_domain_report` over `get_url_report` whenever a URL may contain query/fragment tokens, session IDs, or user identifiers; never call public `submit_*` or `analyse_file` tools automatically; and batch multiple external indicators into a single `ask_gti_agent` session rather than opening one session per indicator.
 4.  Return combined `${ENRICHMENT_ABSTRACT}`.

@@ -106,13 +106,42 @@ def test_tool_auto_detection_from_remote_mcp_urls():
         {
             "GTI_MCP_URL": "https://www.virustotal.com/api/v3/agentspace/mcp/",
             "SECOPS_MCP_URL": "https://chronicle.us.rep.googleapis.com/mcp",
+            "SECOPS_SOAR_MCP_URL": "https://example.com/soar/mcp",
         },
         clear=True,
     ):
         settings = AgentSettings(_env_file=None)
         assert settings.load_gti_mcp is True
         assert settings.load_secops_mcp is True
-        assert settings.load_secops_soar_mcp is False
+        assert settings.load_secops_soar_mcp is True
+
+
+def test_minimal_logging_clamps_adk_loggers_and_unsets_experimental_telemetry():
+    import logging
+
+    adk_logger = logging.getLogger("google_adk")
+    httpx_logger = logging.getLogger("httpx")
+    orig_adk = adk_logger.level
+    orig_httpx = httpx_logger.level
+    try:
+        adk_logger.setLevel(logging.DEBUG)
+        httpx_logger.setLevel(logging.DEBUG)
+        with patch.dict(
+            os.environ,
+            {
+                "MINIMAL_LOGGING": "Y",
+                "ADK_EXPERIMENTAL_TELEMETRY": "true",
+            },
+            clear=True,
+        ):
+            settings = AgentSettings(_env_file=None)
+            assert settings.minimal_logging is True
+            assert adk_logger.level >= logging.WARNING
+            assert httpx_logger.level >= logging.WARNING
+            assert "ADK_EXPERIMENTAL_TELEMETRY" not in os.environ
+    finally:
+        adk_logger.setLevel(orig_adk)
+        httpx_logger.setLevel(orig_httpx)
 
 
 def test_tool_explicit_override_overrules_remote_mcp_urls():

@@ -33,14 +33,21 @@ console = Console()
 def info():
     """Display agent version and loaded configuration."""
     settings = AgentSettings()
+
+    def _status(enabled: bool | None, remote_url: str | None) -> str:
+        if not enabled:
+            return "[dim]Disabled[/dim]"
+        mode = "Remote HTTP" if (remote_url and remote_url.strip()) else "Local stdio"
+        return f"[green]Enabled ({mode})[/green]"
+
     console.print(f"[bold green]MCP Security Agent v{__version__}[/bold green]")
     console.print(f"Model: [cyan]{settings.google_model}[/cyan]")
     console.print(f"Project: [cyan]{settings.google_cloud_project or os.environ.get('GOOGLE_CLOUD_PROJECT', 'Not set')}[/cyan]")
     console.print(f"ADC: [cyan]{settings.google_application_credentials or 'Default (~/.config/gcloud/...)'}[/cyan]")
-    console.print(f"SecOps SIEM MCP: {'[green]Enabled[/green]' if settings.load_secops_mcp else '[dim]Disabled[/dim]'}")
-    console.print(f"SCC MCP: {'[green]Enabled[/green]' if settings.load_scc_mcp else '[dim]Disabled[/dim]'}")
-    console.print(f"GTI MCP: {'[green]Enabled[/green]' if settings.load_gti_mcp else '[dim]Disabled[/dim]'}")
-    console.print(f"SecOps SOAR MCP: {'[green]Enabled[/green]' if settings.load_secops_soar_mcp else '[dim]Disabled[/dim]'}")
+    console.print(f"SecOps SIEM MCP: {_status(settings.load_secops_mcp, settings.secops_mcp_url)}")
+    console.print(f"SCC MCP: {_status(settings.load_scc_mcp, settings.scc_mcp_url)}")
+    console.print(f"GTI MCP: {_status(settings.load_gti_mcp, settings.gti_mcp_url)}")
+    console.print(f"SecOps SOAR MCP: {_status(settings.load_secops_soar_mcp, settings.secops_soar_mcp_url)}")
 
 
 

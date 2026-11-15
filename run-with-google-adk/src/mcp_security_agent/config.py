@@ -181,7 +181,10 @@ class AgentSettings(BaseSettings):
             self.load_gti_mcp = _is_configured(self.vt_apikey) or _is_configured(self.gti_mcp_url)
 
         if self.load_secops_soar_mcp is None:
-            self.load_secops_soar_mcp = _is_configured(self.soar_url) and _is_configured(self.soar_app_key)
+            self.load_secops_soar_mcp = (
+                (_is_configured(self.soar_url) and _is_configured(self.soar_app_key))
+                or _is_configured(self.secops_soar_mcp_url)
+            )
 
         if self.load_secops_mcp is None:
             self.load_secops_mcp = (
@@ -215,6 +218,16 @@ class AgentSettings(BaseSettings):
 
         if self.use_vertex_ai or (target_project and not self.google_api_key and not os.environ.get("GOOGLE_API_KEY")):
             os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "TRUE"
+
+        if self.minimal_logging:
+            import logging
+
+            for noisy_logger in ("google_adk", "google.adk", "httpx", "httpcore"):
+                target_logger = logging.getLogger(noisy_logger)
+                if target_logger.level == logging.NOTSET or target_logger.level < logging.WARNING:
+                    target_logger.setLevel(logging.WARNING)
+            if os.environ.get("ADK_EXPERIMENTAL_TELEMETRY", "").strip():
+                os.environ.pop("ADK_EXPERIMENTAL_TELEMETRY", None)
 
     
     # Chronicle SIEM Params

@@ -225,8 +225,11 @@ gcloud run deploy mcp-security-agent-service \
 
 Ensure the runtime Service Account used by Cloud Run has the appropriate IAM permissions:
 * **Chronicle API Viewer** (`roles/chronicle.viewer`) on the project hosting Chronicle.
+* **MCP Tool User** (`roles/mcp.toolUser`) and **Service Usage Consumer** (`roles/serviceusage.serviceUsageConsumer`) on the quota project when connecting to `SECOPS_MCP_URL` (`chronicle.googleapis.com/mcp` enabled via `gcloud beta services mcp enable chronicle.googleapis.com/mcp`).
 * **Security Center Finding Viewer** (`roles/securitycenter.findingsViewer`) for SCC findings.
 * **Vertex AI User** (`roles/aiplatform.user`) for Vertex AI model execution.
+
+When deploying with `GTI_MCP_URL`, mount `VT_APIKEY` from Secret Manager (`--set-secrets="VT_APIKEY=vt-apikey:latest"`) rather than baking `.env` credentials into container images.
 
 ### 3. Restricting Access in Production
 
@@ -318,7 +321,7 @@ CHRONICLE_REGION=us
 MINIMAL_LOGGING=Y
 ```
 
-When `GTI_MCP_URL` is configured, `build_mcp_toolsets(settings)` normalizes the trailing `/` on `/api/v3/agentspace/mcp/`, attaches `x-apikey`, and enforces a minimum 300-second timeout for multi-step server-side investigations. When `SECOPS_MCP_URL` is configured, `build_mcp_toolsets(settings)` attaches a `header_provider` that caches Google Cloud ADC credentials (`SECOPS_SA_PATH` or default ADC, with optional `SECOPS_IMPERSONATE_SERVICE_ACCOUNT`) and refreshes expired OAuth bearer tokens automatically.
+When `GTI_MCP_URL` is configured, `build_mcp_toolsets(settings)` normalizes the trailing `/` on `/api/v3/agentspace/mcp/`, attaches `x-apikey` on `/api/v3/agentspace/mcp/` (or `Authorization: Bearer vtai_...` on `https://ai.virustotal.com/mcp`), and enforces a minimum 300-second timeout for multi-step server-side investigations. When `SECOPS_MCP_URL` (or `SCC_MCP_URL`) is configured, `build_mcp_toolsets(settings)` validates that the endpoint is a Google-managed `https://*.googleapis.com` origin and injects an origin-pinned `httpx.Auth` client factory wrapping `create_mcp_http_client` so Google Cloud ADC credentials (`SECOPS_SA_PATH` or default ADC, with optional `SECOPS_IMPERSONATE_SERVICE_ACCOUNT`) and `x-goog-user-project` attach on every tool-discovery (`adk web`, `adk graph`, `get_tools()`) and tool-execution request and refresh expired OAuth bearer tokens on a single pooled MCP session.
 
 #### 2. Programmatic `McpToolset` Construction
 
@@ -326,13 +329,18 @@ For custom ADK agents, or when running remote `gti-agentic` side by side with th
 
 - Read `api_key = settings.vt_apikey or os.environ["VT_APIKEY"]` so keys configured in `.env` do not raise `KeyError`.
 - Pass `tool_name_prefix="gti_agentic_"` when keeping both remote `gti-agentic` and local `stdio` `gti-mcp` enabled side by side, or set `LOAD_GTI_MCP=N` if replacing the built-in local `stdio` toolset manually without setting `GTI_MCP_URL`.
-- Set `MINIMAL_LOGGING=Y` in production and avoid enabling ADK HTTP `DEBUG` logging or `ADK_EXPERIMENTAL_TELEMETRY`, because ADK's built-in header redactor masks `x-api-key` rather than `x-apikey`.
+- Set `MINIMAL_LOGGING=Y` in production (`bootstrap_environment()` clamps `google_adk`, `httpx`, and `httpcore` loggers to `WARNING`, unsets `ADK_EXPERIMENTAL_TELEMETRY`, and suppresses raw `function_call.args` dumps in SSE events) so ADK HTTP tracing never logs `x-apikey`.
 
 ```python
 import os
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools.mcp_tool import McpToolset, StreamableHTTPConnectionParams
+from mcp_security_agent.agent import SOC_AGENT_SYSTEM_PROMPT
+from mcp_security_agent.callbacks import bmc_trim_llm_request
+from mcp_security_agent.config import AgentSettings
+from mcp_security_agent.toolsets import build_mcp_toolsets
 
+settings = AgentSettings()
 GTI_AGENTIC_MCP_URL = "https://www.virustotal.com/api/v3/agentspace/mcp/"
 api_key = settings.vt_apikey or os.environ["VT_APIKEY"]
 
@@ -370,7 +378,7 @@ Run the hermetic test suite:
 uv run --extra test pytest tests/
 ```
 
-All unit tests run hermetically using mocked MCP connection parameters and simulated LLM responses.
+All 52 unit and loopback HTTP tests run hermetically using local loopback MCP endpoints, mocked MCP connection parameters, and simulated LLM responses.
 
 
 

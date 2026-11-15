@@ -369,9 +369,9 @@ Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables)
 Running the MCP Server from the CLI (and outside of your MCP client) can reveal issues:
 ```
 uv --verbose \
-  --directory "/Users/dandye/Projects/google-mcp-security/server/scc" \
+  --directory "/path/to/the/repo/server/scc" \
   run \
-  --env-file "/Users/dandye/Projects/google-mcp-security/.env" \
+  --env-file "/path/to/the/repo/.env" \
   scc_mcp.py
 ```
 
