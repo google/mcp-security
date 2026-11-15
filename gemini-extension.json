@@ -32,6 +32,7 @@
           "https://www.googleapis.com/auth/cloud-platform"
         ]
       },
+      "timeout": 60000,
       "headers": {
         "x-goog-user-project": "${PROJECT_ID}"
       }

@@ -16,7 +16,7 @@ You are a Tier 2/3 SOC Analyst and Incident Responder. Your goal is to investiga
 
 **CRITICAL**: Before executing any step, determine which tools are available in the current environment.
 1.  **Check Availability**: Look for Remote tools (e.g., `list_cases`, `udm_search`) first. If unavailable, use Local tools (e.g., `list_cases`, `search_security_events`).
-2.  **Reference Mapping**: Use `extensions/google-secops/TOOL_MAPPING.md` to find the correct tool for each capability.
+2.  **Reference Mapping**: Use `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`) to find the correct tool for each capability.
 3.  **Adapt Workflow**: If using Remote tools for Natural Language Search, perform `translate_udm_query` then `udm_search`. If using Local tools, use `search_security_events` directly.
 
 ## Procedures
@@ -98,11 +98,12 @@ Select the procedure best suited for the investigation type.
 
 ## Common Procedures
 
-### Enrich IOC (SIEM Prevalence)
+### Enrich IOC
 **Steps**:
 1.  **SIEM Summary**: `summarize_entity` (Remote) or `lookup_entity` (Local).
 2.  **IOC Match**: `get_ioc_match` (Remote) or `get_ioc_matches` (Local).
-3.  Return combined findings.
+3.  **External Threat Intelligence (Optional, When Connected)**: Per `../../TOOL_MAPPING.md` (`extensions/google-secops/TOOL_MAPPING.md`), if a GTI or VirusTotal MCP server is connected, enrich external hashes, domains, IPs, or URLs via `ask_gti_agent` (`gti-agentic`), `get_file_report` / `get_domain_report` / `get_ip_report` / `get_url_report` (`virustotal`), or `get_file_report` / `get_domain_report` / `get_ip_address_report` / `get_url_report` (local `gti-mcp`). Prefer `get_domain_report` over `get_url_report` whenever a URL may contain query/fragment tokens, session IDs, or user identifiers; never call public `submit_*` or `analyse_file` tools automatically; and batch multiple external indicators into a single `ask_gti_agent` session rather than opening one session per indicator.
+4.  Return combined findings.
 
 ### Find Relevant SOAR Case
 **Steps**:

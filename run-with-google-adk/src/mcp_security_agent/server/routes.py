@@ -314,8 +314,15 @@ async def sse_event_generator(
                         })
                         yield f"data: {data}\n\n"
                     elif part.function_call:
+                        if get_settings().minimal_logging:
+                            call_text = f"[Tool] **Calling tool `{part.function_call.name}`**"
+                        else:
+                            call_text = (
+                                f"[Tool] **Calling tool `{part.function_call.name}`**\n"
+                                f"```json\n{json.dumps(part.function_call.args, indent=2)}\n```"
+                            )
                         call_info = json.dumps({
-                            "text": f"[Tool] **Calling tool `{part.function_call.name}`**\n```json\n{json.dumps(part.function_call.args, indent=2)}\n```",
+                            "text": call_text,
                             "last_msg": False,
                             "session_id": session_id,
                             "event_type": "tool_call",

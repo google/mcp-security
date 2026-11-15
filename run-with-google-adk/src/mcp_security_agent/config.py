@@ -153,7 +153,7 @@ class AgentSettings(BaseSettings):
 
     # MCP Server Enablement Flags (Optional; auto-detected from credentials if None)
     load_secops_mcp: bool | None = Field(default=None, alias="LOAD_SECOPS_MCP")
-    load_scc_mcp: bool = Field(default=False, alias="LOAD_SCC_MCP")
+    load_scc_mcp: bool | None = Field(default=None, alias="LOAD_SCC_MCP")
     load_gti_mcp: bool | None = Field(default=None, alias="LOAD_GTI_MCP")
     load_secops_soar_mcp: bool | None = Field(default=None, alias="LOAD_SECOPS_SOAR_MCP")
 
@@ -176,15 +176,23 @@ class AgentSettings(BaseSettings):
 
     @model_validator(mode="after")
     def resolve_tool_enablement(self) -> Self:
-        """Auto-detects MCP tool enablement based on presence of API keys and credentials."""
+        """Auto-detects MCP tool enablement based on presence of API keys, credentials, or remote URLs."""
         if self.load_gti_mcp is None:
-            self.load_gti_mcp = _is_configured(self.vt_apikey)
+            self.load_gti_mcp = _is_configured(self.vt_apikey) or _is_configured(self.gti_mcp_url)
+
+        if self.load_scc_mcp is None:
+            self.load_scc_mcp = _is_configured(self.scc_mcp_url)
 
         if self.load_secops_soar_mcp is None:
-            self.load_secops_soar_mcp = _is_configured(self.soar_url) and _is_configured(self.soar_app_key)
+            self.load_secops_soar_mcp = (
+                _is_configured(self.soar_url) and _is_configured(self.soar_app_key)
+            )
 
         if self.load_secops_mcp is None:
-            self.load_secops_mcp = _is_configured(self.chronicle_project_id) and _is_configured(self.chronicle_customer_id)
+            self.load_secops_mcp = (
+                _is_configured(self.chronicle_project_id)
+                and _is_configured(self.chronicle_customer_id)
+            ) or _is_configured(self.secops_mcp_url)
 
         return self
 
@@ -213,6 +221,17 @@ class AgentSettings(BaseSettings):
         if self.use_vertex_ai or (target_project and not self.google_api_key and not os.environ.get("GOOGLE_API_KEY")):
             os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "TRUE"
 
+        if self.minimal_logging:
+            import logging
+
+            for noisy_logger in ("google_adk", "google.adk", "httpx", "httpcore"):
+                target_logger = logging.getLogger(noisy_logger)
+                if target_logger.level == logging.NOTSET or target_logger.level < logging.WARNING:
+                    target_logger.setLevel(logging.WARNING)
+            if os.environ.get("ADK_EXPERIMENTAL_TELEMETRY", "").strip():
+                os.environ.pop("ADK_EXPERIMENTAL_TELEMETRY", None)
+            os.environ["ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS"] = "false"
+
     
     # Chronicle SIEM Params
     chronicle_project_id: str | None = Field(default=None, alias="CHRONICLE_PROJECT_ID")
@@ -230,7 +249,7 @@ class AgentSettings(BaseSettings):
     default_prompt: str | None = Field(default=None, alias="DEFAULT_PROMPT")
 
     @field_validator(
-        "load_secops_mcp", "load_gti_mcp", "load_secops_soar_mcp",
+        "load_secops_mcp", "load_scc_mcp", "load_gti_mcp", "load_secops_soar_mcp",
         mode="before"
     )
     @classmethod
@@ -245,7 +264,7 @@ class AgentSettings(BaseSettings):
         return bool(value)
 
     @field_validator(
-        "load_scc_mcp", "use_vertex_ai", "minimal_logging",
+        "use_vertex_ai", "minimal_logging",
         mode="before"
     )
     @classmethod

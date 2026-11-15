@@ -4,12 +4,16 @@ This is an MCP (Model Context Protocol) server for interacting with Google's
 Threat Intelligence suite.
 [MCP Info](https://modelcontextprotocol.io/introduction)
 
+## Remote MCP Server for Google Threat Intelligence
+
+Organizations with a Google Threat Intelligence Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC) license can also connect MCP clients directly to the hosted Google Threat Intelligence Agentic MCP endpoint at `https://www.virustotal.com/api/v3/agentspace/mcp/` with no local Python runtime, or use the [VirusTotal AI Hosted MCP](https://ai.virustotal.com/install.md) (`https://ai.virustotal.com/mcp`) via browser OAuth 2.1 or a VTAI Agent Token for its 11 hosted indicator report and scan tools without managing a static VirusTotal v3 API key. See the [Remote MCP Server for Google Threat Intelligence guide](https://google.github.io/mcp-security/gti_remote_server.html) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide). Both remote endpoints and this local `gti-mcp` package can run side by side under distinct server keys.
+
 ## Features
 
 ### Collections (Threats)
 
 - **`get_collection_report(id)`**: Retrieves a specific collection report by its ID (e.g., `report--<hash>`, `threat-actor--<hash>`).
-- **`get_entities_related_to_a_collection(id, relationship_name, limit=10)`**: Gets related entities (domains, files, IPs, URLs, other collections) for a given collection ID.
+- **`get_entities_related_to_a_collection(id, relationship_name, limit=10, descriptors_only=True)`**: Gets related entities (domains, files, IPs, URLs, other collections) for a given collection ID.
 - **`search_threats(query, limit=5, order_by="relevance-")`**: Performs a general search for threats (collections) using GTI query syntax.
 - **`search_campaigns(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `campaign`.
 - **`search_threat_actors(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `threat-actor`.
@@ -22,7 +26,7 @@ Threat Intelligence suite.
 ### Files
 
 - **`get_file_report(hash)`**: Retrieves a comprehensive analysis report for a file based on its MD5, SHA1, or SHA256 hash.
-- **`get_entities_related_to_a_file(hash, relationship_name, limit=10)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash.
+- **`get_entities_related_to_a_file(hash, relationship_name, descriptors_only, limit=10)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash.
 - **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a specific sandbox behavior report for a file.
 - **`get_file_behavior_summary(hash)`**: Retrieves a summary of all sandbox behavior reports for a file hash.
 
@@ -33,14 +37,14 @@ Threat Intelligence suite.
 ### Network Locations (Domains & IPs)
 
 - **`get_domain_report(domain)`**: Retrieves a comprehensive analysis report for a domain.
-- **`get_entities_related_to_a_domain(domain, relationship_name, limit=10)`**: Gets related entities for a given domain.
+- **`get_entities_related_to_a_domain(domain, relationship_name, descriptors_only, limit=10)`**: Gets related entities for a given domain.
 - **`get_ip_address_report(ip_address)`**: Retrieves a comprehensive analysis report for an IPv4 or IPv6 address.
-- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, limit=10)`**: Gets related entities for a given IP address.
+- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, descriptors_only, limit=10)`**: Gets related entities for a given IP address.
 
 ### URLs
 
 - **`get_url_report(url)`**: Retrieves a comprehensive analysis report for a URL.
-- **`get_entities_related_to_an_url(url, relationship_name, limit=10)`**: Gets related entities for a given URL.
+- **`get_entities_related_to_an_url(url, relationship_name, descriptors_only, limit=10)`**: Gets related entities for a given URL.
 
 ### Hunting
 

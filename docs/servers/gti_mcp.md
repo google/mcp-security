@@ -2,6 +2,10 @@
 
 This server provides tools for interacting with the Google Threat Intelligence (VirusTotal) API.
 
+## Remote MCP Server for Google Threat Intelligence
+
+If your organization has a Google Threat Intelligence Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC) license and wants a zero-install stateless Streamable HTTP endpoint for multi-turn investigations at `https://www.virustotal.com/api/v3/agentspace/mcp/` (or if you want the 11 hosted indicator report and scan tools at `https://ai.virustotal.com/mcp` via browser OAuth 2.1 or a VTAI Agent Token without managing a static VirusTotal v3 API key), see the [Remote MCP Server for Google Threat Intelligence guide](../gti_remote_server.md). You can register the remote endpoints and this local `gti-mcp` server side by side under distinct server keys.
+
 ## Configuration
 
 To use this server, you need a VirusTotal API key:
@@ -69,7 +73,7 @@ export VT_APIKEY="your-vt-api-key"
 $Env:VT_APIKEY = "your-vt-api-key"
 ```
 
-For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
+For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md).
 
 ## Tools
 
@@ -78,14 +82,18 @@ For more detailed instructions on setting up environment variables, refer to the
 Threats like actors, malware, campaigns, reports, and vulnerabilities are modeled as "collections" in GTI.
 
 - **`get_collection_report(id)`**: Retrieves a specific collection report by its ID (e.g., `report--<hash>`, `threat-actor--<hash>`).
-- **`get_entities_related_to_a_collection(id, relationship_name, limit=10)`**: Gets related entities (domains, files, IPs, URLs, other collections) for a given collection ID. Valid values for `relationship_name` include:
-  - `related_reference`: Related references or documents
-  - `execution_parents`: Parent processes/files
-  - `dropped_files`: Files dropped by malware
-  - `contacted_domains`: Domains contacted by a threat
-  - `contacted_urls`: URLs accessed by a threat
-  - `contacted_ips`: IP addresses contacted by a threat
-  - `embedded_collections`: Other collections embedded within this one
+- **`get_entities_related_to_a_collection(id, relationship_name, limit=10, descriptors_only=True)`**: Gets related entities (domains, files, IPs, URLs, other collections, MITRE ATT&CK techniques, or hunting rulesets) for a given collection ID. Set `descriptors_only=False` when querying `attack_techniques`. Valid values for `relationship_name` include:
+  - `files`: Files associated with the collection
+  - `domains`: Domains associated with the collection
+  - `ip_addresses`: IP addresses associated with the collection
+  - `urls`: URLs associated with the collection
+  - `associations`: Associated threat collections across types
+  - `attack_techniques`: MITRE ATT&CK techniques associated with the collection (requires `descriptors_only=False`)
+  - `malware_families`: Related malware families
+  - `threat_actors`: Related threat actors (also `suspected_threat_actors`)
+  - `campaigns`: Related threat campaigns (also `software_toolkits`, `vulnerabilities`)
+  - `reports`: Related threat intelligence reports
+  - `hunting_rulesets`: Standard YARA hunting rulesets (file/payload matching, distinct from Chronicle YARA-L 2.0 SIEM UDM event detection rules) that identify the collection
 - **`search_threats(query, limit=5, order_by="relevance-")`**: Performs a general search for threats (collections) using GTI query syntax. Supports filtering by `collection_type:"<type>"` within the query.
 - **`search_campaigns(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `campaign`.
 - **`search_threat_actors(query, limit=10, order_by="relevance-")`**: Searches specifically for collections of type `threat-actor`.
@@ -98,14 +106,14 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
 ### Files
 
 - **`get_file_report(hash)`**: Retrieves a comprehensive analysis report for a file based on its MD5, SHA1, or SHA256 hash.
-- **`get_entities_related_to_a_file(hash, relationship_name, limit=10)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash. Valid values for `relationship_name` include:
+- **`get_entities_related_to_a_file(hash, relationship_name, descriptors_only, limit=10)`**: Gets related entities (domains, IPs, URLs, behaviours, etc.) for a given file hash. Pass `descriptors_only=True` when the target object type is `file`, `domain`, `url`, `ip_address`, or `collection` (pass `descriptors_only=False` for `behaviours`). Valid values for `relationship_name` include:
   - `contacted_domains`: Domains contacted by the file
   - `contacted_ips`: IP addresses contacted by the file
   - `contacted_urls`: URLs accessed by the file
-  - `execution_parents`: Parent processes
+  - `dropped_files`: Files dropped by the file during execution
+  - `execution_parents`: Parent processes that executed the file
   - `embedded_domains`: Domains embedded in the file
-  - `execution_children`: Child processes spawned by this file
-  - `behaviors`: Sandbox behavior reports
+  - `behaviours`: Sandbox behavior reports
 - **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a specific sandbox behavior report for a file, identified by `{file_hash}_{sandbox_name}`.
 - **`get_file_behavior_summary(hash)`**: Retrieves a summary of all sandbox behavior reports for a file hash.
 
@@ -116,7 +124,7 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
 ### Network Locations (Domains & IPs)
 
 - **`get_domain_report(domain)`**: Retrieves a comprehensive analysis report for a domain.
-- **`get_entities_related_to_a_domain(domain, relationship_name, limit=10)`**: Gets related entities (files, resolutions, subdomains, URLs, etc.) for a given domain. Valid values for `relationship_name` include:
+- **`get_entities_related_to_a_domain(domain, relationship_name, descriptors_only, limit=10)`**: Gets related entities (files, resolutions, subdomains, URLs, etc.) for a given domain. Pass `descriptors_only=True` when the target object type is `file`, `domain`, `url`, `ip_address`, or `collection` (pass `descriptors_only=False` for `resolutions`). Valid values for `relationship_name` include:
   - `communicating_files`: Files that communicate with this domain
   - `referrer_files`: Files that refer to this domain
   - `resolutions`: DNS resolutions for this domain
@@ -124,7 +132,7 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
   - `subdomains`: Subdomains of this domain
   - `urls`: URLs associated with this domain
 - **`get_ip_address_report(ip_address)`**: Retrieves a comprehensive analysis report for an IPv4 or IPv6 address.
-- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, limit=10)`**: Gets related entities (files, resolutions, URLs, etc.) for a given IP address. Valid values for `relationship_name` include:
+- **`get_entities_related_to_an_ip_address(ip_address, relationship_name, descriptors_only, limit=10)`**: Gets related entities (files, resolutions, URLs, etc.) for a given IP address. Pass `descriptors_only=True` when the target object type is `file`, `domain`, `url`, `ip_address`, or `collection` (pass `descriptors_only=False` for `resolutions`). Valid values for `relationship_name` include:
   - `communicating_files`: Files that communicate with this IP
   - `downloaded_files`: Files downloaded from this IP
   - `referrer_files`: Files that refer to this IP
@@ -134,11 +142,11 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
 ### URLs
 
 - **`get_url_report(url)`**: Retrieves a comprehensive analysis report for a URL.
-- **`get_entities_related_to_an_url(url, relationship_name, limit=10)`**: Gets related entities (files, domains, IPs, redirects, etc.) for a given URL. Valid values for `relationship_name` include:
+- **`get_entities_related_to_an_url(url, relationship_name, descriptors_only, limit=10)`**: Gets related entities (files, domains, IPs, redirects, etc.) for a given URL. Pass `descriptors_only=True` when the target object type is `file`, `domain`, `url`, `ip_address`, or `collection`. Valid values for `relationship_name` include:
   - `downloaded_files`: Files downloaded from this URL
   - `communicating_files`: Files that communicate with this URL
   - `redirecting_urls`: URLs that redirect to this URL
-  - `redirected_urls`: URLs that this URL redirects to
+  - `redirects_to`: URLs that this URL redirects to
 
 ## Query Syntax Examples
 
@@ -182,7 +190,7 @@ For additional query syntax modifiers and search capabilities, refer to the Viru
 ```
 1. Get the file hash (MD5, SHA1, or SHA256)
 2. Use get_file_report(hash) to retrieve analysis details
-3. If malicious, use get_entities_related_to_a_file(hash, "contacted_domains") to see network connections
+3. If malicious, use get_entities_related_to_a_file(hash, "contacted_domains", descriptors_only=True) to see network connections
 4. Check get_file_behavior_summary(hash) for sandbox behavior details
 ```
 
@@ -192,13 +200,13 @@ For additional query syntax modifiers and search capabilities, refer to the Viru
 1. Use search_threat_actors("APT28") to find the threat actor
 2. Get the full report with get_collection_report(id) using the returned ID
 3. View timeline events with get_collection_timeline_events(id)
-4. Explore related malware with get_entities_related_to_a_collection(id, "embedded_collections")
+4. Explore related malware with get_entities_related_to_a_collection(id, "malware_families")
 ```
 
 ### Example 3: Domain investigation
 
 ```
 1. Use get_domain_report("suspicious-domain.com") to get basic information
-2. Check for malware using get_entities_related_to_a_domain("suspicious-domain.com", "communicating_files")
-3. Look for related subdomains with get_entities_related_to_a_domain("suspicious-domain.com", "subdomains")
+2. Check for malware using get_entities_related_to_a_domain("suspicious-domain.com", "communicating_files", descriptors_only=True)
+3. Look for related subdomains with get_entities_related_to_a_domain("suspicious-domain.com", "subdomains", descriptors_only=True)
 ```

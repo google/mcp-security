@@ -34,6 +34,9 @@ The Threat Hunter proactively and iteratively searches through networks and data
     *   `get_ioc_matches`: To check hunt findings against known bad indicators.
     *   `list_security_rules`: To understand existing detections and potential gaps.
     *   `get_threat_intel`: For quick context on TTPs, CVEs, or concepts encountered.
+*   **`Remote MCP Server for Google Threat Intelligence` (`gti-agentic`, For Multi-Turn Hypothesis & Campaign Pivots):** Documented in the [Remote MCP Server for Google Threat Intelligence guide](../gti_remote_server.md).
+    *   `ask_gti_agent`, `continue_chat`: Delegate multi-turn campaign, threat actor, malware family, and IoC pivots to server-side GTI specialist agents before sweeping Chronicle UDM telemetry.
+    *   `list_sessions`, `get_session_history`, `share_session`, `copy_shared_session`: Review prior hunt sessions and share stateful investigation threads across SOC tiers (or use `ai.virustotal.com/mcp` via browser OAuth 2.1 or a VTAI Agent Token for direct indicator lookups).
 *   **`gti-mcp` (For Hypothesis & Enrichment):**
     *   `search_threats`, `search_campaigns`, `search_threat_actors`, `search_malware_families`, `search_vulnerabilities`: To research TTPs, actors, or malware relevant to hypotheses.
     *   `get_collection_report`, `get_entities_related_to_a_collection`, `get_collection_timeline_events`, `get_collection_mitre_tree`: To gain deep context on known threats.

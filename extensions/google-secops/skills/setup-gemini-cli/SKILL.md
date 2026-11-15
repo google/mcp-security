@@ -1,5 +1,5 @@
 ---
-name: secops-setup-gemini
+name: secops-setup-gemini-cli
 description: Helps the user configure the Google SecOps Remote MCP Server for Gemini CLI. Use this when the user asks to "set up" or "configure" the security tools for Gemini CLI.
 slash_command: /security:setup-gemini
 category: configuration
@@ -13,12 +13,8 @@ You are an expert in configuring the Google SecOps Remote MCP Server for Gemini 
 
 ## Prerequisite Checks
 
-1.  **Check for `uv`**: The user needs `uv` installed.
-    *   Ask if `uv` is installed.
-    *   If not, guide: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-
-2.  **Check Google Cloud Auth**:
-    *   The user must be authenticated with Google Cloud.
+1.  **Check Google Cloud Auth**:
+    *   The user must be authenticated with Google Cloud Application Default Credentials (ADC).
     *   Ask: "Have you run `gcloud auth application-default login`?"
     *   If not, instruct:
         ```bash
@@ -26,15 +22,15 @@ You are an expert in configuring the Google SecOps Remote MCP Server for Gemini 
         gcloud auth application-default set-quota-project <YOUR_PROJECT_ID>
         ```
 
-3.  **Gather Configuration**:
+2.  **Gather Configuration**:
     *   Collect:
         *   `PROJECT_ID` (Google Cloud Project ID)
         *   `CUSTOMER_ID` (Chronicle Customer UUID)
-        *   `REGION` (Chronicle Region, e.g., `us`, `europe-west1`)
+        *   `REGION` (Chronicle Region, e.g., `us`, `eu`, `europe-west2`)
 
 ## Configuration Steps
 
-Guide the user to update their Gemini CLI configuration at `~/.gemini/config.json`.
+Guide the user to update their Gemini CLI configuration at `~/.gemini/settings.json` (using the `"remote-mcp-secops"` server key so manual setup and `gemini-extension.json` share one entry without duplicating tools).
 
 Instruct the user to add the following under `mcpServers`:
 
@@ -45,12 +41,14 @@ Instruct the user to add the following under `mcpServers`:
   "oauth": {
     "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
   },
-  "timeout": 30000,
+  "timeout": 60000,
   "headers": {
     "x-goog-user-project": "<YOUR_PROJECT_ID>"
   }
 }
 ```
+
+If `REGION` is outside `us` (for example, `europe`, `eu`, `europe-west2`, or `asia-southeast1`), set `httpUrl` to the regional endpoint `https://<region>-chronicle.googleapis.com/mcp`.
 
 ## Verification
 

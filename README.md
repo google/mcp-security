@@ -3,12 +3,13 @@
 This repository contains Model Context Protocol (MCP) servers that enable MCP clients (like Claude Desktop or the cline.bot VS Code extension) to access Google's security products and services:
 
 1. **Remote MCP Server for Google SecOps** - Fully managed, enterprise-ready MCP server (Recommended)
-2. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
-3. **Google Security Operations SOAR** - For security orchestration, automation, and response
-4. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
-5. **Security Command Center (SCC)** - For cloud security and risk management
+2. **Remote MCP Server for Google Threat Intelligence** - Hosted Agentic MCP server for multi-turn threat intelligence investigations (Enterprise, Enterprise Plus, or active Proof-of-Concept (PoC))
+3. **Google Security Operations (Chronicle)** - For threat detection, investigation, and hunting
+4. **Google Security Operations SOAR** - For security orchestration, automation, and response
+5. **Google Threat Intelligence (GTI)** - For access to Google's threat intelligence data
+6. **Security Command Center (SCC)** - For cloud security and risk management
 
-For the new **Remote MCP Server**, please see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559) and the [setup guide](docs/remote_server.md).
+For the **Remote MCP Server for Google SecOps**, see the [launch announcement](https://security.googlecloudcommunity.com/community-blog-42/google-cloud-remote-mcp-server-for-secops-6559) and the [Remote MCP Server for Google SecOps guide](docs/remote_server.md). For the **Remote MCP Server for Google Threat Intelligence**, see the [Remote MCP Server for Google Threat Intelligence guide](docs/gti_remote_server.md) and the official [Agentic MCP Server Configuration guide](https://gtidocs.virustotal.com/docs/agentic-mcp-guide) (or use the [VirusTotal AI Hosted MCP](https://ai.virustotal.com/install.md) at `https://ai.virustotal.com/mcp` via browser OAuth 2.1 or a VTAI Agent Token for its 11 hosted indicator report and scan tools without a static VirusTotal v3 API key).
 
 Each server can be enabled and run separately, allowing flexibility for environments that don't require all capabilities.
 
@@ -185,7 +186,7 @@ For full setup, architecture details, and Cloud Run deployment guides, see the [
 
 ## MCP Client Config Locations
 
-MCP clients all use the same JSON configuration format (see the [MCP Server Configuration Reference](https://google.github.io/mcp-security/usage_guide.html#mcp-server-configuration-reference)), but they expect the file in different locations.
+MCP client configuration schemas and file paths vary by client (for example, `mcpServers` vs. VS Code's `servers` schema, and local `stdio` vs. Streamable HTTP headers; see the [MCP Server Configuration Reference](https://google.github.io/mcp-security/usage_guide.html#mcp-server-configuration-reference) for local `stdio` servers and [docs/gti_remote_server.md](docs/gti_remote_server.md) for per-client remote HTTP examples).
 
 | Client Application       | Scope     | macOS / Linux Location                | Windows Location                                                                    | Notes                                                                                                                                                                                                |
 | ------------------------ | --------- | ------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -194,7 +195,7 @@ MCP clients all use the same JSON configuration format (see the [MCP Server Conf
 | **Claude Code**          | Global    | `~/.claude.json`                      | `%USERPROFILE%\.claude.json`                                                             | Primary config file for Claude Code CLI and extensions.                                                                                                                                              |
 | **Cursor IDE (Global)**  | Global    | `~/.cursor/mcp.json`                  | `%USERPROFILE%\.cursor\mcp.json`                                                    | Enables MCP servers globally across all projects.                                                                                                                                                    |
 | **Cursor IDE (Project)** | Project   | `<project-root>/.cursor/mcp.json`     | `<project-root>/.cursor/mcp.json`                                                   | Workspace/project-specific config file.                                                                                                                                                              |
-| **VS Code (Workspace)**  | Workspace | `<project-root>/.vscode/mcp.json`     | `<project-root>/.vscode/mcp.json`                                                   | Workspace-level config used when an MCP extension (like **Cline**) is installed. Overrides global config if present.                                                                                 |
+| **VS Code (Workspace)**  | Workspace | `<project-root>/.vscode/mcp.json`     | `<project-root>/.vscode/mcp.json`                                                   | Native VS Code workspace MCP config using the top-level `servers` (and optional `inputs`) schema. **Cline** uses `cline_mcp_settings.json` below.                                                    |
 | **Cline (VS Code Ext.)** | Global    | Inside VS Code extension data         | `%APPDATA%\Code\User\globalStorage\<extension-id>\settings\cline_mcp_settings.json` | Exact path varies by VS Code variant and platform. `<extension-id>` corresponds to the installed extension folder (e.g., `saoudrizwan.claude-dev`).                                                  |
 
 ### Additional Notes for Windows
@@ -368,9 +369,9 @@ Refer to the [usage guide](docs/usage_guide.md#setting-up-environment-variables)
 Running the MCP Server from the CLI (and outside of your MCP client) can reveal issues:
 ```
 uv --verbose \
-  --directory "/Users/dandye/Projects/google-mcp-security/server/scc" \
+  --directory "/path/to/the/repo/server/scc" \
   run \
-  --env-file "/Users/dandye/Projects/google-mcp-security/.env" \
+  --env-file "/path/to/the/repo/.env" \
   scc_mcp.py
 ```
 

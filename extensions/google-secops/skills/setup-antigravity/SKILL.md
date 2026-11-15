@@ -14,7 +14,7 @@ You are an expert in configuring the Google SecOps Remote MCP Server for Antigra
 ## Prerequisite Checks
 
 1.  **Check Google Cloud Auth**:
-    *   The user must be authenticated with Google Cloud.
+    *   The user must be authenticated with Google Cloud Application Default Credentials (ADC).
     *   Ask: "Have you run `gcloud auth application-default login`?"
     *   If not, instruct:
         ```bash
@@ -26,25 +26,26 @@ You are an expert in configuring the Google SecOps Remote MCP Server for Antigra
     *   Collect:
         *   `PROJECT_ID` (Google Cloud Project ID)
         *   `CUSTOMER_ID` (Chronicle Customer UUID)
-        *   `REGION` (Chronicle Region, e.g., `us`, `europe-west1`)
+        *   `REGION` (Chronicle Region, e.g., `us`, `eu`, `europe-west2`)
 
 ## Configuration Steps
 
-Guide the user to update their Antigravity configuration at `~/.gemini/antigravity/mcp_config.json` using the provided template.
+Guide the user to update their Antigravity configuration at `~/.gemini/config/mcp_config.json` (or `~/.gemini/antigravity/mcp_config.json` on older IDE builds) using the provided template.
 
 1.  **Read Template**: Read the `mcp_config.template.json` file located in the same directory as this skill.
-3.  **Prepare Variables**:
-    *   **Option A (Recommended)**: reading from `.env`.
+2.  **Prepare Variables**:
+    *   **Option A (Recommended)**: Reading from `.env`.
         *   Ask the user to create a `.env` file in this directory based on `.env.example`.
-        *   Read the `PROJECT_ID` and optional `SERVER_URL` from `.env`.
-    *   **Option B (Manual)**: Ask the user directly for their `PROJECT_ID`.
-4.  **Generate and Merge Config**:
+        *   Read `PROJECT_ID` and optional `SERVER_URL` from `.env`.
+    *   **Option B (Manual)**: Ask the user directly for `PROJECT_ID` and `REGION`.
+    *   Derive `server_url` when `SERVER_URL` is not explicitly provided: use `https://chronicle.us.rep.googleapis.com/mcp` when `REGION` is `us`, or `https://<region>-chronicle.googleapis.com/mcp` for non-US regions (for example, `https://europe-chronicle.googleapis.com/mcp` or `https://europe-west2-chronicle.googleapis.com/mcp`).
+3.  **Generate and Merge Config**:
     *   Read `mcp_config.template.json`.
-    *   Generate `auth_token` using: `$(gcloud auth print-access-token)`. *Note: Warn the user that this token is temporary.*
+    *   Generate `auth_token` using: `$(gcloud auth application-default print-access-token)`. *Note: Warn the user that this access token expires after 60 minutes.*
     *   Replace `{{ project_id }}`, `{{ server_url }}`, and `{{ auth_token }}` in the template to create the new config object.
-    *   Read the existing `~/.gemini/antigravity/mcp_config.json`.
-    *   Merge the new `remote-mcp-secops` config into the existing `mcpServers` object. **Do not overwrite other servers.**
-    *   Write the merged JSON back to `~/.gemini/antigravity/mcp_config.json`.
+    *   Read the existing `~/.gemini/config/mcp_config.json` (or `~/.gemini/antigravity/mcp_config.json` on older IDE builds).
+    *   Merge the new `remote-secops-investigate` and `remote-secops-admin` entries into the existing `mcpServers` object. **Do not overwrite other servers.**
+    *   Write the merged JSON back to `~/.gemini/config/mcp_config.json` (or `~/.gemini/antigravity/mcp_config.json` on older IDE builds) and restrict permissions with `chmod 600` because the file stores a bearer token.
 
 ## Verification
 
