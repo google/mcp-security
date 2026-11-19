@@ -22,7 +22,7 @@ Before you begin, make sure you have:
 3. **An MCP client** such as:
    - [Claude Desktop](https://claude.ai/download)
    - [cline.bot](https://cline.bot/) [VS Code extension](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
-   - [Google ADK(Agent Development Kit)](https://google.github.io/adk-docs/) based agent (a prebuilt one is provided)
+   - [Google ADK (Agent Development Kit)](https://google.github.io/adk-docs/) agent (using `McpToolset`; see [Remote MCP Server](remote_server.md))
 
 4. **Python environment tools**:
    - `uv` - [The Python package installer](https://docs.astral.sh/uv/) used to run the MCP servers with isolated environments
@@ -42,25 +42,6 @@ cd mcp-security
 No additional installation is needed as `uv` will handle dependencies when running the servers.
 
 ### Step 2: Configure Your MCP Client
-
-
-#### For Prebuilt Google ADK Agent as a Client:
-
-The repository provides a prebuilt Autonomous Security Operations Center (SOC) Agent powered by Google ADK v2.x and MCP in [`run-with-google-adk/`](../run-with-google-adk/README.md).
-
-```bash
-cd run-with-google-adk
-cp .env.example .env
-
-# Interactive terminal investigation REPL
-uv run mcp-security-agent chat
-
-# Web UI and Cloud Run API server
-uv run mcp-security-agent serve --port 8080
-```
-
-For complete configuration and deployment details, see the [ADK Agent Guide](../run-with-google-adk/README.md).
-
 
 #### For Claude Desktop:
 
