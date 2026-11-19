@@ -22,7 +22,7 @@ Before you begin, make sure you have:
 3. **An MCP client** such as:
    - [Claude Desktop](https://claude.ai/download)
    - [cline.bot](https://cline.bot/) [VS Code extension](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
-   - [Google ADK (Agent Development Kit)](https://google.github.io/adk-docs/) agent (using `McpToolset`; see [Remote MCP Server](remote_server.md))
+   - [Google ADK (Agent Development Kit)](https://google.github.io/adk-docs/) agent (using the lightweight `root_agent` starter in [`run-with-google-adk/`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md) or custom `McpToolset` code in [Remote MCP Server](remote_server.md))
 
 4. **Python environment tools**:
    - `uv` - [The Python package installer](https://docs.astral.sh/uv/) used to run the MCP servers with isolated environments
@@ -42,6 +42,23 @@ cd mcp-security
 No additional installation is needed as `uv` will handle dependencies when running the servers.
 
 ### Step 2: Configure Your MCP Client
+
+#### For the Google ADK Starter Agent:
+
+The repository provides a lightweight Google ADK v2 `root_agent` starter (`mcp_security_agent`) in [`run-with-google-adk/`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md):
+
+```bash
+cd run-with-google-adk
+cp .env.example .env
+
+# Interactive terminal session
+uv run adk run mcp_security_agent
+
+# Local developer UI on http://127.0.0.1:8000
+uv run adk web
+```
+
+For shared or production deployments, deploy `mcp_security_agent` to managed Vertex AI Agent Engine and Gemini Enterprise. See the [Google ADK Starter Agent README](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md) for configuration and deployment instructions.
 
 #### For Claude Desktop:
 

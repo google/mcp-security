@@ -159,10 +159,46 @@ You can also use environment files with uvx:
 ## Client Configurations
 The MCP servers from this repo can be used with the following clients
 1. Cline, Claude Desktop, and other MCP supported clients
-2. [Google ADK (Agent Development Kit)](https://google.github.io/adk-docs/) agents via `McpToolset` (see [Remote MCP Server ADK setup](https://google.github.io/mcp-security/remote_server.html#agent-development-kit-adk))
+2. [Google ADK (Agent Development Kit)](https://google.github.io/adk-docs/) agents (a lightweight ADK v2 `root_agent` starter is provided in [`run-with-google-adk`](./run-with-google-adk/README.md); see [Using the Google ADK Starter Agent](#using-the-google-adk-starter-agent) below or [Remote MCP Server ADK setup](https://google.github.io/mcp-security/remote_server.html#agent-development-kit-adk))
 3. [Google SecOps Extension](https://google.github.io/mcp-security/google_secops_extension.html) - Install our example extension for Gemini CLI to get specialized security skills (Triage, Investigate, Hunt).
 
 The configuration for Claude Desktop and Cline is the same (provided below for [uv](#using-uv-recommended) and [pip](#using-pip)).  We use the stdio transport.
+
+### Using the Google ADK Starter Agent
+
+The repository includes a lightweight Google ADK v2 `root_agent` starter (`mcp_security_agent`) in [`run-with-google-adk`](./run-with-google-adk/README.md) that connects Gemini (`gemini-3.1-pro-preview`) to these MCP servers through `McpToolset`.
+
+Run it locally with ADK's built-in CLI or local developer UI:
+
+```bash
+cd run-with-google-adk
+cp .env.example .env
+
+# Interactive terminal session
+uv run adk run mcp_security_agent
+
+# Local developer UI on http://127.0.0.1:8000
+uv run adk web
+```
+
+For shared or production deployments, deploy `mcp_security_agent` to managed Vertex AI Agent Engine and Gemini Enterprise:
+
+```bash
+cd run-with-google-adk
+
+PROJECT_ID="your-gcp-project-id"
+REGION="us-central1"
+STAGING_BUCKET="gs://your-adk-staging-bucket"
+
+uv run adk deploy agent_engine \
+  --project="$PROJECT_ID" \
+  --region="$REGION" \
+  --staging_bucket="$STAGING_BUCKET" \
+  --display_name="mcp-security-agent" \
+  mcp_security_agent
+```
+
+For environment variables, per-subprocess credential isolation, and full deployment details, see [`run-with-google-adk/README.md`](./run-with-google-adk/README.md).
 
 ## MCP Client Config Locations
 
