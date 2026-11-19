@@ -66,7 +66,7 @@ def build_agent() -> LlmAgent:
         tools.append(McpToolset(connection_params=conn))
     return LlmAgent(
         name="mcp_security_agent",
-        model=os.getenv("GOOGLE_MODEL", "").strip() or "gemini-3.1-pro-preview",
+        model=os.getenv("GOOGLE_MODEL", "").strip() or "gemini-3.8-flash",
         description="Security operations agent with Google Cloud Security MCP tools.",
         instruction="You are a security operations analyst. Investigate alerts, query SIEM telemetry, enrich indicators with threat intelligence, review cloud posture findings, and manage SOAR cases using only verified tool data.",
         tools=tools,

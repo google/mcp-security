@@ -166,7 +166,7 @@ The configuration for Claude Desktop and Cline is the same (provided below for [
 
 ### Using the Google ADK Starter Agent
 
-The repository includes a lightweight Google ADK v2 `root_agent` starter (`mcp_security_agent`) in [`run-with-google-adk`](./run-with-google-adk/README.md) that connects Gemini (`gemini-3.1-pro-preview`) to these MCP servers through `McpToolset`.
+The repository includes a lightweight Google ADK v2 `root_agent` starter (`mcp_security_agent`) in [`run-with-google-adk`](./run-with-google-adk/README.md) that connects Gemini (`gemini-3.8-flash`) to these MCP servers through `McpToolset`.
 
 Run it locally with ADK's built-in CLI or local developer UI:
 

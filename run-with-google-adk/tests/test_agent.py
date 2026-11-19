@@ -65,14 +65,14 @@ def test_root_agent_export_and_adk_loader_discovery(monkeypatch: pytest.MonkeyPa
 
     fresh = build_agent()
     assert fresh.name == "mcp_security_agent"
-    assert fresh.model == "gemini-3.1-pro-preview"
+    assert fresh.model == "gemini-3.8-flash"
     assert fresh.tools == []
 
-    monkeypatch.setenv("GOOGLE_MODEL", "gemini-3-flash-preview")
-    assert build_agent().model == "gemini-3-flash-preview"
+    monkeypatch.setenv("GOOGLE_MODEL", "gemini-3.5-flash")
+    assert build_agent().model == "gemini-3.5-flash"
 
     monkeypatch.setenv("GOOGLE_MODEL", "   ")
-    assert build_agent().model == "gemini-3.1-pro-preview"
+    assert build_agent().model == "gemini-3.8-flash"
 
     assert is_single_agent_directory(PKG_DIR) is True
     assert is_single_agent_directory(ADK_DIR) is False

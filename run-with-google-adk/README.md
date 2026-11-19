@@ -1,6 +1,6 @@
 # Google ADK security agent starter
 
-`run-with-google-adk` provides a minimal [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/) v2 `root_agent` package (`mcp_security_agent`). It connects Gemini on Vertex AI (`gemini-3.1-pro-preview`) to the Google Cloud Security Model Context Protocol (MCP) servers in this repository through `McpToolset`.
+`run-with-google-adk` provides a minimal [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/) v2 `root_agent` package (`mcp_security_agent`). It connects Gemini on Vertex AI (`gemini-3.8-flash`) to the Google Cloud Security Model Context Protocol (MCP) servers in this repository through `McpToolset`.
 
 The package exports `root_agent` and `build_agent()` directly for ADK's built-in tooling without custom web-server or session-management code:
 
@@ -27,13 +27,13 @@ The package exports `root_agent` and `build_agent()` directly for ADK's built-in
    cp .env.example .env
    ```
 
-4. Edit `.env` with your Google Cloud project ID and the credentials for the security products you want to attach. For example, to query a production or test Google SecOps tenant with `gemini-3.1-pro-preview`:
+4. Edit `.env` with your Google Cloud project ID and the credentials for the security products you want to attach. For example, to query a production or test Google SecOps tenant with `gemini-3.8-flash`:
 
    ```ini
    GOOGLE_GENAI_USE_VERTEXAI=True
    GOOGLE_CLOUD_PROJECT=your-gcp-project-id
    GOOGLE_CLOUD_LOCATION=global
-   GOOGLE_MODEL=gemini-3.1-pro-preview
+   GOOGLE_MODEL=gemini-3.8-flash
 
    CHRONICLE_PROJECT_ID=your-secops-project-id
    CHRONICLE_CUSTOMER_ID=a1b2c3d4-e5f6-4321-abcd-ef1234567890
@@ -72,8 +72,8 @@ The table below lists every variable in `.env.example`:
 | :--- | :--- | :--- |
 | `GOOGLE_GENAI_USE_VERTEXAI` | `True` | Route Gemini requests through Vertex AI. |
 | `GOOGLE_CLOUD_PROJECT` | *(empty)* | Google Cloud project ID for Vertex AI model calls and default ADC context. |
-| `GOOGLE_CLOUD_LOCATION` | `global` | Vertex AI endpoint location. Keep `global` when using `gemini-3.1-pro-preview`. |
-| `GOOGLE_MODEL` | `gemini-3.1-pro-preview` | Gemini model identifier passed to `LlmAgent`. |
+| `GOOGLE_CLOUD_LOCATION` | `global` | Vertex AI endpoint location (for example, `global` or `us-central1`). |
+| `GOOGLE_MODEL` | `gemini-3.8-flash` | Gemini model identifier passed to `LlmAgent`. |
 | `CHRONICLE_PROJECT_ID` | *(empty)* | Google Cloud project ID associated with your Google SecOps SIEM tenant. |
 | `CHRONICLE_CUSTOMER_ID` | *(empty)* | Google SecOps customer UUID, such as `a1b2c3d4-e5f6-4321-abcd-ef1234567890`. |
 | `CHRONICLE_REGION` | `us` | Google SecOps regional API endpoint, such as `us` or `eu`. |
