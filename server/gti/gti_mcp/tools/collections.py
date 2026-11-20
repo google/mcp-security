@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import typing
 import logging
 
@@ -545,8 +546,13 @@ async def update_iocs_in_collection(
     else:
       return f"Error: Invalid operation '{operation}'. Must be one of 'add' or 'remove'"
 
-    status = res._aiohttp_resp.status
-    return 'Sucesssfully updated collection' if status == 200 else 'Error updating collection'
+    if res.status == 200:
+      return 'Sucesssfully updated collection'
+    try:
+      data = json.loads(await res.text_async())
+    except ValueError:
+      data = None
+    return f"Error updating collection: {_api_error(data)['error']}"
 
 
 @server.tool()
