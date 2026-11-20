@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -28,7 +29,7 @@ def register_tools(mcp: FastMCP):
     # This function registers all tools (actions) for the FireEyeNX integration.
 
     @mcp.tool()
-    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[list[str], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[list[str], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[str, Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def fire_eye_nx_add_ips_policy_exception(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], victim_ip_subnet: Annotated[str, Field(..., description="Specify the IP subnet of the victim that should be used to create a new policy exception. Format: x.x.x.x/xx Example: 10.0.0.1/24")], interface: Annotated[list[str], Field(..., description="Specify what interface should be used in policy exceptions.")], mode: Annotated[list[str], Field(..., description="Specify the mode that should be used in the policy exception.")], name: Annotated[OptionalStr, Field(default=None, description="Specify the name for the policy exception. If nothing is specified, action will add policy exception with name Siemplify_{Interface}_{Mode}")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Add IPS Policy Exception in FireEye NX. Note: IP entities are treated as "Attacker IP Address".
 
         Returns:

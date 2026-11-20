@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -363,7 +364,7 @@ dict: A dictionary containing the result of the action execution.
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def file_operation_tarzip_files_windows(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], source_folder: Annotated[str, Field(default=None, description="The full path to the folder with the relevant files")], file_filter: Annotated[str, Field(default=None, description="iles extension to include in targzip file {ex: *.txt}")], output_folder: Annotated[str, Field(default=None, description="The path to the folder to put the zip file into")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def file_operation_tarzip_files_windows(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], source_folder: Annotated[OptionalStr, Field(default=None, description="The full path to the folder with the relevant files")], file_filter: Annotated[OptionalStr, Field(default=None, description="iles extension to include in targzip file {ex: *.txt}")], output_folder: Annotated[OptionalStr, Field(default=None, description="The path to the folder to put the zip file into")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """
 Compress a tarzip file on windows share
 

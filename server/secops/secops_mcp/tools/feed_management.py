@@ -246,7 +246,7 @@ async def create_feed(
 async def update_feed(
     feed_id: str,
     display_name: str | None = None,
-    feed_details: dict[str, Any] = None,
+    feed_details: dict[str, Any] | None = None,
     project_id: str | None = None,
     customer_id: str | None = None,
     region: str | None = None,

@@ -19,6 +19,7 @@ import json
 from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
+from secops_soar_mcp.utils.optional_str import OptionalStr
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -102,7 +103,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def scc_enterprise_create_scc_enterprise_cloud_posture_ticket_type_snow(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], api_root: Annotated[str, Field(..., description="API root of the ServiceNow instance.")], username: Annotated[str, Field(..., description="Username of the ServiceNow account.")], password: Annotated[str, Field(..., description="Password of the ServiceNow account.")], verify_ssl: Annotated[bool, Field(default=None, description="If enabled, verify the SSL certificate for the connection to the ServiceNow is valid.")], table_role: Annotated[str, Field(default=None, description="Specify the role that should be set to access the newly created table. If nothing is provided, action will create a new role \"u_scc_enterprise_cloud_posture_ticket_user\".")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def scc_enterprise_create_scc_enterprise_cloud_posture_ticket_type_snow(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], api_root: Annotated[str, Field(..., description="API root of the ServiceNow instance.")], username: Annotated[str, Field(..., description="Username of the ServiceNow account.")], password: Annotated[str, Field(..., description="Password of the ServiceNow account.")], verify_ssl: Annotated[bool | None, Field(default=None, description="If enabled, verify the SSL certificate for the connection to the ServiceNow is valid.")], table_role: Annotated[OptionalStr, Field(default=None, description="Specify the role that should be set to access the newly created table. If nothing is provided, action will create a new role \"u_scc_enterprise_cloud_posture_ticket_user\".")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """This action will create a new ticket type called "SCC Enterprise Cloud Posture Ticket" in ServiceNow. It’s a mandatory requirement for the "Sync SCC-ServiceNow Tickets" job and "Posture Findings with SNOW" playbook to work.
 
         Returns:
@@ -405,7 +406,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def scc_enterprise_create_scc_enterprise_cloud_posture_ticket_type_jira(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], api_root: Annotated[str, Field(..., description="API root of the Jira instance.")], username: Annotated[str, Field(..., description="Username of the Jira account.")], api_token: Annotated[str, Field(..., description="Password of the Jira account.")], verify_ssl: Annotated[bool, Field(default=None, description="If enabled, verify the SSL certificate for the connection to Jira is valid.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def scc_enterprise_create_scc_enterprise_cloud_posture_ticket_type_jira(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], api_root: Annotated[str, Field(..., description="API root of the Jira instance.")], username: Annotated[str, Field(..., description="Username of the Jira account.")], api_token: Annotated[str, Field(..., description="Password of the Jira account.")], verify_ssl: Annotated[bool | None, Field(default=None, description="If enabled, verify the SSL certificate for the connection to Jira is valid.")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """This action will create a new ticket type called SCC Enterprise Cloud Posture Ticket” in Jira. It’s a mandatory requirement for the “Sync SCC-Jira Tickets” job and “Posture Findings with Jira” playbook to work. Note: as a part of the process, action will create a new project SCC Enterprise Project” dedicated to SCC Enterprise.
 
         Returns:
@@ -558,7 +559,7 @@ def register_tools(mcp: FastMCP):
             return {"Status": "Failed", "Message": "No active instance found."}
 
     @mcp.tool()
-    async def scc_enterprise_prepare_description(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], output: Annotated[list[str], Field(default=None, description="")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
+    async def scc_enterprise_prepare_description(case_id: Annotated[str, Field(..., description="The ID of the case.")], alert_group_identifiers: Annotated[list[str], Field(..., description="Identifiers for the alert groups.")], output: Annotated[list[str] | None, Field(default=None, description="")], target_entities: Annotated[list[TargetEntity], PydanticListField(TargetEntity, description="Optional list of specific target entities (Identifier, EntityType) to run the action on.")], scope: Annotated[str, Field(default="All entities", description="Defines the scope for the action.")]) -> dict:
         """Prepare description for ITSM ticket.
 
         Returns:

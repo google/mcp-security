@@ -69,8 +69,8 @@ def proto_message_to_dict(message: Any) -> dict[str, Any]:
 
 
 def _build_parent(
-    project_id: str = None,
-    organization_id: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
     location: str = "global",
 ) -> str:
     """Build the canonical SCC v2 parent resource path."""
@@ -99,16 +99,16 @@ def _build_or_filter(field: str, value: str) -> str:
 
 @mcp.tool()
 async def search_findings(
-    project_id: str = None,
-    organization_id: str = None,
-    finding_class: str = None,
-    severity: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
+    finding_class: str | None = None,
+    severity: str | None = None,
     state: str = "ACTIVE",
-    category: str = None,
-    resource_name: str = None,
-    resource_type: str = None,
-    mute: str = None,
-    custom_filter: str = None,
+    category: str | None = None,
+    resource_name: str | None = None,
+    resource_type: str | None = None,
+    mute: str | None = None,
+    custom_filter: str | None = None,
     max_findings: int = 50,
     location: str = "global",
     order_by: str = "event_time desc",
@@ -224,9 +224,9 @@ async def search_findings(
 
 @mcp.tool()
 async def get_finding_details(
-    project_id: str = None,
-    organization_id: str = None,
-    finding_id: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
+    finding_id: str | None = None,
     location: str = "global",
     include_resource_details: bool = True,
 ) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
@@ -333,13 +333,13 @@ async def get_finding_details(
 
 @mcp.tool()
 async def search_findings_by_compliance(
-    project_id: str = None,
-    organization_id: str = None,
-    search_text: str = None,
-    compliance_standard: str = None,
-    compliance_version: str = None,
-    compliance_id: str = None,
-    severity: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
+    search_text: str | None = None,
+    compliance_standard: str | None = None,
+    compliance_version: str | None = None,
+    compliance_id: str | None = None,
+    severity: str | None = None,
     state: str = "ACTIVE",
     max_findings: int = 50,
     location: str = "global",
@@ -519,8 +519,8 @@ async def search_findings_by_compliance(
 
 @mcp.tool()
 async def top_vulnerability_findings(
-    project_id: str = None,
-    organization_id: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
     max_findings: int = 20,
     location: str = "global",
 ) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
@@ -612,11 +612,11 @@ async def top_vulnerability_findings(
 
 @mcp.tool()
 async def get_finding_remediation(
-    project_id: str = None,
-    organization_id: str = None,
-    resource_name: str = None,
-    category: str = None,
-    finding_id: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
+    resource_name: str | None = None,
+    category: str | None = None,
+    finding_id: str | None = None,
     location: str = "global",
 ) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: get_finding_remediation
@@ -773,10 +773,10 @@ async def get_finding_remediation(
 
 @mcp.tool()
 async def set_finding_mute(
-    project_id: str = None,
-    organization_id: str = None,
-    finding_id: str = None,
-    mute: str = None,
+    project_id: str | None = None,
+    organization_id: str | None = None,
+    finding_id: str | None = None,
+    mute: str | None = None,
     location: str = "global",
 ) -> Dict[str, Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
     """Name: set_finding_mute
