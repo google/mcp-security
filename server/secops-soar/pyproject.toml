@@ -1,6 +1,6 @@
 [project]
 name = "secops-soar-mcp"
-version = "0.1.2"
+version = "0.2.0"
 description = "Google SecOps SOAR MCP server"
 readme = "README.md"
 requires-python = ">=3.11"
