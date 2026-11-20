@@ -12,16 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import asyncio
+import re
+import urllib.parse
+from typing import Annotated, Any
+
 from secops_soar_mcp import bindings
 from mcp.server.fastmcp import FastMCP
 from secops_soar_mcp.utils.consts import Endpoints
 from secops_soar_mcp.utils.models import CasePriority
 from logger_utils import get_logger
-from typing import Annotated
 from pydantic import Field
 from secops_soar_mcp.utils.pydantic_list_field import PydanticListField
 
 logger = get_logger(__name__)
+
+_SOAR_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*", re.ASCII)
+
+
+def _validate_soar_id(val: str | int, name: str = "id") -> str:
+    """Validates and normalizes a SOAR case or alert identifier."""
+    if isinstance(val, bool) or not isinstance(val, (str, int)):
+        raise ValueError(f"Invalid {name}: expected string or integer.")
+    if isinstance(val, int):
+        if val < 0:
+            raise ValueError(f"Invalid {name}: must be non-negative.")
+        cleaned = str(val)
+    else:
+        if any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in val):
+            raise ValueError(
+                f"Invalid {name}: control characters are not allowed."
+            )
+        cleaned = val.strip()
+    if not _SOAR_ID_RE.fullmatch(cleaned):
+        raise ValueError(f"Invalid {name}: expected alphanumeric identifier.")
+    return cleaned
 
 
 def register_tools(mcp: FastMCP):
@@ -182,8 +206,11 @@ def register_tools(mcp: FastMCP):
         - Use comments to justify changes in case priority (using a case priority tool) or status.
         - Share key comments or findings with other relevant systems if needed (e.g., ticketing, reporting).
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
-            Endpoints.BASE_CASE_COMMENTS_URL.format(CASE_ID=case_id),
+            Endpoints.BASE_CASE_COMMENTS_URL.format(
+                CASE_ID=urllib.parse.quote(case_id, safe="")
+            ),
             req={"Comment": comment},
         )
 
@@ -228,14 +255,16 @@ def register_tools(mcp: FastMCP):
         - Extract indicators from alert details and use SIEM entity lookup or event search tools for enrichment.
         - Correlate alert details with findings from other security tools (EDR, Network, Cloud, TI) via their MCP tools.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
+        endpoint = Endpoints.BASE_ALERT_URL.format(
+            CASE_ID=urllib.parse.quote(case_id, safe="")
+        )
         if next_page_token:
             return await bindings.http_client.get(
-                Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id),
+                endpoint,
                 params={"pageToken": next_page_token},
             )
-        return await bindings.http_client.get(
-            Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id)
-        )
+        return await bindings.http_client.get(endpoint)
 
     @mcp.tool()
     async def list_alert_group_identifiers_by_case(
@@ -276,13 +305,15 @@ def register_tools(mcp: FastMCP):
         - Use the identifiers as parameters for certain playbook actions or integrations
           (potentially from various security tools connected via MCP) if they operate on alert groups.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
+        params: dict[str, Any] = {"$select": "alertGroupIdentifier"}
         if next_page_token:
-            return await bindings.http_client.get(
-                Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id),
-                params={"pageToken": next_page_token},
-            )
+            params["pageToken"] = next_page_token
         return await bindings.http_client.get(
-            Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(CASE_ID=case_id)
+            Endpoints.LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE.format(
+                CASE_ID=urllib.parse.quote(case_id, safe="")
+            ),
+            params=params,
         )
 
     @mcp.tool()
@@ -327,18 +358,18 @@ def register_tools(mcp: FastMCP):
         - Correlate event details with other related events using SIEM event search tools.
         - Document findings in the relevant case management system using a commenting tool.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
+        alert_id = _validate_soar_id(alert_id, "alert_id")
+        endpoint = Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
+            CASE_ID=urllib.parse.quote(case_id, safe=""),
+            ALERT_ID=urllib.parse.quote(alert_id, safe=""),
+        )
         if next_page_token:
             return await bindings.http_client.get(
-                Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
-                    CASE_ID=case_id, ALERT_ID=alert_id
-                ),
+                endpoint,
                 params={"pageToken": next_page_token},
             )
-        return await bindings.http_client.get(
-            Endpoints.LIST_INVOLVED_EVENTS_BY_ALERT.format(
-                CASE_ID=case_id, ALERT_ID=alert_id
-            )
-        )
+        return await bindings.http_client.get(endpoint)
 
     @mcp.tool()
     async def change_case_priority(
@@ -389,8 +420,11 @@ def register_tools(mcp: FastMCP):
         - Document the reason for the priority change using a case commenting tool.
         - Adjust investigation efforts based on the new priority level.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.patch(
-            Endpoints.BASE_SPECIFIC_CASE_URL.format(CASE_ID=case_id),
+            Endpoints.BASE_SPECIFIC_CASE_URL.format(
+                CASE_ID=urllib.parse.quote(case_id, safe="")
+            ),
             req={"Priority": case_priority},
         )
 
@@ -440,6 +474,7 @@ def register_tools(mcp: FastMCP):
         - Use `get_case_full_details` to verify the description was updated correctly.
         - Continue the investigation using other available tools.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.CHANGE_CASE_DESCRIPTION,
             req={"CaseId": case_id, "Description": description},
@@ -517,6 +552,7 @@ def register_tools(mcp: FastMCP):
         - Use `get_case_full_details` to confirm the closure details were recorded correctly.
         - Document any remaining findings or remediation steps using a case commenting tool.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         req = {
             "CaseId": case_id,
             "RootCause": root_cause,
@@ -566,6 +602,7 @@ def register_tools(mcp: FastMCP):
         - Use `get_case_full_details` to verify the assignment was applied correctly.
         - Adjust investigation efforts based on the assigned analyst's expertise.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.ASSIGN_USER_TO_CASE,
             req={"CaseId": case_id, "User": user},
@@ -612,6 +649,7 @@ def register_tools(mcp: FastMCP):
         - Document the reason for the stage transition using a case commenting tool.
         - Adjust investigation efforts based on the new stage requirements.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.CHANGE_CASE_STAGE,
             req={"CaseId": case_id, "Stage": stage},
@@ -657,6 +695,7 @@ def register_tools(mcp: FastMCP):
         - Document the reason for tagging using a case commenting tool.
         - Use `get_case_full_details` to verify the tag was applied correctly.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.ADD_CASE_TAG,
             req={"CaseId": case_id, "Tag": tag},
@@ -700,6 +739,7 @@ def register_tools(mcp: FastMCP):
         - Document the reason for the tag removal using a case commenting tool.
         - Use `add_case_tag` to apply a corrected tag if needed.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.REMOVE_CASE_TAG,
             req={"CaseId": case_id, "Tag": tag},
@@ -744,6 +784,7 @@ def register_tools(mcp: FastMCP):
         - Use threat intelligence tools to enrich the identified entities.
         - Use the entity list as input for targeted response actions via SOAR playbooks or other security tool integrations (e.g., EDR, firewall).
         """
+        case_id = _validate_soar_id(case_id, "case_id")
         return await bindings.http_client.post(
             Endpoints.GET_ALERT_GROUP_IDENTIFIERS_ENTITIES,
             req={"caseId": case_id, "alertGroupIdentifiers": alert_group_identifiers},
@@ -939,14 +980,16 @@ def register_tools(mcp: FastMCP):
         - Document investigation progress using a case commenting tool.
         - Consider adjusting case priority using a priority management tool based on findings.
         """
+        case_id = _validate_soar_id(case_id, "case_id")
+        encoded_case_id = urllib.parse.quote(case_id, safe="")
         case_coro = bindings.http_client.get(
-            Endpoints.BASE_SPECIFIC_CASE_URL.format(CASE_ID=case_id)
+            Endpoints.BASE_SPECIFIC_CASE_URL.format(CASE_ID=encoded_case_id)
         )
         case_alerts_coro = bindings.http_client.get(
-            Endpoints.BASE_ALERT_URL.format(CASE_ID=case_id)
+            Endpoints.BASE_ALERT_URL.format(CASE_ID=encoded_case_id)
         )
         case_comments_coro = bindings.http_client.get(
-            Endpoints.BASE_CASE_COMMENTS_URL.format(CASE_ID=case_id)
+            Endpoints.BASE_CASE_COMMENTS_URL.format(CASE_ID=encoded_case_id)
         )
         results = await asyncio.gather(case_coro, case_alerts_coro, case_comments_coro)
         return {

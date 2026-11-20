@@ -15,9 +15,11 @@
 
 import json
 import ssl
+import urllib.parse
 from typing import Any
 
 import aiohttp
+
 from logger_utils import get_logger
 
 logger = get_logger(__name__)
@@ -30,6 +32,52 @@ class HttpClient:
         self.base_url = base_url
         self.app_key = app_key
         self._session = None
+
+    @staticmethod
+    def _validate_endpoint(endpoint: str) -> str:
+        """Validates that an API endpoint is a normalized relative path."""
+        if not isinstance(endpoint, str) or not endpoint:
+            raise ValueError("Invalid SOAR endpoint: expected non-empty string.")
+        if not endpoint.startswith("/") or endpoint.startswith("//"):
+            raise ValueError(
+                "Invalid SOAR endpoint: expected relative path starting with '/'."
+            )
+        if any(ord(ch) < 0x20 or ord(ch) == 0x7F or ch.isspace() for ch in endpoint):
+            raise ValueError(
+                "Invalid SOAR endpoint: unexpected whitespace or control characters."
+            )
+        if "#" in endpoint or "\\" in endpoint:
+            raise ValueError("Invalid SOAR endpoint: unexpected path characters.")
+
+        raw_path, _, _ = endpoint.partition("?")
+        for seg in raw_path.split("/")[1:]:
+            if seg in (".", "..") or ".." in seg:
+                raise ValueError(
+                    "Invalid SOAR endpoint: normalized relative path required."
+                )
+            current = seg
+            for _ in range(4):
+                unquoted = urllib.parse.unquote(current)
+                if (
+                    unquoted in (".", "..")
+                    or ".." in unquoted
+                    or any(ch in unquoted for ch in ("/", "\\", "?", "#"))
+                    or any(
+                        ord(ch) < 0x20 or ord(ch) == 0x7F for ch in unquoted
+                    )
+                ):
+                    raise ValueError(
+                        "Invalid SOAR endpoint: normalized relative path required."
+                    )
+                if unquoted == current:
+                    break
+                current = unquoted
+            else:
+                if urllib.parse.unquote(current) != current:
+                    raise ValueError(
+                        "Invalid SOAR endpoint: normalized relative path required."
+                    )
+        return endpoint
 
     def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None:
@@ -56,6 +104,7 @@ class HttpClient:
         Returns:
             The response as a JSON object, or None if an error occurred.
         """
+        endpoint = self._validate_endpoint(endpoint)
         headers = await self._get_headers()
         try:
             async with self._get_session().get(
@@ -89,6 +138,7 @@ class HttpClient:
         Returns:
             The response as a JSON object, or None if an error occurred.
         """
+        endpoint = self._validate_endpoint(endpoint)
         headers = await self._get_headers()
         try:
             async with self._get_session().post(
@@ -124,6 +174,7 @@ class HttpClient:
         Returns:
             The response as a JSON object, or None if an error occurred.
         """
+        endpoint = self._validate_endpoint(endpoint)
         headers = await self._get_headers()
         try:
             async with self._get_session().patch(

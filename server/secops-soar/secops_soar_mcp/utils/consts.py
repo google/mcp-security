@@ -26,9 +26,7 @@ class Endpoints:
     BASE_SPECIFIC_CASE_URL = BASE_CASE_URL + "/{CASE_ID}"
     BASE_CASE_COMMENTS_URL = BASE_SPECIFIC_CASE_URL + "/comments"
     BASE_ALERT_URL = "/api/1p/external/v1.0/cases/{CASE_ID}/caseAlerts"
-    LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE = (
-        BASE_ALERT_URL + "?$select=alertGroupIdentifier"
-    )
+    LIST_ALERT_GROUP_IDENTIFIERS_BY_CASE = BASE_ALERT_URL
     BASE_SPECIFIC_ALERT_URL = BASE_ALERT_URL + "/{ALERT_ID}"
     FETCH_FULL_UNIQUE_ENTITY = "/api/external/v1/entities/GetEntityData"
     SEARCH_ENTITY = "/api/external/v1.0/entity-search/entities"
