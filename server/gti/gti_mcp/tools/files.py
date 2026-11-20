@@ -11,15 +11,326 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import logging
-import typing
-import urllib.parse
+import errno
+import io
 import json
+import logging
+import os
+import pathlib
+import stat
+import typing
+import unicodedata
+import urllib.parse
 
+import vt
 from mcp.server.fastmcp import Context
+from mcp.server.fastmcp.exceptions import ToolError as _ToolError
 
 from .. import utils
 from ..server import server, vt_client
+
+_UPLOAD_DIR_ENV_VAR = "GTI_ALLOWED_UPLOAD_DIR"
+_REPARSE_TAG_MOUNT_POINT = getattr(
+    stat, "IO_REPARSE_TAG_MOUNT_POINT", 0xA0000003
+)
+_REPARSE_TAG_SYMLINK = getattr(stat, "IO_REPARSE_TAG_SYMLINK", 0xA000000C)
+_logger = logging.getLogger(__name__)
+
+
+def _is_symlink_or_junction(
+    path_obj: pathlib.Path, st: os.stat_result
+) -> bool:
+  """Returns True if path_obj or its lstat result is a symlink or junction."""
+  if stat.S_ISLNK(st.st_mode) or path_obj.is_symlink():
+    return True
+  reparse_tag = getattr(st, "st_reparse_tag", 0)
+  if reparse_tag in (_REPARSE_TAG_MOUNT_POINT, _REPARSE_TAG_SYMLINK):
+    return True
+  is_junction = getattr(path_obj, "is_junction", None)
+  if callable(is_junction) and is_junction():
+    return True
+  return False
+
+
+def _sanitize_upload_filename(file_name: str, default: str = "submission.bin") -> str:
+  """Normalizes an uploaded file name to a safe basename."""
+  if not file_name:
+    return default
+  tail = file_name.replace("\\", "/").rsplit("/", maxsplit=1)[-1].strip()
+  if (
+      not tail
+      or tail in {".", ".."}
+      or len(tail) > 255
+      or '"' in tail
+      or "\\" in tail
+      or any(unicodedata.category(ch).startswith("C") for ch in tail)
+  ):
+    return default
+  return tail
+
+
+class _BasenameFileReader(io.IOBase):
+  """Binary file reader wrapper that exposes only a sanitized basename."""
+
+  def __init__(self, raw_file: typing.BinaryIO, basename: str):
+    super().__init__()
+    self._raw = raw_file
+    self.name = basename
+
+  def readable(self) -> bool:
+    return self._raw.readable()
+
+  def seekable(self) -> bool:
+    return self._raw.seekable()
+
+  def fileno(self) -> int:
+    return self._raw.fileno()
+
+  def tell(self) -> int:
+    return self._raw.tell()
+
+  def seek(self, offset: int, whence: int = io.SEEK_SET) -> int:
+    return self._raw.seek(offset, whence)
+
+  def read(self, size: int = -1) -> bytes:
+    return self._raw.read(size)
+
+  def readline(self, size: int | None = -1) -> bytes:
+    return self._raw.readline(-1 if size is None else size)
+
+  def close(self) -> None:
+    try:
+      self._raw.close()
+    finally:
+      super().close()
+
+
+def _resolve_allowed_upload_dir() -> pathlib.Path | None:
+  """Resolves and validates the configured upload directory."""
+  raw_dir = os.getenv(_UPLOAD_DIR_ENV_VAR, "").strip()
+  if not raw_dir:
+    return None
+
+  if any(ord(ch) < 32 or ord(ch) == 127 for ch in raw_dir):
+    raise ValueError(f"{_UPLOAD_DIR_ENV_VAR} must not contain control characters")
+
+  expanded = pathlib.Path(raw_dir).expanduser()
+  if not expanded.is_absolute():
+    raise ValueError(
+        f"{_UPLOAD_DIR_ENV_VAR} must be an absolute path to an existing directory: '{raw_dir}'"
+    )
+
+  try:
+    resolved = expanded.resolve(strict=True)
+  except (OSError, RuntimeError) as e:
+    raise ValueError(
+        f"{_UPLOAD_DIR_ENV_VAR} path does not exist or cannot be resolved: '{raw_dir}': {e}"
+    ) from e
+
+  if not resolved.is_dir():
+    raise ValueError(f"{_UPLOAD_DIR_ENV_VAR} must be a directory: '{resolved}'")
+
+  if resolved == resolved.parent or resolved == pathlib.Path(resolved.anchor):
+    raise ValueError(f"{_UPLOAD_DIR_ENV_VAR} cannot be the filesystem root: '{resolved}'")
+
+  return resolved
+
+
+def _open_confined_upload_file(
+    user_path_str: str,
+    allowed_dir: pathlib.Path,
+    configured_dir: pathlib.Path | None = None,
+) -> tuple[typing.BinaryIO, str]:
+  """Opens a regular file within allowed_dir without following symlinks."""
+  if not isinstance(user_path_str, str) or not user_path_str.strip():
+    raise ValueError("file_path cannot be empty")
+  stripped = user_path_str.strip()
+  if "\0" in stripped or any(ord(ch) < 32 or ord(ch) == 127 for ch in stripped):
+    raise ValueError("file_path contains invalid control characters or null bytes")
+
+  pure_posix = pathlib.PurePosixPath(stripped)
+  pure_win = pathlib.PureWindowsPath(stripped)
+  if ".." in pure_posix.parts or ".." in pure_win.parts:
+    raise PermissionError("Directory traversal with '..' is not allowed")
+
+  cand = pathlib.Path(stripped)
+  if not cand.is_absolute() and (
+      pure_win.drive or pure_win.root or pure_posix.root
+  ):
+    raise PermissionError(
+        "Drive-qualified or rooted relative paths are not allowed"
+    )
+
+  if cand.is_absolute():
+    if cand.is_relative_to(allowed_dir):
+      rel = cand.relative_to(allowed_dir)
+    elif (
+        configured_dir is not None
+        and ".." not in configured_dir.parts
+        and cand.is_relative_to(configured_dir)
+    ):
+      rel = cand.relative_to(configured_dir)
+    else:
+      raise PermissionError(
+          "File path is outside the allowed GTI_ALLOWED_UPLOAD_DIR directory"
+      )
+  else:
+    rel = cand
+
+  if not rel.parts or rel == pathlib.Path("."):
+    raise ValueError("Path is the allowed directory itself, not a regular file")
+  if ".." in rel.parts:
+    raise PermissionError("Directory traversal with '..' is not allowed")
+  if stripped.endswith(("/", "\\")):
+    raise ValueError("Path must not end with a directory separator")
+
+  if hasattr(os, "O_NOFOLLOW") and hasattr(os, "O_DIRECTORY"):
+    try:
+      current_fd = os.open(
+          str(allowed_dir), os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+      )
+    except OSError as e:
+      raise PermissionError("Failed to open allowed upload directory") from e
+
+    open_dir_fds = [current_fd]
+    try:
+      for part in rel.parent.parts:
+        if not part or part == ".":
+          continue
+        if part == "..":
+          raise PermissionError("Directory traversal with '..' is not allowed")
+        try:
+          next_fd = os.open(
+              part,
+              os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+              dir_fd=current_fd,
+          )
+          open_dir_fds.append(next_fd)
+          current_fd = next_fd
+        except OSError as e:
+          if e.errno in (errno.ELOOP, getattr(errno, "EMLINK", errno.ELOOP)):
+            raise PermissionError(
+                "Symlinks are not allowed in directory path"
+            ) from e
+          if e.errno == errno.ENOTDIR:
+            try:
+              st_part = os.stat(
+                  part, dir_fd=current_fd, follow_symlinks=False
+              )
+            except OSError:
+              raise PermissionError(
+                  "Path component is not a directory or is a symlink"
+              ) from e
+            if stat.S_ISLNK(st_part.st_mode):
+              raise PermissionError(
+                  "Symlinks are not allowed in directory path"
+              ) from e
+            raise ValueError(
+                "Path component in directory path is not a directory"
+            ) from e
+          raise
+
+      try:
+        file_fd = os.open(
+            rel.name,
+            os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_NONBLOCK", 0),
+            dir_fd=current_fd,
+        )
+      except OSError as e:
+        if e.errno in (errno.ELOOP, getattr(errno, "EMLINK", errno.ELOOP)):
+          raise PermissionError("Symlinks are not allowed") from e
+        if e.errno == errno.EISDIR:
+          raise ValueError("Path is not a regular file") from e
+        raise
+
+      fd_owned = True
+      try:
+        st = os.fstat(file_fd)
+        if not stat.S_ISREG(st.st_mode):
+          raise ValueError("Path is not a regular file")
+        if hasattr(os, "set_blocking"):
+          os.set_blocking(file_fd, True)
+        raw_file = open(file_fd, "rb", closefd=True)
+        fd_owned = False
+      except Exception:
+        if fd_owned:
+          try:
+            os.close(file_fd)
+          except OSError:
+            pass
+        raise
+    finally:
+      for dfd in open_dir_fds:
+        try:
+          os.close(dfd)
+        except OSError:
+          pass
+  else:
+    try:
+      st_root = os.lstat(allowed_dir)
+    except OSError as e:
+      raise PermissionError("Failed to open allowed upload directory") from e
+    if _is_symlink_or_junction(allowed_dir, st_root) or not stat.S_ISDIR(
+        st_root.st_mode
+    ):
+      raise PermissionError("Failed to open allowed upload directory")
+
+    current_dir = allowed_dir
+    for part in rel.parent.parts:
+      if not part or part == ".":
+        continue
+      if part == "..":
+        raise PermissionError("Directory traversal with '..' is not allowed")
+      current_dir = current_dir / part
+      try:
+        st_part = os.lstat(current_dir)
+      except OSError as e:
+        if e.errno == errno.ENOTDIR:
+          raise ValueError(
+              "Path component in directory path is not a directory"
+          ) from e
+        raise
+      if _is_symlink_or_junction(current_dir, st_part):
+        raise PermissionError("Symlinks are not allowed in directory path")
+      if not stat.S_ISDIR(st_part.st_mode):
+        raise ValueError("Path component in directory path is not a directory")
+
+    candidate_target = current_dir / rel.name
+    try:
+      st_leaf = os.lstat(candidate_target)
+    except OSError as e:
+      if e.errno == errno.ENOTDIR:
+        raise ValueError(
+            "Path component in directory path is not a directory"
+        ) from e
+      raise
+    if _is_symlink_or_junction(candidate_target, st_leaf):
+      raise PermissionError("Symlinks are not allowed")
+    if not stat.S_ISREG(st_leaf.st_mode):
+      raise ValueError("Path is not a regular file")
+
+    target = candidate_target.resolve(strict=True)
+    if not target.is_relative_to(allowed_dir):
+      raise PermissionError(
+          "File path is outside the allowed GTI_ALLOWED_UPLOAD_DIR directory"
+      )
+    if target == allowed_dir:
+      raise ValueError("Path is not a regular file")
+
+    raw_file = open(target, "rb")
+    try:
+      st_open = os.fstat(raw_file.fileno())
+      if not stat.S_ISREG(st_open.st_mode):
+        raise ValueError("Path is not a regular file")
+    except Exception:
+      try:
+        raw_file.close()
+      except OSError:
+        pass
+      raise
+
+  safe_name = _sanitize_upload_filename(rel.name, default="submission.bin")
+  return raw_file, safe_name
 
 
 FILE_RELATIONSHIPS = [
@@ -247,25 +558,77 @@ async def get_file_behavior_summary(hash: str, ctx: Context) -> typing.Dict[str,
   return utils.sanitize_response(res["data"])
 
 
-@server.tool()
-async def analyse_file(file_path: str, ctx: Context):
+async def analyse_file(
+    file_path: str, ctx: Context
+) -> typing.Dict[str, typing.Any]:  # noqa: UP006 - typing.Dict keeps FastMCP {"result": ...} outputSchema
   """Upload and analyse the file in VirusTotal.
 
-  The file will be uploaded to VirusTotal and shared with the community.
+  The file will be uploaded to VirusTotal and shared publicly with the community.
+  Requires the GTI_ALLOWED_UPLOAD_DIR environment variable to be set to an
+  allowed directory. Only regular files within this directory can be analyzed.
 
   Args:
-    file_path (required): Path to the file for analysis. Use absolute path.
+    file_path (required): Path to the file for analysis, relative to or inside
+      the allowed upload directory.
   Returns:
-    The analysis report.
+    The analysis report or an error dictionary.
   """
-  async with vt_client(ctx) as client:
-    with open(file_path, "rb") as f:    
-      analysis = await client.scan_file_async(file=f)
-      logging.info(f"File {file_path} uploaded.")
+  try:
+    allowed_dir = _resolve_allowed_upload_dir()
+  except ValueError as e:
+    _logger.error("Invalid %s configuration: %s", _UPLOAD_DIR_ENV_VAR, e)
+    return {
+        "error": (
+            f"Invalid {_UPLOAD_DIR_ENV_VAR} configuration; check server logs."
+        )
+    }
 
-    res = await client.wait_for_analysis_completion(analysis)
-    logging.info(f"Analysis has completed with ID %s", res.id)
-    return utils.sanitize_response(res.to_dict())
+  if allowed_dir is None:
+    return {
+        "error": (
+            "analyse_file is disabled by default. Set the"
+            f" {_UPLOAD_DIR_ENV_VAR} environment variable to an absolute"
+            " directory path to enable file uploads."
+        )
+    }
+
+  raw_configured = os.getenv(_UPLOAD_DIR_ENV_VAR, "").strip()
+  configured_dir = (
+      pathlib.Path(raw_configured).expanduser() if raw_configured else None
+  )
+
+  try:
+    raw_file, safe_name = _open_confined_upload_file(
+        file_path, allowed_dir, configured_dir=configured_dir
+    )
+  except (ValueError, PermissionError) as e:
+    _logger.error("Rejected upload attempt: %s", e)
+    return {"error": str(e)}
+  except FileNotFoundError:
+    _logger.error("Upload target not found within %s", _UPLOAD_DIR_ENV_VAR)
+    return {"error": "File not found within GTI_ALLOWED_UPLOAD_DIR"}
+  except OSError as e:
+    _logger.error("OS error opening upload target: %s", e)
+    return {"error": "Failed to open file for upload"}
+
+  wrapped_reader = _BasenameFileReader(raw_file, safe_name)
+  try:
+    with wrapped_reader:
+      async with vt_client(ctx) as client:
+        try:
+          analysis = await client.scan_file_async(file=wrapped_reader)
+          _logger.info("File %s uploaded for analysis.", safe_name)
+          res = await client.wait_for_analysis_completion(analysis)
+          _logger.info("Analysis has completed with ID %s", res.id)
+          return utils.sanitize_response(res.to_dict())
+        except vt.error.APIError as e:
+          _logger.error("VirusTotal API error during analysis: %s", e)
+          return {"error": f"VirusTotal API Error: {e}"}
+  finally:
+    try:
+      wrapped_reader.close()
+    except Exception:
+      pass
 
 @server.tool()
 async def search_digital_threat_monitoring(
@@ -443,3 +806,35 @@ async def search_digital_threat_monitoring(
             pass
 
     return utils.sanitize_response(res_json)
+
+
+def _remove_upload_tool(target_server: typing.Any) -> None:
+  """Removes analyse_file from target_server if currently registered."""
+  try:
+    target_server.remove_tool("analyse_file")
+  except _ToolError:
+    pass
+
+
+def _register_upload_tools(target_server: typing.Any = server) -> bool:
+  """Registers or unregisters upload tools based on GTI_ALLOWED_UPLOAD_DIR configuration."""
+  try:
+    allowed_dir = _resolve_allowed_upload_dir()
+  except ValueError as e:
+    _remove_upload_tool(target_server)
+    _logger.error("Failed to configure %s: %s", _UPLOAD_DIR_ENV_VAR, e)
+    raise
+
+  _remove_upload_tool(target_server)
+  if allowed_dir is not None:
+    target_server.add_tool(analyse_file)
+    _logger.info("Registered analyse_file tool confined to %s", allowed_dir)
+    return True
+
+  _logger.info(
+      "analyse_file tool unregistered (set %s to enable)", _UPLOAD_DIR_ENV_VAR
+  )
+  return False
+
+
+_register_upload_tools(server)

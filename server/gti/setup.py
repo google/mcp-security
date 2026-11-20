@@ -19,7 +19,7 @@ setup = setuptools.setup
 
 setup(
     name="gti-mcp",
-    version="0.1.3",
+    version="0.1.4",
     packages=setuptools.find_packages(),
     python_requires=">=3.11",
     install_requires=[

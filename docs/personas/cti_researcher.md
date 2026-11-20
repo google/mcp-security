@@ -52,7 +52,7 @@ The CTI Researcher primarily utilizes the **`Google Threat Intelligence MCP serv
         *   `get_url_report`: Analyze URLs.
         *   `get_entities_related_to_a_file`, `get_entities_related_to_a_domain`, `get_entities_related_to_an_ip_address`, `get_entities_related_to_an_url`: Pivot from specific IOCs to discover related infrastructure, malware, or actors.
         *   `get_file_behavior_summary` / `get_file_behavior_report`: Understand malware behavior from sandbox analysis.
-        *   `analyse_file`: Submit files for analysis.
+        *   `analyse_file`: Submit local files within `GTI_ALLOWED_UPLOAD_DIR` for analysis (disabled by default until `GTI_ALLOWED_UPLOAD_DIR` is set; uploaded files are shared with the VirusTotal community).
         *   `search_iocs`: Search for specific IOC patterns or characteristics across different entity types.
     *   **Hunting & Organizational Context:**
         *   `get_hunting_ruleset` / `get_entities_related_to_a_hunting_ruleset`: Work with Yara rulesets.

@@ -57,16 +57,21 @@ VT_APIKEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 
 ### Environment Variable Setup
 
-Set up the `VT_APIKEY` environment variable in your system:
+Set up the environment variables in your system:
+
+- `VT_APIKEY` (required): Your VirusTotal API key.
+- `GTI_ALLOWED_UPLOAD_DIR` (optional): Absolute path to an existing local directory for file uploads. When set, registers the `analyse_file` tool and restricts uploads to regular files within this directory (must not be the filesystem root). If set to an invalid value (such as a relative path, non-existent path, non-directory, or filesystem root), the server raises a `ValueError` and refuses to start.
 
 **For macOS/Linux:**
 ```bash
 export VT_APIKEY="your-vt-api-key"
+export GTI_ALLOWED_UPLOAD_DIR="/path/to/uploads"
 ```
 
 **For Windows PowerShell:**
 ```powershell
 $Env:VT_APIKEY = "your-vt-api-key"
+$Env:GTI_ALLOWED_UPLOAD_DIR = "C:\path\to\uploads"
 ```
 
 For more detailed instructions on setting up environment variables, refer to the [usage guide](../usage_guide.md#setting-up-environment-variables).
@@ -108,6 +113,7 @@ Threats like actors, malware, campaigns, reports, and vulnerabilities are modele
   - `behaviors`: Sandbox behavior reports
 - **`get_file_behavior_report(file_behaviour_id)`**: Retrieves a specific sandbox behavior report for a file, identified by `{file_hash}_{sandbox_name}`.
 - **`get_file_behavior_summary(hash)`**: Retrieves a summary of all sandbox behavior reports for a file hash.
+- **`analyse_file(file_path)`**: Uploads and analyzes a local file in VirusTotal. Disabled by default; set `GTI_ALLOWED_UPLOAD_DIR` to an absolute directory path to enable uploads of regular files within that directory. Uploaded files are shared with the VirusTotal community.
 
 ### Intelligence Search
 
