@@ -19,7 +19,7 @@ setup = setuptools.setup
 
 setup(
     name="secops-soar-mcp",
-    version="0.1.2",
+    version="0.2.0",
     packages=setuptools.find_packages(),
     python_requires=">=3.11",
     install_requires=[
