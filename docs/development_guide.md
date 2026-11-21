@@ -8,15 +8,18 @@ The repository is organized as follows:
 
 ```
 mcp-security/
-├── docs/                 # Documentation
-│   ├── servers/          # Server-specific documentation
-│   └── img/              # Images for documentation
-├── server/               # Server implementations
-│   ├── gti/              # Google Threat Intelligence server
-│   ├── scc/              # Security Command Center server
-│   ├── secops/           # Security Operations server
-│   └── secops-soar/      # SOAR server
-└── README.md             # Repository README
+├── docs/                     # Documentation
+│   ├── servers/              # Server-specific documentation
+│   └── img/                  # Images for documentation
+├── run-with-google-adk/      # Lightweight Google ADK v2 root_agent starter
+│   ├── mcp_security_agent/   # Agent package (__init__.py, agent.py)
+│   └── tests/                # Hermetic pytest suite
+├── server/                   # Server implementations
+│   ├── gti/                  # Google Threat Intelligence server
+│   ├── scc/                  # Security Command Center server
+│   ├── secops/               # Security Operations server
+│   └── secops-soar/          # SOAR server
+└── README.md                 # Repository README
 ```
 
 ## MCP Server Architecture
@@ -101,6 +104,17 @@ For each server, you should test:
 1. **Tool Functionality**: Ensure each tool works as expected
 2. **MCP Protocol Compliance**: Test compatibility with MCP clients
 3. **Error Handling**: Verify graceful error handling
+
+### Testing the Google ADK Starter Agent
+
+To run the hermetic unit tests for the Google ADK v2 `root_agent` starter in [`run-with-google-adk/`](https://github.com/google/mcp-security/blob/main/run-with-google-adk/README.md):
+
+```bash
+cd run-with-google-adk
+uv run --extra test pytest tests/
+```
+
+For local interactive verification against configured MCP servers, run `uv run adk run mcp_security_agent` or `uv run adk web`. Production deployments target managed Vertex AI Agent Engine (`uv run adk deploy agent_engine`) and Gemini Enterprise.
 
 ## Documentation Standards
 
